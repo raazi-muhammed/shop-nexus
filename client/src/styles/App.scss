@@ -1,6 +1,41 @@
-// Variable overrides first
-$primary: #900;
-$enable-shadows: true;
+$primary: #342475;
+$secondary: #7a76e2;
+$light: #d7d6f6;
+
+$border-radius: 1rem;
 
 // Then import Bootstrap
 @import "../../node_modules/bootstrap/scss/bootstrap"; //@import "../node_modules/bootstrap/scss/bootstrap";
+
+.btn,
+.form-control {
+	height: 3rem;
+}
+
+.form-control {
+	background-color: $light;
+}
+
+.text-small {
+	font-size: 0.75rem;
+}
+
+.h3,
+h3 {
+	font-size: 2rem;
+	font-weight: bold;
+}
+
+.container-max-width {
+	max-width: 60rem;
+}
+
+body {
+	background-color: #f1f0ff;
+	min-height: 100vh;
+}
+
+#root {
+	min-height: 100vh;
+	display: flex;
+}

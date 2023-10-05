@@ -1,10 +1,14 @@
+import { Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
 import "./styles/App.css";
 
 function App() {
 	return (
-		<>
-			<h1>Shop Nexus</h1>
-		</>
+		<Routes>
+			<Route path="/login" element={<LoginPage />} />
+			<Route path="/sign-up" element={<SignUpPage />} />
+		</Routes>
 	);
 }
 
