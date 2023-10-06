@@ -1,12 +1,29 @@
 import React from "react";
-import loginCover from "../assets/login-cover.jpg";
+import loginCover from "../../assets/login-cover.jpg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import server from "../../server";
 
 const LoginPage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const newForm = {
+			email: email,
+			password: password,
+		};
 
+		axios
+			.post(`${server}/user/login-user`, newForm)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-white rounded-4">
 			<section className="col-6 p-0 overflow-hidden ">
@@ -20,7 +37,7 @@ const LoginPage = () => {
 			<section className="col-6 p-5 my-auto">
 				<h3>Log In</h3>
 				<p classNmae="text-small">please enter you details to log in</p>
-				<form>
+				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className="mb-3">
 						<label for="email" className="form-label">
 							Email
