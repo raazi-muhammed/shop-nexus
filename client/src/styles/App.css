@@ -12012,4 +12012,8 @@ body {
 #root {
   min-height: 100vh;
   display: flex;
+}
+
+.sub-heading {
+  font-size: 1rem;
 }/*# sourceMappingURL=App.css.map */

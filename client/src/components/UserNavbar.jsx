@@ -30,9 +30,11 @@ const UserNavbar = () => {
 			<section className="d-flex gap-3">
 				<button className="btn btn-sm btn-secondary text-white">{heart}</button>
 				<button className="btn btn-sm btn-secondary text-white">{cart}</button>
-				<button className="btn btn-sm btn-secondary text-white">
-					{profile}
-				</button>
+				<Link to="/login">
+					<button className="btn btn-sm btn-secondary text-white">
+						{profile}
+					</button>
+				</Link>
 			</section>
 		</section>
 	);

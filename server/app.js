@@ -7,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 //const fileUpload = require("express-fileupload");
 const userController = require("./controller/userController");
+const productController = require("./controller/productController");
+
 const cors = require("cors");
 app.use(cors());
 const PORT = process.env.PORT;
@@ -19,12 +21,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Static file
 app.use("/", express.static("uploads"));
 
-app.get("*", (req, res) => {
-	console.log("HHIHI");
-});
-
 // Router
 app.use("/api/v1/user", userController);
+app.use("/api/v1/products/", productController);
+
+app.get("*", (req, res) => {
+	console.log("no matching url");
+});
 
 app.listen(PORT, () => {
 	console.log(`Server is running on ${PORT}`);
