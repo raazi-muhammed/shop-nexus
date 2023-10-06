@@ -11,10 +11,10 @@ const UserNavbar = () => {
 				</button>
 			</div>
 			<nav className="d-flex gap-3">
-				<Link to="/home">
+				<Link to="/">
 					<button className="btn btn-sm btn-secondary text-white">Home</button>
 				</Link>
-				<Link>
+				<Link to="/best-selling">
 					<button className="btn btn-sm text-secondary">Best Selling</button>
 				</Link>
 				<Link to="/new-products">

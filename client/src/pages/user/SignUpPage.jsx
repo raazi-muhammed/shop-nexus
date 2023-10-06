@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import server from "../../server";
 
@@ -10,7 +10,7 @@ const SignUpPage = () => {
 	const [age, setAge] = useState("");
 	const [password, setPassword] = useState("");
 	const [profilePhoto, setProfilePhoto] = useState(null);
-
+	const navigate = useNavigate();
 	const handleFileInputChange = (e) => {
 		setProfilePhoto(e.target.files[0]);
 	};
@@ -28,6 +28,7 @@ const SignUpPage = () => {
 			.post(`${server}/user/create-user`, newForm)
 			.then((res) => {
 				console.log(res);
+				navigate("/");
 			})
 			.catch((err) => {
 				console.log(err);

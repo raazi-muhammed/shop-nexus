@@ -5,7 +5,7 @@ const { heart, cart } = Icons;
 
 const ProductCartMain = ({
 	name,
-	stock,
+	sold,
 	price,
 	rating,
 	discount_price,
@@ -14,8 +14,8 @@ const ProductCartMain = ({
 }) => {
 	return (
 		<section
-			className="bg-white d-flex flex-column m-3 rounded-4"
-			style={{ width: "15rem" }}>
+			className="bg-white d-flex flex-column m-3 rounded-4 flex-shrink-0"
+			style={({ "min-width": "15rem" }, { "max-width": "18rem" })}>
 			<img className="rounded-4 w-100 " src={imgUrl} alt="" srcSet="" />
 			<section className="d-flex flex-column p-4 pb-0 ">
 				<Link className="text-secondary text-small text-decoration-none">
@@ -24,7 +24,7 @@ const ProductCartMain = ({
 				<p>{name}</p>
 				<section className="d-flex gap-2">
 					<p className="text-small">Rating: {rating}</p>
-					<p className="text-small">{stock} Sold</p>
+					<p className="text-small">{sold} Sold</p>
 				</section>
 				<section className="d-flex gap-1 ">
 					<p className="h4 mb-0">${discount_price}</p>
