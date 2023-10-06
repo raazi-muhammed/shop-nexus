@@ -24,14 +24,6 @@ const SignUpPage = () => {
 			password: password,
 			profilePhoto: profilePhoto,
 		};
-		//const config = { headers: { "Content-Type": "multipart/form-data" } };
-		//const newForm = new FormData();
-		/* newForm.append("file", profilePhoto);
-		newForm.append("name", fullName);
-		newForm.append("email", email);
-		newForm.append("age", age);
-		newForm.append("password", password); */
-
 		axios
 			.post(`${server}/user/create-user`, newForm)
 			.then((res) => {
