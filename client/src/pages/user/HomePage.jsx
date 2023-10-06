@@ -6,18 +6,23 @@ import FAQsPage from "./FAQsPage";
 import ProductsPage from "./ProductsPage";
 import BestSellingPage from "./BestSellingPage";
 import HomeContentPage from "./HomeContentPage";
+import Footer from "../../components/Footer";
 
 const HomePage = () => {
 	return (
 		<div>
 			<UserHeader />
 			<UserNavbar />
-			<Routes>
-				<Route path="/new-products" element={<ProductsPage />} />
-				<Route path="/best-selling" element={<BestSellingPage />} />
-				<Route path="/faqs" element={<FAQsPage />} />
-				<Route path="/" element={<HomeContentPage />} />
-			</Routes>
+
+			<div className="min-vh-100">
+				<Routes>
+					<Route path="/new-products" element={<ProductsPage />} />
+					<Route path="/best-selling" element={<BestSellingPage />} />
+					<Route path="/faqs" element={<FAQsPage />} />
+					<Route path="/" element={<HomeContentPage />} />
+				</Routes>
+			</div>
+			<Footer />
 		</div>
 	);
 };
