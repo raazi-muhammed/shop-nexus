@@ -45,12 +45,28 @@ router.post("/create-user", async (req, res, next) => {
 });
 
 router.post("/login-user", async (req, res) => {
-	console.log(req.body);
-	let data = await User.find({ email: req.body.email });
-	const isPasswordMatch = await User.comparePassword(req.body.password);
-	console.log(isPasswordMatch);
-	//	console.log(data);
-	//	console.log(data.password);
+	req.session.user = req.body;
+
+	let user = await User.findOne(
+		{ email: req.body.email },
+		{ password: 1, email: 1, fullName: 1 } // used projection because other password is not returend
+	);
+
+	console.log(req.body.password);
+	console.log(user);
+
+	let isPasswordMatch;
+	try {
+		isPasswordMatch = await user.comparePassword(req.body.password);
+		console.log(isPasswordMatch);
+	} catch (error) {
+		isPasswordMatch = false;
+		console.log(error);
+	}
+
+	res.status(200).json({
+		success: isPasswordMatch,
+	});
 });
 
 module.exports = router;

@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Icons from "../assets/Icons";
+
 const { heart, cart, profile } = Icons;
 const UserNavbar = () => {
+	const [userName, setUserName] = useState("Login");
+
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
 			<div>
@@ -32,7 +35,7 @@ const UserNavbar = () => {
 				<button className="btn btn-sm btn-secondary text-white">{cart}</button>
 				<Link to="/login">
 					<button className="btn btn-sm btn-secondary text-white">
-						{profile}
+						{profile} {userName}
 					</button>
 				</Link>
 			</section>

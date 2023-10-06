@@ -1,11 +1,12 @@
 import React from "react";
 import loginCover from "../../assets/login-cover.jpg";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import server from "../../server";
 
 const LoginPage = () => {
+	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const handleSubmit = (e) => {
@@ -15,15 +16,12 @@ const LoginPage = () => {
 			password: password,
 		};
 
-		axios
-			.post(`${server}/user/login-user`, newForm)
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		axios.post(`${server}/user/login-user`, newForm).then((res) => {
+			console.log(res.data);
+			if (res.data.success) navigate("/");
+		});
 	};
+
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-white rounded-4">
 			<section className="col-6 p-0 overflow-hidden ">
@@ -31,15 +29,15 @@ const LoginPage = () => {
 					src={loginCover}
 					className="rounded-start-4 m-0"
 					alt=""
-					srcset=""
+					srcSet=""
 				/>
 			</section>
 			<section className="col-6 p-5 my-auto">
 				<h3>Log In</h3>
-				<p classNmae="text-small">please enter you details to log in</p>
+				<p className="text-small">please enter you details to log in</p>
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className="mb-3">
-						<label for="email" className="form-label">
+						<label htmlFor="email" className="form-label">
 							Email
 						</label>
 						<input
@@ -53,7 +51,7 @@ const LoginPage = () => {
 						/>
 					</div>
 					<div className="mb-3">
-						<label for="password" className="form-label">
+						<label htmlFor="password" className="form-label">
 							Password
 						</label>
 						<input
@@ -74,7 +72,7 @@ const LoginPage = () => {
 									type="checkbox"
 									id="remember-me"
 								/>
-								<label className="form-check-label" for="remember-me">
+								<label className="form-check-label" htmlFor="remember-me">
 									Remember me
 								</label>
 							</div>

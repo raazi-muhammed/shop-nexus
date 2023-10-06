@@ -9,10 +9,11 @@ const bodyParser = require("body-parser");
 const userController = require("./controller/userController");
 const productController = require("./controller/productController");
 
+const sessions = require("express-session");
+
 const cors = require("cors");
 app.use(cors());
 const PORT = process.env.PORT;
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,6 +21,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Static file
 app.use("/", express.static("uploads"));
+
+/* Session */
+app.use(
+	sessions({
+		secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+		saveUninitialized: true,
+		resave: false,
+	})
+);
 
 // Router
 app.use("/api/v1/user", userController);
