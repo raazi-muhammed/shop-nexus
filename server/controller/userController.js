@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 
-//router.post("/create-user", upload.single("file"), async (req, res, next) => {
 router.post("/create-user", async (req, res, next) => {
 	try {
 		const { fullName, email, password, age, profilePic } = req.body;
@@ -23,7 +22,6 @@ router.post("/create-user", async (req, res, next) => {
 			password: password,
 			profilePic: profilePic,
 		};
-		//console.log(user);
 
 		const createActivationToken = (user) => {
 			return jwt.sign(user, process.env.ACTIVATION_SECRET, {
@@ -32,12 +30,8 @@ router.post("/create-user", async (req, res, next) => {
 		};
 		const activationToken = createActivationToken(user);
 		const activationUrl = `http://localhost:5173/api/v1/activation?activation_token=${activationToken}`;
-		//const newUser = await User.create(user);
+
 		console.log(activationUrl);
-		/* res.status(201).json({
-			success: true,
-			//newUser,
-		}); */
 		await sendMail({
 			email: user.email,
 			subject: "Activate you account",
@@ -101,17 +95,30 @@ router.post("/login-user", async (req, res) => {
 		console.log(error);
 	}
 
+	const gwtTok = user.getJwtToken();
+	console.log("gwtTok: " + gwtTok);
+
 	res.status(200).json({
 		success: isPasswordMatch,
 	});
 });
 
 router.get("/get-current-user", (req, res) => {
-	//console.log(res.session);
+	console.log("hi");
+	const authHeader = req.headers["authorization"];
+	const token = authHeader.split(" ")[1];
+	console.log(token);
+
+	if (token) {
+		console.log("token is not null");
+		jwt.verify(token, process.env.ACTIVATION_SECRET, (err, user) => {
+			console.log(user);
+		});
+	}
 	res.status(200).json({
 		success: true,
 		currentUserPage: true,
-		user: req.session.user,
+		user: token,
 	});
 });
 
