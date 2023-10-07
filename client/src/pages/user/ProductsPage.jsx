@@ -11,16 +11,17 @@ const ProductsPage = ({ type }) => {
 	useEffect(() => {
 		console.log("all product axios started to work");
 		axios.get(`${server}/products/all-products`).then((data) => {
-			console.log("data receved");
+			console.log("data received");
 			console.log(setProductData(data));
 		});
 	}, []);
 
 	return (
-		<div className={`d-flex   ${type}`}>
+		<div className={`d-flex ${type}`}>
 			{productData.data.map((product) => (
 				<ProductCartMain
 					key={product._id}
+					productId={product._id}
 					price={product.price}
 					rating={product.rating}
 					name={product.name}
@@ -35,7 +36,7 @@ const ProductsPage = ({ type }) => {
 };
 
 ProductsPage.defaultProps = {
-	type: "flex-wrap",
+	type: "flex-wrap min-vh-100",
 };
 
 export default ProductsPage;

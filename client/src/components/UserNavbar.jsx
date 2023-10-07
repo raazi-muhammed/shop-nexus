@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Icons from "../assets/Icons";
+import NavComponent from "./NavComponent";
 
 const { heart, cart, profile } = Icons;
 const UserNavbar = ({ user }) => {
+	const navItems = [
+		{ name: "Home", link: "/" },
+		{ name: "Best Selling", link: "/best-selling" },
+		{ name: "Products", link: "/new-products" },
+		{ name: "Events", link: "/" },
+		{ name: "FAQs", link: "/faq" },
+	];
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
 			<div>
@@ -11,23 +19,7 @@ const UserNavbar = ({ user }) => {
 					Catergories
 				</button>
 			</div>
-			<nav className="d-flex gap-3">
-				<Link to="/">
-					<button className="btn btn-sm btn-secondary text-white">Home</button>
-				</Link>
-				<Link to="/best-selling">
-					<button className="btn btn-sm text-secondary">Best Selling</button>
-				</Link>
-				<Link to="/new-products">
-					<button className="btn btn-sm text-secondary">Products</button>
-				</Link>
-				<Link>
-					<button className="btn btn-sm text-secondary">Events</button>
-				</Link>
-				<Link to="/faqs">
-					<button className="btn btn-sm text-secondary">FAQs</button>
-				</Link>
-			</nav>
+			<NavComponent navItems={navItems} />
 			<section className="d-flex gap-3">
 				<button className="btn btn-sm btn-secondary text-white">{heart}</button>
 				<button className="btn btn-sm btn-secondary text-white">{cart}</button>

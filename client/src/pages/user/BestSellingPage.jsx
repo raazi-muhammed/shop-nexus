@@ -16,10 +16,11 @@ const BestSellingPage = ({ type }) => {
 	}, []);
 
 	return (
-		<div className={`d-flex   ${type}`}>
+		<div className={`d-flex  ${type}`}>
 			{productData.data.map((product) => (
 				<ProductCartMain
 					key={product._id}
+					productId={product._id}
 					price={product.price}
 					rating={product.rating}
 					name={product.name}
@@ -34,7 +35,7 @@ const BestSellingPage = ({ type }) => {
 };
 
 BestSellingPage.defaultProps = {
-	type: "flex-wrap",
+	type: "flex-wrap min-vh-100",
 };
 
 export default BestSellingPage;

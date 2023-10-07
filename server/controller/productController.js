@@ -19,4 +19,15 @@ router.get("/best-selling", async (req, res) => {
 	return data;
 });
 
+router.get("/single-product/:id", async (req, res) => {
+	const productId = req.params.id;
+	console.log(productId);
+
+	let data = await Products.find({ _id: productId });
+	//console.log(data);
+	console.log(data);
+	res.status(200).json(data);
+	return data;
+});
+
 module.exports = router;
