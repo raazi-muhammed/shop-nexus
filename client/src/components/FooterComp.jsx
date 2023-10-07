@@ -46,13 +46,15 @@ const FooterComp = () => {
 				<p className="text-primary h3">Shop Nexus</p>
 				<p className="text-secondary">Shop Nexus © 2023</p>
 			</section>
-			{footerLinks.map((linkSection) => (
-				<section className="d-flex flex-column gap-1">
+			{footerLinks.map((linkSection, i) => (
+				<section key={i} className="d-flex flex-column gap-1">
 					<p className="text-small text-secondary fw-bold m-0">
 						{linkSection.heading}
 					</p>
-					{linkSection.links.map((links) => (
-						<Link className="text-small text-secondary ">{links.name}</Link>
+					{linkSection.links.map((links, i) => (
+						<Link key={i} className="text-small text-secondary ">
+							{links.name}
+						</Link>
 					))}
 				</section>
 			))}

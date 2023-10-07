@@ -6,7 +6,7 @@ const NavComponent = ({ navItems }) => {
 	return (
 		<nav className="d-flex gap-3 justify-content-center">
 			{navItems.map((e, i) => (
-				<Link to={e.link}>
+				<Link key={i} to={e.link}>
 					<button
 						onClick={(e) => setCurrentNav(i)}
 						className={

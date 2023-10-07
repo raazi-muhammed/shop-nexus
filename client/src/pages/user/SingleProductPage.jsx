@@ -30,17 +30,18 @@ const SingleProductPage = () => {
 						className="w-100 rounded-4"
 						src={productData?.image_Url[imgSelect]?.url}
 						alt=""
-						srcset=""
+						srcSet=""
 					/>
 					<section className="d-flex gap-3 justify-content-center mt-4">
 						{productData?.image_Url.map((e, i) => (
 							<img
+								key={i}
 								className="rounded-4"
 								style={{ width: "5rem", height: "5rem", objectFit: "cover" }}
 								src={productData?.image_Url[i]?.url}
 								alt=""
 								onClick={(e) => setImgSelect(i)}
-								srcset=""
+								srcSet=""
 							/>
 						))}
 					</section>

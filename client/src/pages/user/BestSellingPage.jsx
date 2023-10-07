@@ -8,10 +8,8 @@ const BestSellingPage = ({ type }) => {
 	//http://localhost:3000/api/v1/products/all-products
 
 	useEffect(() => {
-		console.log("all product axios started to work");
 		axios.get(`${server}/products/best-selling`).then((data) => {
-			console.log("data receved");
-			console.log(setProductData(data));
+			setProductData(data);
 		});
 	}, []);
 
