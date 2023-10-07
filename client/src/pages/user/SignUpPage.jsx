@@ -28,7 +28,7 @@ const SignUpPage = () => {
 			.post(`${server}/user/create-user`, newForm)
 			.then((res) => {
 				console.log(res);
-				navigate("/");
+				//navigate("/");
 			})
 			.catch((err) => {
 				console.log(err);

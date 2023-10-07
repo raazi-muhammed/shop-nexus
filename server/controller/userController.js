@@ -1,22 +1,20 @@
 const express = require("express");
-const path = require("path");
 const router = express.Router();
-const upload = require("../multer");
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../utils/sendMail");
+const sendToken = require("../utils/jwtToken");
 
 //router.post("/create-user", upload.single("file"), async (req, res, next) => {
 router.post("/create-user", async (req, res, next) => {
 	try {
 		const { fullName, email, password, age, profilePic } = req.body;
-		//console.log(req.body);
+
 		const userEmail = await User.findOne({ email });
 
 		if (userEmail) {
 			return next(new ErrorHandler("User already exists", 400));
 		}
-		//const filename = req.file.filename;
-		//const fileUrl = path.join(filename);
 
 		const user = {
 			fullName: fullName,
@@ -33,19 +31,58 @@ router.post("/create-user", async (req, res, next) => {
 			});
 		};
 		const activationToken = createActivationToken(user);
-		const activationUrl = `http://localhost:3000/activation/${activationToken}`;
-		const newUser = await User.create(user);
+		const activationUrl = `http://localhost:5173/api/v1/activation?activation_token=${activationToken}`;
+		//const newUser = await User.create(user);
+		console.log(activationUrl);
+		/* res.status(201).json({
+			success: true,
+			//newUser,
+		}); */
+		await sendMail({
+			email: user.email,
+			subject: "Activate you account",
+			message: `Click to activate ${activationUrl}`,
+		});
 		res.status(201).json({
 			success: true,
-			newUser,
+			message: `please check your email`,
 		});
 	} catch (err) {
 		console.log(err);
 	}
 });
 
+router.post("/activation", async (req, res) => {
+	try {
+		const { activation_token } = req.body;
+		console.log(activation_token);
+		const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
+		if (!newUser) return next("Invalid Token");
+
+		const { fullName, email, password, age, profilePic } = newUser;
+
+		const dataUser = await User.create({
+			fullName: fullName,
+			email: email,
+			age: age,
+			password: password,
+			profilePic: profilePic,
+		});
+
+		res.status(201).json({
+			success: 200,
+		});
+		sendToken(dataUser, 201, res);
+	} catch (error) {
+		console.log(error);
+	}
+});
+
 router.post("/login-user", async (req, res) => {
-	req.session.user = req.body;
+	req.session.user = {
+		username: "raazi",
+		age: 18,
+	};
 
 	let user = await User.findOne(
 		{ email: req.body.email },
@@ -66,6 +103,15 @@ router.post("/login-user", async (req, res) => {
 
 	res.status(200).json({
 		success: isPasswordMatch,
+	});
+});
+
+router.get("/get-current-user", (req, res) => {
+	//console.log(res.session);
+	res.status(200).json({
+		success: true,
+		currentUserPage: true,
+		user: req.session.user,
 	});
 });
 

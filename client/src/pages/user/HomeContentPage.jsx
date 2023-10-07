@@ -3,6 +3,7 @@ import BestSellingPage from "./BestSellingPage";
 import ProductsPage from "./ProductsPage";
 
 const HomeContentPage = () => {
+	
 	return (
 		<main className="vw-100">
 			<h2 className="text-secondary">Best Selling</h2>
