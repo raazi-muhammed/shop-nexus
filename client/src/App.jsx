@@ -6,6 +6,7 @@ import "./styles/App.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 import HomePage from "./pages/User/HomePage";
+import SellerLoginPage from "./pages/seller/SellerLoginPage";
 
 function App() {
 	return (
@@ -13,6 +14,8 @@ function App() {
 			<Route path="/login" element={<LoginPage />} />
 			<Route path="/sign-up" element={<SignUpPage />} />
 			<Route path="/api/v1/activation" element={<ActivationPage />} />
+
+			<Route path="/seller/login" element={<SellerLoginPage />} />
 			<Route path="*" element={<HomePage />} />
 		</Routes>
 	);

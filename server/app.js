@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 //const fileUpload = require("express-fileupload");
 const userController = require("./controller/userController");
 const productController = require("./controller/productController");
+const sellerController = require("./controller/sellerController");
 
 const sessions = require("express-session");
 
@@ -33,6 +34,7 @@ app.use(
 // Router
 app.use("/api/v1/user/", userController);
 app.use("/api/v1/products/", productController);
+app.use("/api/v1/seller/", sellerController);
 
 app.get("*", (req, res) => {
 	console.log("no matching url");
