@@ -10,7 +10,7 @@ const UserNavbar = ({ user }) => {
 		{ name: "Best Selling", link: "/best-selling" },
 		{ name: "Products", link: "/new-products" },
 		{ name: "Events", link: "/" },
-		{ name: "FAQs", link: "/faq" },
+		{ name: "FAQs", link: "/faqs" },
 	];
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">

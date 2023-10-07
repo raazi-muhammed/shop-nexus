@@ -4,13 +4,18 @@ import server from "../../server";
 import { useParams, useSearchParams } from "react-router-dom";
 import RatingStar from "../../components/RatingStar";
 import Icons from "../../assets/Icons";
+import NavComponent from "../../components/NavComponent";
 const { heart, cart } = Icons;
 
 const SingleProductPage = () => {
 	const [imgSelect, setImgSelect] = useState(0);
 	const [productData, setProductData] = useState({ image_Url: [] });
 	const { id } = useParams();
-
+	const navItems = [
+		{ name: "Details", link: "#" },
+		{ name: "Reviews", link: "#" },
+		{ name: "About Seller", link: "#" },
+	];
 	useEffect(() => {
 		axios
 			.get(`${server}/products/single-product/${id}`)
@@ -42,7 +47,7 @@ const SingleProductPage = () => {
 				</section>
 				<section className="col-6 px-4">
 					<h3>{productData.name}</h3>
-					<p className="text-small">{productData.description}</p>
+					<p className="text-secondary fw-bold mb-2">{productData.category}</p>
 					<div className="d-flex align-items-center  gap-2 mb-3">
 						<RatingStar rating={productData.rating} />
 						<p className="text-small mt-2 m-0">{`${productData.total_sell} Sold`}</p>
@@ -79,8 +84,15 @@ const SingleProductPage = () => {
 								<p>{`${productData.shop?.ratings} Ratings`}</p>
 							</div>
 						</section>
-						<p>{JSON.stringify(productData)}</p>
 					</section>
+				</section>
+			</section>
+			{/* ------------------------------------------------------------------  */}
+			<section className="bg-white p-4">
+				<NavComponent className="justify-content-center " navItems={navItems} />
+				<section className="p-4">
+					<p className="h4">{productData.name}</p>
+					<p className="text-small">{productData.description}</p>
 				</section>
 			</section>
 		</main>
