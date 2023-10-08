@@ -4,6 +4,7 @@ const Shop = require("../model/Shop");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
+const Products = require("../model/Products");
 
 router.post("/crate-shop", async (req, res) => {
 	try {
@@ -149,11 +150,26 @@ router.post("/login-shop", async (req, res) => {
 });
 
 router.get("/get-shop-details/:id", async (req, res) => {
-	console.log(req.params.id);
 	const shopId = req.params.id;
 
 	const shopDetails = await Shop.findOne({ _id: shopId });
-	res.status(200).json({ data: shopDetails });
+	res.status(200).json({
+		success: true,
+		data: shopDetails,
+	});
+});
+
+router.get("/get-products-from-shop/:shopId", async (req, res) => {
+	console.log(req.params.shopId);
+	const ShopDetails = await Shop.find({ _id: req.params.shopId });
+
+	const shopName = ShopDetails[0].shopName;
+
+	const shopDetails = await Products.find({ "shop.name": shopName });
+	res.status(200).json({
+		success: true,
+		data: shopDetails,
+	});
 });
 
 module.exports = router;

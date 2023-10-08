@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Icons from "../assets/Icons";
+const { heart, cart, profile } = Icons;
+
 import NavComponent from "./NavComponent";
 import axios from "axios";
 import server from "../server";
 import toast from "react-hot-toast";
 
-const { heart, cart, profile } = Icons;
 const UserNavbar = () => {
 	const navItems = [
 		{ name: "Home", link: "/" },

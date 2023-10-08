@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
-const SellerNavbar = () => {
-	const [displayShopName, setDisplayShopName] = useState("Loading");
+const SellerNavbar = ({ shopName }) => {
 	let { shopId } = useParams();
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
@@ -17,7 +16,7 @@ const SellerNavbar = () => {
 					{shopId}
 				</button>
 				<button className="btn btn-sm btn-secondary text-white">
-					{displayShopName}
+					{shopName}
 				</button>
 				{/* <Link to="/login"> */}
 			</section>
