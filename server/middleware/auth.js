@@ -6,7 +6,7 @@ const User = require("../model/User");
 exports.isAuthenticated = catchAsyncError(async (req, res, next) => {
 	let token;
 	try {
-		token = req.cookies["token"];
+		token = req.cookies["userToken"];
 	} catch (err) {
 		res.status(500).json({ success: false, message: "No token found" });
 		return next(new ErrorHandler("No token Found"));

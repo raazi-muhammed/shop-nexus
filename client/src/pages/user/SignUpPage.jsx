@@ -3,17 +3,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import server from "../../server";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
 	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
 	const [age, setAge] = useState("");
 	const [password, setPassword] = useState("");
-	const [profilePhoto, setProfilePhoto] = useState(null);
-	const navigate = useNavigate();
-	const handleFileInputChange = (e) => {
-		setProfilePhoto(e.target.files[0]);
-	};
+	const [confirmPassword, setConfirmPassword] = useState("");
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -21,23 +18,21 @@ const SignUpPage = () => {
 			fullName: fullName,
 			email: email,
 			age: age,
-			password: password,
-			profilePhoto: profilePhoto,
+			password,
+			confirmPassword,
 		};
 		axios
 			.post(`${server}/user/create-user`, newForm)
 			.then((res) => {
 				console.log(res);
-				//navigate("/");
+				toast.success(res.data.message);
 			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.catch((err) => toast.error(err.response.data.message));
 	};
 
 	return (
-		<main className="my-auto mx-auto row container-max-width bg-white rounded-4">
-			<section className="col-12 p-5 my-auto">
+		<main className="row vw-100 ">
+			<section className="col-12 my-auto mx-auto p-5 bg-white rounded-4 container-max-width-form">
 				<h3>Create an account</h3>
 				<p className="text-small">
 					please enter you details to create an account
@@ -98,30 +93,30 @@ const SignUpPage = () => {
 							required
 						/>
 					</div>
-					{/* <div className="mb-3">
-						{profilePhoto ? (
-							<img src={URL.createObjectURL(profilePhoto)} alt="" srcSet="" />
-						) : (
-							<img src={loginCover} alt="" srcSet="" className="w-25" />
-						)}
-						<label htmlFor="profile-picture" className="form-label">
-							Profile Photo
+					<div className="mb-3">
+						<label htmlFor="confirm-password" className="form-label">
+							Confirm Password
 						</label>
 						<input
-							type="file"
+							type="password"
 							className="form-control"
-							id="profile-picture"
-							name="profilePicture"
-							onChange={(e) => handleFileInputChange(e)}
+							id="confirm-password"
+							name="confirmPassword"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							required
 						/>
-					</div> */}
-
+					</div>
 					<button type="submit" className="btn btn-primary btn-block col-12 ">
 						Log In
 					</button>
 				</form>
-				<p>
-					Alread Have an Account? <Link to="/login"> Log In</Link>
+				<p className="text-center mt-2">
+					Alread Have an Account?{" "}
+					<Link className="text-secondary fw-bold" to="/login">
+						{" "}
+						Log In
+					</Link>
 				</p>
 			</section>
 		</main>

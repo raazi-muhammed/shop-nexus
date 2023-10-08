@@ -20,10 +20,17 @@ const SellerActivationPage = () => {
 				})
 				.then(() => {
 					setMessage("Account Verified Successfully");
+				})
+				.catch((err) => {
+					setMessage(err.response.data.message || "Verification Failed");
 				});
 		}
 	}, []);
-	return <div>{message}</div>;
+	return (
+		<div className="vw-100 vh-100 d-flex justify-content-center align-items-center">
+			{message}
+		</div>
+	);
 };
 
 export default SellerActivationPage;

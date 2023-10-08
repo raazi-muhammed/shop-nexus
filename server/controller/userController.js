@@ -9,12 +9,23 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 
 router.post("/create-user", async (req, res, next) => {
 	try {
-		const { fullName, email, password, age, profilePic } = req.body;
+		const { fullName, email, password, confirmPassword, age } = req.body;
+
+		if (confirmPassword !== password) {
+			res.status(400).json({
+				success: false,
+				message: "Password doesn't match",
+			});
+			return;
+		}
 
 		const userEmail = await User.findOne({ email });
-
 		if (userEmail) {
-			console.log("user laready exists");
+			res.status(400).json({
+				success: false,
+				message: "User Already Exists",
+			});
+			return;
 		}
 
 		const user = {
@@ -22,7 +33,6 @@ router.post("/create-user", async (req, res, next) => {
 			email: email,
 			age: age,
 			password: password,
-			profilePic: profilePic,
 		};
 
 		const createActivationToken = (user) => {
@@ -33,18 +43,25 @@ router.post("/create-user", async (req, res, next) => {
 		const activationToken = createActivationToken(user);
 		const activationUrl = `http://localhost:5173/api/v1/activation?activation_token=${activationToken}`;
 
-		console.log(activationUrl);
 		await sendMail({
 			email: user.email,
 			subject: "Activate you account",
 			message: `Click to activate ${activationUrl}`,
 		});
+
+		/* Can be removed, added so that don't have to check mail while testing */
+		console.log(activationUrl);
+
 		res.status(201).json({
 			success: true,
-			message: `please check your email`,
+			message: `Please check your email`,
 		});
 	} catch (err) {
 		console.log(err);
+		res.status(400).json({
+			success: false,
+			message: "Internal Server Error",
+		});
 	}
 });
 
@@ -97,7 +114,7 @@ router.post("/login-user", async (req, res) => {
 			});
 			return;
 		}
-		sendToken(user, 201, res);
+		sendToken(user, 201, res, "userToken");
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({
@@ -127,23 +144,5 @@ router.get(
 		}
 	})
 );
-
-router.get("/get-current-user", (req, res) => {
-	const authHeader = req.headers["authorization"];
-	const token = authHeader.split(" ")[1];
-	console.log(token);
-
-	if (token) {
-		console.log("token is not null");
-		jwt.verify(token, process.env.ACTIVATION_SECRET, (err, user) => {
-			console.log(user);
-		});
-	}
-	res.status(200).json({
-		success: true,
-		currentUserPage: true,
-		user: token,
-	});
-});
 
 module.exports = router;

@@ -3,6 +3,7 @@ import loginCover from "../../assets/login-cover.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import server from "../../server";
+import toast from "react-hot-toast";
 
 const SellerLoginPage = () => {
 	const [email, setEmail] = useState("");
@@ -22,7 +23,8 @@ const SellerLoginPage = () => {
 				console.log(res.data);
 				if (res.data.success)
 					navigate(`/seller/dashboard/${res.data.user._id}`);
-			});
+			})
+			.catch((err) => toast.error(err.response.data.message));
 	};
 
 	return (

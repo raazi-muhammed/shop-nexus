@@ -23,9 +23,7 @@ const LoginPage = () => {
 				console.log(res.data);
 				if (res.data.success) navigate("/");
 			})
-			.catch((err) => {
-				toast.error(err.response.data.message);
-			});
+			.catch((err) => toast.error(err.response.data.message));
 	};
 
 	return (

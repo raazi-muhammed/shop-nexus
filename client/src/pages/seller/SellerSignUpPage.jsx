@@ -2,12 +2,14 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import server from "../../server";
+import toast from "react-hot-toast";
 
 const SellerSignUpPage = () => {
 	const [shopName, setShopName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [address1, setAddress1] = useState("");
 	const [address2, setAddress2] = useState("");
 	const [zipCode, setZipCode] = useState("");
@@ -22,21 +24,20 @@ const SellerSignUpPage = () => {
 			address2,
 			zipCode,
 			password,
+			confirmPassword,
 		};
 		axios
 			.post(`${server}/seller/crate-shop`, newForm)
 			.then((res) => {
 				console.log(res);
-				//navigate("/");
+				toast.success(res.data.message);
 			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.catch((err) => toast.error(err.response.data.message));
 	};
 
 	return (
-		<main className="my-auto mx-auto row container-max-width bg-primary text-white rounded-4">
-			<section className="col-12 p-5 my-auto">
+		<main className="row vw-100 ">
+			<section className="col-12 my-auto mx-auto p-5 bg-primary text-white rounded-4 container-max-width-form">
 				<h3>Create an account</h3>
 				<p className="text-small">
 					please enter you details to create an account
@@ -139,17 +140,30 @@ const SellerSignUpPage = () => {
 							required
 						/>
 					</div>
+					<div className="mb-3">
+						<label htmlFor="confirm-password" className="form-label">
+							Confirm Password
+						</label>
+						<input
+							type="password"
+							className="form-control"
+							id="confirm-password"
+							name="confirmPassword"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							required
+						/>
+					</div>
 
 					<button
 						type="submit"
-						className="btn btn-secondary text-white btn-block col-12 ">
+						className="btn btn-secondary text-white btn-block col-12">
 						Log In
 					</button>
 				</form>
 				<p className="text-center mt-3">
 					Alread Have an Account?{" "}
-					<Link className="text-secondary " to="/seller/login">
-						{" "}
+					<Link className="text-secondary fw-bold" to="/seller/login">
 						Log In
 					</Link>
 				</p>
