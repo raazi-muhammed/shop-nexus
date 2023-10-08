@@ -20,7 +20,8 @@ const SellerLoginPage = () => {
 			.post(`${server}/seller/login-shop`, newForm, { withCredentials: true })
 			.then((res) => {
 				console.log(res.data);
-				if (res.data.success) navigate("/seller/dashboard?");
+				if (res.data.success)
+					navigate(`/seller/dashboard/${res.data.user._id}`);
 			});
 	};
 

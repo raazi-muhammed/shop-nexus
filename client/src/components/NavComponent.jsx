@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 const NavComponent = ({ navItems }) => {
 	const [currentNav, setCurrentNav] = useState(0);
+
 	return (
 		<nav className="d-flex gap-3 justify-content-center">
 			{navItems.map((e, i) => (

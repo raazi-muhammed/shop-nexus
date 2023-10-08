@@ -12,6 +12,7 @@ import SellerSignUpPage from "./pages/seller/SellerSignUpPage";
 import { useEffect } from "react";
 import axios from "axios";
 import server from "./server";
+import SellerDashboardPage from "./pages/seller/SellerDashboardPage";
 
 function App() {
 	/* useEffect(() => {
@@ -36,6 +37,10 @@ function App() {
 			/>
 			<Route path="/seller/login" element={<SellerLoginPage />} />
 			<Route path="/seller/sign-up" element={<SellerSignUpPage />} />
+			<Route
+				path="/seller/dashboard/:shopId"
+				element={<SellerDashboardPage />}
+			/>
 			<Route path="*" element={<HomePage />} />
 		</Routes>
 	);

@@ -116,4 +116,12 @@ router.post("/login-shop", async (req, res) => {
 	}
 });
 
+router.get("/get-shop-details/:id", async (req, res) => {
+	console.log(req.params.id);
+	const shopId = req.params.id;
+
+	const shopDetails = await Shop.findOne({ _id: shopId });
+	res.status(200).json({ data: shopDetails });
+});
+
 module.exports = router;
