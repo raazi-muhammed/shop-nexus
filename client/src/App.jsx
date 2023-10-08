@@ -5,6 +5,7 @@ import ActivationPage from "./pages/user/ActivationPage";
 import SellerActivationPage from "./pages/seller/SellerActivationPage";
 import "./styles/App.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import toast, { Toaster } from "react-hot-toast";
 
 import HomePage from "./pages/User/HomePage";
 import SellerLoginPage from "./pages/seller/SellerLoginPage";
@@ -26,23 +27,27 @@ function App() {
 				console.log(err);
 			});
 	}, []); */
+
 	return (
-		<Routes>
-			<Route path="/login" element={<LoginPage />} />
-			<Route path="/sign-up" element={<SignUpPage />} />
-			<Route path="/api/v1/activation" element={<ActivationPage />} />
-			<Route
-				path="/api/v1/seller/activation"
-				element={<SellerActivationPage />}
-			/>
-			<Route path="/seller/login" element={<SellerLoginPage />} />
-			<Route path="/seller/sign-up" element={<SellerSignUpPage />} />
-			<Route
-				path="/seller/dashboard/:shopId"
-				element={<SellerDashboardPage />}
-			/>
-			<Route path="*" element={<HomePage />} />
-		</Routes>
+		<>
+			<Routes>
+				<Route path="/login" element={<LoginPage />} />
+				<Route path="/sign-up" element={<SignUpPage />} />
+				<Route path="/api/v1/activation" element={<ActivationPage />} />
+				<Route
+					path="/api/v1/seller/activation"
+					element={<SellerActivationPage />}
+				/>
+				<Route path="/seller/login" element={<SellerLoginPage />} />
+				<Route path="/seller/sign-up" element={<SellerSignUpPage />} />
+				<Route
+					path="/seller/dashboard/:shopId"
+					element={<SellerDashboardPage />}
+				/>
+				<Route path="*" element={<HomePage />} />
+			</Routes>
+			<Toaster position="top-right" reverseOrder={true} />
+		</>
 	);
 }
 

@@ -4,18 +4,18 @@ import axios from "axios";
 import ProductCartMain from "../../components/ProductCartMain";
 
 const BestSellingPage = ({ type }) => {
-	const [productData, setProductData] = useState({ data: [] });
+	const [productData, setProductData] = useState([]);
 	//http://localhost:3000/api/v1/products/all-products
 
 	useEffect(() => {
-		axios.get(`${server}/products/best-selling`).then((data) => {
-			setProductData(data);
+		axios.get(`${server}/products/best-selling`).then((res) => {
+			setProductData(res.data.products);
 		});
 	}, []);
 
 	return (
 		<div className={`d-flex  ${type}`}>
-			{productData.data.map((product) => (
+			{productData.map((product) => (
 				<ProductCartMain
 					key={product._id}
 					productId={product._id}

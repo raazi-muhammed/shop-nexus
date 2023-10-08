@@ -4,14 +4,24 @@ const jwt = require("jsonwebtoken");
 const User = require("../model/User");
 
 exports.isAuthenticated = catchAsyncError(async (req, res, next) => {
-	const token = req.cookies["token"];
-	console.log(token);
+	let token;
+	try {
+		token = req.cookies["token"];
+	} catch (err) {
+		res.status(500).json({ success: false, message: "No token found" });
+		return next(new ErrorHandler("No token Found"));
+	}
 
 	if (!token) {
-		return next(new ErrorHandler("Please login to couintes"));
+		res.status(500).json({ success: false, message: "No value of Token" });
+		return next(new ErrorHandler("No value of Token"));
 	}
 
 	const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-	req.user = await User.findById(decoded.id);
+
+	const userFound = await User.findById(decoded.id);
+	if (!userFound)
+		res.status(500).json({ success: false, message: "No User found" });
+	req.user = userFound;
 	next();
 });

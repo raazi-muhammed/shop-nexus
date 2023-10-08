@@ -4,6 +4,7 @@ import Icons from "../assets/Icons";
 import NavComponent from "./NavComponent";
 import axios from "axios";
 import server from "../server";
+import toast from "react-hot-toast";
 
 const { heart, cart, profile } = Icons;
 const UserNavbar = () => {
@@ -17,15 +18,14 @@ const UserNavbar = () => {
 	const [userData, setUserData] = useState("Log In");
 
 	useEffect(() => {
-		console.log("hi");
 		axios
 			.get(`${server}/user/load-user`, { withCredentials: true })
 			.then((res) => {
-				console.log(res);
+				toast.success("Logged In");
 				setUserData(res.data.user);
 			})
 			.catch((err) => {
-				console.log(err);
+				console.log(err.response.data.message);
 			});
 	}, []);
 

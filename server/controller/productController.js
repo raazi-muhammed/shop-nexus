@@ -4,30 +4,50 @@ const router = express.Router();
 const Products = require("../model/Products");
 
 router.get("/all-products", async (req, res) => {
-	console.log("all products");
-	let data = await Products.find({});
-	//console.log(data);
-	res.status(200).json(data);
-	return data;
+	try {
+		let products = await Products.find({});
+		res.status(200).json({
+			success: true,
+			products,
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
 });
 
 router.get("/best-selling", async (req, res) => {
-	console.log("best selling");
-	let data = await Products.find({}).sort({ total_sell: -1 });
-	//console.log(data);
-	res.status(200).json(data);
-	return data;
+	try {
+		let products = await Products.find({}).sort({ total_sell: -1 });
+		res.status(200).json({
+			success: true,
+			products,
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
 });
 
 router.get("/single-product/:id", async (req, res) => {
-	const productId = req.params.id;
-	console.log(productId);
+	try {
+		const productId = req.params.id;
 
-	let data = await Products.find({ _id: productId });
-	//console.log(data);
-	console.log(data);
-	res.status(200).json(data);
-	return data;
+		let productDetails = await Products.find({ _id: productId });
+		res.status(200).json({
+			success: true,
+			productDetails,
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
 });
 
 module.exports = router;

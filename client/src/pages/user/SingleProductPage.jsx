@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import RatingStar from "../../components/RatingStar";
 import Icons from "../../assets/Icons";
 import NavComponent from "../../components/NavComponent";
+import toast from "react-hot-toast";
 const { heart, cart } = Icons;
 
 const SingleProductPage = () => {
@@ -19,7 +20,10 @@ const SingleProductPage = () => {
 	useEffect(() => {
 		axios
 			.get(`${server}/products/single-product/${id}`)
-			.then((product) => setProductData(product.data[0]));
+			.then((res) => {
+				setProductData(res.data.productDetails[0]);
+			})
+			.catch((err) => toast.error("Loading failed" + err));
 	}, []);
 
 	return (

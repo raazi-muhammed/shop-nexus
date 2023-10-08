@@ -75,33 +75,34 @@ router.post("/activation", async (req, res) => {
 });
 
 router.post("/login-user", async (req, res) => {
-	let user = await User.findOne(
-		{ email: req.body.email },
-		{ password: 1, email: 1, fullName: 1 } // used projection because other password is not returend
-	);
-
-	console.log(req.body.password);
-	console.log(user);
-
-	let isPasswordMatch;
 	try {
+		let user = await User.findOne(
+			{ email: req.body.email },
+			{ password: 1, email: 1, fullName: 1 } // used projection because otherwise password is not returned
+		);
+
+		if (!user) {
+			res.status(404).json({
+				success: false,
+				message: "User not Found",
+			});
+			return;
+		}
+
 		isPasswordMatch = await user.comparePassword(req.body.password);
-		console.log(isPasswordMatch);
-
-		const gwtTok = user.getJwtToken();
-		console.log("gwtTok: " + gwtTok);
+		if (!isPasswordMatch) {
+			res.status(401).json({
+				success: false,
+				message: "Password Incorrect",
+			});
+			return;
+		}
 		sendToken(user, 201, res);
-
-		/* res.status(200).json({
-			success: true,
-			fullName: user.fullName,
-			token: gwtTok,
-		}); */
 	} catch (error) {
-		isPasswordMatch = false;
 		console.log(error);
 		res.status(500).json({
 			success: false,
+			message: "Internal Serer Error",
 		});
 	}
 });
@@ -111,7 +112,6 @@ router.get(
 	"/load-user",
 	isAuthenticated,
 	catchAsyncError(async (req, res, next) => {
-		console.log("Cookies: " + req.cookies);
 		try {
 			const user = await User.findById(req.user.id);
 
@@ -120,8 +120,10 @@ router.get(
 				user,
 			});
 		} catch (error) {
-			console.log(error);
-			res.status(500).json({ success: false });
+			//console.log(error);
+			res
+				.status(500)
+				.json({ success: false, message: "Error in Loading User" });
 		}
 	})
 );
