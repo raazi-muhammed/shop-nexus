@@ -18,7 +18,7 @@ const UserHeader = () => {
 					placeholder="Search"
 				/>
 			</div>
-			<Link to={"/seller/login"}>
+			<Link to={"/seller/sign-up"}>
 				<button className="btn btn-secondary text-white">
 					Become A seller
 				</button>

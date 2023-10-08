@@ -1,23 +1,35 @@
 const express = require("express");
 const connectDatabase = require("./db/database");
 const app = express();
-//require("dotenv").config();
 require("dotenv").config({ path: "./config/.env" });
 
+const sessions = require("express-session");
 const bodyParser = require("body-parser");
-//const fileUpload = require("express-fileupload");
+
+var cookies = require("cookie-parser");
+app.use(cookies());
+
+/* Controllers */
 const userController = require("./controller/userController");
 const productController = require("./controller/productController");
 const sellerController = require("./controller/sellerController");
 
-const sessions = require("express-session");
+const ErrorHandler = require("./utils/errorHandler");
 
+/* Cors */
 const cors = require("cors");
-app.use(cors());
+app.use(
+	cors({
+		origin: "http://localhost:5173",
+		credentials: true, //access-control-allow-credentials:true
+		optionSuccessStatus: 200,
+	})
+);
+
 const PORT = process.env.PORT;
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(fileUpload({ useTempFiles: true }));
 
 // Static file
 app.use("/", express.static("uploads"));
@@ -39,6 +51,9 @@ app.use("/api/v1/seller/", sellerController);
 app.get("*", (req, res) => {
 	console.log("no matching url");
 });
+
+/* Error handler */
+app.use(ErrorHandler);
 
 app.listen(PORT, () => {
 	console.log(`Server is running on ${PORT}`);

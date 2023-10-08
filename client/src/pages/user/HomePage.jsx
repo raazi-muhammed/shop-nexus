@@ -10,11 +10,10 @@ import SingleProductPage from "./SingleProductPage";
 import FooterComp from "../../components/FooterComp";
 
 const HomePage = () => {
-	const [user, setUser] = useState({ id: "test", name: "Guest" });
 	return (
 		<div>
 			<UserHeader />
-			<UserNavbar user={user} />
+			<UserNavbar />
 			<Routes>
 				<Route path="/new-products" element={<ProductsPage />} />
 				<Route path="/best-selling" element={<BestSellingPage />} />

@@ -16,10 +16,12 @@ const LoginPage = () => {
 			password: password,
 		};
 
-		axios.post(`${server}/user/login-user`, newForm).then((res) => {
-			console.log(res.data);
-			if (res.data.success) navigate("/");
-		});
+		axios
+			.post(`${server}/user/login-user`, newForm, { withCredentials: true })
+			.then((res) => {
+				console.log(res.data);
+				if (res.data.success) navigate("/");
+			});
 	};
 
 	return (

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Icons from "../assets/Icons";
 import NavComponent from "./NavComponent";
+import axios from "axios";
+import server from "../server";
 
 const { heart, cart, profile } = Icons;
-const UserNavbar = ({ user }) => {
+const UserNavbar = () => {
 	const navItems = [
 		{ name: "Home", link: "/" },
 		{ name: "Best Selling", link: "/best-selling" },
@@ -12,6 +14,21 @@ const UserNavbar = ({ user }) => {
 		{ name: "Events", link: "/" },
 		{ name: "FAQs", link: "/faqs" },
 	];
+	const [userData, setUserData] = useState("Log In");
+
+	useEffect(() => {
+		console.log("hi");
+		axios
+			.get(`${server}/user/load-user`, { withCredentials: true })
+			.then((res) => {
+				console.log(res);
+				setUserData(res.data.user);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
+
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
 			<div>
@@ -23,9 +40,10 @@ const UserNavbar = ({ user }) => {
 			<section className="d-flex gap-3">
 				<button className="btn btn-sm btn-secondary text-white">{heart}</button>
 				<button className="btn btn-sm btn-secondary text-white">{cart}</button>
-				<Link to="/login">
+				{/* <Link to="/login"> */}
+				<Link to={userData._id ? `/user/profile/${userData._id} ` : `/login`}>
 					<button className="btn btn-sm btn-secondary text-white">
-						{profile} {user.name}
+						{profile} {userData?.fullName ? `${userData.fullName} ` : `Log In`}
 					</button>
 				</Link>
 			</section>

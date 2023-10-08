@@ -1,10 +1,28 @@
 import React, { useState } from "react";
 import loginCover from "../../assets/login-cover.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import server from "../../server";
 
 const SellerLoginPage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const navigate = useNavigate();
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const newForm = {
+			email: email,
+			password: password,
+		};
+
+		axios
+			.post(`${server}/seller/login-shop`, newForm, { withCredentials: true })
+			.then((res) => {
+				console.log(res.data);
+				if (res.data.success) navigate("/seller/dashboard?");
+			});
+	};
 
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-primary text-white rounded-4">
@@ -19,7 +37,7 @@ const SellerLoginPage = () => {
 			<section className="col-6 p-5 my-auto">
 				<h3> Seller Log In </h3>
 				<p className="text-small">please enter you details to log in</p>
-				<form>
+				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className="mb-3">
 						<label htmlFor="email" className="form-label">
 							Email
@@ -73,7 +91,7 @@ const SellerLoginPage = () => {
 				</form>
 				<p className="text-center mt-3">
 					Don’t Have an Account{" "}
-					<Link className="text-secondary" to="/sign-up">
+					<Link className="text-secondary" to="/seller/sign-up">
 						{" "}
 						Sign Up
 					</Link>

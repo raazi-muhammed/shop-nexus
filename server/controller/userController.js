@@ -4,6 +4,8 @@ const User = require("../model/User");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
+const { isAuthenticated } = require("../middleware/auth");
+const catchAsyncError = require("../middleware/catchAsyncError");
 
 router.post("/create-user", async (req, res, next) => {
 	try {
@@ -12,7 +14,7 @@ router.post("/create-user", async (req, res, next) => {
 		const userEmail = await User.findOne({ email });
 
 		if (userEmail) {
-			return next(new ErrorHandler("User already exists", 400));
+			console.log("user laready exists");
 		}
 
 		const user = {
@@ -73,11 +75,6 @@ router.post("/activation", async (req, res) => {
 });
 
 router.post("/login-user", async (req, res) => {
-	req.session.user = {
-		username: "raazi",
-		age: 18,
-	};
-
 	let user = await User.findOne(
 		{ email: req.body.email },
 		{ password: 1, email: 1, fullName: 1 } // used projection because other password is not returend
@@ -90,21 +87,46 @@ router.post("/login-user", async (req, res) => {
 	try {
 		isPasswordMatch = await user.comparePassword(req.body.password);
 		console.log(isPasswordMatch);
+
+		const gwtTok = user.getJwtToken();
+		console.log("gwtTok: " + gwtTok);
+		sendToken(user, 201, res);
+
+		/* res.status(200).json({
+			success: true,
+			fullName: user.fullName,
+			token: gwtTok,
+		}); */
 	} catch (error) {
 		isPasswordMatch = false;
 		console.log(error);
+		res.status(500).json({
+			success: false,
+		});
 	}
-
-	const gwtTok = user.getJwtToken();
-	console.log("gwtTok: " + gwtTok);
-
-	res.status(200).json({
-		success: isPasswordMatch,
-	});
 });
 
+//Load user
+router.get(
+	"/load-user",
+	isAuthenticated,
+	catchAsyncError(async (req, res, next) => {
+		console.log("Cookies: " + req.cookies);
+		try {
+			const user = await User.findById(req.user.id);
+
+			res.status(200).json({
+				success: true,
+				user,
+			});
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ success: false });
+		}
+	})
+);
+
 router.get("/get-current-user", (req, res) => {
-	console.log("hi");
 	const authHeader = req.headers["authorization"];
 	const token = authHeader.split(" ")[1];
 	console.log(token);
