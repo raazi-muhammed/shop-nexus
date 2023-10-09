@@ -7,6 +7,7 @@ import Icons from "../../assets/Icons";
 import NavComponent from "../../components/NavComponent";
 import toast from "react-hot-toast";
 const { heart, cart } = Icons;
+import ReactImageMagnify from "react-image-magnify";
 
 const SingleProductPage = () => {
 	const [imgSelect, setImgSelect] = useState(0);
@@ -28,14 +29,25 @@ const SingleProductPage = () => {
 
 	return (
 		<main>
-			<section className="row p-4">
+			<section className="row p-4 w-100">
 				<section className="col-6">
-					<img
-						className="w-100 rounded-4"
-						src={productData?.images[imgSelect]?.url}
-						alt=""
-						srcSet=""
+					<ReactImageMagnify
+						{...{
+							imageClassName: "rounded-4",
+
+							smallImage: {
+								alt: "Wristwatch by Ted Baker London",
+								isFluidWidth: true,
+								src: productData?.images[imgSelect]?.url,
+							},
+							largeImage: {
+								src: productData?.images[imgSelect]?.url,
+								width: 1200,
+								height: 1800,
+							},
+						}}
 					/>
+
 					<section className="d-flex gap-3 justify-content-center mt-4">
 						{productData?.images.map((e, i) => (
 							<img
