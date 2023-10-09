@@ -22,8 +22,12 @@ const UserNavbar = () => {
 		axios
 			.get(`${server}/user/load-user`, { withCredentials: true })
 			.then((res) => {
-				toast.success("Logged In");
-				setUserData(res.data.user);
+				if (res.data.success === false) {
+					toast.error("You are Blocked");
+				} else {
+					toast.success("Logged In");
+					setUserData(res.data.user);
+				}
 			})
 			.catch((err) => {
 				console.log(err.response.data.message);

@@ -95,7 +95,7 @@ router.post("/login-user", async (req, res) => {
 	try {
 		let user = await User.findOne(
 			{ email: req.body.email },
-			{ password: 1, email: 1, fullName: 1 } // used projection because otherwise password is not returned
+			{ password: 1, email: 1, fullName: 1, isBlocked: 1 } // used projection because otherwise password is not returned
 		);
 
 		if (!user) {
@@ -114,6 +114,15 @@ router.post("/login-user", async (req, res) => {
 			});
 			return;
 		}
+
+		if (user.isBlocked) {
+			res.status(401).json({
+				success: false,
+				message: "You are Blocked",
+			});
+			return;
+		}
+
 		sendToken(user, 201, res, "userToken");
 	} catch (error) {
 		console.log(error);
@@ -131,6 +140,14 @@ router.get(
 	catchAsyncError(async (req, res, next) => {
 		try {
 			const user = await User.findById(req.user.id);
+
+			if (user.isBlocked) {
+				res.status(200).json({
+					success: false,
+					message: "You are Blocked",
+				});
+				return;
+			}
 
 			res.status(200).json({
 				success: true,
