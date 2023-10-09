@@ -46,7 +46,7 @@ const UserNavbar = () => {
 				<button className="btn btn-sm btn-secondary text-white">{heart}</button>
 				<button className="btn btn-sm btn-secondary text-white">{cart}</button>
 				{/* <Link to="/login"> */}
-				<Link to={userData._id ? `/user/profile/${userData._id} ` : `/login`}>
+				<Link to={userData._id ? `/user/dashboard/${userData._id} ` : `/login`}>
 					<button className="btn btn-sm btn-secondary text-white">
 						{profile} {userData?.fullName ? `${userData.fullName} ` : `Log In`}
 					</button>

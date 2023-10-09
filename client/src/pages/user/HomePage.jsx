@@ -8,6 +8,7 @@ import BestSellingPage from "./BestSellingPage";
 import HomeContentPage from "./HomeContentPage";
 import SingleProductPage from "./SingleProductPage";
 import FooterComp from "../../components/FooterComp";
+import UserDashboard from "./UserDashboard";
 
 const HomePage = () => {
 	return (
@@ -19,6 +20,7 @@ const HomePage = () => {
 				<Route path="/best-selling" element={<BestSellingPage />} />
 				<Route path="/faqs" element={<FAQsPage />} />
 				<Route path="/product/:id" element={<SingleProductPage />} />
+				<Route path="/user/dashboard/:userId/*" element={<UserDashboard />} />
 				<Route path="/" element={<HomeContentPage />} />
 			</Routes>
 			<FooterComp />

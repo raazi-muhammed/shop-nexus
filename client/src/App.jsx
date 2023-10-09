@@ -10,9 +10,6 @@ import toast, { Toaster } from "react-hot-toast";
 import HomePage from "./pages/User/HomePage";
 import SellerLoginPage from "./pages/seller/SellerLoginPage";
 import SellerSignUpPage from "./pages/seller/SellerSignUpPage";
-import { useEffect } from "react";
-import axios from "axios";
-import server from "./server";
 import SellerDashboardPage from "./pages/seller/SellerDashboardPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
@@ -36,6 +33,7 @@ function App() {
 				/>
 				<Route path="/admin/login" element={<AdminLoginPage />} />
 				<Route path="/admin/dashboard/*" element={<AdminDashboardPage />} />
+
 				<Route path="*" element={<HomePage />} />
 			</Routes>
 			<Toaster position="top-right" reverseOrder={true} />
