@@ -22,8 +22,9 @@ const SellerAllProducts = ({ shopId }) => {
 				<p className="col-3 m-0">Info</p>
 				<p className="col-2 m-0">Price</p>
 			</section>
-			{data.map((product) => (
+			{data.map((product, i) => (
 				<ProductCardRow
+					key={i}
 					id={product._id}
 					name={product.name}
 					stock={product.stock}

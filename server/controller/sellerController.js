@@ -5,7 +5,8 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const Products = require("../model/Products");
-
+const { upload } = require("../multer");
+const fs = require("fs");
 router.post("/crate-shop", async (req, res) => {
 	try {
 		if (req.body.password !== req.body.confirmPassword) {
@@ -157,6 +158,56 @@ router.get("/get-shop-details/:id", async (req, res) => {
 		success: true,
 		data: shopDetails,
 	});
+});
+
+router.put("/edit-shop-details", upload.single("file"), async (req, res) => {
+	try {
+		const {
+			shopId,
+			zipCode,
+			address1,
+			address2,
+			phoneNumber,
+			email,
+			shopName,
+		} = req.body;
+
+		let shopDetails;
+		shopDetails = await Shop.findOneAndUpdate(
+			{ _id: shopId },
+			{ zipCode, address1, address2, phoneNumber, email, shopName },
+			{ new: true } //for return updated file
+		);
+
+		if (req.file) {
+			/* const fileName = req.file.filename;
+			const filePath = `uploads/${fileName}`;
+
+			fs.unlink(filePath, (err) => {
+				if (err) console.log(err);
+				else console.log("File over Written");
+			}); */
+
+			const fileUrl = `http://localhost:3000/images/${req.file.filename}`;
+			shopDetails = await Shop.findOneAndUpdate(
+				{ _id: shopId },
+				{ $set: { "image.url": fileUrl } },
+				{ new: true, upsert: true }
+			);
+		}
+
+		res.status(200).json({
+			success: true,
+			message: "Update Successful",
+			shopData: shopDetails,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			success: false,
+			message: err || "Internal Server Error",
+		});
+	}
 });
 
 router.get("/get-products-from-shop/:shopId", async (req, res) => {

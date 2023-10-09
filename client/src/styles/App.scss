@@ -7,9 +7,10 @@ $form-select-font-size: 0.75rem;
 $form-select-bg: $secondary;
 
 $btn-border-radius-sm: 1rem;
+$input-bg: $light;
+$input-padding-y: 0.75rem;
 
-// Then import Bootstrap
-@import "../../node_modules/bootstrap/scss/bootstrap"; //@import "../node_modules/bootstrap/scss/bootstrap";
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
 .btn,
 .form-control {
@@ -19,10 +20,6 @@ $btn-border-radius-sm: 1rem;
 .btn-sm,
 .form-sm {
 	height: 2rem;
-}
-
-.form-control {
-	background-color: $light;
 }
 
 .text-small {

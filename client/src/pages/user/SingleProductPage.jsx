@@ -10,7 +10,7 @@ const { heart, cart } = Icons;
 
 const SingleProductPage = () => {
 	const [imgSelect, setImgSelect] = useState(0);
-	const [productData, setProductData] = useState({ image_Url: [] });
+	const [productData, setProductData] = useState({ images: [] });
 	const { id } = useParams();
 	const navItems = [
 		{ name: "Details", link: "#" },
@@ -32,17 +32,17 @@ const SingleProductPage = () => {
 				<section className="col-6">
 					<img
 						className="w-100 rounded-4"
-						src={productData?.image_Url[imgSelect]?.url}
+						src={productData?.images[imgSelect]?.url}
 						alt=""
 						srcSet=""
 					/>
 					<section className="d-flex gap-3 justify-content-center mt-4">
-						{productData?.image_Url.map((e, i) => (
+						{productData?.images.map((e, i) => (
 							<img
 								key={i}
 								className="rounded-4"
 								style={{ width: "5rem", height: "5rem", objectFit: "cover" }}
-								src={productData?.image_Url[i]?.url}
+								src={productData?.images[i]?.url}
 								alt=""
 								onClick={(e) => setImgSelect(i)}
 								srcSet=""

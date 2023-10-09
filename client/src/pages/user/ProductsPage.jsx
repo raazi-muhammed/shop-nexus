@@ -29,7 +29,7 @@ const ProductsPage = ({ type }) => {
 					name={product.name}
 					sold={product.total_sell}
 					shopName={product.shop.name}
-					imgUrl={product.image_Url[0].url}
+					imgUrl={product.images[0]?.url}
 					discount_price={product.discount_price}
 				/>
 			))}

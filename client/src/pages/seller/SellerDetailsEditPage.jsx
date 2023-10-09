@@ -1,23 +1,94 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import server from "../../server";
+import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
-const SellerDetailsEditPage = ({ data }) => {
-	const [shopName, setShopName] = useState(data.data.shopName);
-	const [email, setEmail] = useState(data.data.email);
-	const [phoneNumber, setPhoneNumber] = useState(data.data.phoneNumber);
+const SellerDetailsEditPage = () => {
+	const [data, setData] = useState({});
+	let { shopId } = useParams();
 
-	const [address1, setAddress1] = useState(data.data.address1);
-	const [address2, setAddress2] = useState(data.data.address2);
-	const [zipCode, setZipCode] = useState(data.data.zipCode);
+	useEffect(() => {
+		axios
+			.get(`${server}/seller/get-shop-details/${shopId}`)
+			.then((res) => {
+				setData(res.data.data);
+				const { shopName, email, phoneNumber, address1, address2, zipCode } =
+					res.data.data;
+				setShopName(shopName);
+				setEmail(email);
+				setPhoneNumber(phoneNumber);
+				setAddress1(address1);
+				setZipCode(zipCode);
+				setAddress2(address2);
+			})
+			.catch((err) => console.log(err));
+	}, []);
+
+	const [shopName, setShopName] = useState(data.shopName);
+	const [shopIcon, setShopIcon] = useState(data.shopName);
+	const [email, setEmail] = useState(data.email);
+	const [phoneNumber, setPhoneNumber] = useState(data.phoneNumber);
+	const [address1, setAddress1] = useState(data.address1);
+	const [address2, setAddress2] = useState(data.address2);
+	const [zipCode, setZipCode] = useState(data.zipCode);
+
+	const handleFileInputChange = (e) => {
+		const file = e.target.files[0];
+		setShopIcon(file);
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		var form_data = new FormData();
+		form_data.append("file", shopIcon);
+		form_data.append("shopName", shopName);
+		form_data.append("email", email);
+		form_data.append("phoneNumber", phoneNumber);
+		form_data.append("address1", address1);
+		form_data.append("address2", address2);
+		form_data.append("zipCode", zipCode);
+		form_data.append("shopId", data._id);
+
+		const config = {
+			headers: { "content-type": "multipart/form-data" },
+		};
+
+		axios
+			.put(`${server}/seller/edit-shop-details`, form_data, config)
+			.then((res) => {
+				toast.success(res.data.message);
+				toast.error("Reload if data is not updated");
+			})
+			.catch((res) => toast.error(JSON.stringify(res.response?.data?.message)));
+	};
 
 	return (
 		<div>
 			<section className="d-flex justify-content-between">
-				<p className="text-small text-secondary ">Id: {data.data?._id}</p>
+				<p className="text-small text-secondary ">Id: {data._id}</p>
 				<p className="text-small text-secondary ">
-					Available Balance: {data.data?.availableBalance}
+					Available Balance: {data.availableBalance}
 				</p>
 			</section>
-			<form>
+
+			<form onSubmit={(e) => handleSubmit(e)}>
+				<div className="mb-3 d-flex align-items-center gap-3 ">
+					<img
+						className="rounded-circle"
+						style={{ width: "4rem", height: "4rem" }}
+						src={data.image?.url}
+						alt=""
+					/>
+					<input
+						className="form-control"
+						style={{ height: "3rem" }}
+						type="file"
+						id="formFileMultiple"
+						onChange={(e) => handleFileInputChange(e)}
+					/>
+				</div>
 				<div className="mb-3">
 					<label htmlFor="shop-name" className="form-label">
 						Shop Name

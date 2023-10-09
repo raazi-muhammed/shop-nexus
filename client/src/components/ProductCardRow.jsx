@@ -11,7 +11,7 @@ const ProductCardRow = ({ id, name, stock, category, price, imgUrl }) => {
 					style={{ width: "5rem", height: "5rem" }}
 					src={imgUrl}
 					alt=""
-					srcset=""
+					srcSet=""
 				/>
 				<div className="ms-2 align-items-center">
 					<p className="text-small m-0">{`Id: ${id}`}</p>

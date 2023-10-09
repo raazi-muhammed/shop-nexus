@@ -35,7 +35,7 @@ const shopSchema = new mongoose.Schema({
 		type: String,
 		default: "Seller",
 	},
-	avatar: {
+	image: {
 		public_id: {
 			type: String,
 			//required: true,

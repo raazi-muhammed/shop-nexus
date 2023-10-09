@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Static file
-app.use("/", express.static("uploads"));
+app.use("/images", express.static(__dirname + "/uploads"));
 
 /* Session */
 app.use(

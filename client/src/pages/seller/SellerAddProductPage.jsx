@@ -35,7 +35,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 	};
 	return (
 		<section>
-			<h3>Add an User</h3>
+			<h3>Add an Product</h3>
 			<form onSubmit={(e) => handleSubmit(e)}>
 				<div className="mb-3">
 					<label htmlFor="product-name" className="form-label">

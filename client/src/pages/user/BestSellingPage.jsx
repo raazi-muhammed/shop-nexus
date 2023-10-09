@@ -5,7 +5,6 @@ import ProductCartMain from "../../components/ProductCartMain";
 
 const BestSellingPage = ({ type }) => {
 	const [productData, setProductData] = useState([]);
-	//http://localhost:3000/api/v1/products/all-products
 
 	useEffect(() => {
 		axios.get(`${server}/products/best-selling`).then((res) => {
@@ -24,7 +23,7 @@ const BestSellingPage = ({ type }) => {
 					name={product.name}
 					sold={product.total_sell}
 					shopName={product.shop.name}
-					imgUrl={product.image_Url[0].url}
+					imgUrl={product.images[0]?.url}
 					discount_price={product.discount_price}
 				/>
 			))}

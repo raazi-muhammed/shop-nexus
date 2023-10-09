@@ -16,15 +16,15 @@ const SellerDashboardPage = () => {
 	const asideItems = [
 		{
 			name: "All Products",
-			link: "/seller/dashboard/65222c2bbe72f43f4e4e845e/all-products",
+			link: `/seller/dashboard/${shopId}/all-products`,
 		},
 		{
 			name: "New Product",
-			link: "/seller/dashboard/65222c2bbe72f43f4e4e845e/new-product",
+			link: `/seller/dashboard/${shopId}/new-product`,
 		},
 		{
 			name: "Edit Shop",
-			link: "/seller/dashboard/65222c2bbe72f43f4e4e845e/",
+			link: `/seller/dashboard/${shopId}/edit-shop`,
 		},
 	];
 
@@ -57,7 +57,7 @@ const SellerDashboardPage = () => {
 								<SellerAddProductPage shopId={shopId} shopName={shopName} />
 							}
 						/>
-						<Route path="/" element={<SellerDetailsEditPage data={data} />} />
+						<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
 					</Routes>
 				</section>
 			</section>
