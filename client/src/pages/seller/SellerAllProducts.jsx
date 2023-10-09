@@ -31,6 +31,7 @@ const SellerAllProducts = ({ shopId }) => {
 					category={product.category}
 					price={product.discount_price}
 					imgUrl={product?.images[0]?.url}
+					shopId={shopId}
 				/>
 			))}
 		</div>

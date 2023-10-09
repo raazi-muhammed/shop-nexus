@@ -211,9 +211,7 @@ router.put("/edit-shop-details", upload.single("file"), async (req, res) => {
 });
 
 router.get("/get-products-from-shop/:shopId", async (req, res) => {
-	console.log(req.params.shopId);
 	const ShopDetails = await Shop.find({ _id: req.params.shopId });
-
 	const shopName = ShopDetails[0].shopName;
 
 	const shopDetails = await Products.find({ "shop.name": shopName });

@@ -3,7 +3,15 @@ import Icons from "../assets/Icons";
 import { Link } from "react-router-dom";
 const { eye, edit } = Icons;
 
-const ProductCardRow = ({ id, name, stock, category, price, imgUrl }) => {
+const ProductCardRow = ({
+	id,
+	name,
+	stock,
+	category,
+	price,
+	imgUrl,
+	shopId,
+}) => {
 	return (
 		<div className="ps-0 p-3 bg-white m-1 row rounded-4 align-items-center">
 			<section className="col-6 d-flex align-items-center ">
@@ -27,7 +35,11 @@ const ProductCardRow = ({ id, name, stock, category, price, imgUrl }) => {
 				<Link to={`/product/${id}`}>
 					<button className="btn btn-secondary text-white btn-sm">{eye}</button>
 				</Link>
-				<button className="btn btn-secondary text-white btn-sm">{edit}</button>
+				<Link to={`/seller/dashboard/${shopId}/edit-single-product/${id}`}>
+					<button className="btn btn-secondary text-white btn-sm">
+						{edit}
+					</button>
+				</Link>
 			</section>
 		</div>
 	);

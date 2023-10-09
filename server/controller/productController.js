@@ -50,6 +50,32 @@ router.get("/single-product/:id", async (req, res) => {
 	}
 });
 
+router.put("/edit-product/:id", async (req, res) => {
+	try {
+		const productId = req.params.id;
+		const { productName, category, price, discountedPrice } = req.body;
+
+		let productDetails = await Products.findOneAndUpdate(
+			{ _id: productId },
+			{ name: productName, category, price, discount_price: discountedPrice },
+			{ new: true }
+		);
+
+		res.status(200).json({
+			success: true,
+			message: "Product Update successful",
+			productDetails,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			success: true,
+			message: "Some Error",
+			err,
+		});
+	}
+});
+
 router.post("/add-product", async (req, res) => {
 	try {
 		const {

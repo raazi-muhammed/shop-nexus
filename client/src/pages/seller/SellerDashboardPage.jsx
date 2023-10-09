@@ -7,6 +7,7 @@ import SellerAllProducts from "./SellerAllProducts";
 import AsideComp from "../../components/AsideComp";
 import SellerAddProductPage from "./SellerAddProductPage";
 import SellerDetailsEditPage from "./SellerDetailsEditPage";
+import SellerEditSingleProductPage from "./SellerEditSingleProductPage";
 
 const SellerDashboardPage = () => {
 	const [data, setData] = useState("");
@@ -58,6 +59,10 @@ const SellerDashboardPage = () => {
 							}
 						/>
 						<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
+						<Route
+							path="/edit-single-product/:productId"
+							element={<SellerEditSingleProductPage />}
+						/>
 					</Routes>
 				</section>
 			</section>
