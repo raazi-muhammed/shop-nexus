@@ -22,7 +22,7 @@ const FAQsPage = () => {
 		},
 	];
 	return (
-		<div class="accordion p-4 min-vh-100" id="accordionExample">
+		<div class="accordion p-4 min-vh-100 vw-100 " id="accordionExample">
 			{faqs.map((faq) => (
 				<div class="accordion-item">
 					<h2 class="accordion-header">

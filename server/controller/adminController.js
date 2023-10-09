@@ -38,10 +38,7 @@ router.post("/login", async (req, res) => {
 
 router.get("/get-all-users", async (req, res) => {
 	try {
-		console.log("hi");
 		const userData = await User.find({});
-
-		console.log(userData);
 
 		res.status(200).json({
 			success: true,
@@ -54,14 +51,12 @@ router.get("/get-all-users", async (req, res) => {
 
 router.post("/block-user", async (req, res) => {
 	try {
-		console.log("blocking user");
 		const { id, action } = req.body;
 		const userData = await User.findOneAndUpdate(
 			{ _id: id },
 			{ isBlocked: action },
 			{ new: true }
 		);
-		console.log(userData);
 
 		res.status(200).json({
 			success: true,

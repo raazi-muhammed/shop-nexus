@@ -104,7 +104,6 @@ router.put("/edit-product-admin/:id", async (req, res) => {
 	try {
 		const productId = req.params.id;
 		const { category, rating } = req.body;
-		console.log(req.body);
 		let productDetails = await Products.findOneAndUpdate(
 			{ _id: productId },
 			{
@@ -113,8 +112,6 @@ router.put("/edit-product-admin/:id", async (req, res) => {
 			},
 			{ new: true }
 		);
-
-		console.log(productDetails);
 
 		res.status(200).json({
 			success: true,
@@ -188,7 +185,6 @@ router.post("/add-product", async (req, res) => {
 			stock,
 			total_sell: 0,
 		};
-		console.log(productDataToAdd);
 
 		const productData = await Products.create(productDataToAdd);
 

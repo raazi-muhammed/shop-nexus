@@ -28,9 +28,9 @@ const SingleProductPage = () => {
 	}, []);
 
 	return (
-		<main>
-			<section className="row p-4 w-100">
-				<section className="col-6">
+		<main className="vw-100">
+			<section className="row p-4 mx-auto w-100">
+				<section className="col-12 col-sm-6">
 					<ReactImageMagnify
 						{...{
 							imageClassName: "rounded-4",
@@ -48,7 +48,7 @@ const SingleProductPage = () => {
 						}}
 					/>
 
-					<section className="d-flex gap-3 justify-content-center mt-4">
+					<section className=" d-flex gap-3 justify-content-center my-4">
 						{productData?.images.map((e, i) => (
 							<img
 								key={i}
@@ -62,7 +62,7 @@ const SingleProductPage = () => {
 						))}
 					</section>
 				</section>
-				<section className="col-6 px-4">
+				<section className="col-12 col-sm-6 px-4">
 					<h3>{productData.name}</h3>
 					<p className="text-secondary fw-bold mb-2">{productData.category}</p>
 					<div className="d-flex align-items-center  gap-2 mb-3">
