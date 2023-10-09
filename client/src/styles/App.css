@@ -12001,7 +12001,7 @@ h3 {
 }
 
 .container-max-width-form {
-  max-width: 30rem;
+  width: min(30rem, 100%);
 }
 
 body {

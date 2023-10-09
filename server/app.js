@@ -13,6 +13,7 @@ app.use(cookies());
 const userController = require("./controller/userController");
 const productController = require("./controller/productController");
 const sellerController = require("./controller/sellerController");
+const adminController = require("./controller/adminController");
 
 const ErrorHandler = require("./utils/errorHandler");
 
@@ -47,6 +48,7 @@ app.use(
 app.use("/api/v1/user/", userController);
 app.use("/api/v1/products/", productController);
 app.use("/api/v1/seller/", sellerController);
+app.use("/api/v1/admin/", adminController);
 
 app.get("*", (req, res) => {
 	console.log("no matching url");

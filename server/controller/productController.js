@@ -18,6 +18,21 @@ router.get("/all-products", async (req, res) => {
 	}
 });
 
+router.get("/all-products-including-deleted", async (req, res) => {
+	try {
+		let products = await Products.find({});
+		res.status(200).json({
+			success: true,
+			products,
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
 router.get("/best-selling", async (req, res) => {
 	try {
 		let products = await Products.find({ isDeleted: { $ne: true } }).sort({
@@ -69,6 +84,37 @@ router.put("/edit-product/:id", async (req, res) => {
 			},
 			{ new: true }
 		);
+
+		res.status(200).json({
+			success: true,
+			message: "Product Update successful",
+			productDetails,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			success: true,
+			message: "Some Error",
+			err,
+		});
+	}
+});
+
+router.put("/edit-product-admin/:id", async (req, res) => {
+	try {
+		const productId = req.params.id;
+		const { category, rating } = req.body;
+		console.log(req.body);
+		let productDetails = await Products.findOneAndUpdate(
+			{ _id: productId },
+			{
+				category: category,
+				rating: rating,
+			},
+			{ new: true }
+		);
+
+		console.log(productDetails);
 
 		res.status(200).json({
 			success: true,

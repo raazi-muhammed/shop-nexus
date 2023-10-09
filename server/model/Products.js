@@ -59,7 +59,7 @@ const productSchema = new mongoose.Schema({
 			},
 		},
 	],
-	ratings: {
+	rating: {
 		type: Number,
 	},
 	shop: {
