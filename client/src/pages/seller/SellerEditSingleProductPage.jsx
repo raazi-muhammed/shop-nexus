@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import server from "../../server";
 import toast from "react-hot-toast";
 
@@ -34,6 +34,12 @@ const SellerEditSingleProductPage = () => {
 			.catch((err) => console.log(err));
 	};
 
+	const handleDelete = (e) => {
+		axios
+			.delete(`${server}/products/delete-product/${productId}`)
+			.then((res) => toast.success(res.data?.message))
+			.catch((err) => console.log(err));
+	};
 	useEffect(() => {
 		axios
 			.get(`${server}/products/single-product/${productId}`)
@@ -165,6 +171,11 @@ const SellerEditSingleProductPage = () => {
 					Edit Product
 				</button>
 			</form>
+
+			<button className="btn btn-danger" onClick={handleDelete}>
+				Delete Product
+			</button>
+
 			<p>{JSON.stringify(data)}</p>
 		</div>
 	);

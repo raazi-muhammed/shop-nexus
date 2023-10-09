@@ -5,7 +5,7 @@ const Products = require("../model/Products");
 
 router.get("/all-products", async (req, res) => {
 	try {
-		let products = await Products.find({});
+		let products = await Products.find({ isDeleted: { $ne: true } });
 		res.status(200).json({
 			success: true,
 			products,
@@ -20,7 +20,9 @@ router.get("/all-products", async (req, res) => {
 
 router.get("/best-selling", async (req, res) => {
 	try {
-		let products = await Products.find({}).sort({ total_sell: -1 });
+		let products = await Products.find({ isDeleted: { $ne: true } }).sort({
+			total_sell: -1,
+		});
 		res.status(200).json({
 			success: true,
 			products,
@@ -53,17 +55,51 @@ router.get("/single-product/:id", async (req, res) => {
 router.put("/edit-product/:id", async (req, res) => {
 	try {
 		const productId = req.params.id;
-		const { productName, category, price, discountedPrice } = req.body;
+		const { productName, description, category, price, discountedPrice } =
+			req.body;
 
 		let productDetails = await Products.findOneAndUpdate(
 			{ _id: productId },
-			{ name: productName, category, price, discount_price: discountedPrice },
+			{
+				name: productName,
+				description,
+				category,
+				price,
+				discount_price: discountedPrice,
+			},
 			{ new: true }
 		);
 
 		res.status(200).json({
 			success: true,
 			message: "Product Update successful",
+			productDetails,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			success: true,
+			message: "Some Error",
+			err,
+		});
+	}
+});
+
+router.delete("/delete-product/:id", async (req, res) => {
+	try {
+		const productId = req.params.id;
+
+		let productDetails = await Products.findOneAndUpdate(
+			{ _id: productId },
+			{
+				isDeleted: true,
+			},
+			{ new: true }
+		);
+
+		res.status(200).json({
+			success: true,
+			message: "Product Deleted successful",
 			productDetails,
 		});
 	} catch (err) {

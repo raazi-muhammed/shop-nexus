@@ -69,8 +69,8 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 					<label htmlFor="description" className="form-label">
 						Description
 					</label>
-					<input
-						type="text"
+					<textarea
+						type="text-area"
 						className="form-control"
 						id="description"
 						value={description}

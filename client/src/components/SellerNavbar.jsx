@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const SellerNavbar = ({ shopName }) => {
 	let { shopId } = useParams();
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
 			<div>
-				<button className="btn btn-sm btn-secondary text-white">
-					Catergories
-				</button>
+				<Link to={"/"} className="text-decoration-none text-primary h3">
+					Shop Nexus
+				</Link>
 			</div>
 
 			<section className="d-flex gap-3">
