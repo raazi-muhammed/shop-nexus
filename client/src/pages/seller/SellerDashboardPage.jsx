@@ -12,6 +12,22 @@ const SellerDashboardPage = () => {
 	const [data, setData] = useState("");
 	let { shopId } = useParams();
 	const [shopName, setShopName] = useState("Loading...");
+
+	const asideItems = [
+		{
+			name: "All Products",
+			link: "/seller/dashboard/65222c2bbe72f43f4e4e845e/all-products",
+		},
+		{
+			name: "New Product",
+			link: "/seller/dashboard/65222c2bbe72f43f4e4e845e/new-product",
+		},
+		{
+			name: "Edit Shop",
+			link: "/seller/dashboard/65222c2bbe72f43f4e4e845e/",
+		},
+	];
+
 	useEffect(() => {
 		axios
 			.get(`${server}/seller/get-shop-details/${shopId}`)
@@ -27,7 +43,7 @@ const SellerDashboardPage = () => {
 			<SellerNavbar shopName={shopName} />
 			<section className="row py-5">
 				<div className="col-3 mt-3">
-					<AsideComp />
+					<AsideComp asideItems={asideItems} />
 				</div>
 				<section className="col-9">
 					<Routes>

@@ -1,18 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const AsideComp = () => {
+const AsideComp = ({ asideItems }) => {
 	const [currentNav, setCurrentNav] = useState(0);
-	const asideItems = [
-		{
-			name: "All Products",
-			link: "/seller/dashboard/65222c2bbe72f43f4e4e845e/all-products",
-		},
-		{
-			name: "New Product",
-			link: "/seller/dashboard/65222c2bbe72f43f4e4e845e/new-product",
-		},
-	];
 
 	return (
 		<nav className="d-flex flex-column bg-white p-4 m-3 rounded-4 w-100 gap-1 justify-content-center">
