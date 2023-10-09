@@ -41,7 +41,7 @@ function App() {
 				<Route path="/seller/login" element={<SellerLoginPage />} />
 				<Route path="/seller/sign-up" element={<SellerSignUpPage />} />
 				<Route
-					path="/seller/dashboard/:shopId"
+					path="/seller/dashboard/:shopId/*"
 					element={<SellerDashboardPage />}
 				/>
 				<Route path="*" element={<HomePage />} />

@@ -16,10 +16,10 @@ const productSchema = new mongoose.Schema({
 	tags: {
 		type: String,
 	},
-	originalPrice: {
+	price: {
 		type: Number,
 	},
-	discountPrice: {
+	discount_price: {
 		type: Number,
 		required: [true, "Please enter your product price!"],
 	},
@@ -61,10 +61,6 @@ const productSchema = new mongoose.Schema({
 	],
 	ratings: {
 		type: Number,
-	},
-	shopId: {
-		type: String,
-		required: true,
 	},
 	shop: {
 		type: Object,
