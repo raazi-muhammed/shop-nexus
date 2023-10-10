@@ -33,14 +33,15 @@ const SellerEditSingleProductPage = () => {
 	};
 
 	const handleFileInputChange = async (e) => {
-		image = [];
+		const newImage = [];
 		for (let i = 0; i < e.target.files.length; i++) {
 			const file = e.target.files[i];
+
 			const base64 = await convertBase64(file);
-			image.push(base64);
+			newImage.push(base64);
 		}
 
-		setImage(image);
+		setImage(newImage);
 	};
 
 	const handleSubmit = (e) => {
@@ -62,7 +63,7 @@ const SellerEditSingleProductPage = () => {
 				toast.success(res.data?.message);
 				setRefresh(!refresh);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => console.log(err.response.data.message));
 	};
 
 	/* For Deleting(soft) Product */

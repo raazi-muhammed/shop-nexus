@@ -3,6 +3,7 @@ const path = require("path");
 const router = express.Router();
 const Products = require("../model/Products");
 const cloudinaryUpload = require("../utils/cloudinaryUpload");
+const sharp = require("sharp");
 
 router.get("/all-products", async (req, res) => {
 	try {
@@ -83,10 +84,10 @@ router.put("/edit-product/:id", async (req, res) => {
 		console.log(image);
 
 		const imageUrls = await Promise.all(
-			image.map(async (e, i) => {
+			image.map(async (img, i) => {
 				return {
 					public_id: i,
-					url: await cloudinaryUpload(e),
+					url: await cloudinaryUpload(img),
 				};
 			})
 		);
@@ -215,7 +216,13 @@ router.post("/add-product", async (req, res) => {
 			shopName,
 		} = req.body;
 
-		console.log(image);
+		if (image.length === 0) {
+			res.status(500).json({
+				success: false,
+				message: "Please Add at least one image",
+			});
+			return;
+		}
 
 		const imageUrls = await Promise.all(
 			image.map(async (e, i) => {
@@ -226,15 +233,12 @@ router.post("/add-product", async (req, res) => {
 			})
 		);
 
-		console.log(imageUrls);
-
 		const productDataToAdd = {
 			name: productName,
 			category,
 			description,
 			price,
 			discount_price: discountedPrice,
-			//images: [{ public_id: 0, url: imageUrl }],
 			images: imageUrls,
 			shop: {
 				name: shopName,
@@ -249,6 +253,7 @@ router.post("/add-product", async (req, res) => {
 
 		res.status(201).json({
 			success: true,
+			message: "Product Added",
 			productData,
 		});
 	} catch (error) {

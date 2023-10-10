@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import server from "../../server";
+import toast from "react-hot-toast";
 
 const SellerAddProductPage = ({ shopId, shopName }) => {
 	const [productName, setProductName] = useState("");
@@ -28,14 +29,14 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 	};
 
 	const handleFileInputChange = async (e) => {
-		image = [];
+		const newImage = [];
 		for (let i = 0; i < e.target.files.length; i++) {
 			const file = e.target.files[i];
 			const base64 = await convertBase64(file);
-			image.push(base64);
+			newImage.push(base64);
 		}
 
-		setImage(image);
+		setImage(newImage);
 	};
 
 	const handleSubmit = (e) => {
@@ -53,9 +54,14 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 			shopName,
 		};
 
-		axios.post(`${server}/products/add-product`, formData).then((res) => {
-			console.log(res);
-		});
+		axios
+			.post(`${server}/products/add-product`, formData)
+			.then((res) => {
+				toast.success(res.data.message);
+			})
+			.catch((err) => {
+				toast.error(err.response?.data?.message);
+			});
 	};
 	return (
 		<section>

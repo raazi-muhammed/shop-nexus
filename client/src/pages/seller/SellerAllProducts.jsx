@@ -21,7 +21,7 @@ const SellerAllProducts = ({ shopId }) => {
 				<p className="col-3 m-0">Info</p>
 				<p className="col-2 m-0">Price</p>
 			</section>
-			{!data[0].name ? (
+			{!data[0]?.name ? (
 				<p className="d-flex justify-content-center mt-5">Loading...</p>
 			) : (
 				data.map((product, i) => (
@@ -32,7 +32,7 @@ const SellerAllProducts = ({ shopId }) => {
 						stock={product.stock}
 						category={product.category}
 						price={product.discount_price}
-						imgUrl={product?.images[0]?.url}
+						imgUrl={product.images[0]?.url}
 						shopId={shopId}
 					/>
 				))
