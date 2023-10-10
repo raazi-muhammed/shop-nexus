@@ -9,7 +9,6 @@ const SellerAllProducts = ({ shopId }) => {
 		axios
 			.get(`${server}/seller/get-products-from-shop/${shopId}`)
 			.then((res) => {
-				console.log(res.data.data);
 				setData(res.data.data);
 			})
 			.catch((err) => console.log(err));
@@ -22,18 +21,22 @@ const SellerAllProducts = ({ shopId }) => {
 				<p className="col-3 m-0">Info</p>
 				<p className="col-2 m-0">Price</p>
 			</section>
-			{data.map((product, i) => (
-				<ProductCardRow
-					key={i}
-					id={product._id}
-					name={product.name}
-					stock={product.stock}
-					category={product.category}
-					price={product.discount_price}
-					imgUrl={product?.images[0]?.url}
-					shopId={shopId}
-				/>
-			))}
+			{!data[0].name ? (
+				<p className="d-flex justify-content-center mt-5">Loading...</p>
+			) : (
+				data.map((product, i) => (
+					<ProductCardRow
+						key={i}
+						id={product._id}
+						name={product.name}
+						stock={product.stock}
+						category={product.category}
+						price={product.discount_price}
+						imgUrl={product?.images[0]?.url}
+						shopId={shopId}
+					/>
+				))
+			)}
 		</div>
 	);
 };
