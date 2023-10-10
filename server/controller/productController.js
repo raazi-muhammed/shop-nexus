@@ -80,12 +80,18 @@ router.put("/edit-product/:id", async (req, res) => {
 			image,
 		} = req.body;
 
-		const imgURL = await cloudinaryUpload(image);
-		console.log(imgURL);
-		const imageToAdd = {
-			public_id: 2,
-			url: imgURL,
-		};
+		console.log(image);
+
+		const imageUrls = await Promise.all(
+			image.map(async (e, i) => {
+				return {
+					public_id: i,
+					url: await cloudinaryUpload(e),
+				};
+			})
+		);
+
+		console.log(imageUrls);
 
 		let productDetails = await Products.findOneAndUpdate(
 			{ _id: productId },
@@ -95,7 +101,7 @@ router.put("/edit-product/:id", async (req, res) => {
 				category,
 				price,
 				discount_price: discountedPrice,
-				$addToSet: { images: imageToAdd },
+				$addToSet: { images: { $each: imageUrls } },
 			},
 			{ new: true }
 		);
@@ -103,7 +109,7 @@ router.put("/edit-product/:id", async (req, res) => {
 		res.status(200).json({
 			success: true,
 			message: "Product Update successful",
-			productDetails,
+			//productDetails,
 		});
 	} catch (err) {
 		console.log(err);
@@ -202,12 +208,25 @@ router.post("/add-product", async (req, res) => {
 			description,
 			price,
 			discountedPrice,
-			imageUrl,
+			image,
 			rating,
 			stock,
 			shopId,
 			shopName,
 		} = req.body;
+
+		console.log(image);
+
+		const imageUrls = await Promise.all(
+			image.map(async (e, i) => {
+				return {
+					public_id: i,
+					url: await cloudinaryUpload(e),
+				};
+			})
+		);
+
+		console.log(imageUrls);
 
 		const productDataToAdd = {
 			name: productName,
@@ -215,7 +234,8 @@ router.post("/add-product", async (req, res) => {
 			description,
 			price,
 			discount_price: discountedPrice,
-			images: [{ public_id: 0, url: imageUrl }],
+			//images: [{ public_id: 0, url: imageUrl }],
+			images: imageUrls,
 			shop: {
 				name: shopName,
 				id: shopId,

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 const SellerEditSingleProductPage = () => {
 	const [refresh, setRefresh] = useState(true);
 
-	const [data, setData] = useState("loding");
+	const [data, setData] = useState([]);
 	const { productId } = useParams();
 	const [productName, setProductName] = useState("");
 	const [category, setCategory] = useState("");
@@ -16,7 +16,7 @@ const SellerEditSingleProductPage = () => {
 	const [discountedPrice, setDiscountedPrice] = useState("");
 	const [stock, setStock] = useState("");
 	const [imagesToDisplay, setImagesToDisplay] = useState([]);
-	const [image, setImage] = useState("");
+	const [image, setImage] = useState([]);
 
 	const convertBase64 = (file) => {
 		return new Promise((res, rej) => {
@@ -33,10 +33,14 @@ const SellerEditSingleProductPage = () => {
 	};
 
 	const handleFileInputChange = async (e) => {
-		const file = e.target.files[0];
-		const base64 = await convertBase64(file);
-		console.log(base64);
-		setImage(base64);
+		image = [];
+		for (let i = 0; i < e.target.files.length; i++) {
+			const file = e.target.files[i];
+			const base64 = await convertBase64(file);
+			image.push(base64);
+		}
+
+		setImage(image);
 	};
 
 	const handleSubmit = (e) => {
@@ -61,6 +65,7 @@ const SellerEditSingleProductPage = () => {
 			.catch((err) => console.log(err));
 	};
 
+	/* For Deleting(soft) Product */
 	const handleDelete = (e) => {
 		axios
 			.delete(`${server}/products/delete-product/${productId}`)
@@ -221,6 +226,7 @@ const SellerEditSingleProductPage = () => {
 						id="image-url"
 						name="imageUrl"
 						onChange={(e) => handleFileInputChange(e)}
+						multiple
 					/>
 				</div>
 

@@ -17,7 +17,6 @@ module.exports = (image) => {
 	return new Promise((res, rej) => {
 		cloudinary.uploader.upload(image, opts, (err, result) => {
 			if (result && result.secure_url) {
-				console.group(result.secure_url);
 				return res(result.secure_url);
 			}
 			console.log(err.message);

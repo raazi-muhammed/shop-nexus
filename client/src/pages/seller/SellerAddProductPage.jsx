@@ -11,6 +11,32 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 	const [imageUrl, setImageUrl] = useState("");
 	const [rating, setRating] = useState("");
 	const [stock, setStock] = useState("");
+	const [image, setImage] = useState([]);
+
+	const convertBase64 = (file) => {
+		return new Promise((res, rej) => {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(file);
+
+			fileReader.onload = () => {
+				res(fileReader.result);
+			};
+			fileReader.onerror = (err) => {
+				rej(err);
+			};
+		});
+	};
+
+	const handleFileInputChange = async (e) => {
+		image = [];
+		for (let i = 0; i < e.target.files.length; i++) {
+			const file = e.target.files[i];
+			const base64 = await convertBase64(file);
+			image.push(base64);
+		}
+
+		setImage(image);
+	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -20,7 +46,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 			description,
 			price,
 			discountedPrice,
-			imageUrl,
+			image,
 			rating,
 			stock,
 			shopId,
@@ -30,8 +56,6 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 		axios.post(`${server}/products/add-product`, formData).then((res) => {
 			console.log(res);
 		});
-
-		//console.log(formData);
 	};
 	return (
 		<section>
@@ -109,16 +133,15 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="image-url" className="form-label">
-						Image Url
+						Add Image
 					</label>
 					<input
-						type="text"
+						type="file"
 						className="form-control"
 						id="image-url"
-						value={imageUrl}
 						name="imageUrl"
-						onChange={(e) => setImageUrl(e.target.value)}
-						required
+						onChange={(e) => handleFileInputChange(e)}
+						multiple
 					/>
 				</div>
 				<div className="mb-3">
