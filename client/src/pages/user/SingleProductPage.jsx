@@ -34,9 +34,8 @@ const SingleProductPage = () => {
 					<ReactImageMagnify
 						{...{
 							imageClassName: "rounded-4",
-
 							smallImage: {
-								alt: "Wristwatch by Ted Baker London",
+								alt: "Product Image",
 								isFluidWidth: true,
 								src: productData?.images[imgSelect]?.url,
 							},

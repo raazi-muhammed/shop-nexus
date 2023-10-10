@@ -25,6 +25,9 @@ const LoginPage = () => {
 			})
 			.catch((err) => toast.error(err.response.data.message));
 	};
+	const handleGoogle = () => {
+		window.open("http://localhost:3000/auth/google", "_self");
+	};
 
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-white rounded-4">
@@ -89,6 +92,11 @@ const LoginPage = () => {
 						Log In
 					</button>
 				</form>
+				<button
+					className="btn btn-secondary mt-2 text-white w-100"
+					onClick={handleGoogle}>
+					Sign In with Google
+				</button>
 				<p className="text-center mt-3">
 					Don’t Have an Account{" "}
 					<Link className="text-secondary fw-bold" to="/sign-up">

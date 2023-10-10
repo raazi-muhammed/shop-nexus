@@ -27,14 +27,6 @@ app.use(
 	})
 );
 
-const PORT = process.env.PORT;
-
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Static file
-app.use("/images", express.static(__dirname + "/uploads"));
-
 /* Session */
 app.use(
 	sessions({
@@ -44,11 +36,30 @@ app.use(
 	})
 );
 
+/* Pssport */
+
+require("./utils/passport");
+const passport = require("passport");
+app.use(passport.initialize());
+app.use(passport.session());
+
+const googleAuth = require("./controller/googleAuth");
+
+const PORT = process.env.PORT;
+
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Static file
+app.use("/images", express.static(__dirname + "/uploads"));
+
 // Router
 app.use("/api/v1/user/", userController);
 app.use("/api/v1/products/", productController);
 app.use("/api/v1/seller/", sellerController);
 app.use("/api/v1/admin/", adminController);
+
+app.use("/auth/", googleAuth);
 
 app.get("*", (req, res) => {
 	console.log("no matching url");
