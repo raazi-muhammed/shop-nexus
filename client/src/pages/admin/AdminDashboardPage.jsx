@@ -33,20 +33,25 @@ const AdminDashboardPage = () => {
 		{ name: "Products", link: "products" },
 	];
 	return (
-		<div className="row gap-3 w-100">
-			<section className="col-3">
-				<AsideComp asideItems={asideItems} />
-			</section>
-			<section className="col-8">
-				<Routes>
-					<Route path="/user" element={<AdminUserPage />} />
-					<Route path="/products" element={<AdminProductsPage />} />
-					<Route
-						path="/edit-product/:productId"
-						element={<AdminProductEditPage />}
-					/>
-				</Routes>
-			</section>
+		<div>
+			<nav style={{ height: "2rem" }}>
+				<p className="h3 mb-1 m-4 ">Admin Page</p>
+			</nav>
+			<main className="row gap-3 vw-100">
+				<section className="col-3">
+					<AsideComp asideItems={asideItems} />
+				</section>
+				<section className="col-8">
+					<Routes>
+						<Route path="/user" element={<AdminUserPage />} />
+						<Route path="/products" element={<AdminProductsPage />} />
+						<Route
+							path="/edit-product/:productId"
+							element={<AdminProductEditPage />}
+						/>
+					</Routes>
+				</section>
+			</main>
 		</div>
 	);
 };

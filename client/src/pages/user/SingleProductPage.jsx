@@ -30,7 +30,7 @@ const SingleProductPage = () => {
 	return (
 		<main className="vw-100">
 			<section className="row p-4 mx-auto w-100">
-				<section className="col-12 col-sm-6">
+				<section className="col-12 col-sm-6 justify-content-center">
 					<ReactImageMagnify
 						{...{
 							imageClassName: "rounded-4",
@@ -47,7 +47,7 @@ const SingleProductPage = () => {
 						}}
 					/>
 
-					<section className=" d-flex gap-3 justify-content-center my-4">
+					<section className="col-12 d-flex gap-3 justify-content-center my-4">
 						{productData?.images.map((e, i) => (
 							<img
 								key={i}

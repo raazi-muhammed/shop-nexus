@@ -12016,4 +12016,9 @@ body {
 
 .sub-heading {
   font-size: 1rem;
+}
+
+.single-product-image {
+  max-height: min(70rem, 60vh);
+  aspect-ratio: 1;
 }/*# sourceMappingURL=App.css.map */

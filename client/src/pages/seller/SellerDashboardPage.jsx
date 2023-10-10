@@ -46,7 +46,7 @@ const SellerDashboardPage = () => {
 				<div className="col-3 mt-3">
 					<AsideComp asideItems={asideItems} />
 				</div>
-				<section className="col-9">
+				<section className="col-8 mx-auto">
 					<Routes>
 						<Route
 							path="/all-products"

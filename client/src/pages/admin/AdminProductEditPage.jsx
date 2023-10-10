@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const AdminProductEditPage = () => {
 	const { productId } = useParams();
-	const [data, setData] = useState({});
+	const [data, setData] = useState({ images: [] });
 	const [category, setCategory] = useState("");
 	const [rating, setRating] = useState("");
 
@@ -34,7 +34,7 @@ const AdminProductEditPage = () => {
 	return (
 		<div className="w-100">
 			<section className="row my-4">
-				<img className="col-4 rounded-4" src={data.images[0].url} alt="" />
+				<img className="col-4 rounded-4" src={data.images[0]?.url} alt="" />
 				<div className="col-6 my-auto">
 					<p>Id: {data._id}</p>
 					<p className="h4">{data.name}</p>

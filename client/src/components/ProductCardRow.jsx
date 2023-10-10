@@ -16,6 +16,7 @@ const ProductCardRow = ({
 		<div className="ps-0 p-3 bg-white m-1 row rounded-4 align-items-center">
 			<section className="col-6 d-flex align-items-center ">
 				<img
+					className="rounded-2"
 					style={{ width: "5rem", height: "5rem" }}
 					src={imgUrl}
 					alt=""
