@@ -14,7 +14,6 @@ const userController = require("./controller/userController");
 const productController = require("./controller/productController");
 const sellerController = require("./controller/sellerController");
 const adminController = require("./controller/adminController");
-
 const ErrorHandler = require("./utils/errorHandler");
 
 /* Cors */
@@ -47,7 +46,12 @@ const googleAuth = require("./controller/googleAuth");
 
 const PORT = process.env.PORT;
 
-app.use(express.json());
+app.use(
+	express.json({
+		limit: "50mb",
+	})
+);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Static file

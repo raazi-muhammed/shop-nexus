@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const router = express.Router();
 const Products = require("../model/Products");
+const cloudinaryUpload = require("../utils/cloudinaryUpload");
 
 router.get("/all-products", async (req, res) => {
 	try {
@@ -70,8 +71,21 @@ router.get("/single-product/:id", async (req, res) => {
 router.put("/edit-product/:id", async (req, res) => {
 	try {
 		const productId = req.params.id;
-		const { productName, description, category, price, discountedPrice } =
-			req.body;
+		const {
+			productName,
+			description,
+			category,
+			price,
+			discountedPrice,
+			image,
+		} = req.body;
+
+		const imgURL = await cloudinaryUpload(image);
+		console.log(imgURL);
+		const imageToAdd = {
+			public_id: 2,
+			url: imgURL,
+		};
 
 		let productDetails = await Products.findOneAndUpdate(
 			{ _id: productId },
@@ -81,6 +95,7 @@ router.put("/edit-product/:id", async (req, res) => {
 				category,
 				price,
 				discount_price: discountedPrice,
+				$addToSet: { images: imageToAdd },
 			},
 			{ new: true }
 		);
@@ -93,14 +108,38 @@ router.put("/edit-product/:id", async (req, res) => {
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({
-			success: true,
+			success: false,
 			message: "Some Error",
 			err,
 		});
 	}
 });
 
-router.put("/edit-product-admin/:id", async (req, res) => {
+router.put("/delete-product-image/:id", async (req, res) => {
+	try {
+		const productId = req.params.id;
+		const removeIndex = req.body.index;
+
+		let productDetails = await Products.findOneAndUpdate(
+			{ _id: productId },
+			{ $pull: { images: { url: removeIndex } } },
+			{ new: true }
+		);
+		res.status(200).json({
+			success: true,
+			message: "Removed Image",
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			success: false,
+			message: "Image not removed",
+			err,
+		});
+	}
+});
+
+router.put("/edit-product-admin/:id/", async (req, res) => {
 	try {
 		const productId = req.params.id;
 		const { category, rating } = req.body;

@@ -5,16 +5,39 @@ import server from "../../server";
 import toast from "react-hot-toast";
 
 const SellerEditSingleProductPage = () => {
+	const [refresh, setRefresh] = useState(true);
+
 	const [data, setData] = useState("loding");
 	const { productId } = useParams();
-
 	const [productName, setProductName] = useState("");
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
 	const [price, setPrice] = useState("");
 	const [discountedPrice, setDiscountedPrice] = useState("");
-	const [imageUrl, setImageUrl] = useState("");
 	const [stock, setStock] = useState("");
+	const [imagesToDisplay, setImagesToDisplay] = useState([]);
+	const [image, setImage] = useState("");
+
+	const convertBase64 = (file) => {
+		return new Promise((res, rej) => {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(file);
+
+			fileReader.onload = () => {
+				res(fileReader.result);
+			};
+			fileReader.onerror = (err) => {
+				rej(err);
+			};
+		});
+	};
+
+	const handleFileInputChange = async (e) => {
+		const file = e.target.files[0];
+		const base64 = await convertBase64(file);
+		console.log(base64);
+		setImage(base64);
+	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -26,11 +49,15 @@ const SellerEditSingleProductPage = () => {
 			price,
 			discountedPrice,
 			stock,
+			image,
 		};
 
 		axios
 			.put(`${server}/products/edit-product/${productId}`, formData)
-			.then((res) => toast.success(res.data?.message))
+			.then((res) => {
+				toast.success(res.data?.message);
+				setRefresh(!refresh);
+			})
 			.catch((err) => console.log(err));
 	};
 
@@ -40,6 +67,20 @@ const SellerEditSingleProductPage = () => {
 			.then((res) => toast.success(res.data?.message))
 			.catch((err) => console.log(err));
 	};
+
+	const handleRemoveItem = (index) => {
+		console.log(index);
+		axios
+			.put(`${server}/products/delete-product-image/${productId}`, {
+				index,
+			})
+			.then((res) => {
+				toast.success(res.data.message);
+				setRefresh(!refresh);
+			})
+			.catch((err) => toast.error(err.data.data.message));
+	};
+
 	useEffect(() => {
 		axios
 			.get(`${server}/products/single-product/${productId}`)
@@ -54,6 +95,7 @@ const SellerEditSingleProductPage = () => {
 					stock,
 					shop,
 					sold_out,
+					images,
 				} = res.data?.productDetails[0];
 				setData(res.data);
 				setProductName(name);
@@ -62,13 +104,15 @@ const SellerEditSingleProductPage = () => {
 				setPrice(price);
 				setDiscountedPrice(discount_price);
 				setStock(stock);
+				setImagesToDisplay(images);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [refresh]);
 
 	return (
-		<div>
+		<div className="w-100">
 			<p>{productId}</p>
+
 			<form onSubmit={(e) => handleSubmit(e)}>
 				<div className="mb-3">
 					<label htmlFor="product-name" className="form-label">
@@ -140,19 +184,7 @@ const SellerEditSingleProductPage = () => {
 						required
 					/>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="image-url" className="form-label">
-						Image Url
-					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="image-url"
-						value={imageUrl}
-						name="imageUrl"
-						onChange={(e) => setImageUrl(e.target.value)}
-					/>
-				</div>
+
 				<div className="mb-3">
 					<label htmlFor="number" className="form-label">
 						Stock
@@ -167,16 +199,40 @@ const SellerEditSingleProductPage = () => {
 						required
 					/>
 				</div>
-				<button type="submit" className="btn btn-primary">
-					Edit Product
-				</button>
+				<section className="d-flex overflow-auto gap-3 my-3">
+					{imagesToDisplay.map((e, i) => (
+						<div className="col-3">
+							<img className="w-100 rounded-4" src={e.url} alt="" />
+							<button
+								className="btn btn-danger btn-sm mt-2 w-100"
+								onClick={(event) => handleRemoveItem(e.url)}>
+								Remove
+							</button>
+						</div>
+					))}
+				</section>
+				<div className="mb-3">
+					<label htmlFor="image-url" className="form-label">
+						Add Image
+					</label>
+					<input
+						type="file"
+						className="form-control"
+						id="image-url"
+						name="imageUrl"
+						onChange={(e) => handleFileInputChange(e)}
+					/>
+				</div>
+
+				<div className="row gap-3 m-1">
+					<button type="submit" className="col btn btn-primary">
+						Edit Product
+					</button>
+					<button className="col btn btn-danger" onClick={handleDelete}>
+						Delete Product
+					</button>
+				</div>
 			</form>
-
-			<button className="btn btn-danger" onClick={handleDelete}>
-				Delete Product
-			</button>
-
-			<p>{JSON.stringify(data)}</p>
 		</div>
 	);
 };

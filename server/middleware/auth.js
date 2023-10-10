@@ -14,7 +14,7 @@ exports.isAuthenticated = catchAsyncError(async (req, res, next) => {
 
 	if (!token) {
 		res.status(500).json({ success: false, message: "No value of Token" });
-		return next(new ErrorHandler("No value of Token"));
+		return;
 	}
 
 	const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
