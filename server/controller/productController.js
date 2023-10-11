@@ -4,6 +4,9 @@ const router = express.Router();
 const Products = require("../model/Products");
 const cloudinaryUpload = require("../utils/cloudinaryUpload");
 const sharp = require("sharp");
+const { isSellerAuthenticated } = require("../middleware/sellerAuth");
+const { isAdminAuthenticated } = require("../middleware/adminAuth");
+const Shop = require("../model/Shop");
 
 router.get("/all-products", async (req, res) => {
 	try {
@@ -69,7 +72,7 @@ router.get("/single-product/:id", async (req, res) => {
 	}
 });
 
-router.put("/edit-product/:id", async (req, res) => {
+router.put("/edit-product/:id", isSellerAuthenticated, async (req, res) => {
 	try {
 		const productId = req.params.id;
 		const {
@@ -78,6 +81,7 @@ router.put("/edit-product/:id", async (req, res) => {
 			category,
 			price,
 			discountedPrice,
+			stock,
 			image,
 		} = req.body;
 
@@ -101,6 +105,7 @@ router.put("/edit-product/:id", async (req, res) => {
 				description,
 				category,
 				price,
+				stock,
 				discount_price: discountedPrice,
 				$addToSet: { images: { $each: imageUrls } },
 			},
@@ -122,86 +127,98 @@ router.put("/edit-product/:id", async (req, res) => {
 	}
 });
 
-router.put("/delete-product-image/:id", async (req, res) => {
-	try {
-		const productId = req.params.id;
-		const removeIndex = req.body.index;
+router.put(
+	"/delete-product-image/:id",
+	isSellerAuthenticated,
+	async (req, res) => {
+		try {
+			const productId = req.params.id;
+			const removeIndex = req.body.index;
 
-		let productDetails = await Products.findOneAndUpdate(
-			{ _id: productId },
-			{ $pull: { images: { url: removeIndex } } },
-			{ new: true }
-		);
-		res.status(200).json({
-			success: true,
-			message: "Removed Image",
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({
-			success: false,
-			message: "Image not removed",
-			err,
-		});
+			let productDetails = await Products.findOneAndUpdate(
+				{ _id: productId },
+				{ $pull: { images: { url: removeIndex } } },
+				{ new: true }
+			);
+			res.status(200).json({
+				success: true,
+				message: "Removed Image",
+			});
+		} catch (err) {
+			console.log(err);
+			res.status(500).json({
+				success: false,
+				message: "Image not removed",
+				err,
+			});
+		}
 	}
-});
+);
 
-router.put("/edit-product-admin/:id/", async (req, res) => {
-	try {
-		const productId = req.params.id;
-		const { category, rating } = req.body;
-		let productDetails = await Products.findOneAndUpdate(
-			{ _id: productId },
-			{
-				category: category,
-				rating: rating,
-			},
-			{ new: true }
-		);
+router.put(
+	"/edit-product-admin/:id/",
+	isAdminAuthenticated,
+	async (req, res) => {
+		try {
+			const productId = req.params.id;
+			const { category, rating } = req.body;
+			let productDetails = await Products.findOneAndUpdate(
+				{ _id: productId },
+				{
+					category: category,
+					rating: rating,
+				},
+				{ new: true }
+			);
 
-		res.status(200).json({
-			success: true,
-			message: "Product Update successful",
-			productDetails,
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({
-			success: true,
-			message: "Some Error",
-			err,
-		});
+			res.status(200).json({
+				success: true,
+				message: "Product Update successful",
+				productDetails,
+			});
+		} catch (err) {
+			console.log(err);
+			res.status(500).json({
+				success: true,
+				message: "Some Error",
+				err,
+			});
+		}
 	}
-});
+);
 
-router.delete("/delete-product/:id", async (req, res) => {
-	try {
-		const productId = req.params.id;
+router.delete(
+	"/delete-product/:id",
+	isSellerAuthenticated,
+	async (req, res) => {
+		try {
+			const productId = req.params.id;
 
-		let productDetails = await Products.findOneAndUpdate(
-			{ _id: productId },
-			{
-				isDeleted: true,
-			},
-			{ new: true }
-		);
+			let productDetails = await Products.findOneAndUpdate(
+				{ _id: productId },
+				{
+					isDeleted: true,
+				},
+				{ new: true }
+			);
 
-		res.status(200).json({
-			success: true,
-			message: "Product Deleted successful",
-			productDetails,
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({
-			success: true,
-			message: "Some Error",
-			err,
-		});
+			res.status(200).json({
+				success: true,
+				message: "Product Deleted successful",
+				productDetails,
+			});
+		} catch (err) {
+			console.log(err);
+			res.status(500).json({
+				success: true,
+				message: "Some Error",
+				err,
+			});
+		}
 	}
-});
+);
 
-router.post("/add-product", async (req, res) => {
+router.post("/add-product", isSellerAuthenticated, async (req, res) => {
 	try {
 		const {
 			productName,
@@ -260,6 +277,25 @@ router.post("/add-product", async (req, res) => {
 		console.log(error);
 		res.status(500).json({
 			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
+router.get("/get-products-from-shop/:shopId", async (req, res) => {
+	try {
+		const ShopDetails = await Shop.find({ _id: req.params.shopId });
+		const shopName = ShopDetails[0].shopName;
+
+		const shopDetails = await Products.find({ "shop.name": shopName });
+		res.status(200).json({
+			success: true,
+			data: shopDetails,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(200).json({
+			success: true,
 			message: "Internal Server Error",
 		});
 	}

@@ -1,7 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
-import { Route, Routes, useParams, useSearchParams } from "react-router-dom";
+import {
+	Link,
+	Route,
+	Routes,
+	useParams,
+	useSearchParams,
+} from "react-router-dom";
 import RatingStar from "../../components/RatingStar";
 import Icons from "../../assets/Icons";
 import NavComponent from "../../components/NavComponent";
@@ -91,10 +97,10 @@ const SingleProductPage = () => {
 							{heart} Add to Wishlist
 						</button>
 					</section>
-
+					<hr className="text-secondary my-4" />
 					<section>
 						<p className="text-primary fw-bold">About Seller</p>
-						<section className="d-flex gap-4 align-items-center">
+						<section className="d-flex gap-3 align-items-center">
 							<img
 								className="rounded-circle "
 								style={{ width: "5rem", height: "5rem", objectFit: "cover" }}
@@ -102,10 +108,14 @@ const SingleProductPage = () => {
 								alt=""
 								srcset=""
 							/>
-
-							<p className="h4 fw-bold text-primary">
-								{productData.shop?.name}
-							</p>
+							<section>
+								<p className="h4 fw-bold text-primary">
+									{productData.shop?.name}
+								</p>
+								<Link to={`/shop/${shopData?._id}`}>
+									<button className="btn-sm btn btn-light">View Shop</button>
+								</Link>
+							</section>
 						</section>
 					</section>
 				</section>
@@ -127,7 +137,7 @@ const SingleProductPage = () => {
 						path="/reviews"
 						element={
 							<section className="p-4">
-								{productData.reviews.length == 0 ? (
+								{productData.reviews?.length == 0 ? (
 									<p className="mt-3 mb-1 text-small text-center">
 										No reviews yet
 									</p>

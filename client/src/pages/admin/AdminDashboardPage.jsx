@@ -13,8 +13,9 @@ const AdminDashboardPage = () => {
 	const [refresh, setRefresh] = useState(true);
 	useEffect(() => {
 		axios
-			.get(`${server}/admin/get-all-users`)
-			.then((res) => setData(res.data.userDetails));
+			.get(`${server}/admin/get-all-users`, { withCredentials: true })
+			.then((res) => setData(res.data.userDetails))
+			.catch((err) => toast.error(err.response.data.message));
 	}, [refresh]);
 
 	const handleDelete = (id, action) => {

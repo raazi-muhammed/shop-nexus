@@ -55,7 +55,9 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 		};
 
 		axios
-			.post(`${server}/products/add-product`, formData)
+			.post(`${server}/products/add-product`, formData, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				toast.success(res.data.message);
 			})

@@ -9,7 +9,7 @@ const AdminProductsPage = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/products/all-products-including-deleted`)
+			.get(`${server}/products/all-products-including-deleted`, { withCredentials: true })
 			.then((res) => setData(res.data.products));
 	}, []);
 	return (

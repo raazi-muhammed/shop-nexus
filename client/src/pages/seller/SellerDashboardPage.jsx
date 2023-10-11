@@ -31,7 +31,9 @@ const SellerDashboardPage = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-shop-details/${shopId}`)
+			.get(`${server}/seller/get-shop-details/${shopId}`, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				setData(res.data);
 				setShopName(res.data.data.shopName);

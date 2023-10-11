@@ -10,7 +10,9 @@ const SellerDetailsEditPage = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-shop-details/${shopId}`)
+			.get(`${server}/seller/get-shop-details/${shopId}`, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				setData(res.data.data);
 				const { shopName, email, phoneNumber, address1, address2, zipCode } =
@@ -22,7 +24,7 @@ const SellerDetailsEditPage = () => {
 				setZipCode(zipCode);
 				setAddress2(address2);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => toast.error(err.response.data.message));
 	}, []);
 
 	const [shopName, setShopName] = useState(data.shopName);

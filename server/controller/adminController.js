@@ -2,6 +2,7 @@ const express = require("express");
 router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../model/User");
+const { isAdminAuthenticated } = require("../middleware/adminAuth");
 
 router.post("/login", async (req, res) => {
 	try {
@@ -22,11 +23,17 @@ router.post("/login", async (req, res) => {
 			});
 			return;
 		}
-
-		res.status(200).json({
-			success: true,
-			message: "Admin true",
-		});
+		const options = {
+			expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+			httpOnly: true,
+		};
+		res
+			.status(200)
+			.cookie("adminDetails", { userName, password }, options)
+			.json({
+				success: true,
+				message: "You are an Admin",
+			});
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({
@@ -36,7 +43,7 @@ router.post("/login", async (req, res) => {
 	}
 });
 
-router.get("/get-all-users", async (req, res) => {
+router.get("/get-all-users", isAdminAuthenticated, async (req, res) => {
 	try {
 		const userData = await User.find({});
 
@@ -49,7 +56,7 @@ router.get("/get-all-users", async (req, res) => {
 	}
 });
 
-router.post("/block-user", async (req, res) => {
+router.post("/block-user", isAdminAuthenticated, async (req, res) => {
 	try {
 		const { id, action } = req.body;
 		const userData = await User.findOneAndUpdate(

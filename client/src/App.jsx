@@ -31,6 +31,7 @@ function App() {
 					path="/seller/dashboard/:shopId/*"
 					element={<SellerDashboardPage />}
 				/>
+
 				<Route path="/admin/login" element={<AdminLoginPage />} />
 				<Route path="/admin/dashboard/*" element={<AdminDashboardPage />} />
 

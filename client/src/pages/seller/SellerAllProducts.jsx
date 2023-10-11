@@ -2,16 +2,19 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
 import ProductCardRow from "../../components/ProductCardRow";
+import toast from "react-hot-toast";
 
 const SellerAllProducts = ({ shopId }) => {
 	const [data, setData] = useState([{ images: [] }]);
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-products-from-shop/${shopId}`)
+			.get(`${server}/seller/get-products-from-shop/${shopId}`, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				setData(res.data.data);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => toast.error(err.response.data.message));
 	}, []);
 
 	return (

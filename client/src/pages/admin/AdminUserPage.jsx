@@ -8,20 +8,25 @@ const AdminUserPage = () => {
 	const [refresh, setRefresh] = useState(true);
 	useEffect(() => {
 		axios
-			.get(`${server}/admin/get-all-users`)
-			.then((res) => setData(res.data.userDetails));
+			.get(`${server}/admin/get-all-users`, { withCredentials: true })
+			.then((res) => setData(res.data.userDetails))
+			.catch((err) => toast.error(err.response.data.message));
 	}, [refresh]);
 
 	const handleDelete = (id, action) => {
 		console.log(id);
 		setRefresh(!refresh);
 		axios
-			.post(`${server}/admin/block-user`, { id, action })
+			.post(
+				`${server}/admin/block-user`,
+				{ id, action },
+				{ withCredentials: true }
+			)
 			.then((res) => {
 				toast.success(res.data.message);
 				toast.error("Refresh if changes are not seen");
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => toast.error(err.response.data.message));
 	};
 	return (
 		<section className="w-100 row gap-3 ">

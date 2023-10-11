@@ -28,8 +28,11 @@ const AdminProductEditPage = () => {
 			rating,
 		};
 		axios
-			.put(`${server}/products/edit-product-admin/${productId}`, formData)
-			.then((res) => toast.success(res.data?.message));
+			.put(`${server}/products/edit-product-admin/${productId}`, formData, {
+				withCredentials: true,
+			})
+			.then((res) => toast.success(res.data?.message))
+			.catch((err) => toast.error(err.response.data.message));
 	};
 	return (
 		<div className="w-100">

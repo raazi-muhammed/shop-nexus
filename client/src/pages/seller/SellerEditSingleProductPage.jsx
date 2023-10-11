@@ -58,7 +58,9 @@ const SellerEditSingleProductPage = () => {
 		};
 
 		axios
-			.put(`${server}/products/edit-product/${productId}`, formData)
+			.put(`${server}/products/edit-product/${productId}`, formData, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				toast.success(res.data?.message);
 				setRefresh(!refresh);
@@ -69,7 +71,9 @@ const SellerEditSingleProductPage = () => {
 	/* For Deleting(soft) Product */
 	const handleDelete = (e) => {
 		axios
-			.delete(`${server}/products/delete-product/${productId}`)
+			.delete(`${server}/products/delete-product/${productId}`, {
+				withCredentials: true,
+			})
 			.then((res) => toast.success(res.data?.message))
 			.catch((err) => console.log(err));
 	};
@@ -77,9 +81,11 @@ const SellerEditSingleProductPage = () => {
 	const handleRemoveItem = (index) => {
 		console.log(index);
 		axios
-			.put(`${server}/products/delete-product-image/${productId}`, {
-				index,
-			})
+			.put(
+				`${server}/products/delete-product-image/${productId}`,
+				{ withCredentials: true },
+				{ index }
+			)
 			.then((res) => {
 				toast.success(res.data.message);
 				setRefresh(!refresh);
