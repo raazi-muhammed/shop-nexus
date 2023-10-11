@@ -50,6 +50,22 @@ const SingleProductPage = () => {
 			})
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
 	};
+	const handleAddToWishList = () => {
+		const itemData = {
+			product_id: id,
+			name: productData.name,
+			price: productData.discount_price,
+			imageUrl: productData?.images[0]?.url,
+		};
+		axios
+			.post(`${server}/wish-list/add-to-wish-list`, itemData, {
+				withCredentials: true,
+			})
+			.then((res) => {
+				toast.success(res.data?.message || "Success");
+			})
+			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
+	};
 	return (
 		<main className="vw-100">
 			<section className="row p-4 mx-auto w-100">
@@ -102,7 +118,9 @@ const SingleProductPage = () => {
 							className="btn btn-sm btn-primary d-flex gap-2 align-items-center">
 							{cart} Add to Cart
 						</button>
-						<button className="btn btn-sm btn-secondary text-white">
+						<button
+							onClick={handleAddToWishList}
+							className="btn btn-sm btn-secondary text-white">
 							{heart} Add to Wishlist
 						</button>
 					</section>

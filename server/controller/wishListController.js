@@ -3,7 +3,7 @@ const User = require("../model/User");
 
 const router = require("express").Router();
 
-router.post("/add-to-cart", isAuthenticated, async (req, res) => {
+router.post("/add-to-wish-list", isAuthenticated, async (req, res) => {
 	try {
 		const { product_id, price, name, imageUrl } = req.body;
 		const userId = req.user._id;
@@ -18,13 +18,13 @@ router.post("/add-to-cart", isAuthenticated, async (req, res) => {
 		const updatedUser = await User.findOneAndUpdate(
 			{ _id: userId },
 			{
-				$addToSet: { cart: cartItem },
+				$addToSet: { wishList: cartItem },
 			}
 		);
 
 		res.status(200).json({
 			success: true,
-			message: "Added to Cart",
+			message: "Added to Wishlist",
 		});
 	} catch (err) {
 		console.log(err);
@@ -35,17 +35,16 @@ router.post("/add-to-cart", isAuthenticated, async (req, res) => {
 	}
 });
 
-router.get("/get-all-cart", isAuthenticated, async (req, res) => {
+router.get("/get-all-wish-list", isAuthenticated, async (req, res) => {
 	try {
 		const userId = req.user._id;
 
 		const updatedUser = await User.findOne({ _id: userId });
-		const cartItems = updatedUser.cart;
+		const wishListItems = updatedUser.wishList;
 
 		res.status(200).json({
 			success: true,
-			message: "Added to Cart",
-			cartItems,
+			wishListItems,
 		});
 	} catch (err) {
 		console.log(err);
@@ -56,7 +55,7 @@ router.get("/get-all-cart", isAuthenticated, async (req, res) => {
 	}
 });
 
-router.put("/remove-from-cart", isAuthenticated, async (req, res) => {
+router.put("/remove-from-wish-list", isAuthenticated, async (req, res) => {
 	try {
 		const userId = req.user._id;
 		const { product_id } = req.body;
@@ -64,16 +63,16 @@ router.put("/remove-from-cart", isAuthenticated, async (req, res) => {
 		const updatedUser = await User.findOneAndUpdate(
 			{ _id: userId },
 			{
-				$pull: { cart: { product_id } },
+				$pull: { wishList: { product_id } },
 			},
 			{ new: true }
 		);
-		const cartItems = updatedUser.cart;
+		const wishListItems = updatedUser.wishList;
 
 		res.status(200).json({
 			success: true,
-			message: "Removed from Cart",
-			cartItems,
+			message: "Removed from WishList",
+			wishListItems,
 		});
 	} catch (err) {
 		console.log(err);

@@ -15,6 +15,7 @@ const productController = require("./controller/productController");
 const sellerController = require("./controller/sellerController");
 const adminController = require("./controller/adminController");
 const cartController = require("./controller/cartController");
+const wishListController = require("./controller/wishListController");
 const ErrorHandler = require("./utils/errorHandler");
 
 /* Cors */
@@ -64,6 +65,7 @@ app.use("/api/v1/products/", productController);
 app.use("/api/v1/seller/", sellerController);
 app.use("/api/v1/admin/", adminController);
 app.use("/api/v1/cart/", cartController);
+app.use("/api/v1/wish-list/", wishListController);
 
 app.use("/auth/", googleAuth);
 

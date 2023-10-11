@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Icons from "../assets/Icons";
+import server from "../server";
+import axios from "axios";
+import toast from "react-hot-toast";
 const { heart, cart } = Icons;
 
 const ProductCartMain = ({
@@ -13,6 +16,36 @@ const ProductCartMain = ({
 	shopName,
 	productId,
 }) => {
+	const handleAddToCart = () => {
+		const itemData = {
+			product_id: productId,
+			name: name,
+			price: discount_price,
+			imageUrl: imgUrl,
+		};
+		axios
+			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
+			.then((res) => {
+				toast.success(res.data?.message || "Success");
+			})
+			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
+	};
+	const handleAddToWishList = () => {
+		const itemData = {
+			product_id: productId,
+			name: name,
+			price: discount_price,
+			imageUrl: imgUrl,
+		};
+		axios
+			.post(`${server}/wish-list/add-to-wish-list`, itemData, {
+				withCredentials: true,
+			})
+			.then((res) => {
+				toast.success(res.data?.message || "Success");
+			})
+			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
+	};
 	return (
 		<section
 			className="bg-white d-flex flex-column m-3 rounded-4 flex-shrink-0"
@@ -35,10 +68,16 @@ const ProductCartMain = ({
 				</section>
 			</section>
 			<section className="m-2 d-flex gap-2">
-				<button className="btn btn-sm btn-primary flex-grow-1 d-flex gap-2 align-items-center">
+				<button
+					className="btn btn-sm btn-primary flex-grow-1 d-flex gap-2 align-items-center"
+					onClick={handleAddToCart}>
 					{cart} Add to Cart
 				</button>
-				<button className="btn btn-sm btn-secondary text-white">{heart}</button>
+				<button
+					onClick={handleAddToWishList}
+					className="btn btn-sm btn-secondary text-white">
+					{heart}
+				</button>
 			</section>
 		</section>
 	);

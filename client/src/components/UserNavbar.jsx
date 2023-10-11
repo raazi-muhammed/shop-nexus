@@ -8,9 +8,11 @@ import axios from "axios";
 import server from "../server";
 import toast from "react-hot-toast";
 import CartUser from "./CartUser";
+import WishListUser from "./WishListUser";
 
 const UserNavbar = () => {
 	const [isCartOpen, setIsCartOpen] = useState(false);
+	const [isWishListOpen, setIsWishListOpen] = useState(false);
 	const navItems = [
 		{ name: "Home", link: "/" },
 		{ name: "Best Selling", link: "/best-selling" },
@@ -55,9 +57,6 @@ const UserNavbar = () => {
 			});
 	}, []);
 
-	const handleCartButtonClicked = () => {
-		setIsCartOpen(true);
-	};
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
 			<div>
@@ -67,9 +66,13 @@ const UserNavbar = () => {
 			</div>
 			<NavComponent navItems={navItems} />
 			<section className="d-flex gap-3">
-				<button className="btn btn-sm btn-secondary text-white">{heart}</button>
 				<button
-					onClick={handleCartButtonClicked}
+					onClick={() => setIsWishListOpen(true)}
+					className="btn btn-sm btn-secondary text-white">
+					{heart}
+				</button>
+				<button
+					onClick={() => setIsCartOpen(true)}
 					className="btn btn-sm btn-secondary text-white">
 					{cart}
 				</button>
@@ -82,7 +85,22 @@ const UserNavbar = () => {
 			</section>
 			{isCartOpen ? (
 				<aside className="bg-white aside-card overflow-auto ">
+					<button
+						onClick={() => setIsCartOpen(false)}
+						className="btn btn-sm text-primary w-100">
+						Close
+					</button>
 					<CartUser />
+				</aside>
+			) : null}
+			{isWishListOpen ? (
+				<aside className="bg-white aside-card overflow-auto ">
+					<button
+						onClick={() => setIsWishListOpen(false)}
+						className="btn btn-sm text-primary w-100">
+						Close
+					</button>
+					<WishListUser />
 				</aside>
 			) : null}
 		</section>
