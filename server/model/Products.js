@@ -66,6 +66,10 @@ const productSchema = new mongoose.Schema({
 		required: true,
 	},
 	sold_out: {
+		type: Boolean,
+		default: false,
+	},
+	total_sell: {
 		type: Number,
 		default: 0,
 	},

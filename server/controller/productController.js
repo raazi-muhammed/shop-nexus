@@ -156,12 +156,14 @@ router.put(
 	async (req, res) => {
 		try {
 			const productId = req.params.id;
-			const { category, rating } = req.body;
+			const { category, rating, totalSales, soldOut } = req.body;
 			let productDetails = await Products.findOneAndUpdate(
 				{ _id: productId },
 				{
 					category: category,
 					rating: rating,
+					sold_out: soldOut,
+					total_sell: totalSales,
 				},
 				{ new: true }
 			);

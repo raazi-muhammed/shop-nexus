@@ -9,6 +9,7 @@ const BestSellingPage = ({ type }) => {
 	useEffect(() => {
 		axios.get(`${server}/products/best-selling`).then((res) => {
 			setProductData(res.data.products);
+			console.log(res.data.products);
 		});
 	}, []);
 

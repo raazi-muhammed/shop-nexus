@@ -17,6 +17,25 @@ const UserNavbar = () => {
 		{ name: "FAQs", link: "/faqs" },
 	];
 	const [userData, setUserData] = useState("Log In");
+	useEffect(() => {
+		axios
+			.get(
+				`http://localhost:3000/auth/login/success`,
+				{ withCredentials: true },
+				{
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+						"Access-Control-Allow-Credentials": true,
+					},
+				}
+			)
+			.then((res) => {
+				console.log(res);
+				setUserData({ fullName: res.data.user.displayName });
+			})
+			.catch((err) => console.log(err));
+	}, []);
 
 	useEffect(() => {
 		axios

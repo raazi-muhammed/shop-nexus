@@ -8,16 +8,21 @@ const AdminProductEditPage = () => {
 	const { productId } = useParams();
 	const [data, setData] = useState({ images: [] });
 	const [category, setCategory] = useState("");
-	const [rating, setRating] = useState("");
+	const [rating, setRating] = useState(0);
+	const [totalSales, setTotalSales] = useState(0);
+	const [soldOut, setSoldOut] = useState(false);
 
 	useEffect(() => {
 		axios
 			.get(`${server}/products/single-product/${productId}`)
 			.then((res) => {
 				setData(res.data?.productDetails[0]);
-				const { category, rating } = res.data?.productDetails[0];
+				const { category, rating, sold_out, total_sell } =
+					res.data?.productDetails[0];
 				setCategory(category);
 				setRating(rating);
+				setSoldOut(sold_out);
+				setTotalSales(total_sell);
 			})
 			.catch((err) => console.log(err));
 	}, []);
@@ -26,6 +31,8 @@ const AdminProductEditPage = () => {
 		const formData = {
 			category,
 			rating,
+			totalSales,
+			soldOut,
 		};
 		axios
 			.put(`${server}/products/edit-product-admin/${productId}`, formData, {
@@ -69,6 +76,34 @@ const AdminProductEditPage = () => {
 						value={rating}
 						name="rating"
 						onChange={(e) => setRating(e.target.value)}
+						required
+					/>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="rating" className="form-label">
+						Total Sales
+					</label>
+					<input
+						type="number"
+						className="form-control"
+						id="rating"
+						value={totalSales}
+						name="rating"
+						onChange={(e) => setTotalSales(e.target.value)}
+						required
+					/>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="rating" className="form-label">
+						Sold Out
+					</label>
+					<input
+						type="text"
+						className="form-control"
+						id="rating"
+						value={soldOut}
+						name="rating"
+						onChange={(e) => setSoldOut(e.target.value)}
 						required
 					/>
 				</div>

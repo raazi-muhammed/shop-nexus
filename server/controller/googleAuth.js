@@ -4,9 +4,9 @@ const passport = require("passport");
 router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 
 router.get(
-	"google/callback",
+	"/google/callback",
 	passport.authenticate("google", {
-		successRedirect: "http://localhost:5173",
+		successRedirect: "http://localhost:5173/",
 		failureRedirect: "login/failed",
 	})
 );
@@ -20,6 +20,7 @@ router.get("/login/success", (req, res) => {
 			//cookies:
 		});
 	}
+
 	res.status(400).json({
 		success: false,
 		message: "failed",

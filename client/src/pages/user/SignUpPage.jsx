@@ -29,6 +29,9 @@ const SignUpPage = () => {
 			})
 			.catch((err) => toast.error(err.response.data.message));
 	};
+	const handleGoogle = () => {
+		window.open("http://localhost:3000/auth/google", "_self");
+	};
 
 	return (
 		<main className="row vw-100 ">
@@ -107,8 +110,14 @@ const SignUpPage = () => {
 							required
 						/>
 					</div>
+
 					<button type="submit" className="btn btn-primary btn-block col-12 ">
 						Log In
+					</button>
+					<button
+						className="btn btn-secondary mt-2 text-white w-100"
+						onClick={handleGoogle}>
+						Sign In with Google
 					</button>
 				</form>
 				<p className="text-center mt-2">
