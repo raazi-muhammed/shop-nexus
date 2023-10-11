@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now(),
 	},
+	isBlocked: {
+		type: Boolean,
+		default: false,
+	},
 	resetPasswordToken: String,
 	resetPasswordTime: Date,
 });
@@ -82,7 +86,6 @@ userSchema.methods.getJwtToken = function () {
 
 // compare password
 userSchema.methods.comparePassword = async function (enteredPassword) {
-	console.log(enteredPassword, this.password);
 	return await bcrypt.compare(enteredPassword, this.password);
 };
 

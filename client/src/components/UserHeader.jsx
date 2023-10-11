@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const UserHeader = () => {
 	return (
@@ -17,7 +18,11 @@ const UserHeader = () => {
 					placeholder="Search"
 				/>
 			</div>
-			<button className="btn btn-secondary text-white">Become A seller</button>
+			<Link to={"/seller/sign-up"}>
+				<button className="btn btn-secondary text-white">
+					Become A seller
+				</button>
+			</Link>
 		</header>
 	);
 };

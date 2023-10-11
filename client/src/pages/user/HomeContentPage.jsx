@@ -8,6 +8,7 @@ const HomeContentPage = () => {
 			<h2 className="text-secondary mt-4 mb-0 ms-4 ">Best Selling</h2>
 			<BestSellingPage type="overflow-scroll " />
 			<h2 className="text-secondary mt-4 mb-0 ms-4">Products</h2>
+
 			<ProductsPage type="overflow-scroll " />
 		</main>
 	);

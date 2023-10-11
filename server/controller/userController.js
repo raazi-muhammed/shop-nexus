@@ -1,31 +1,39 @@
 const express = require("express");
-const path = require("path");
 const router = express.Router();
-const upload = require("../multer");
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../utils/sendMail");
+const sendToken = require("../utils/jwtToken");
+const { isAuthenticated } = require("../middleware/auth");
+const catchAsyncError = require("../middleware/catchAsyncError");
 
-//router.post("/create-user", upload.single("file"), async (req, res, next) => {
 router.post("/create-user", async (req, res, next) => {
 	try {
-		const { fullName, email, password, age, profilePic } = req.body;
-		//console.log(req.body);
-		const userEmail = await User.findOne({ email });
+		const { fullName, email, password, confirmPassword, age } = req.body;
 
-		if (userEmail) {
-			return next(new ErrorHandler("User already exists", 400));
+		if (confirmPassword !== password) {
+			res.status(400).json({
+				success: false,
+				message: "Password doesn't match",
+			});
+			return;
 		}
-		//const filename = req.file.filename;
-		//const fileUrl = path.join(filename);
+
+		const userEmail = await User.findOne({ email });
+		if (userEmail) {
+			res.status(400).json({
+				success: false,
+				message: "User Already Exists",
+			});
+			return;
+		}
 
 		const user = {
 			fullName: fullName,
 			email: email,
 			age: age,
 			password: password,
-			profilePic: profilePic,
 		};
-		//console.log(user);
 
 		const createActivationToken = (user) => {
 			return jwt.sign(user, process.env.ACTIVATION_SECRET, {
@@ -33,40 +41,140 @@ router.post("/create-user", async (req, res, next) => {
 			});
 		};
 		const activationToken = createActivationToken(user);
-		const activationUrl = `http://localhost:3000/activation/${activationToken}`;
-		const newUser = await User.create(user);
+		const activationUrl = `http://localhost:5173/api/v1/activation?activation_token=${activationToken}`;
+
+		await sendMail({
+			email: user.email,
+			subject: "Activate you account",
+			message: `Click to activate ${activationUrl}`,
+		});
+
+		/* Can be removed, added so that don't have to check mail while testing */
+		console.log(activationUrl);
+
 		res.status(201).json({
 			success: true,
-			newUser,
+			message: `Please check your email`,
 		});
 	} catch (err) {
 		console.log(err);
+		res.status(400).json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
+router.post("/activation", async (req, res) => {
+	try {
+		const { activation_token } = req.body;
+		console.log(activation_token);
+		const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
+		if (!newUser) return next("Invalid Token");
+
+		const { fullName, email, password, age, profilePic } = newUser;
+
+		const dataUser = await User.create({
+			fullName: fullName,
+			email: email,
+			age: age,
+			password: password,
+			profilePic: profilePic,
+		});
+
+		res.status(201).json({
+			success: 200,
+		});
+		sendToken(dataUser, 201, res);
+	} catch (error) {
+		console.log(error);
 	}
 });
 
 router.post("/login-user", async (req, res) => {
-	req.session.user = req.body;
-
-	let user = await User.findOne(
-		{ email: req.body.email },
-		{ password: 1, email: 1, fullName: 1 } // used projection because other password is not returend
-	);
-
-	console.log(req.body.password);
-	console.log(user);
-
-	let isPasswordMatch;
 	try {
-		isPasswordMatch = await user.comparePassword(req.body.password);
-		console.log(isPasswordMatch);
-	} catch (error) {
-		isPasswordMatch = false;
-		console.log(error);
-	}
+		let user = await User.findOne(
+			{ email: req.body.email },
+			{ password: 1, email: 1, fullName: 1, isBlocked: 1 } // used projection because otherwise password is not returned
+		);
 
-	res.status(200).json({
-		success: isPasswordMatch,
-	});
+		if (!user) {
+			res.status(404).json({
+				success: false,
+				message: "User not Found",
+			});
+			return;
+		}
+
+		isPasswordMatch = await user.comparePassword(req.body.password);
+		if (!isPasswordMatch) {
+			res.status(401).json({
+				success: false,
+				message: "Password Incorrect",
+			});
+			return;
+		}
+
+		if (user.isBlocked) {
+			res.status(401).json({
+				success: false,
+				message: "You are Blocked",
+			});
+			return;
+		}
+
+		sendToken(user, 201, res, "userToken");
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Internal Serer Error",
+		});
+	}
 });
+
+router.get("/logout", (req, res) => {
+	try {
+		console.log("logout reached");
+
+		res.status(200).clearCookie("userToken").json({
+			success: true,
+			message: "User is Logged out",
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
+//Load user
+router.get(
+	"/load-user",
+	isAuthenticated,
+	catchAsyncError(async (req, res, next) => {
+		try {
+			const user = await User.findById(req.user.id);
+
+			if (user.isBlocked) {
+				res.status(200).json({
+					success: false,
+					message: "You are Blocked",
+				});
+				return;
+			}
+
+			res.status(200).json({
+				success: true,
+				user,
+			});
+		} catch (error) {
+			res
+				.status(500)
+				.json({ success: false, message: "Error in Loading User" });
+		}
+	})
+);
 
 module.exports = router;

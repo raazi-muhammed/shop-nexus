@@ -11,12 +11,15 @@ const ProductCartMain = ({
 	discount_price,
 	imgUrl,
 	shopName,
+	productId,
 }) => {
 	return (
 		<section
 			className="bg-white d-flex flex-column m-3 rounded-4 flex-shrink-0"
-			style={({ "min-width": "15rem" }, { "max-width": "18rem" })}>
-			<img className="rounded-4 w-100 " src={imgUrl} alt="" srcSet="" />
+			style={({ "min-width": "15rem" }, { maxWidth: "18rem" })}>
+			<Link to={`/product/${productId}`}>
+				<img className="rounded-4 w-100 " src={imgUrl} alt="" />
+			</Link>
 			<section className="d-flex flex-column p-4 pb-0 ">
 				<Link className="text-secondary text-small text-decoration-none">
 					{shopName}

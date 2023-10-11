@@ -3,30 +3,33 @@ import server from "../../server";
 import axios from "axios";
 
 import ProductCartMain from "../../components/ProductCartMain";
+import toast from "react-hot-toast";
 
 const ProductsPage = ({ type }) => {
-	const [productData, setProductData] = useState({ data: [] });
-	//http://localhost:3000/api/v1/products/all-products
-
+	const [productData, setProductData] = useState([]);
 	useEffect(() => {
-		console.log("all product axios started to work");
-		axios.get(`${server}/products/all-products`).then((data) => {
-			console.log("data receved");
-			console.log(setProductData(data));
-		});
+		axios
+			.get(`${server}/products/all-products`)
+			.then((res) => {
+				setProductData(res.data.products);
+			})
+			.catch((err) => {
+				toast.error("Loading failed");
+			});
 	}, []);
 
 	return (
 		<div className={`d-flex   ${type}`}>
-			{productData.data.map((product) => (
+			{productData.map((product) => (
 				<ProductCartMain
 					key={product._id}
 					price={product.price}
+					productId={product._id}
 					rating={product.rating}
 					name={product.name}
 					sold={product.total_sell}
 					shopName={product.shop.name}
-					imgUrl={product.image_Url[0].url}
+					imgUrl={product.images[0]?.url}
 					discount_price={product.discount_price}
 				/>
 			))}

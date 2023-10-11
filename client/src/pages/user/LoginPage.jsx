@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import server from "../../server";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
 	const navigate = useNavigate();
@@ -16,10 +17,16 @@ const LoginPage = () => {
 			password: password,
 		};
 
-		axios.post(`${server}/user/login-user`, newForm).then((res) => {
-			console.log(res.data);
-			if (res.data.success) navigate("/");
-		});
+		axios
+			.post(`${server}/user/login-user`, newForm, { withCredentials: true })
+			.then((res) => {
+				console.log(res.data);
+				if (res.data.success) navigate("/");
+			})
+			.catch((err) => toast.error(err.response.data.message));
+	};
+	const handleGoogle = () => {
+		window.open("http://localhost:3000/auth/google", "_self");
 	};
 
 	return (
@@ -85,8 +92,17 @@ const LoginPage = () => {
 						Log In
 					</button>
 				</form>
-				<p>
-					Don’t Have an Account <Link to="/sign-up"> Sign Up</Link>
+				<button
+					className="btn btn-secondary mt-2 text-white w-100"
+					onClick={handleGoogle}>
+					Sign In with Google
+				</button>
+				<p className="text-center mt-3">
+					Don’t Have an Account{" "}
+					<Link className="text-secondary fw-bold" to="/sign-up">
+						{" "}
+						Sign Up
+					</Link>
 				</p>
 			</section>
 		</main>
