@@ -7,6 +7,7 @@ const sendToken = require("../utils/jwtToken");
 const Products = require("../model/Products");
 const { upload } = require("../multer");
 const fs = require("fs");
+
 router.post("/crate-shop", async (req, res) => {
 	try {
 		if (req.body.password !== req.body.confirmPassword) {
@@ -151,13 +152,21 @@ router.post("/login-shop", async (req, res) => {
 });
 
 router.get("/get-shop-details/:id", async (req, res) => {
-	const shopId = req.params.id;
+	try {
+		const shopId = req.params.id;
 
-	const shopDetails = await Shop.findOne({ _id: shopId });
-	res.status(200).json({
-		success: true,
-		data: shopDetails,
-	});
+		const shopDetails = await Shop.findOne({ _id: shopId });
+		res.status(200).json({
+			success: true,
+			data: shopDetails,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			success: true,
+			message: "Failed to get shop details",
+		});
+	}
 });
 
 router.put("/edit-shop-details", upload.single("file"), async (req, res) => {

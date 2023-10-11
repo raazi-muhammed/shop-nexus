@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Route, Routes, useParams, useSearchParams } from "react-router-dom";
 import RatingStar from "../../components/RatingStar";
 import Icons from "../../assets/Icons";
 import NavComponent from "../../components/NavComponent";
@@ -13,16 +13,26 @@ const SingleProductPage = () => {
 	const [imgSelect, setImgSelect] = useState(0);
 	const [productData, setProductData] = useState({ images: [] });
 	const { id } = useParams();
+	const [shopData, setShopData] = useState({});
 	const navItems = [
-		{ name: "Details", link: "#" },
-		{ name: "Reviews", link: "#" },
-		{ name: "About Seller", link: "#" },
+		{ name: "Details", link: `/product/${id}` },
+		{ name: "Reviews", link: "reviews" },
+		{ name: "About Seller", link: "about-seller" },
 	];
 	useEffect(() => {
 		axios
 			.get(`${server}/products/single-product/${id}`)
 			.then((res) => {
 				setProductData(res.data.productDetails[0]);
+
+				axios
+					.get(
+						`${server}/seller/get-shop-details/${res.data.productDetails[0].shop.id}`
+					)
+					.then((res) => {
+						setShopData(res.data.data);
+						console.log(res);
+					});
 			})
 			.catch((err) => toast.error("Loading failed" + err));
 	}, []);
@@ -42,7 +52,7 @@ const SingleProductPage = () => {
 							largeImage: {
 								src: productData?.images[imgSelect]?.url,
 								width: 1200,
-								height: 1800,
+								height: 1200,
 							},
 						}}
 					/>
@@ -84,21 +94,18 @@ const SingleProductPage = () => {
 
 					<section>
 						<p className="text-primary fw-bold">About Seller</p>
-						<section className="d-flex gap-4">
+						<section className="d-flex gap-4 align-items-center">
 							<img
 								className="rounded-circle "
 								style={{ width: "5rem", height: "5rem", objectFit: "cover" }}
-								src={productData.shop?.shop_avatar?.url}
+								src={shopData.image?.url}
 								alt=""
 								srcset=""
 							/>
 
-							<div className="">
-								<p className="h4 fw-bold text-primary">
-									{productData.shop?.name}
-								</p>
-								<p>{`${productData.shop?.ratings} Ratings`}</p>
-							</div>
+							<p className="h4 fw-bold text-primary">
+								{productData.shop?.name}
+							</p>
 						</section>
 					</section>
 				</section>
@@ -106,10 +113,42 @@ const SingleProductPage = () => {
 			{/* ------------------------------------------------------------------  */}
 			<section className="bg-white p-4">
 				<NavComponent className="justify-content-center " navItems={navItems} />
-				<section className="p-4">
-					<p className="h4">{productData.name}</p>
-					<p className="text-small">{productData.description}</p>
-				</section>
+				<Routes>
+					<Route
+						path="/"
+						element={
+							<section className="p-4">
+								<p className="h4">{productData.name}</p>
+								<p className="text-small">{productData.description}</p>
+							</section>
+						}
+					/>
+					<Route
+						path="/reviews"
+						element={
+							<section className="p-4">
+								{productData.reviews.length == 0 ? (
+									<p className="mt-3 mb-1 text-small text-center">
+										No reviews yet
+									</p>
+								) : (
+									<p className="text-small">{productData.reviews}</p>
+								)}
+							</section>
+						}
+					/>
+					<Route
+						path="/about-seller"
+						element={
+							<section className="p-4">
+								<p className="h4">{shopData?.shopName}</p>
+								<p className="">{shopData?.email}</p>
+								<p className="text-small mb-0 ">{shopData?.address1}</p>
+								<p className="text-small">{shopData?.address2}</p>
+							</section>
+						}
+					/>
+				</Routes>
 			</section>
 		</main>
 	);
