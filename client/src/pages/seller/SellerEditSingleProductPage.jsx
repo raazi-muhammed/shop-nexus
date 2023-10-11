@@ -78,26 +78,25 @@ const SellerEditSingleProductPage = () => {
 			.catch((err) => console.log(err));
 	};
 
-	const handleRemoveItem = (index) => {
-		console.log(index);
+	const handleRemoveItem = (imgUrl) => {
+		console.log(imgUrl);
 		axios
 			.put(
 				`${server}/products/delete-product-image/${productId}`,
-				{ withCredentials: true },
-				{ index }
+				{ imgUrl },
+				{ withCredentials: true }
 			)
 			.then((res) => {
-				toast.success(res.data.message);
+				toast.success(res.data?.message);
 				setRefresh(!refresh);
 			})
-			.catch((err) => toast.error(err.data.data.message));
+			.catch((err) => toast.error(err.data?.data?.message || "Error"));
 	};
 
 	useEffect(() => {
 		axios
 			.get(`${server}/products/single-product/${productId}`)
 			.then((res) => {
-				console.log(res.data?.productDetails[0]);
 				const {
 					name,
 					description,
@@ -239,7 +238,7 @@ const SellerEditSingleProductPage = () => {
 
 				<div className="row gap-3 m-1">
 					<button type="submit" className="col btn btn-primary">
-						Edit Product
+						Update Product
 					</button>
 					<button className="col btn btn-danger" onClick={handleDelete}>
 						Delete Product

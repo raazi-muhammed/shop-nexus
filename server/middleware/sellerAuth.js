@@ -18,9 +18,5 @@ exports.isSellerAuthenticated = catchAsyncError(async (req, res, next) => {
 	}
 
 	const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-	////const userFound = await User.findById(decoded.id);
-	//	res.status(500).json({ success: false, message: "No User found" });
-	//req.user = userFound;
 	next();
 });

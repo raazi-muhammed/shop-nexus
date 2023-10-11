@@ -85,8 +85,6 @@ router.put("/edit-product/:id", isSellerAuthenticated, async (req, res) => {
 			image,
 		} = req.body;
 
-		console.log(image);
-
 		const imageUrls = await Promise.all(
 			image.map(async (img, i) => {
 				return {
@@ -95,8 +93,6 @@ router.put("/edit-product/:id", isSellerAuthenticated, async (req, res) => {
 				};
 			})
 		);
-
-		console.log(imageUrls);
 
 		let productDetails = await Products.findOneAndUpdate(
 			{ _id: productId },
@@ -129,15 +125,15 @@ router.put("/edit-product/:id", isSellerAuthenticated, async (req, res) => {
 
 router.put(
 	"/delete-product-image/:id",
-	isSellerAuthenticated,
+	isAdminAuthenticated,
 	async (req, res) => {
 		try {
 			const productId = req.params.id;
-			const removeIndex = req.body.index;
+			const imageUrl = req.body.imgUrl;
 
 			let productDetails = await Products.findOneAndUpdate(
 				{ _id: productId },
-				{ $pull: { images: { url: removeIndex } } },
+				{ $pull: { images: { url: imageUrl } } },
 				{ new: true }
 			);
 			res.status(200).json({
@@ -149,7 +145,6 @@ router.put(
 			res.status(500).json({
 				success: false,
 				message: "Image not removed",
-				err,
 			});
 		}
 	}
