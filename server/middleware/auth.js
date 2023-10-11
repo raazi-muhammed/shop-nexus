@@ -9,7 +9,7 @@ exports.isAuthenticated = catchAsyncError(async (req, res, next) => {
 		token = req.cookies["userToken"];
 	} catch (err) {
 		res.status(500).json({ success: false, message: "No token found" });
-		return next(new ErrorHandler("No token Found"));
+		return;
 	}
 
 	if (!token) {

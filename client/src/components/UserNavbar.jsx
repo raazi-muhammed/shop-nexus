@@ -7,8 +7,10 @@ import NavComponent from "./NavComponent";
 import axios from "axios";
 import server from "../server";
 import toast from "react-hot-toast";
+import CartUser from "./CartUser";
 
 const UserNavbar = () => {
+	const [isCartOpen, setIsCartOpen] = useState(false);
 	const navItems = [
 		{ name: "Home", link: "/" },
 		{ name: "Best Selling", link: "/best-selling" },
@@ -53,6 +55,9 @@ const UserNavbar = () => {
 			});
 	}, []);
 
+	const handleCartButtonClicked = () => {
+		setIsCartOpen(true);
+	};
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
 			<div>
@@ -63,7 +68,11 @@ const UserNavbar = () => {
 			<NavComponent navItems={navItems} />
 			<section className="d-flex gap-3">
 				<button className="btn btn-sm btn-secondary text-white">{heart}</button>
-				<button className="btn btn-sm btn-secondary text-white">{cart}</button>
+				<button
+					onClick={handleCartButtonClicked}
+					className="btn btn-sm btn-secondary text-white">
+					{cart}
+				</button>
 				{/* <Link to="/login"> */}
 				<Link to={userData._id ? `/user/dashboard/${userData._id} ` : `/login`}>
 					<button className="btn btn-sm btn-secondary text-white">
@@ -71,6 +80,11 @@ const UserNavbar = () => {
 					</button>
 				</Link>
 			</section>
+			{isCartOpen ? (
+				<aside className="bg-white aside-card overflow-auto ">
+					<CartUser />
+				</aside>
+			) : null}
 		</section>
 	);
 };

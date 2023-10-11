@@ -1,13 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
-import {
-	Link,
-	Route,
-	Routes,
-	useParams,
-	useSearchParams,
-} from "react-router-dom";
+import { Link, Route, Routes, useParams } from "react-router-dom";
 import RatingStar from "../../components/RatingStar";
 import Icons from "../../assets/Icons";
 import NavComponent from "../../components/NavComponent";
@@ -26,6 +20,7 @@ const SingleProductPage = () => {
 		{ name: "About Seller", link: "about-seller" },
 	];
 	useEffect(() => {
+		axios.defaults.withCredentials = true;
 		axios
 			.get(`${server}/products/single-product/${id}`)
 			.then((res) => {
@@ -37,12 +32,24 @@ const SingleProductPage = () => {
 					)
 					.then((res) => {
 						setShopData(res.data.data);
-						console.log(res);
 					});
 			})
 			.catch((err) => toast.error("Loading failed" + err));
 	}, []);
-
+	const handleAddToCart = () => {
+		const itemData = {
+			product_id: id,
+			name: productData.name,
+			price: productData.discount_price,
+			imageUrl: productData?.images[0]?.url,
+		};
+		axios
+			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
+			.then((res) => {
+				toast.success(res.data?.message || "Success");
+			})
+			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
+	};
 	return (
 		<main className="vw-100">
 			<section className="row p-4 mx-auto w-100">
@@ -90,7 +97,9 @@ const SingleProductPage = () => {
 						</p>
 					</div>
 					<section className="my-3 d-flex gap-2">
-						<button className="btn btn-sm btn-primary d-flex gap-2 align-items-center">
+						<button
+							onClick={handleAddToCart}
+							className="btn btn-sm btn-primary d-flex gap-2 align-items-center">
 							{cart} Add to Cart
 						</button>
 						<button className="btn btn-sm btn-secondary text-white">
