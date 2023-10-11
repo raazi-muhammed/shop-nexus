@@ -37,9 +37,7 @@ const SignUpPage = () => {
 		<main className="row vw-100 ">
 			<section className="col-12 my-auto mx-auto p-5 bg-white rounded-4 container-max-width-form">
 				<h3>Create an account</h3>
-				<p className="text-small">
-					please enter you details to create an account
-				</p>
+				<p className="text-secondary">New to Shop Nexus? Register Now</p>
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className="mb-3">
 						<label htmlFor="full-name" className="form-label">
@@ -112,13 +110,13 @@ const SignUpPage = () => {
 					</div>
 
 					<button type="submit" className="btn btn-primary btn-block col-12 ">
-						Log In
+						Sign Up
 					</button>
-					<button
+					{/* <button
 						className="btn btn-secondary mt-2 text-white w-100"
 						onClick={handleGoogle}>
 						Sign In with Google
-					</button>
+					</button> */}
 				</form>
 				<p className="text-center mt-2">
 					Alread Have an Account?{" "}

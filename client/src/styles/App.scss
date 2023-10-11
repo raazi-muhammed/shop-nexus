@@ -3,12 +3,11 @@ $secondary: #7a76e2;
 $light: #d7d6f6;
 
 $border-radius: 1rem;
-$form-select-font-size: 0.75rem;
-$form-select-bg: $secondary;
-
 $btn-border-radius-sm: 1rem;
 $input-bg: $light;
 $input-padding-y: 0.75rem;
+
+$form-select-border-radius-sm: 1rem;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 

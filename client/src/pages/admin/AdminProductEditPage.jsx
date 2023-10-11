@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../server";
 import toast from "react-hot-toast";
+import categoryArry from "../../utils/category";
 
 const AdminProductEditPage = () => {
 	const { productId } = useParams();
@@ -52,18 +53,19 @@ const AdminProductEditPage = () => {
 			</section>
 			<form onSubmit={(e) => handleSubmit(e)}>
 				<div className="mb-3">
-					<label htmlFor="category" className="form-label">
-						Category
+					<label className="form-label" htmlFor="categorySelect">
+						Select a Category:
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="category"
+					<select
 						value={category}
-						name="category"
 						onChange={(e) => setCategory(e.target.value)}
-						required
-					/>
+						className="form-select"
+						id="categorySelect">
+						<option value="">Select Category</option>
+						{categoryArry.map((e) => (
+							<option value={e}>{e}</option>
+						))}
+					</select>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="rating" className="form-label">

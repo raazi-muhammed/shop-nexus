@@ -25,8 +25,8 @@ const ActivationPage = () => {
 	}, []);
 
 	return (
-		<div>
-			<p>{message}</p>
+		<div className="w-100 d-flex justify-content-center align-items-center">
+			<p className="text-center">{message}</p>
 		</div>
 	);
 };

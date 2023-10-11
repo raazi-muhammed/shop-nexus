@@ -74,6 +74,9 @@ router.post("/activation", async (req, res) => {
 
 		const { fullName, email, password, age, profilePic } = newUser;
 
+		const userExits = await User.findOne({ email });
+		if (userExits) return;
+
 		const dataUser = await User.create({
 			fullName: fullName,
 			email: email,
@@ -82,11 +85,11 @@ router.post("/activation", async (req, res) => {
 			profilePic: profilePic,
 		});
 
-		res.status(201).json({
-			success: 200,
-		});
 		sendToken(dataUser, 201, res);
 	} catch (error) {
+		res.status(500).json({
+			success: false,
+		});
 		console.log(error);
 	}
 });

@@ -41,7 +41,7 @@ const LoginPage = () => {
 			</section>
 			<section className="col-6 p-5 my-auto">
 				<h3>Log In</h3>
-				<p className="text-small">please enter you details to log in</p>
+				<p className="text-secondary">Welcome back! Log in</p>
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className="mb-3">
 						<label htmlFor="email" className="form-label">
@@ -92,11 +92,11 @@ const LoginPage = () => {
 						Log In
 					</button>
 				</form>
-				<button
+				{/* <button
 					className="btn btn-secondary mt-2 text-white w-100"
 					onClick={handleGoogle}>
 					Sign In with Google
-				</button>
+				</button> */}
 				<p className="text-center mt-3">
 					Don’t Have an Account{" "}
 					<Link className="text-secondary fw-bold" to="/sign-up">

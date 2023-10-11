@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
+import categoryArry from "../../utils/category";
 
 const SellerAddProductPage = ({ shopId, shopName }) => {
 	const [productName, setProductName] = useState("");
@@ -53,7 +54,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 			shopId,
 			shopName,
 		};
-
+		console.log(formData);
 		axios
 			.post(`${server}/products/add-product`, formData, {
 				withCredentials: true,
@@ -84,18 +85,19 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 					/>
 				</div>
 				<div className="mb-3">
-					<label htmlFor="category" className="form-label">
-						Category
+					<label className="form-label" htmlFor="categorySelect">
+						Select a Category:
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="category"
+					<select
 						value={category}
-						name="category"
 						onChange={(e) => setCategory(e.target.value)}
-						required
-					/>
+						className="form-select"
+						id="categorySelect">
+						<option value="">Select Category</option>
+						{categoryArry.map((e) => (
+							<option value={e}>{e}</option>
+						))}
+					</select>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="description" className="form-label">

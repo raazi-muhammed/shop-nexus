@@ -9,6 +9,7 @@ import server from "../server";
 import toast from "react-hot-toast";
 import CartUser from "./CartUser";
 import WishListUser from "./WishListUser";
+import category from "../utils/category";
 
 const UserNavbar = () => {
 	const [isCartOpen, setIsCartOpen] = useState(false);
@@ -21,7 +22,7 @@ const UserNavbar = () => {
 		{ name: "FAQs", link: "/faqs" },
 	];
 	const [userData, setUserData] = useState("Log In");
-	useEffect(() => {
+	/* useEffect(() => {
 		axios
 			.get(
 				`http://localhost:3000/auth/login/success`,
@@ -39,7 +40,7 @@ const UserNavbar = () => {
 				setUserData({ fullName: res.data.user.displayName });
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, []); */
 
 	useEffect(() => {
 		axios
@@ -60,9 +61,17 @@ const UserNavbar = () => {
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
 			<div>
-				<button className="btn btn-sm btn-secondary text-white">
-					Catergories
-				</button>
+				<label className="visually-hidden " for="categorySelect">
+					Select a Category:
+				</label>
+				<select
+					className="w-75 form-select form-select-sm bg-secondary text-white px-3"
+					id="categorySelect">
+					<option value="">Select Category</option>
+					{category.map((e) => (
+						<option value={e}>{e}</option>
+					))}
+				</select>
 			</div>
 			<NavComponent navItems={navItems} />
 			<section className="d-flex gap-3">

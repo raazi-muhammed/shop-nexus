@@ -39,9 +39,7 @@ const SellerSignUpPage = () => {
 		<main className="row vw-100 ">
 			<section className="col-12 my-auto mx-auto p-5 bg-primary text-white rounded-4 container-max-width-form">
 				<h3>Create an account</h3>
-				<p className="text-small">
-					please enter you details to create an account
-				</p>
+				<p className="text-light">New to Shop Nexus? Register Now</p>
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className="mb-3">
 						<label htmlFor="shop-name" className="form-label">

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import server from "../../server";
 import toast from "react-hot-toast";
+import categoryArry from "../../utils/category";
 
 const SellerEditSingleProductPage = () => {
 	const [refresh, setRefresh] = useState(true);
@@ -140,18 +141,19 @@ const SellerEditSingleProductPage = () => {
 					/>
 				</div>
 				<div className="mb-3">
-					<label htmlFor="category" className="form-label">
-						Category
+					<label className="form-label" htmlFor="categorySelect">
+						Select a Category:
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="category"
+					<select
 						value={category}
-						name="category"
 						onChange={(e) => setCategory(e.target.value)}
-						required
-					/>
+						className="form-select"
+						id="categorySelect">
+						<option value="">Select Category</option>
+						{categoryArry.map((e) => (
+							<option value={e}>{e}</option>
+						))}
+					</select>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="description" className="form-label">

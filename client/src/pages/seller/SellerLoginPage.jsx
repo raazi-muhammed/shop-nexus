@@ -39,7 +39,7 @@ const SellerLoginPage = () => {
 			</section>
 			<section className="col-6 p-5 my-auto">
 				<h3> Seller Log In </h3>
-				<p className="text-small">please enter you details to log in</p>
+				<p className="text-light">Welcome back! Log in</p>
 				<form onSubmit={(e) => handleSubmit(e)}>
 					<div className="mb-3">
 						<label htmlFor="email" className="form-label">
