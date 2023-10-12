@@ -40,6 +40,7 @@ router.post("/create-user", async (req, res, next) => {
 				expiresIn: "5m",
 			});
 		};
+
 		const activationToken = createActivationToken(user);
 		const activationUrl = `http://localhost:5173/api/v1/activation?activation_token=${activationToken}`;
 

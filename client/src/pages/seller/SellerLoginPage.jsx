@@ -30,12 +30,7 @@ const SellerLoginPage = () => {
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-primary text-white rounded-4">
 			<section className="col-6 p-0 overflow-hidden ">
-				<img
-					src={loginCover}
-					className="rounded-start-4 m-0"
-					alt=""
-					srcSet=""
-				/>
+				<img src={loginCover} className="rounded-start-4 m-0" alt="" />
 			</section>
 			<section className="col-6 p-5 my-auto">
 				<h3> Seller Log In </h3>

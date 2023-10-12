@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import SellerNavbar from "../../components/SellerNavbar";
 import axios from "axios";
 import server from "../../server";
-import { Route, Routes, useParams } from "react-router-dom";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import SellerAllProducts from "./SellerAllProducts";
 import AsideComp from "../../components/AsideComp";
 import SellerAddProductPage from "./SellerAddProductPage";
 import SellerDetailsEditPage from "./SellerDetailsEditPage";
 import SellerEditSingleProductPage from "./SellerEditSingleProductPage";
+import toast from "react-hot-toast";
 
 const SellerDashboardPage = () => {
+	const navigate = useNavigate();
 	const [data, setData] = useState("");
 	let { shopId } = useParams();
 	const [shopName, setShopName] = useState("Loading...");
@@ -41,12 +43,27 @@ const SellerDashboardPage = () => {
 			.catch((err) => console.log(err));
 	}, []);
 
+	const handleLogOut = () => {
+		axios
+			.get(`${server}/seller/logout`, { withCredentials: true })
+			.then((res) => {
+				toast.success(res.data.message);
+				navigate("/seller/login");
+				window.location.reload();
+			});
+	};
+
 	return (
 		<main className="vw-100">
 			<SellerNavbar shopName={shopName} />
 			<section className="row py-5">
 				<div className="col-3 mt-3">
 					<AsideComp asideItems={asideItems} />
+					<button
+						className="btn btn-sm btn-danger w-100 ms-3"
+						onClick={handleLogOut}>
+						Log out
+					</button>
 				</div>
 				<section className="col-8 mx-auto">
 					<Routes>

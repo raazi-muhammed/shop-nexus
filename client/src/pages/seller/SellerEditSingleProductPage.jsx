@@ -217,6 +217,7 @@ const SellerEditSingleProductPage = () => {
 						<div className="col-3">
 							<img className="w-100 rounded-4" src={e.url} alt="" />
 							<button
+								type="button"
 								className="btn btn-danger btn-sm mt-2 w-100"
 								onClick={(event) => handleRemoveItem(e.url)}>
 								Remove

@@ -25,9 +25,9 @@ const LoginPage = () => {
 			})
 			.catch((err) => toast.error(err.response.data.message));
 	};
-	const handleGoogle = () => {
+	/* 	const handleGoogle = () => {
 		window.open("http://localhost:3000/auth/google", "_self");
-	};
+	}; */
 
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-white rounded-4">
