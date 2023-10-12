@@ -5,7 +5,9 @@ const UserHeader = () => {
 	return (
 		<header className="d-flex justify-content-between vw-100 bg-primary p-3 text-white">
 			<div>
-				<h1>Shop Nexus</h1>
+				<Link to={"/"} className="text-white h3 text-decoration-none ">
+					Shop Nexus
+				</Link>
 			</div>
 			<div className="">
 				<label htmlFor="search-product" className="form-label visually-hidden ">

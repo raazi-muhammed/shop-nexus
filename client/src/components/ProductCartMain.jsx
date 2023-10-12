@@ -48,7 +48,7 @@ const ProductCartMain = ({
 	};
 	return (
 		<section
-			className="bg-white d-flex flex-column m-3 rounded-4 flex-shrink-0"
+			className="bg-white d-flex flex-column m-3 rounded-4 flex-shrink-0 "
 			style={({ "min-width": "15rem" }, { maxWidth: "18rem" })}>
 			<Link to={`/product/${productId}`}>
 				<img className="rounded-4 w-100 " src={imgUrl} alt="" />

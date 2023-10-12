@@ -153,6 +153,99 @@ router.get("/logout", (req, res) => {
 	}
 });
 
+router.get("/user-details", isAuthenticated, async (req, res) => {
+	try {
+		const user = await User.findById(req.user.id);
+
+		res.status(200).json({
+			success: true,
+			user,
+		});
+	} catch (error) {
+		res.status(500).json({ success: false, message: "Error in getting User" });
+	}
+});
+
+router.put("/edit-user-details", isAuthenticated, async (req, res) => {
+	try {
+		const { email, fullName } = req.body;
+		const user = await User.findOneAndUpdate(
+			{ _id: req.user.id },
+			{ fullName, email }
+		);
+
+		res.status(200).json({
+			success: true,
+			message: "User Updated",
+			user,
+		});
+	} catch (error) {
+		res.status(500).json({ success: false, message: "Error in getting User" });
+	}
+});
+
+router.post("/add-address", isAuthenticated, async (req, res) => {
+	try {
+		const {
+			fullName,
+			phoneNumber,
+			pinCode,
+			state,
+			city,
+			addressLine1,
+			addressLine2,
+			addressType,
+		} = req.body;
+
+		const user = await User.findOneAndUpdate(
+			{ _id: req.user.id },
+			{
+				$addToSet: {
+					addresses: {
+						fullName,
+						phoneNumber,
+						pinCode,
+						state,
+						city,
+						address1: addressLine1,
+						address2: addressLine2,
+						addressType,
+					},
+				},
+			}
+		);
+
+		res.status(200).json({
+			success: true,
+			message: "User Updated",
+			user,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ success: false, message: "Error Adding Address" });
+	}
+});
+
+router.post("/remove-address", isAuthenticated, async (req, res) => {
+	try {
+		const { addressId } = req.body;
+		const user = await User.findOneAndUpdate(
+			{ _id: req.user.id },
+			{ $pull: { addresses: { _id: addressId } } },
+			{ new: true }
+		);
+
+		res.status(200).json({
+			success: true,
+			message: "Address Removed",
+			user,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ success: false, message: "Error Adding Address" });
+	}
+});
+
 //Load user
 router.get(
 	"/load-user",

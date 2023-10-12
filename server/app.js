@@ -2,10 +2,8 @@ const express = require("express");
 const connectDatabase = require("./db/database");
 const app = express();
 require("dotenv").config({ path: "./config/.env" });
-
 const sessions = require("express-session");
 const bodyParser = require("body-parser");
-
 var cookies = require("cookie-parser");
 app.use(cookies());
 
@@ -16,6 +14,7 @@ const sellerController = require("./controller/sellerController");
 const adminController = require("./controller/adminController");
 const cartController = require("./controller/cartController");
 const wishListController = require("./controller/wishListController");
+const googleAuth = require("./controller/googleAuth");
 const ErrorHandler = require("./utils/errorHandler");
 
 /* Cors */
@@ -37,14 +36,11 @@ app.use(
 	})
 );
 
-/* Pssport */
-
+/* Passport */
 require("./utils/passport");
 const passport = require("passport");
 app.use(passport.initialize());
 app.use(passport.session());
-
-const googleAuth = require("./controller/googleAuth");
 
 const PORT = process.env.PORT;
 
@@ -66,7 +62,6 @@ app.use("/api/v1/seller/", sellerController);
 app.use("/api/v1/admin/", adminController);
 app.use("/api/v1/cart/", cartController);
 app.use("/api/v1/wish-list/", wishListController);
-
 app.use("/auth/", googleAuth);
 
 app.get("*", (req, res) => {

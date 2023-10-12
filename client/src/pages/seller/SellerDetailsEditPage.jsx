@@ -177,7 +177,7 @@ const SellerDetailsEditPage = () => {
 				<button
 					type="submit"
 					className="btn btn-secondary text-white btn-block col-12">
-					Edit Data
+					Update Data
 				</button>
 			</form>
 		</div>

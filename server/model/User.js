@@ -22,23 +22,37 @@ const userSchema = new mongoose.Schema({
 	},
 	addresses: [
 		{
-			country: {
+			fullName: {
 				type: String,
+				required: true,
+			},
+			phoneNumber: {
+				type: Number,
+				required: true,
 			},
 			city: {
 				type: String,
+				required: true,
+			},
+			state: {
+				type: String,
+				required: true,
 			},
 			address1: {
 				type: String,
+				required: true,
 			},
 			address2: {
 				type: String,
+				required: true,
 			},
-			zipCode: {
+			pinCode: {
 				type: Number,
+				required: true,
 			},
 			addressType: {
 				type: String,
+				default: "Home",
 			},
 		},
 	],
