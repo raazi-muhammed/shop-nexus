@@ -61,7 +61,7 @@ const UserNavbar = () => {
 	return (
 		<section className="d-flex justify-content-between p-2 bg-light">
 			<div>
-				<label className="visually-hidden " for="categorySelect">
+				<label className="visually-hidden " htmlFor="categorySelect">
 					Select a Category:
 				</label>
 				<select
@@ -69,7 +69,9 @@ const UserNavbar = () => {
 					id="categorySelect">
 					<option value="">Select Category</option>
 					{category.map((e) => (
-						<option value={e}>{e}</option>
+						<option key={e} value={e}>
+							{e}
+						</option>
 					))}
 				</select>
 			</div>

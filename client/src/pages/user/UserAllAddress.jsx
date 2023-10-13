@@ -37,8 +37,8 @@ const UserAllAddress = () => {
 			{userData?.addresses?.length === 0 && (
 				<p className="m-4 text-secondary">No saved Addresses</p>
 			)}
-			{userData?.addresses?.map((address) => (
-				<section className="bg-white p-3 m-2 rounded-4">
+			{userData?.addresses?.map((address, i) => (
+				<section key={i} className="bg-white p-3 m-2 rounded-4">
 					<div className="row w-100">
 						<div className="col">
 							<p className="m-0 text-small text-secondary">Full Name</p>

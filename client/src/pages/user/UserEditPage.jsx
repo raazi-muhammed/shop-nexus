@@ -4,10 +4,10 @@ import server from "../../server";
 import toast from "react-hot-toast";
 
 const UserEditPage = () => {
-	const [userData, setUserData] = useState();
-	const [userName, setUserName] = useState();
-	const [email, setEmail] = useState();
-	const [userAvatar, setUserAvatar] = useState();
+	const [userData, setUserData] = useState("");
+	const [userName, setUserName] = useState("");
+	const [email, setEmail] = useState("");
+	const [userAvatar, setUserAvatar] = useState("");
 
 	useEffect(() => {
 		axios
@@ -29,11 +29,6 @@ const UserEditPage = () => {
 		userFormData.append("fullName", userName);
 		userFormData.append("email", email);
 		userFormData.append("file", userAvatar);
-
-		/* const userFormData = {
-			fullName: userName,
-			email,
-		}; */
 
 		const config = {
 			headers: { "content-type": "multipart/form-data" },

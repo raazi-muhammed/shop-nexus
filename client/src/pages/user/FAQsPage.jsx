@@ -22,12 +22,12 @@ const FAQsPage = () => {
 		},
 	];
 	return (
-		<div class="accordion p-4 min-vh-100 vw-100 " id="accordionExample">
-			{faqs.map((faq) => (
-				<div class="accordion-item">
-					<h2 class="accordion-header">
+		<div className="accordion p-4 min-vh-100 vw-100 " id="accordionExample">
+			{faqs.map((faq, i) => (
+				<div key={i} className="accordion-item">
+					<h2 className="accordion-header">
 						<button
-							class="accordion-button collapsed"
+							className="accordion-button collapsed"
 							type="button"
 							data-bs-toggle="collapse"
 							data-bs-target={"#collapseOne" + faq.id}
@@ -38,9 +38,9 @@ const FAQsPage = () => {
 					</h2>
 					<div
 						id={"collapseOne" + faq.id}
-						class="accordion-collapse collapse "
+						className="accordion-collapse collapse "
 						data-bs-parent="#accordionExample">
-						<div class="accordion-body">{faq.answer}</div>
+						<div className="accordion-body">{faq.answer}</div>
 					</div>
 				</div>
 			))}

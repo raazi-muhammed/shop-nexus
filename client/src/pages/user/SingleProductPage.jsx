@@ -12,7 +12,7 @@ import ProductSuggestion from "./ProductSuggestion";
 
 const SingleProductPage = () => {
 	const [imgSelect, setImgSelect] = useState(0);
-	const [productData, setProductData] = useState({ images: [] });
+	const [productData, setProductData] = useState({ images: [{ url: "" }] });
 
 	const { id } = useParams();
 	const [shopData, setShopData] = useState({});
@@ -101,7 +101,6 @@ const SingleProductPage = () => {
 								src={productData?.images[i]?.url}
 								alt=""
 								onClick={(e) => setImgSelect(i)}
-								srcSet=""
 							/>
 						))}
 					</section>
@@ -139,7 +138,6 @@ const SingleProductPage = () => {
 								style={{ width: "5rem", height: "5rem", objectFit: "cover" }}
 								src={shopData.image?.url}
 								alt=""
-								srcset=""
 							/>
 							<section>
 								<p className="h4 fw-bold text-primary">

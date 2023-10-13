@@ -85,14 +85,14 @@ const SellerSignUpPage = () => {
 						/>
 					</div>
 					<div className="mb-3">
-						<label htmlFor="phone-number" className="form-label">
+						<label htmlFor="GSTIN-number" className="form-label">
 							GSTIN Number
 						</label>
 						<input
 							type="number"
 							className="form-control"
-							id="phone-number"
-							name="phoneNumber"
+							id="GSTIN-number"
+							name="GSTINNumber"
 							value={gstinNumber}
 							onChange={(e) => setGstinNumber(e.target.value)}
 						/>
