@@ -9,6 +9,14 @@ const UserEditPage = () => {
 	const [email, setEmail] = useState("");
 	const [userAvatar, setUserAvatar] = useState("");
 
+	const [validationSetting, setValidationSetting] =
+		useState("needs-validation");
+	const [allowSubmission, setAllowSubmission] = useState(false);
+	const handleFormChange = (e) => {
+		setAllowSubmission(e.currentTarget.checkValidity());
+		setValidationSetting("was-validated");
+	};
+
 	useEffect(() => {
 		axios
 			.get(`${server}/user/user-details`, { withCredentials: true })
@@ -52,7 +60,10 @@ const UserEditPage = () => {
 	};
 
 	return (
-		<form onSubmit={(e) => handleEditUser(e)}>
+		<form
+			className={validationSetting}
+			onChange={handleFormChange}
+			onSubmit={handleEditUser}>
 			<div className="mb-3 d-flex align-items-center gap-3 ">
 				<img
 					className="rounded-circle"
@@ -65,6 +76,7 @@ const UserEditPage = () => {
 					alt=""
 				/>
 				<input
+					accept="image/*"
 					className="form-control"
 					style={{ height: "3rem" }}
 					type="file"
@@ -85,6 +97,7 @@ const UserEditPage = () => {
 					onChange={(e) => setUserName(e.target.value)}
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<div className="mb-3">
 				<label htmlFor="email" className="form-label">
@@ -99,8 +112,10 @@ const UserEditPage = () => {
 					onChange={(e) => setEmail(e.target.value)}
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<button
+				disabled={!allowSubmission}
 				type="submit"
 				className="btn btn-secondary text-white btn-block col-12">
 				Update Data

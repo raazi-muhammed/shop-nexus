@@ -13,6 +13,14 @@ const UserAddAddress = () => {
 	const [addressLine2, setAddressLine2] = useState("");
 	const [addressType, setAddressType] = useState("Home");
 
+	const [validationSetting, setValidationSetting] =
+		useState("needs-validation");
+	const [allowSubmission, setAllowSubmission] = useState(false);
+	const handleFormChange = (e) => {
+		setAllowSubmission(e.currentTarget.checkValidity());
+		setValidationSetting("was-validated");
+	};
+
 	const addressData = {
 		fullName,
 		phoneNumber,
@@ -37,7 +45,11 @@ const UserAddAddress = () => {
 	};
 
 	return (
-		<form onSubmit={(e) => handleAddAddress(e)}>
+		<form
+			noValidate
+			className={validationSetting}
+			onChange={handleFormChange}
+			onSubmit={handleAddAddress}>
 			<div className="mb-3">
 				<label htmlFor="address-line-1" className="form-label">
 					Full Name
@@ -51,20 +63,23 @@ const UserAddAddress = () => {
 					onChange={(e) => setFullName(e.target.value)}
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<div className="mb-3">
 				<label htmlFor="address-line-1" className="form-label">
 					Phone Number
 				</label>
 				<input
-					type="number"
+					type="tel"
 					className="form-control"
 					id="address-line-1"
 					name="addressLine1"
 					value={phoneNumber}
 					onChange={(e) => setPhoneNumber(e.target.value)}
+					pattern="^(?:\+\d{1,3}\s?)?(?:\(\d{1,4}\)\s?)?\d{10,14}$"
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<div className="mb-3">
 				<label htmlFor="address-line-1" className="form-label">
@@ -77,8 +92,10 @@ const UserAddAddress = () => {
 					name="addressLine1"
 					value={pinCode}
 					onChange={(e) => setPinCode(e.target.value)}
+					pattern="^\d{6}$"
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<div className="mb-3">
 				<label htmlFor="address-line-1" className="form-label">
@@ -93,6 +110,7 @@ const UserAddAddress = () => {
 					onChange={(e) => setState(e.target.value)}
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<div className="mb-3">
 				<label htmlFor="address-line-1" className="form-label">
@@ -107,6 +125,7 @@ const UserAddAddress = () => {
 					onChange={(e) => setCity(e.target.value)}
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<div className="mb-3">
 				<label htmlFor="address-line-1" className="form-label">
@@ -121,6 +140,7 @@ const UserAddAddress = () => {
 					onChange={(e) => setAddressLine1(e.target.value)}
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<div className="mb-3">
 				<label htmlFor="address-line-2" className="form-label">
@@ -135,22 +155,24 @@ const UserAddAddress = () => {
 					onChange={(e) => setAddressLine2(e.target.value)}
 					required
 				/>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<div className="mb-3">
-				<label htmlFor="address-line-2" className="form-label">
+				<label htmlFor="categorySelect" className="form-label">
 					Address Type
 				</label>
-				<input
-					type="text"
-					className="form-control"
-					id="address-line-2"
-					name="addressLine2"
+				<select
+					className="form-select"
+					id="categorySelect"
 					value={addressType}
-					onChange={(e) => setAddressType(e.target.value)}
-					required
-				/>
+					onChange={(e) => setAddressType(e.target.value)}>
+					<option value="Home">Home</option>
+					<option value="Work">Work</option>
+				</select>
+				<div class="invalid-feedback">Invalid</div>
 			</div>
 			<button
+				disabled={!allowSubmission}
 				type="submit"
 				className="btn btn-secondary text-white btn-block col-12">
 				Update Data
