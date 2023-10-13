@@ -8,10 +8,12 @@ import NavComponent from "../../components/NavComponent";
 import toast from "react-hot-toast";
 const { heart, cart } = Icons;
 import ReactImageMagnify from "react-image-magnify";
+import ProductSuggestion from "./ProductSuggestion";
 
 const SingleProductPage = () => {
 	const [imgSelect, setImgSelect] = useState(0);
 	const [productData, setProductData] = useState({ images: [] });
+
 	const { id } = useParams();
 	const [shopData, setShopData] = useState({});
 	const navItems = [
@@ -19,6 +21,7 @@ const SingleProductPage = () => {
 		{ name: "Reviews", link: "reviews" },
 		{ name: "About Seller", link: "about-seller" },
 	];
+
 	useEffect(() => {
 		axios.defaults.withCredentials = true;
 		axios
@@ -36,6 +39,7 @@ const SingleProductPage = () => {
 			})
 			.catch((err) => toast.error("Loading failed" + err));
 	}, []);
+
 	const handleAddToCart = () => {
 		const itemData = {
 			product_id: id,
@@ -50,6 +54,7 @@ const SingleProductPage = () => {
 			})
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
 	};
+
 	const handleAddToWishList = () => {
 		const itemData = {
 			product_id: id,
@@ -66,6 +71,7 @@ const SingleProductPage = () => {
 			})
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
 	};
+
 	return (
 		<main className="vw-100">
 			<section className="row p-4 mx-auto w-100">
@@ -186,6 +192,9 @@ const SingleProductPage = () => {
 						}
 					/>
 				</Routes>
+			</section>
+			<section>
+				<ProductSuggestion productCategory={productData.category} />
 			</section>
 		</main>
 	);

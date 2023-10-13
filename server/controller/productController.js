@@ -23,6 +23,22 @@ router.get("/all-products", async (req, res) => {
 	}
 });
 
+router.get("/filter-products/:category", async (req, res) => {
+	try {
+		const { category } = req.params;
+		let products = await Products.find({ isDeleted: { $ne: true }, category });
+		res.status(200).json({
+			success: true,
+			products,
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
 router.get("/all-products-including-deleted", async (req, res) => {
 	try {
 		let products = await Products.find({});
