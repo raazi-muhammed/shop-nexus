@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import loginCover from "../../assets/login-cover.jpg";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,10 +8,23 @@ import toast from "react-hot-toast";
 
 const LoginPage = () => {
 	const navigate = useNavigate();
+
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [emailErr, setEmailErr] = useState("");
+	const [passwordErr, setPasswordErr] = useState("");
+
+	const [validationSetting, setValidationSetting] =
+		useState("needs-validation");
+	const [allowSubmission, setAllowSubmission] = useState(false);
+	const handleFormChange = (e) => {
+		setAllowSubmission(e.currentTarget.checkValidity());
+		setValidationSetting("was-validated");
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setAllowSubmission(false);
 		const newForm = {
 			email: email,
 			password: password,
@@ -23,8 +36,15 @@ const LoginPage = () => {
 				console.log(res.data);
 				if (res.data.success) navigate("/");
 			})
-			.catch((err) => toast.error(err.response.data.message));
+			.catch((err) => {
+				const message = err.response.data.message;
+				const errorWith = err.response.data.errorWith;
+				errorWith === "user" ? setEmailErr(message) : setEmailErr("");
+				errorWith === "password" ? setPasswordErr(message) : setPasswordErr("");
+				if (!errorWith) toast.error(message);
+			});
 	};
+
 	/* 	const handleGoogle = () => {
 		window.open("http://localhost:3000/auth/google", "_self");
 	}; */
@@ -42,20 +62,30 @@ const LoginPage = () => {
 			<section className="col-6 p-5 my-auto">
 				<h3>Log In</h3>
 				<p className="text-secondary">Welcome back! Log in</p>
-				<form onSubmit={(e) => handleSubmit(e)}>
+				<form
+					onChange={handleFormChange}
+					className={validationSetting}
+					noValidate
+					onSubmit={handleSubmit}>
 					<div className="mb-3">
 						<label htmlFor="email" className="form-label">
 							Email
 						</label>
 						<input
-							type="text"
-							className="form-control"
+							type="email"
+							className={`form-control ${emailErr ? "is-invalid" : ""}`}
 							id="email"
 							value={email}
 							name="email"
-							onChange={(e) => setEmail(e.target.value)}
-							required
+							onChange={(e) => {
+								setEmailErr("");
+								setEmail(e.target.value);
+							}}
+							required="required"
 						/>
+						<div class="invalid-feedback">
+							{emailErr ? emailErr : "Invalid Email"}
+						</div>
 					</div>
 					<div className="mb-3">
 						<label htmlFor="password" className="form-label">
@@ -63,13 +93,19 @@ const LoginPage = () => {
 						</label>
 						<input
 							type="password"
-							className="form-control"
+							className={`form-control ${passwordErr ? "is-invalid" : ""}`}
 							id="password"
 							name="password"
 							value={password}
-							onChange={(e) => setPassword(e.target.value)}
+							onChange={(e) => {
+								setPasswordErr("");
+								setPassword(e.target.value);
+							}}
 							required
 						/>
+						<div class="invalid-feedback">
+							{passwordErr ? passwordErr : "Invalid"}
+						</div>
 					</div>
 					<div className="row mb-3">
 						<div className="col-6">
@@ -88,7 +124,10 @@ const LoginPage = () => {
 							Forgot Password?
 						</Link>
 					</div>
-					<button type="submit" className="btn btn-primary btn-block col-12 ">
+					<button
+						disabled={!allowSubmission}
+						type="submit"
+						className="btn btn-primary btn-block col-12 ">
 						Log In
 					</button>
 				</form>

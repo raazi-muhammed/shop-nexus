@@ -12,8 +12,18 @@ const SignUpPage = () => {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
+	const [emailErr, setEmailErr] = useState("");
+	const [validationSetting, setValidationSetting] =
+		useState("needs-validation");
+	const [allowSubmission, setAllowSubmission] = useState(false);
+	const handleFormChange = (e) => {
+		setAllowSubmission(e.currentTarget.checkValidity());
+		setValidationSetting("was-validated");
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setAllowSubmission(false);
 		const newForm = {
 			fullName: fullName,
 			email: email,
@@ -27,7 +37,12 @@ const SignUpPage = () => {
 				console.log(res);
 				toast.success(res.data.message);
 			})
-			.catch((err) => toast.error(err.response.data.message));
+			.catch((err) => {
+				const message = err.response.data.message;
+				const errorWith = err.response.data.errorWith;
+				if (errorWith === "email") setEmailErr(message);
+				if (!errorWith) toast.error(message);
+			});
 	};
 	const handleGoogle = () => {
 		window.open("http://localhost:3000/auth/google", "_self");
@@ -38,7 +53,11 @@ const SignUpPage = () => {
 			<section className="col-12 my-auto mx-auto p-5 bg-white rounded-4 container-max-width-form">
 				<h3>Create an account</h3>
 				<p className="text-secondary">New to Shop Nexus? Register Now</p>
-				<form onSubmit={(e) => handleSubmit(e)}>
+				<form
+					noValidate
+					className={validationSetting}
+					onChange={handleFormChange}
+					onSubmit={handleSubmit}>
 					<div className="mb-3">
 						<label htmlFor="full-name" className="form-label">
 							Full Name
@@ -52,6 +71,7 @@ const SignUpPage = () => {
 							onChange={(e) => setFullName(e.target.value)}
 							required
 						/>
+						<div class="invalid-feedback">Invalid</div>
 					</div>
 					<div className="mb-3">
 						<label htmlFor="email" className="form-label">
@@ -59,13 +79,20 @@ const SignUpPage = () => {
 						</label>
 						<input
 							type="email"
-							className="form-control"
+							className={`form-control ${emailErr ? "is-invalid" : ""}`}
 							id="email"
 							name="email"
 							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							onChange={(e) => {
+								setEmailErr("");
+								setEmail(e.target.value);
+							}}
 							required
 						/>
+						<div class="invalid-feedback">
+							{" "}
+							{emailErr ? emailErr : "Invalid email"}
+						</div>
 					</div>
 					<div className="mb-3">
 						<label htmlFor="age" className="form-label">
@@ -85,6 +112,7 @@ const SignUpPage = () => {
 							Password
 						</label>
 						<input
+							pattern=".{4,}"
 							type="password"
 							className="form-control"
 							id="password"
@@ -93,6 +121,7 @@ const SignUpPage = () => {
 							onChange={(e) => setPassword(e.target.value)}
 							required
 						/>
+						<div class="invalid-feedback">4 characters minimum</div>
 					</div>
 					<div className="mb-3">
 						<label htmlFor="confirm-password" className="form-label">
@@ -105,11 +134,16 @@ const SignUpPage = () => {
 							name="confirmPassword"
 							value={confirmPassword}
 							onChange={(e) => setConfirmPassword(e.target.value)}
+							pattern={`(?:${password})`}
 							required
 						/>
+						<div class="invalid-feedback">Confirm password isn't matching</div>
 					</div>
 
-					<button type="submit" className="btn btn-primary btn-block col-12 ">
+					<button
+						disabled={!allowSubmission}
+						type="submit"
+						className="btn btn-primary btn-block col-12 ">
 						Sign Up
 					</button>
 					{/* <button

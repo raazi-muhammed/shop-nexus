@@ -10,27 +10,14 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 
 router.post("/create-user", async (req, res, next) => {
 	try {
-		const { fullName, email, password, confirmPassword, age } = req.body;
+		const { fullName, email, password, age } = req.body;
 
-		if (confirmPassword !== password) {
-			res.status(400).json({
-				success: false,
-				message: "Password doesn't match",
-			});
-			return;
-		}
-		if (password.length < 5) {
-			res.status(400).json({
-				success: false,
-				message: "Password must be at least 4 characters",
-			});
-			return;
-		}
 		const userEmail = await User.findOne({ email });
 		if (userEmail) {
 			res.status(400).json({
 				success: false,
-				message: "User Already Exists",
+				errorWith: "email",
+				message: "User already exists with this email",
 			});
 			return;
 		}
@@ -76,7 +63,6 @@ router.post("/create-user", async (req, res, next) => {
 router.post("/activation", async (req, res) => {
 	try {
 		const { activation_token } = req.body;
-		console.log(activation_token);
 		const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
 		if (!newUser) return next("Invalid Token");
 
@@ -112,6 +98,7 @@ router.post("/login-user", async (req, res) => {
 		if (!user) {
 			res.status(404).json({
 				success: false,
+				errorWith: "user",
 				message: "User not Found",
 			});
 			return;
@@ -121,6 +108,7 @@ router.post("/login-user", async (req, res) => {
 		if (!isPasswordMatch) {
 			res.status(401).json({
 				success: false,
+				errorWith: "password",
 				message: "Password Incorrect",
 			});
 			return;
@@ -129,11 +117,11 @@ router.post("/login-user", async (req, res) => {
 		if (user.isBlocked) {
 			res.status(401).json({
 				success: false,
+				errorWith: "user",
 				message: "You are Blocked",
 			});
 			return;
 		}
-
 		sendToken(user, 201, res, "userToken");
 	} catch (error) {
 		console.log(error);
