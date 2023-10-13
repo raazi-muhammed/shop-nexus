@@ -7,6 +7,15 @@ import { useParams } from "react-router-dom";
 const SellerDetailsEditPage = () => {
 	const [data, setData] = useState({});
 	let { shopId } = useParams();
+	const [shopName, setShopName] = useState(data.shopName);
+	const [shopIcon, setShopIcon] = useState(data.shopName);
+	const [shopImageUrl, setShopImageUrl] = useState(data.image?.url);
+	const [email, setEmail] = useState(data.email);
+	const [phoneNumber, setPhoneNumber] = useState(data.phoneNumber);
+	const [address1, setAddress1] = useState(data.address1);
+	const [address2, setAddress2] = useState(data.address2);
+	const [zipCode, setZipCode] = useState(data.zipCode);
+	const [gstinNumber, setGstinNumber] = useState(data.zipCode);
 
 	useEffect(() => {
 		axios
@@ -23,6 +32,7 @@ const SellerDetailsEditPage = () => {
 					address2,
 					zipCode,
 					GSTIN_Number,
+					image,
 				} = res.data.data;
 				setShopName(shopName);
 				setEmail(email);
@@ -31,18 +41,10 @@ const SellerDetailsEditPage = () => {
 				setZipCode(zipCode);
 				setAddress2(address2);
 				setGstinNumber(GSTIN_Number);
+				setShopImageUrl(image?.url);
 			})
 			.catch((err) => toast.error(err.response.data.message));
 	}, []);
-
-	const [shopName, setShopName] = useState(data.shopName);
-	const [shopIcon, setShopIcon] = useState(data.shopName);
-	const [email, setEmail] = useState(data.email);
-	const [phoneNumber, setPhoneNumber] = useState(data.phoneNumber);
-	const [address1, setAddress1] = useState(data.address1);
-	const [address2, setAddress2] = useState(data.address2);
-	const [zipCode, setZipCode] = useState(data.zipCode);
-	const [gstinNumber, setGstinNumber] = useState(data.zipCode);
 
 	const handleFileInputChange = (e) => {
 		const file = e.target.files[0];
@@ -52,7 +54,7 @@ const SellerDetailsEditPage = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
-		var form_data = new FormData();
+		let form_data = new FormData();
 		form_data.append("file", shopIcon);
 		form_data.append("shopName", shopName);
 		form_data.append("email", email);
@@ -72,6 +74,7 @@ const SellerDetailsEditPage = () => {
 			.put(`${server}/seller/edit-shop-details`, form_data, config)
 			.then((res) => {
 				toast.success(res.data.message);
+				setShopImageUrl(res.data?.shopData?.image?.url);
 				toast.error("Reload if data is not updated");
 			})
 			.catch((res) => toast.error(JSON.stringify(res.response?.data?.message)));
@@ -91,7 +94,11 @@ const SellerDetailsEditPage = () => {
 					<img
 						className="rounded-circle"
 						style={{ width: "4rem", height: "4rem" }}
-						src={data.image?.url}
+						src={
+							shopImageUrl
+								? shopImageUrl
+								: "http://localhost:3000/images/profile-pic-1697175479482_300657077.png"
+						}
 						alt=""
 					/>
 					<input

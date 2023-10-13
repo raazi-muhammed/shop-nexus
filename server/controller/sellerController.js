@@ -206,14 +206,6 @@ router.put(
 			);
 
 			if (req.file) {
-				/* const fileName = req.file.filename;
-			const filePath = `uploads/${fileName}`;
-
-			fs.unlink(filePath, (err) => {
-				if (err) console.log(err);
-				else console.log("File over Written");
-			}); */
-
 				const fileUrl = `http://localhost:3000/images/${req.file.filename}`;
 				shopDetails = await Shop.findOneAndUpdate(
 					{ _id: shopId },

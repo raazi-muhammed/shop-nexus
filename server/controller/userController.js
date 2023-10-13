@@ -4,6 +4,7 @@ const User = require("../model/User");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
+const { upload } = require("../multer");
 const { isAuthenticated } = require("../middleware/auth");
 const catchAsyncError = require("../middleware/catchAsyncError");
 
@@ -145,8 +146,6 @@ router.post("/login-user", async (req, res) => {
 
 router.get("/logout", (req, res) => {
 	try {
-		console.log("logout reached");
-
 		res.status(200).clearCookie("userToken").json({
 			success: true,
 			message: "User is Logged out",
@@ -172,23 +171,41 @@ router.get("/user-details", isAuthenticated, async (req, res) => {
 	}
 });
 
-router.put("/edit-user-details", isAuthenticated, async (req, res) => {
-	try {
-		const { email, fullName } = req.body;
-		const user = await User.findOneAndUpdate(
-			{ _id: req.user.id },
-			{ fullName, email }
-		);
+router.put(
+	"/edit-user-details",
+	isAuthenticated,
+	upload.single("file"),
+	async (req, res) => {
+		try {
+			const { email, fullName } = req.body;
+			let user;
 
-		res.status(200).json({
-			success: true,
-			message: "User Updated",
-			user,
-		});
-	} catch (error) {
-		res.status(500).json({ success: false, message: "Error in getting User" });
+			user = await User.findOneAndUpdate(
+				{ _id: req.user.id },
+				{ fullName, email }
+			);
+
+			if (req.file) {
+				const fileUrl = `http://localhost:3000/images/${req.file.filename}`;
+				user = await User.findOneAndUpdate(
+					{ _id: req.user.id },
+					{ $set: { "avatar.url": fileUrl } },
+					{ new: true, upsert: true }
+				);
+			}
+
+			res.status(200).json({
+				success: true,
+				message: "User Updated",
+				user,
+			});
+		} catch (error) {
+			res
+				.status(500)
+				.json({ success: false, message: "Error in getting User" });
+		}
 	}
-});
+);
 
 router.post("/add-address", isAuthenticated, async (req, res) => {
 	try {
