@@ -18,7 +18,13 @@ router.post("/create-user", async (req, res, next) => {
 			});
 			return;
 		}
-
+		if (password.length < 5) {
+			res.status(400).json({
+				success: false,
+				message: "Password must be at least 4 characters",
+			});
+			return;
+		}
 		const userEmail = await User.findOne({ email });
 		if (userEmail) {
 			res.status(400).json({

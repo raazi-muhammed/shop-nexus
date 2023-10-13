@@ -47,6 +47,7 @@ router.post("/crate-shop", async (req, res) => {
 			address1: req.body.address1,
 			address2: req.body.address2,
 			password: req.body.password,
+			gstinNumber: req.body.gstinNumber,
 		};
 
 		const createActivationToken = (shop) => {
@@ -90,6 +91,7 @@ router.post("/activation", async (req, res) => {
 			address1,
 			address2,
 			password,
+			gstinNumber,
 		} = newUser;
 
 		if (!newUser) {
@@ -108,6 +110,7 @@ router.post("/activation", async (req, res) => {
 			address1,
 			address2,
 			password,
+			GSTIN_Number: gstinNumber,
 		});
 
 		sendToken(dataUser, 201, res);
@@ -153,7 +156,6 @@ router.post("/login-shop", async (req, res) => {
 });
 
 router.get("/get-shop-details/:id", async (req, res) => {
-	console.log(req.headers);
 	try {
 		const shopId = req.params.id;
 
@@ -243,8 +245,6 @@ router.get(
 
 router.get("/logout", (req, res) => {
 	try {
-		console.log("logout reached");
-
 		res.status(200).clearCookie("sellerToken").json({
 			success: true,
 			message: "User is Logged out",

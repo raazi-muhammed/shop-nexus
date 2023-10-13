@@ -14,7 +14,8 @@ const BestSellingPage = ({ type }) => {
 	}, []);
 
 	return (
-		<div className={`d-flex  ${type}`}>
+		<div
+			className={`row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 p-4 ${type}`}>
 			{productData.map((product) => (
 				<ProductCartMain
 					key={product._id}

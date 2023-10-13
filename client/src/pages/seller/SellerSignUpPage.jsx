@@ -13,6 +13,7 @@ const SellerSignUpPage = () => {
 	const [address1, setAddress1] = useState("");
 	const [address2, setAddress2] = useState("");
 	const [zipCode, setZipCode] = useState("");
+	const [gstinNumber, setGstinNumber] = useState("");
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -25,6 +26,7 @@ const SellerSignUpPage = () => {
 			zipCode,
 			password,
 			confirmPassword,
+			gstinNumber,
 		};
 		axios
 			.post(`${server}/seller/crate-shop`, newForm)
@@ -80,6 +82,19 @@ const SellerSignUpPage = () => {
 							name="phoneNumber"
 							value={phoneNumber}
 							onChange={(e) => setPhoneNumber(e.target.value)}
+						/>
+					</div>
+					<div className="mb-3">
+						<label htmlFor="phone-number" className="form-label">
+							GSTIN Number
+						</label>
+						<input
+							type="number"
+							className="form-control"
+							id="phone-number"
+							name="phoneNumber"
+							value={gstinNumber}
+							onChange={(e) => setGstinNumber(e.target.value)}
 						/>
 					</div>
 					<div className="mb-3">

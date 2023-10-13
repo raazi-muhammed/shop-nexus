@@ -49,7 +49,7 @@ const AdminDashboardPage = () => {
 			<nav style={{ height: "2rem" }}>
 				<p className="h3 mb-1 m-4 ">Admin Page</p>
 			</nav>
-			<main className="row gap-3 vw-100">
+			<main className="row vw-100 p-3">
 				<section className="col-3">
 					<AsideComp asideItems={asideItems} />
 					<button
@@ -58,7 +58,7 @@ const AdminDashboardPage = () => {
 						Log out
 					</button>
 				</section>
-				<section className="col-8">
+				<section className="ps-5 col">
 					<Routes>
 						<Route path="/user" element={<AdminUserPage />} />
 						<Route path="/products" element={<AdminProductsPage />} />

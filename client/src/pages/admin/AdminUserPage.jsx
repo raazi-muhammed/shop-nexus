@@ -29,25 +29,27 @@ const AdminUserPage = () => {
 			.catch((err) => toast.error(err.response.data.message));
 	};
 	return (
-		<section className="w-100 row gap-3 ">
+		<section className="w-100 row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 ">
 			{data.map((e, i) => (
-				<section key={i} className="bg-white p-4 rounded-4 col-4 text-center">
-					<p className="text-primary h4 fw-bold m-0">{e.fullName}</p>
-					<p className="text-small">{e.email}</p>
-					{e.isBlocked ? (
-						<button
-							onClick={(event) => handleDelete(e._id, false)}
-							className="btn btn-success ">
-							Unblock User
-						</button>
-					) : (
-						<button
-							onClick={(event) => handleDelete(e._id, true)}
-							className="btn btn-danger ">
-							Block User
-						</button>
-					)}
-				</section>
+				<div className="col p-3">
+					<section key={i} className="bg-white p-4 rounded-4 text-center">
+						<p className="text-primary h4 fw-bold m-0">{e.fullName}</p>
+						<p className="text-small">{e.email}</p>
+						{e.isBlocked ? (
+							<button
+								onClick={(event) => handleDelete(e._id, false)}
+								className="btn btn-success ">
+								Unblock User
+							</button>
+						) : (
+							<button
+								onClick={(event) => handleDelete(e._id, true)}
+								className="btn btn-danger ">
+								Block User
+							</button>
+						)}
+					</section>
+				</div>
 			))}
 		</section>
 	);

@@ -31,6 +31,9 @@ const shopSchema = new mongoose.Schema({
 		type: Number,
 		required: true,
 	},
+	GSTIN_Number: {
+		type: Number,
+	},
 	role: {
 		type: String,
 		default: "Seller",
@@ -56,7 +59,7 @@ const shopSchema = new mongoose.Schema({
 		type: Number,
 		default: 0,
 	},
-	transections: [
+	transactions: [
 		{
 			amount: {
 				type: Number,
