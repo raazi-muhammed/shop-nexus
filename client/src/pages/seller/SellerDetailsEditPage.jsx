@@ -15,14 +15,22 @@ const SellerDetailsEditPage = () => {
 			})
 			.then((res) => {
 				setData(res.data.data);
-				const { shopName, email, phoneNumber, address1, address2, zipCode } =
-					res.data.data;
+				const {
+					shopName,
+					email,
+					phoneNumber,
+					address1,
+					address2,
+					zipCode,
+					GSTIN_Number,
+				} = res.data.data;
 				setShopName(shopName);
 				setEmail(email);
 				setPhoneNumber(phoneNumber);
 				setAddress1(address1);
 				setZipCode(zipCode);
 				setAddress2(address2);
+				setGstinNumber(GSTIN_Number);
 			})
 			.catch((err) => toast.error(err.response.data.message));
 	}, []);
@@ -34,6 +42,7 @@ const SellerDetailsEditPage = () => {
 	const [address1, setAddress1] = useState(data.address1);
 	const [address2, setAddress2] = useState(data.address2);
 	const [zipCode, setZipCode] = useState(data.zipCode);
+	const [gstinNumber, setGstinNumber] = useState(data.zipCode);
 
 	const handleFileInputChange = (e) => {
 		const file = e.target.files[0];
@@ -51,10 +60,12 @@ const SellerDetailsEditPage = () => {
 		form_data.append("address1", address1);
 		form_data.append("address2", address2);
 		form_data.append("zipCode", zipCode);
+		form_data.append("gstinNumber", gstinNumber);
 		form_data.append("shopId", data._id);
 
 		const config = {
 			headers: { "content-type": "multipart/form-data" },
+			withCredentials: true,
 		};
 
 		axios
@@ -130,6 +141,19 @@ const SellerDetailsEditPage = () => {
 						name="phoneNumber"
 						value={phoneNumber}
 						onChange={(e) => setPhoneNumber(e.target.value)}
+					/>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="gstin-number" className="form-label">
+						GSTIN Number
+					</label>
+					<input
+						type="number"
+						className="form-control"
+						id="gstin-number"
+						name="gstinNumber"
+						value={gstinNumber}
+						onChange={(e) => setGstinNumber(e.target.value)}
 					/>
 				</div>
 				<div className="mb-3">

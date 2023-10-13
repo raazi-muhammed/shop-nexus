@@ -187,12 +187,21 @@ router.put(
 				phoneNumber,
 				email,
 				shopName,
+				gstinNumber,
 			} = req.body;
 
 			let shopDetails;
 			shopDetails = await Shop.findOneAndUpdate(
 				{ _id: shopId },
-				{ zipCode, address1, address2, phoneNumber, email, shopName },
+				{
+					zipCode,
+					address1,
+					address2,
+					phoneNumber,
+					email,
+					shopName,
+					GSTIN_Number: gstinNumber,
+				},
 				{ new: true } //for return updated file
 			);
 
