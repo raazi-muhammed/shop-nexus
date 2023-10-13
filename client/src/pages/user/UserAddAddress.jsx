@@ -2,8 +2,10 @@ import axios from "axios";
 import React, { useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const UserAddAddress = () => {
+	const navigate = useNavigate();
 	const [fullName, setFullName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [pinCode, setPinCode] = useState("");
@@ -38,7 +40,11 @@ const UserAddAddress = () => {
 			.post(`${server}/user/add-address`, addressData, {
 				withCredentials: true,
 			})
-			.then((res) => toast.success(res.data.message || "Success"))
+			.then((res) => {
+				//replaced the last part of URL
+				navigate(location.pathname.replace(/[^/]*$/, "address"));
+				toast.success(res.data.message || "Address Added");
+			})
 			.catch((err) =>
 				toast.error(err.response.data.message || "An Error occurred")
 			);
@@ -86,7 +92,7 @@ const UserAddAddress = () => {
 					Pin Code
 				</label>
 				<input
-					type="number"
+					type="text"
 					className="form-control"
 					id="address-line-1"
 					name="addressLine1"
