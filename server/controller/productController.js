@@ -231,6 +231,37 @@ router.delete(
 	}
 );
 
+router.delete(
+	"/recover-product/:id",
+	isSellerAuthenticated,
+	async (req, res) => {
+		try {
+			const productId = req.params.id;
+
+			let productDetails = await Products.findOneAndUpdate(
+				{ _id: productId },
+				{
+					isDeleted: false,
+				},
+				{ new: true }
+			);
+
+			res.status(200).json({
+				success: true,
+				message: "Product Recovered successful",
+				productDetails,
+			});
+		} catch (err) {
+			console.log(err);
+			res.status(500).json({
+				success: true,
+				message: "Some Error",
+				err,
+			});
+		}
+	}
+);
+
 router.post("/add-product", isSellerAuthenticated, async (req, res) => {
 	try {
 		const {

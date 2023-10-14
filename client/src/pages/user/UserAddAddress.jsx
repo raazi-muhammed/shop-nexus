@@ -3,6 +3,11 @@ import React, { useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import {
+	formLabelClass,
+	inputDivClass,
+	formClass,
+} from "../../utils/styleClasses";
 
 const UserAddAddress = () => {
 	const navigate = useNavigate();
@@ -53,134 +58,150 @@ const UserAddAddress = () => {
 	return (
 		<form
 			noValidate
-			className={validationSetting}
+			className={`${formClass} ${validationSetting}`}
 			onChange={handleFormChange}
 			onSubmit={handleAddAddress}>
-			<div className="mb-3">
-				<label htmlFor="address-line-1" className="form-label">
+			<div className="row">
+				<label htmlFor="address-line-1" className={formLabelClass}>
 					Full Name
 				</label>
-				<input
-					type="text"
-					className="form-control"
-					id="address-line-1"
-					name="addressLine1"
-					value={fullName}
-					onChange={(e) => setFullName(e.target.value)}
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="text"
+						className="form-control"
+						id="address-line-1"
+						name="addressLine1"
+						value={fullName}
+						onChange={(e) => setFullName(e.target.value)}
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="address-line-1" className="form-label">
+			<div className="row">
+				<label htmlFor="address-line-1" className={formLabelClass}>
 					Phone Number
 				</label>
-				<input
-					type="tel"
-					className="form-control"
-					id="address-line-1"
-					name="addressLine1"
-					value={phoneNumber}
-					onChange={(e) => setPhoneNumber(e.target.value)}
-					pattern="^(?:\+\d{1,3}\s?)?(?:\(\d{1,4}\)\s?)?\d{10,14}$"
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="tel"
+						className="form-control"
+						id="address-line-1"
+						name="addressLine1"
+						value={phoneNumber}
+						onChange={(e) => setPhoneNumber(e.target.value)}
+						pattern="^(?:\+\d{1,3}\s?)?(?:\(\d{1,4}\)\s?)?\d{10,14}$"
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="address-line-1" className="form-label">
+			<div className="row">
+				<label htmlFor="address-line-1" className={formLabelClass}>
 					Pin Code
 				</label>
-				<input
-					type="text"
-					className="form-control"
-					id="address-line-1"
-					name="addressLine1"
-					value={pinCode}
-					onChange={(e) => setPinCode(e.target.value)}
-					pattern="^\d{6}$"
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="text"
+						className="form-control"
+						id="address-line-1"
+						name="addressLine1"
+						value={pinCode}
+						onChange={(e) => setPinCode(e.target.value)}
+						pattern="^\d{6}$"
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="address-line-1" className="form-label">
+			<div className="row">
+				<label htmlFor="address-line-1" className={formLabelClass}>
 					State
 				</label>
-				<input
-					type="text"
-					className="form-control"
-					id="address-line-1"
-					name="addressLine1"
-					value={state}
-					onChange={(e) => setState(e.target.value)}
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="text"
+						className="form-control"
+						id="address-line-1"
+						name="addressLine1"
+						value={state}
+						onChange={(e) => setState(e.target.value)}
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="address-line-1" className="form-label">
+			<div className="row">
+				<label htmlFor="address-line-1" className={formLabelClass}>
 					City
 				</label>
-				<input
-					type="text"
-					className="form-control"
-					id="address-line-1"
-					name="addressLine1"
-					value={city}
-					onChange={(e) => setCity(e.target.value)}
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="text"
+						className="form-control"
+						id="address-line-1"
+						name="addressLine1"
+						value={city}
+						onChange={(e) => setCity(e.target.value)}
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="address-line-1" className="form-label">
+			<div className="row">
+				<label htmlFor="address-line-1" className={formLabelClass}>
 					Address Line 1
 				</label>
-				<input
-					type="text"
-					className="form-control"
-					id="address-line-1"
-					name="addressLine1"
-					value={addressLine1}
-					onChange={(e) => setAddressLine1(e.target.value)}
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="text"
+						className="form-control"
+						id="address-line-1"
+						name="addressLine1"
+						value={addressLine1}
+						onChange={(e) => setAddressLine1(e.target.value)}
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="address-line-2" className="form-label">
+			<div className="row">
+				<label htmlFor="address-line-2" className={formLabelClass}>
 					Address Line 2
 				</label>
-				<input
-					type="text"
-					className="form-control"
-					id="address-line-2"
-					name="addressLine2"
-					value={addressLine2}
-					onChange={(e) => setAddressLine2(e.target.value)}
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="text"
+						className="form-control"
+						id="address-line-2"
+						name="addressLine2"
+						value={addressLine2}
+						onChange={(e) => setAddressLine2(e.target.value)}
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="categorySelect" className="form-label">
+			<div className="row">
+				<label htmlFor="categorySelect" className={formLabelClass}>
 					Address Type
 				</label>
-				<select
-					className="form-select"
-					id="categorySelect"
-					value={addressType}
-					onChange={(e) => setAddressType(e.target.value)}>
-					<option value="Home">Home</option>
-					<option value="Work">Work</option>
-				</select>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<select
+						className="form-select"
+						id="categorySelect"
+						value={addressType}
+						onChange={(e) => setAddressType(e.target.value)}>
+						<option value="Home">Home</option>
+						<option value="Work">Work</option>
+					</select>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
 			<button
 				disabled={!allowSubmission}
 				type="submit"
-				className="btn btn-secondary text-white btn-block col-12">
+				className="btn btn-secondary text-white col-12 col-lg-6 align-self-center">
 				Update Data
 			</button>
 		</form>

@@ -86,7 +86,18 @@ const SellerEditSingleProductPage = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
-				navigate("/");
+				navigate(-1);
+				toast.success(res.data?.message);
+			})
+			.catch((err) => console.log(err));
+	};
+	const handleRecover = (e) => {
+		axios
+			.delete(`${server}/products/recover-product/${productId}`, {
+				withCredentials: true,
+			})
+			.then((res) => {
+				navigate(-1);
 				toast.success(res.data?.message);
 			})
 			.catch((err) => console.log(err));
@@ -122,7 +133,7 @@ const SellerEditSingleProductPage = () => {
 					sold_out,
 					images,
 				} = res.data?.productDetails[0];
-				setData(res.data);
+				setData(res.data?.productDetails[0]);
 				setProductName(name);
 				setCategory(category);
 				setDescription(description);
@@ -268,9 +279,15 @@ const SellerEditSingleProductPage = () => {
 						className="col btn btn-primary">
 						Update Product
 					</button>
-					<button className="col btn btn-danger" onClick={handleDelete}>
-						Delete Product
-					</button>
+					{!data?.isDeleted ? (
+						<button className="col btn btn-danger" onClick={handleDelete}>
+							Delete Product
+						</button>
+					) : (
+						<button className="col btn btn-success" onClick={handleRecover}>
+							Recover Product
+						</button>
+					)}
 				</div>
 			</form>
 		</div>

@@ -2,6 +2,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
+import {
+	formLabelClass,
+	inputDivClass,
+	formClass,
+} from "../../utils/styleClasses";
 
 const UserEditPage = () => {
 	const [userData, setUserData] = useState("");
@@ -62,63 +67,70 @@ const UserEditPage = () => {
 	return (
 		<form
 			noValidate
-			className={validationSetting}
+			className={`${validationSetting} ${formClass}`}
 			onChange={handleFormChange}
 			onSubmit={handleEditUser}>
-			<div className="mb-3 d-flex align-items-center gap-3 ">
-				<img
-					className="rounded-circle"
-					style={{ width: "4rem", height: "4rem" }}
-					src={
-						userAvatar
-							? userAvatar
-							: "http://localhost:3000/images/profile-pic-1697175479482_300657077.png"
-					}
-					alt=""
-				/>
-				<input
-					accept="image/*"
-					className="form-control"
-					style={{ height: "3rem" }}
-					type="file"
-					id="formFileMultiple"
-					onChange={(e) => handleFileInputChange(e)}
-				/>
+			<div className="row align-items-center">
+				<div className={formLabelClass}>
+					<img
+						className="rounded-circle"
+						style={{ width: "4rem", height: "4rem" }}
+						src={
+							userAvatar
+								? userAvatar
+								: "http://localhost:3000/images/profile-pic-1697175479482_300657077.png"
+						}
+						alt=""
+					/>
+				</div>
+				<div className={`${inputDivClass} m-0`}>
+					<input
+						accept="image/*"
+						className="form-control"
+						type="file"
+						id="formFileMultiple"
+						onChange={(e) => handleFileInputChange(e)}
+					/>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="user-name" className="form-label">
+			<div className="row">
+				<label htmlFor="user-name" className={formLabelClass}>
 					Name
 				</label>
-				<input
-					type="text"
-					className="form-control"
-					id="user-name"
-					name="userName"
-					value={userName}
-					onChange={(e) => setUserName(e.target.value)}
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="text"
+						className="form-control"
+						id="user-name"
+						name="userName"
+						value={userName}
+						onChange={(e) => setUserName(e.target.value)}
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
-			<div className="mb-3">
-				<label htmlFor="email" className="form-label">
+			<div className="row">
+				<label htmlFor="email" className={formLabelClass}>
 					Email
 				</label>
-				<input
-					type="email"
-					className="form-control"
-					id="email"
-					name="email"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-					required
-				/>
-				<div class="invalid-feedback">Invalid</div>
+				<div className={inputDivClass}>
+					<input
+						type="email"
+						className="form-control"
+						id="email"
+						name="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						required
+					/>
+					<div class="invalid-feedback">Invalid</div>
+				</div>
 			</div>
 			<button
 				disabled={!allowSubmission}
 				type="submit"
-				className="btn btn-secondary text-white btn-block col-12">
+				className="btn btn-secondary text-white col-12 col-lg-6 align-self-center">
 				Update Data
 			</button>
 		</form>
