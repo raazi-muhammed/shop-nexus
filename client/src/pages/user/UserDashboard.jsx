@@ -30,15 +30,15 @@ const UserDashboard = () => {
 		<main className="vw-100 min-vh-100 p-2">
 			<div className="w-100 container container-xxl  ">
 				<div className="row">
-					<section className="col-3">
+					<section className="col-12 col-md-4 col-lg-3">
 						<AsideComp asideItems={asideItems} />
 						<button
-							className="btn btn-sm btn-danger w-100 ms-3"
+							className="btn btn-sm btn-danger w-100"
 							onClick={handleLogOut}>
 							Log out
 						</button>
 					</section>
-					<section className="col-9 px-4 py-3 ">
+					<section className="col px-4 py-3 ">
 						<Routes>
 							<Route path="/add-address" element={<UserAddAddress />} />
 							<Route path="/address" element={<UserAllAddress />} />
