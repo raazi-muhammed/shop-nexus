@@ -4,6 +4,8 @@ import Icons from "../assets/Icons";
 import server from "../server";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
+import { useDispatch } from "react-redux";
 const { heart, cart } = Icons;
 
 const ProductCartMain = ({
@@ -16,6 +18,7 @@ const ProductCartMain = ({
 	shopName,
 	productId,
 }) => {
+	const dispatch = useDispatch();
 	const handleAddToCart = () => {
 		const itemData = {
 			product_id: productId,
@@ -26,6 +29,7 @@ const ProductCartMain = ({
 		axios
 			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
 			.then((res) => {
+				dispatch(setUserDataReducer(res.data?.user));
 				toast.success(res.data?.message || "Success");
 			})
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
@@ -42,6 +46,7 @@ const ProductCartMain = ({
 				withCredentials: true,
 			})
 			.then((res) => {
+				dispatch(setUserDataReducer(res.data?.user));
 				toast.success(res.data?.message || "Success");
 			})
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));

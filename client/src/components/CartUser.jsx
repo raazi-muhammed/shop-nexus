@@ -6,23 +6,16 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 const { trash, close } = Icons;
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { displayCart, hideCart } from "../app/feature/cart/cartSlice";
+import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
 
 const CartUser = () => {
-	const [cartItems, setCartItems] = useState([]);
-	const navigate = useNavigate();
+	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
+	const cartItems = userData?.cart;
 
-	useEffect(() => {
-		axios.defaults.withCredentials = true;
-		axios
-			.get(`${server}/cart/get-all-cart`, { withCredentials: true })
-			.then((res) => {
-				setCartItems(res.data.cartItems);
-			})
-			.catch((err) => console.log(err));
-	}, []);
+	const navigate = useNavigate();
 
 	const handleRemoveFromCart = (product_id) => {
 		axios
@@ -32,9 +25,12 @@ const CartUser = () => {
 				{ withCredentials: true }
 			)
 			.then((res) => {
+				dispatch(setUserDataReducer(res.data?.user));
 				toast.success(res.data?.message);
-				setCartItems(res.data.cartItems);
-			});
+			})
+			.catch((err) =>
+				toast.error(err?.response?.data?.message || "An Error occurred")
+			);
 	};
 
 	const handelProductClick = (id) => {
@@ -52,10 +48,10 @@ const CartUser = () => {
 					{close}
 				</button>
 			</div>
-			{cartItems.length == 0 && (
+			{cartItems?.length == 0 && (
 				<p className="mt-3 text-sm text-secondary ">No items on Cart</p>
 			)}
-			{cartItems.map((cartItem, i) => (
+			{cartItems?.map((cartItem, i) => (
 				<div key={i} className="row w-100 m-0 my-2 align-items-center">
 					<div className="col-3 m-0 p-0 ">
 						<img className="m-0 w-100 p-0" src={cartItem.imageUrl} />

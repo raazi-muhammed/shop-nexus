@@ -9,8 +9,12 @@ import toast from "react-hot-toast";
 const { heart, cart } = Icons;
 import ReactImageMagnify from "react-image-magnify";
 import ProductSuggestion from "./ProductSuggestion";
+import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+import { useDispatch } from "react-redux";
 
 const SingleProductPage = () => {
+	const dispatch = useDispatch();
+
 	const [imgSelect, setImgSelect] = useState(0);
 	const [productData, setProductData] = useState({ images: [{ url: "" }] });
 
@@ -50,6 +54,7 @@ const SingleProductPage = () => {
 		axios
 			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
 			.then((res) => {
+				dispatch(setUserDataReducer(res.data.user));
 				toast.success(res.data?.message || "Success");
 			})
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
@@ -67,6 +72,7 @@ const SingleProductPage = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
+				dispatch(setUserDataReducer(res.data.user));
 				toast.success(res.data?.message || "Success");
 			})
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));

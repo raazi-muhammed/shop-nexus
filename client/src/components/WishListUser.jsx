@@ -7,24 +7,17 @@ import Icons from "../assets/Icons";
 const { trash, close } = Icons;
 
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { hideWishList } from "../app/feature/wishList/wishListSlice";
+import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
 
 const WishListUser = () => {
-	const [wishListItems, setWishListItems] = useState([]);
-	const navigate = useNavigate();
+	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
+	const wishListItems = userData.wishList;
+	const navigate = useNavigate();
 
-	useEffect(() => {
-		axios.defaults.withCredentials = true;
-		axios
-			.get(`${server}/wish-list/get-all-wish-list`, { withCredentials: true })
-			.then((res) => {
-				setWishListItems(res.data.wishListItems);
-			})
-			.catch((err) => console.log(err));
-	}, []);
-	const handleRemoveFromCart = (product_id) => {
+	const handleRemoveFromWishList = (product_id) => {
 		axios
 			.put(
 				`${server}/wish-list/remove-from-wish-list`,
@@ -32,9 +25,14 @@ const WishListUser = () => {
 				{ withCredentials: true }
 			)
 			.then((res) => {
+				dispatch(setUserDataReducer(res.data?.user));
 				toast.success(res.data?.message);
-				setWishListItems(res.data.wishListItems);
-			});
+			})
+			.catch((err) =>
+				toast.error(
+					err?.response?.data?.message || "Cannot Remove from Wishlist"
+				)
+			);
 	};
 
 	const handelProductClick = (id) => {
@@ -53,10 +51,10 @@ const WishListUser = () => {
 				</button>
 			</div>
 
-			{wishListItems.length == 0 && (
+			{wishListItems?.length == 0 && (
 				<p className="mt-3 text-sm text-secondary ">No items on wishlist</p>
 			)}
-			{wishListItems.map((wishListItem, i) => (
+			{wishListItems?.map((wishListItem, i) => (
 				<div key={i} className="row w-100 m-0 my-2 align-items-center">
 					<div className="col-3 m-0 p-0 ">
 						<img className="m-0 w-100 p-0" src={wishListItem.imageUrl} />
@@ -71,7 +69,7 @@ const WishListUser = () => {
 
 					<div className="col-2 my-auto">
 						<button
-							onClick={(e) => handleRemoveFromCart(wishListItem.product_id)}
+							onClick={(e) => handleRemoveFromWishList(wishListItem.product_id)}
 							className="btn btn-light text-secondary btn-sm m-0">
 							{trash}
 						</button>

@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const UserAllAddress = () => {
 	const userData = useSelector((state) => state.userData.userData);
+	const dispatch = useDispatch();
 
 	const handleRemoveAddress = (addressId) => {
 		axios
@@ -16,7 +17,7 @@ const UserAllAddress = () => {
 				{ withCredentials: true }
 			)
 			.then((res) => {
-				setUserData(res.data?.user);
+				dispatch(setUserDataReducer(res.data.user));
 				toast.success(res.data?.message || "Address Removed");
 			})
 			.catch((err) =>

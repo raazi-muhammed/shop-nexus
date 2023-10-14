@@ -19,12 +19,14 @@ router.post("/add-to-cart", isAuthenticated, async (req, res) => {
 			{ _id: userId },
 			{
 				$addToSet: { cart: cartItem },
-			}
+			},
+			{ new: true }
 		);
 
 		res.status(200).json({
 			success: true,
 			message: "Added to Cart",
+			user: updatedUser,
 		});
 	} catch (err) {
 		console.log(err);
@@ -68,12 +70,11 @@ router.put("/remove-from-cart", isAuthenticated, async (req, res) => {
 			},
 			{ new: true }
 		);
-		const cartItems = updatedUser.cart;
 
 		res.status(200).json({
 			success: true,
 			message: "Removed from Cart",
-			cartItems,
+			user: updatedUser,
 		});
 	} catch (err) {
 		console.log(err);

@@ -2,16 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Icons from "../assets/Icons";
 const { heart, cart, profile } = Icons;
-
 import NavComponent from "./NavComponent";
-import axios from "axios";
-import server from "../server";
-import toast from "react-hot-toast";
 import category from "../utils/category";
 import { useDispatch, useSelector } from "react-redux";
-import { displayCart, hideCart } from "../app/feature/cart/cartSlice";
+import { displayCart } from "../app/feature/cart/cartSlice";
 import { displayWishList } from "../app/feature/wishList/wishListSlice";
-import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
 
 const UserNavbar = () => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -24,44 +19,6 @@ const UserNavbar = () => {
 		{ name: "Events", link: "/" },
 		{ name: "FAQs", link: "/faqs" },
 	];
-
-	//const [userData, setUserData] = useState("Log In");
-
-	/* useEffect(() => {
-		axios
-			.get(
-				`http://localhost:3000/auth/login/success`,
-				{ withCredentials: true },
-				{
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-						"Access-Control-Allow-Credentials": true,
-					},
-				}
-			)
-			.then((res) => {
-				console.log(res);
-				setUserData({ fullName: res.data.user.displayName });
-			})
-			.catch((err) => console.log(err));
-	}, []); */
-
-	/* useEffect(() => {
-		axios
-			.get(`${server}/user/load-user`, { withCredentials: true })
-			.then((res) => {
-				if (res.data.success === false) {
-					toast.error("You are Blocked");
-				} else {
-					toast.success("Logged In");
-					setUserData(res.data.user);
-				}
-			})
-			.catch((err) => {
-				console.log(err.response.data.message);
-			});
-	}, []); */
 
 	return (
 		<section className="w-100 bg-light">

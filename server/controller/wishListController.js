@@ -19,12 +19,14 @@ router.post("/add-to-wish-list", isAuthenticated, async (req, res) => {
 			{ _id: userId },
 			{
 				$addToSet: { wishList: cartItem },
-			}
+			},
+			{ new: true }
 		);
 
 		res.status(200).json({
 			success: true,
 			message: "Added to Wishlist",
+			user: updatedUser,
 		});
 	} catch (err) {
 		console.log(err);
@@ -67,12 +69,11 @@ router.put("/remove-from-wish-list", isAuthenticated, async (req, res) => {
 			},
 			{ new: true }
 		);
-		const wishListItems = updatedUser.wishList;
 
 		res.status(200).json({
 			success: true,
 			message: "Removed from WishList",
-			wishListItems,
+			user: updatedUser,
 		});
 	} catch (err) {
 		console.log(err);
