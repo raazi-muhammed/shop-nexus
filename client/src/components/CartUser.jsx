@@ -4,11 +4,16 @@ import server from "../server";
 import Icons from "../assets/Icons";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-const { trash } = Icons;
+const { trash, close } = Icons;
+
+import { useDispatch } from "react-redux";
+import { displayCart, hideCart } from "../app/feature/cart/cartSlice";
 
 const CartUser = () => {
 	const [cartItems, setCartItems] = useState([]);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		axios.defaults.withCredentials = true;
 		axios
@@ -18,6 +23,7 @@ const CartUser = () => {
 			})
 			.catch((err) => console.log(err));
 	}, []);
+
 	const handleRemoveFromCart = (product_id) => {
 		axios
 			.put(
@@ -30,14 +36,22 @@ const CartUser = () => {
 				setCartItems(res.data.cartItems);
 			});
 	};
+
 	const handelProductClick = (id) => {
 		navigate(`/product/${id}`, { replace: true });
 		window.location.reload();
 	};
+
 	return (
 		<section className="p-3 pt-5 w-100">
-			<p className="h3 text-primary">Cart</p>
-
+			<div className="d-flex justify-content-between">
+				<p className="h3 text-primary">Cart</p>
+				<button
+					onClick={() => dispatch(hideCart())}
+					className="btn btn-light btn-sm text-secondary">
+					{close}
+				</button>
+			</div>
 			{cartItems.length == 0 && (
 				<p className="mt-3 text-sm text-secondary ">No items on Cart</p>
 			)}

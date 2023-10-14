@@ -4,12 +4,16 @@ import server from "../server";
 import { useNavigate } from "react-router-dom";
 
 import Icons from "../assets/Icons";
+const { trash, close } = Icons;
+
 import toast from "react-hot-toast";
-const { trash } = Icons;
+import { useDispatch } from "react-redux";
+import { hideWishList } from "../app/feature/wishList/wishListSlice";
 
 const WishListUser = () => {
 	const [wishListItems, setWishListItems] = useState([]);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		axios.defaults.withCredentials = true;
@@ -40,7 +44,14 @@ const WishListUser = () => {
 
 	return (
 		<section className="p-3 pt-5 w-100">
-			<p className="h3 text-primary">Wish List</p>
+			<div className="d-flex justify-content-between">
+				<p className="h3 text-primary">Wish List</p>
+				<button
+					onClick={() => dispatch(hideWishList())}
+					className="btn btn-light btn-sm text-secondary">
+					{close}
+				</button>
+			</div>
 
 			{wishListItems.length == 0 && (
 				<p className="mt-3 text-sm text-secondary ">No items on wishlist</p>

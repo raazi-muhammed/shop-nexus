@@ -7,18 +7,14 @@ import NavComponent from "./NavComponent";
 import axios from "axios";
 import server from "../server";
 import toast from "react-hot-toast";
-import CartUser from "./CartUser";
-import WishListUser from "./WishListUser";
 import category from "../utils/category";
 import { useDispatch, useSelector } from "react-redux";
 import { displayCart, hideCart } from "../app/feature/cart/cartSlice";
+import { displayWishList } from "../app/feature/wishList/wishListSlice";
 
 const UserNavbar = () => {
-	const cartState = useSelector((state) => state.cart.isCartVisible);
 	const dispatch = useDispatch();
 
-	const [isCartOpen, setIsCartOpen] = useState(false);
-	const [isWishListOpen, setIsWishListOpen] = useState(false);
 	const navItems = [
 		{ name: "Home", link: "/" },
 		{ name: "Best Selling", link: "/best-selling" },
@@ -72,9 +68,6 @@ const UserNavbar = () => {
 						<label className="visually-hidden " htmlFor="categorySelect">
 							Select a Category:
 						</label>
-
-						<p>{JSON.stringify(cartState)}</p>
-
 						<select
 							className="w-75 form-select form-select-sm bg-secondary text-white px-3"
 							id="categorySelect">
@@ -89,19 +82,15 @@ const UserNavbar = () => {
 					<NavComponent navItems={navItems} />
 					<section className="d-flex gap-3">
 						<button
-							onClick={() => {
-								dispatch(displayCart());
-								setIsWishListOpen(true);
-							}}
+							onClick={() => dispatch(displayWishList())}
 							className="btn btn-sm btn-secondary text-white">
 							{heart}
 						</button>
 						<button
-							onClick={() => setIsCartOpen(true)}
+							onClick={() => dispatch(displayCart())}
 							className="btn btn-sm btn-secondary text-white">
 							{cart}
 						</button>
-						{/* <Link to="/login"> */}
 						<Link
 							to={userData._id ? `/user/dashboard/${userData._id} ` : `/login`}>
 							<button className="btn btn-sm btn-secondary text-white">
@@ -112,28 +101,6 @@ const UserNavbar = () => {
 					</section>
 				</div>
 			</div>
-
-			{/* {isCartOpen ? (
-
-				<aside className="bg-white aside-card overflow-auto ">
-					<button
-						onClick={() => setIsCartOpen(false)}
-						className="btn btn-sm text-primary w-100">
-						Close
-					</button>
-					<CartUser />
-				</aside>
-			) : null}
-			{isWishListOpen ? (
-				<aside className="bg-white aside-card overflow-auto ">
-					<button
-						onClick={() => setIsWishListOpen(false)}
-						className="btn btn-sm text-primary w-100">
-						Close
-					</button>
-					<WishListUser />
-				</aside>
-			) : null} */}
 		</section>
 	);
 };
