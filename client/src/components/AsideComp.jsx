@@ -5,7 +5,7 @@ const AsideComp = ({ asideItems }) => {
 	const [currentNav, setCurrentNav] = useState(0);
 
 	return (
-		<nav className="d-flex flex-column bg-white p-4 m-3 rounded-4 w-100 gap-1 justify-content-center">
+		<nav className="d-flex flex-column bg-white p-4 rounded-4 w-100 gap-1 justify-content-center">
 			{asideItems.map((e, i) => (
 				<Link key={i} to={e.link}>
 					<button

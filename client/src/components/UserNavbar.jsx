@@ -72,7 +72,9 @@ const UserNavbar = () => {
 						<label className="visually-hidden " htmlFor="categorySelect">
 							Select a Category:
 						</label>
+
 						<p>{JSON.stringify(cartState)}</p>
+
 						<select
 							className="w-75 form-select form-select-sm bg-secondary text-white px-3"
 							id="categorySelect">
@@ -112,6 +114,7 @@ const UserNavbar = () => {
 			</div>
 
 			{/* {isCartOpen ? (
+
 				<aside className="bg-white aside-card overflow-auto ">
 					<button
 						onClick={() => setIsCartOpen(false)}

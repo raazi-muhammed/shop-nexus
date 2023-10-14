@@ -21,6 +21,7 @@ const HomePage = () => {
 		<div>
 			<UserHeader />
 			<UserNavbar />
+
 			<Routes>
 				<Route path="/new-products" element={<ProductsPage />} />
 				<Route path="/best-selling" element={<BestSellingPage />} />

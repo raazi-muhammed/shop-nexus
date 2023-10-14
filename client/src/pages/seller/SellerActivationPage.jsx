@@ -1,14 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import server from "../../server";
+import toast from "react-hot-toast";
 
 const SellerActivationPage = () => {
-	//const { activation_token } = useQuery();
+	const navigate = useNavigate();
 	const [message, setMessage] = useState("Seller Verification on process");
 	const [searchParams, setSearchParams] = useSearchParams();
-
-	// Get a specific query parameter
 	const activation_token = searchParams.get("activation_token");
 	console.log(activation_token);
 
@@ -20,6 +19,8 @@ const SellerActivationPage = () => {
 				})
 				.then(() => {
 					setMessage("Account Verified Successfully");
+					toast.success("Account Verified Successfully");
+					navigate("/seller/login");
 				})
 				.catch((err) => {
 					setMessage(err.response.data.message || "Verification Failed");

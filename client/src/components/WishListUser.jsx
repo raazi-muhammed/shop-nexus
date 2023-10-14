@@ -42,8 +42,11 @@ const WishListUser = () => {
 		<section className="p-3 pt-5 w-100">
 			<p className="h3 text-primary">Wish List</p>
 
-			{wishListItems.map((wishListItem) => (
-				<div className="row w-100 m-0 my-2 align-items-center">
+			{wishListItems.length == 0 && (
+				<p className="mt-3 text-sm text-secondary ">No items on wishlist</p>
+			)}
+			{wishListItems.map((wishListItem, i) => (
+				<div key={i} className="row w-100 m-0 my-2 align-items-center">
 					<div className="col-3 m-0 p-0 ">
 						<img className="m-0 w-100 p-0" src={wishListItem.imageUrl} />
 					</div>

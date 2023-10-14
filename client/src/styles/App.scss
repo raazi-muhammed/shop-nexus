@@ -7,7 +7,14 @@ $btn-border-radius-sm: 1rem;
 $input-bg: $light;
 $input-padding-y: 0.75rem;
 
+/* Form */
 $form-select-border-radius-sm: 1rem;
+$form-feedback-icon-valid: none;
+$form-feedback-icon-invalid: none;
+
+$form-feedback-valid-color: $primary;
+$form-valid-border-color: $light;
+$form-valid-color: $primary;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 

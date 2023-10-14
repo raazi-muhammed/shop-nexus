@@ -5,7 +5,7 @@ import ProductCardRow from "../../components/ProductCardRow";
 import toast from "react-hot-toast";
 
 const SellerAllProducts = ({ shopId }) => {
-	const [data, setData] = useState([{ images: [] }]);
+	const [data, setData] = useState([{ images: [{ url: "" }] }]);
 	useEffect(() => {
 		axios
 			.get(`${server}/seller/get-products-from-shop/${shopId}`, {
@@ -27,18 +27,41 @@ const SellerAllProducts = ({ shopId }) => {
 			{!data[0]?.name ? (
 				<p className="d-flex justify-content-center mt-5">Loading...</p>
 			) : (
-				data.map((product, i) => (
-					<ProductCardRow
-						key={i}
-						id={product._id}
-						name={product.name}
-						stock={product.stock}
-						category={product.category}
-						price={product.discount_price}
-						imgUrl={product.images[0]?.url}
-						shopId={shopId}
-					/>
-				))
+				<>
+					{data.map((product, i) => (
+						<>
+							{!product.isDeleted && (
+								<ProductCardRow
+									key={i}
+									id={product._id}
+									name={product.name}
+									stock={product.stock}
+									category={product.category}
+									price={product.discount_price}
+									imgUrl={product.images[0]?.url}
+									shopId={shopId}
+								/>
+							)}
+						</>
+					))}
+					<p className="fw-bold m-3 text-danger">Deleted</p>
+					{data.map((product, i) => (
+						<>
+							{product.isDeleted && (
+								<ProductCardRow
+									key={i}
+									id={product._id}
+									name={product.name}
+									stock={product.stock}
+									category={product.category}
+									price={product.discount_price}
+									imgUrl={product.images[0]?.url}
+									shopId={shopId}
+								/>
+							)}
+						</>
+					))}
+				</>
 			)}
 		</div>
 	);

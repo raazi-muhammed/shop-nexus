@@ -75,4 +75,20 @@ router.post("/block-user", isAdminAuthenticated, async (req, res) => {
 	}
 });
 
+router.get("/logout", (req, res) => {
+	try {
+		console.log("logout reached");
+
+		res.status(200).clearCookie("adminDetails").json({
+			success: true,
+			message: "User is Logged out",
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
 module.exports = router;

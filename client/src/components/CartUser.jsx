@@ -38,8 +38,11 @@ const CartUser = () => {
 		<section className="p-3 pt-5 w-100">
 			<p className="h3 text-primary">Cart</p>
 
-			{cartItems.map((cartItem) => (
-				<div className="row w-100 m-0 my-2 align-items-center">
+			{cartItems.length == 0 && (
+				<p className="mt-3 text-sm text-secondary ">No items on Cart</p>
+			)}
+			{cartItems.map((cartItem, i) => (
+				<div key={i} className="row w-100 m-0 my-2 align-items-center">
 					<div className="col-3 m-0 p-0 ">
 						<img className="m-0 w-100 p-0" src={cartItem.imageUrl} />
 					</div>
