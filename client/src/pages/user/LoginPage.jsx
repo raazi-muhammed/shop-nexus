@@ -39,8 +39,8 @@ const LoginPage = () => {
 			.catch((err) => {
 				const message = err.response.data.message;
 				const errorWith = err.response.data.errorWith;
-				errorWith === "user" ? setEmailErr(message) : setEmailErr("");
-				errorWith === "password" ? setPasswordErr(message) : setPasswordErr("");
+				if (errorWith === "user") setEmailErr(message);
+				if (errorWith === "password") setPasswordErr(message);
 				if (!errorWith) toast.error(message);
 			});
 	};
@@ -63,9 +63,9 @@ const LoginPage = () => {
 				<h3>Log In</h3>
 				<p className="text-secondary">Welcome back! Log in</p>
 				<form
+					noValidate
 					onChange={handleFormChange}
 					className={validationSetting}
-					noValidate
 					onSubmit={handleSubmit}>
 					<div className="mb-3">
 						<label htmlFor="email" className="form-label">
@@ -81,7 +81,7 @@ const LoginPage = () => {
 								setEmailErr("");
 								setEmail(e.target.value);
 							}}
-							required="required"
+							required
 						/>
 						<div class="invalid-feedback">
 							{emailErr ? emailErr : "Invalid Email"}
@@ -101,6 +101,7 @@ const LoginPage = () => {
 								setPasswordErr("");
 								setPassword(e.target.value);
 							}}
+							pattern=".{3,}"
 							required
 						/>
 						<div class="invalid-feedback">

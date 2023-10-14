@@ -13,21 +13,23 @@ const BestSellingPage = ({ type }) => {
 	}, []);
 
 	return (
-		<div
-			className={`row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 p-4 ${type}`}>
-			{productData.map((product) => (
-				<ProductCartMain
-					key={product._id}
-					productId={product._id}
-					price={product.price}
-					rating={product.rating}
-					name={product.name}
-					sold={product.total_sell}
-					shopName={product.shop.name}
-					imgUrl={product.images[0]?.url}
-					discount_price={product.discount_price}
-				/>
-			))}
+		<div className="w-100 container container-xxl  ">
+			<div
+				className={`row w-100   row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 p-4 ${type}`}>
+				{productData.map((product) => (
+					<ProductCartMain
+						key={product._id}
+						productId={product._id}
+						price={product.price}
+						rating={product.rating}
+						name={product.name}
+						sold={product.total_sell}
+						shopName={product.shop.name}
+						imgUrl={product.images[0]?.url}
+						discount_price={product.discount_price}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };

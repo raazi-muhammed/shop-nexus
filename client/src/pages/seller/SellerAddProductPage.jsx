@@ -15,6 +15,14 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 	const [stock, setStock] = useState("");
 	const [image, setImage] = useState([]);
 
+	const [validationSetting, setValidationSetting] =
+		useState("needs-validation");
+	const [allowSubmission, setAllowSubmission] = useState(false);
+	const handleFormChange = (e) => {
+		setAllowSubmission(e.currentTarget.checkValidity());
+		setValidationSetting("was-validated");
+	};
+
 	const convertBase64 = (file) => {
 		return new Promise((res, rej) => {
 			const fileReader = new FileReader();
@@ -69,7 +77,11 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 	return (
 		<section>
 			<h3>Add an Product</h3>
-			<form onSubmit={(e) => handleSubmit(e)}>
+			<form
+				noValidate
+				className={validationSetting}
+				onChange={handleFormChange}
+				onSubmit={handleSubmit}>
 				<div className="mb-3">
 					<label htmlFor="product-name" className="form-label">
 						Product Name
@@ -83,6 +95,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						onChange={(e) => setProductName(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label className="form-label" htmlFor="categorySelect">
@@ -112,6 +125,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						onChange={(e) => setDescription(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="price" className="form-label">
@@ -126,6 +140,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						onChange={(e) => setPrice(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="discounted-price" className="form-label">
@@ -140,6 +155,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						onChange={(e) => setDiscountedPrice(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="image-url" className="form-label">
@@ -151,8 +167,11 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						id="image-url"
 						name="imageUrl"
 						onChange={(e) => handleFileInputChange(e)}
+						accept="image/*"
 						multiple
+						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="rating" className="form-label">
@@ -167,6 +186,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						onChange={(e) => setRating(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="number" className="form-label">
@@ -181,8 +201,12 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						onChange={(e) => setStock(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
-				<button type="submit" className="btn btn-primary">
+				<button
+					disabled={!allowSubmission}
+					type="submit"
+					className="btn btn-primary">
 					Add Product
 				</button>
 			</form>

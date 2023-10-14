@@ -22,28 +22,30 @@ const FAQsPage = () => {
 		},
 	];
 	return (
-		<div className="accordion p-4 min-vh-100 vw-100 " id="accordionExample">
-			{faqs.map((faq, i) => (
-				<div key={i} className="accordion-item">
-					<h2 className="accordion-header">
-						<button
-							className="accordion-button collapsed"
-							type="button"
-							data-bs-toggle="collapse"
-							data-bs-target={"#collapseOne" + faq.id}
-							aria-expanded="false"
-							aria-controls={"collapseOne" + faq.id}>
-							{faq.question}
-						</button>
-					</h2>
-					<div
-						id={"collapseOne" + faq.id}
-						className="accordion-collapse collapse "
-						data-bs-parent="#accordionExample">
-						<div className="accordion-body">{faq.answer}</div>
+		<div className="w-100 container container-xl ">
+			<div className="accordion p-4 min-vh-100 w-100 " id="accordionExample">
+				{faqs.map((faq, i) => (
+					<div key={i} className="accordion-item">
+						<h2 className="accordion-header">
+							<button
+								className="accordion-button collapsed"
+								type="button"
+								data-bs-toggle="collapse"
+								data-bs-target={"#collapseOne" + faq.id}
+								aria-expanded="false"
+								aria-controls={"collapseOne" + faq.id}>
+								{faq.question}
+							</button>
+						</h2>
+						<div
+							id={"collapseOne" + faq.id}
+							className="accordion-collapse collapse "
+							data-bs-parent="#accordionExample">
+							<div className="accordion-body">{faq.answer}</div>
+						</div>
 					</div>
-				</div>
-			))}
+				))}
+			</div>
 		</div>
 	);
 };

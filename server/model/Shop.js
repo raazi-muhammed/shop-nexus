@@ -32,7 +32,7 @@ const shopSchema = new mongoose.Schema({
 		required: true,
 	},
 	GSTIN_Number: {
-		type: Number,
+		type: String,
 	},
 	role: {
 		type: String,

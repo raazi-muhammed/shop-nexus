@@ -27,22 +27,26 @@ const UserDashboard = () => {
 	};
 
 	return (
-		<main className="vw-100 min-vh-100 row p-2">
-			<section className="col-3">
-				<AsideComp asideItems={asideItems} />
-				<button
-					className="btn btn-sm btn-danger w-100 ms-3"
-					onClick={handleLogOut}>
-					Log out
-				</button>
-			</section>
-			<section className="col-9 px-4 py-3 ">
-				<Routes>
-					<Route path="/add-address" element={<UserAddAddress />} />
-					<Route path="/address" element={<UserAllAddress />} />
-					<Route path="/" element={<UserEditPage />} />
-				</Routes>
-			</section>
+		<main className="vw-100 min-vh-100 p-2">
+			<div className="w-100 container container-xxl  ">
+				<div className="row">
+					<section className="col-3">
+						<AsideComp asideItems={asideItems} />
+						<button
+							className="btn btn-sm btn-danger w-100 ms-3"
+							onClick={handleLogOut}>
+							Log out
+						</button>
+					</section>
+					<section className="col-9 px-4 py-3 ">
+						<Routes>
+							<Route path="/add-address" element={<UserAddAddress />} />
+							<Route path="/address" element={<UserAllAddress />} />
+							<Route path="/" element={<UserEditPage />} />
+						</Routes>
+					</section>
+				</div>
+			</div>
 		</main>
 	);
 };

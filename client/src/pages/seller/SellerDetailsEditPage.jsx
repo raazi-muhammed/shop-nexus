@@ -17,6 +17,14 @@ const SellerDetailsEditPage = () => {
 	const [zipCode, setZipCode] = useState(data.zipCode);
 	const [gstinNumber, setGstinNumber] = useState(data.zipCode);
 
+	const [validationSetting, setValidationSetting] =
+		useState("needs-validation");
+	const [allowSubmission, setAllowSubmission] = useState(false);
+	const handleFormChange = (e) => {
+		setAllowSubmission(e.currentTarget.checkValidity());
+		setValidationSetting("was-validated");
+	};
+
 	useEffect(() => {
 		axios
 			.get(`${server}/seller/get-shop-details/${shopId}`, {
@@ -89,7 +97,11 @@ const SellerDetailsEditPage = () => {
 				</p>
 			</section>
 
-			<form onSubmit={(e) => handleSubmit(e)}>
+			<form
+				noValidate
+				className={validationSetting}
+				onChange={handleFormChange}
+				onSubmit={handleSubmit}>
 				<div className="mb-3 d-flex align-items-center gap-3 ">
 					<img
 						className="rounded-circle"
@@ -106,8 +118,10 @@ const SellerDetailsEditPage = () => {
 						style={{ height: "3rem" }}
 						type="file"
 						id="formFileMultiple"
+						accept="image/*"
 						onChange={(e) => handleFileInputChange(e)}
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="shop-name" className="form-label">
@@ -122,6 +136,7 @@ const SellerDetailsEditPage = () => {
 						onChange={(e) => setShopName(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="email" className="form-label">
@@ -136,45 +151,55 @@ const SellerDetailsEditPage = () => {
 						onChange={(e) => setEmail(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="phone-number" className="form-label">
 						Phone Number
 					</label>
 					<input
-						type="number"
+						type="text"
 						className="form-control"
 						id="phone-number"
 						name="phoneNumber"
 						value={phoneNumber}
 						onChange={(e) => setPhoneNumber(e.target.value)}
+						pattern="^(?:\+\d{1,3}\s?)?(?:\(\d{1,4}\)\s?)?\d{10,14}$"
+						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="gstin-number" className="form-label">
 						GSTIN Number
 					</label>
 					<input
-						type="number"
+						type="text"
 						className="form-control"
 						id="gstin-number"
 						name="gstinNumber"
 						value={gstinNumber}
 						onChange={(e) => setGstinNumber(e.target.value)}
+						pattern="^\d{6,}$"
+						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="zip-code" className="form-label">
 						Zip code
 					</label>
 					<input
-						type="number"
+						type="text"
 						className="form-control"
 						id="zip-code"
 						name="zipCode"
 						value={zipCode}
 						onChange={(e) => setZipCode(e.target.value)}
+						pattern="^\d{6}$"
+						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="address1" className="form-label">
@@ -189,6 +214,7 @@ const SellerDetailsEditPage = () => {
 						onChange={(e) => setAddress1(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="address2" className="form-label">
@@ -203,9 +229,11 @@ const SellerDetailsEditPage = () => {
 						onChange={(e) => setAddress2(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 
 				<button
+					disabled={!allowSubmission}
 					type="submit"
 					className="btn btn-secondary text-white btn-block col-12">
 					Update Data

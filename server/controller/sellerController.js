@@ -11,22 +11,6 @@ const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 
 router.post("/crate-shop", async (req, res) => {
 	try {
-		if (req.body.password !== req.body.confirmPassword) {
-			res.status(400).json({
-				success: 400,
-				message: "Password doesn't match",
-			});
-			return;
-		}
-
-		if (req.body.password.length < 6) {
-			res.status(400).json({
-				success: 400,
-				message: "Password must be at least 6 characters",
-			});
-			return;
-		}
-
 		const shopAlreadyExists = await Shop.findOne({
 			$or: [{ shopName: req.body.shopName }, { email: req.body.email }],
 		});
@@ -34,7 +18,8 @@ router.post("/crate-shop", async (req, res) => {
 		if (shopAlreadyExists) {
 			res.status(400).json({
 				success: 400,
-				message: "Shop name or Email taken",
+				errorWith: "email",
+				message: "Email taken",
 			});
 			return;
 		}
@@ -132,6 +117,7 @@ router.post("/login-shop", async (req, res) => {
 		if (!shop) {
 			res.status(404).json({
 				success: false,
+				errorWith: "email",
 				message: "No user found",
 			});
 			return;
@@ -141,6 +127,7 @@ router.post("/login-shop", async (req, res) => {
 		if (!isPasswordMatch) {
 			res.status(404).json({
 				success: false,
+				errorWith: "password",
 				message: "Incorrect Password",
 			});
 			return;
@@ -233,14 +220,22 @@ router.get(
 	"/get-products-from-shop/:shopId",
 	isSellerAuthenticated,
 	async (req, res) => {
-		const ShopDetails = await Shop.find({ _id: req.params.shopId });
-		const shopName = ShopDetails[0].shopName;
+		try {
+			const ShopDetails = await Shop.find({ _id: req.params.shopId });
+			const shopName = ShopDetails[0].shopName;
 
-		const shopDetails = await Products.find({ "shop.name": shopName });
-		res.status(200).json({
-			success: true,
-			data: shopDetails,
-		});
+			const shopDetails = await Products.find({ "shop.name": shopName });
+			res.status(200).json({
+				success: true,
+				data: shopDetails,
+			});
+		} catch (err) {
+			console.log(err);
+			res.status(500).json({
+				success: false,
+				message: "Internal Server Error",
+			});
+		}
 	}
 );
 

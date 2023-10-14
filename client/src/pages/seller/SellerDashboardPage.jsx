@@ -56,35 +56,37 @@ const SellerDashboardPage = () => {
 	return (
 		<main className="vw-100">
 			<SellerNavbar shopName={shopName} />
-			<section className="row py-5">
-				<div className="col-3 mt-3">
-					<AsideComp asideItems={asideItems} />
-					<button
-						className="btn btn-sm btn-danger w-100 ms-3"
-						onClick={handleLogOut}>
-						Log out
-					</button>
-				</div>
-				<section className="col-8 mx-auto">
-					<Routes>
-						<Route
-							path="/all-products"
-							element={<SellerAllProducts shopId={shopId} />}
-						/>
-						<Route
-							path="/new-product"
-							element={
-								<SellerAddProductPage shopId={shopId} shopName={shopName} />
-							}
-						/>
-						<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
-						<Route
-							path="/edit-single-product/:productId"
-							element={<SellerEditSingleProductPage />}
-						/>
-					</Routes>
+			<div className="w-100 container container-xxl  ">
+				<section className="row py-5">
+					<div className="col-3 mt-3">
+						<AsideComp asideItems={asideItems} />
+						<button
+							className="btn btn-sm btn-danger w-100 ms-3"
+							onClick={handleLogOut}>
+							Log out
+						</button>
+					</div>
+					<section className="col-8 mx-auto">
+						<Routes>
+							<Route
+								path="/all-products"
+								element={<SellerAllProducts shopId={shopId} />}
+							/>
+							<Route
+								path="/new-product"
+								element={
+									<SellerAddProductPage shopId={shopId} shopName={shopName} />
+								}
+							/>
+							<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
+							<Route
+								path="/edit-single-product/:productId"
+								element={<SellerEditSingleProductPage />}
+							/>
+						</Routes>
+					</section>
 				</section>
-			</section>
+			</div>
 		</main>
 	);
 };

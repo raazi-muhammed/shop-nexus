@@ -61,6 +61,7 @@ const UserEditPage = () => {
 
 	return (
 		<form
+			noValidate
 			className={validationSetting}
 			onChange={handleFormChange}
 			onSubmit={handleEditUser}>

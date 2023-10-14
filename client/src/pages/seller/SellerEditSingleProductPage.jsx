@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import server from "../../server";
 import toast from "react-hot-toast";
 import categoryArry from "../../utils/category";
 
 const SellerEditSingleProductPage = () => {
+	const navigate = useNavigate();
 	const [refresh, setRefresh] = useState(true);
 
 	const [data, setData] = useState([]);
@@ -18,6 +19,14 @@ const SellerEditSingleProductPage = () => {
 	const [stock, setStock] = useState("");
 	const [imagesToDisplay, setImagesToDisplay] = useState([]);
 	const [image, setImage] = useState([]);
+
+	const [validationSetting, setValidationSetting] =
+		useState("needs-validation");
+	const [allowSubmission, setAllowSubmission] = useState(false);
+	const handleFormChange = (e) => {
+		setAllowSubmission(e.currentTarget.checkValidity());
+		setValidationSetting("was-validated");
+	};
 
 	const convertBase64 = (file) => {
 		return new Promise((res, rej) => {
@@ -47,6 +56,7 @@ const SellerEditSingleProductPage = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setAllowSubmission(false);
 		const formData = {
 			productId,
 			productName,
@@ -75,7 +85,10 @@ const SellerEditSingleProductPage = () => {
 			.delete(`${server}/products/delete-product/${productId}`, {
 				withCredentials: true,
 			})
-			.then((res) => toast.success(res.data?.message))
+			.then((res) => {
+				navigate("/");
+				toast.success(res.data?.message);
+			})
 			.catch((err) => console.log(err));
 	};
 
@@ -125,7 +138,11 @@ const SellerEditSingleProductPage = () => {
 		<div className="w-100">
 			<p>{productId}</p>
 
-			<form onSubmit={(e) => handleSubmit(e)}>
+			<form
+				noValidate
+				onChange={handleFormChange}
+				className={validationSetting}
+				onSubmit={handleSubmit}>
 				<div className="mb-3">
 					<label htmlFor="product-name" className="form-label">
 						Product Name
@@ -139,6 +156,7 @@ const SellerEditSingleProductPage = () => {
 						onChange={(e) => setProductName(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label className="form-label" htmlFor="categorySelect">
@@ -149,7 +167,6 @@ const SellerEditSingleProductPage = () => {
 						onChange={(e) => setCategory(e.target.value)}
 						className="form-select"
 						id="categorySelect">
-						<option value="">Select Category</option>
 						{categoryArry.map((e) => (
 							<option value={e}>{e}</option>
 						))}
@@ -168,6 +185,7 @@ const SellerEditSingleProductPage = () => {
 						onChange={(e) => setDescription(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="price" className="form-label">
@@ -182,6 +200,7 @@ const SellerEditSingleProductPage = () => {
 						onChange={(e) => setPrice(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="discounted-price" className="form-label">
@@ -196,6 +215,7 @@ const SellerEditSingleProductPage = () => {
 						onChange={(e) => setDiscountedPrice(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 
 				<div className="mb-3">
@@ -211,6 +231,7 @@ const SellerEditSingleProductPage = () => {
 						onChange={(e) => setStock(e.target.value)}
 						required
 					/>
+					<div class="invalid-feedback">Invalid</div>
 				</div>
 				<section className="d-flex overflow-auto gap-3 my-3">
 					{imagesToDisplay.map((e, i) => (
@@ -235,12 +256,16 @@ const SellerEditSingleProductPage = () => {
 						id="image-url"
 						name="imageUrl"
 						onChange={(e) => handleFileInputChange(e)}
+						accept="image/*"
 						multiple
 					/>
 				</div>
 
 				<div className="row gap-3 m-1">
-					<button type="submit" className="col btn btn-primary">
+					<button
+						disabled={!allowSubmission}
+						type="submit"
+						className="col btn btn-primary">
 						Update Product
 					</button>
 					<button className="col btn btn-danger" onClick={handleDelete}>

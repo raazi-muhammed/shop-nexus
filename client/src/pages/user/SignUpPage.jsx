@@ -112,13 +112,13 @@ const SignUpPage = () => {
 							Password
 						</label>
 						<input
-							pattern=".{4,}"
 							type="password"
 							className="form-control"
 							id="password"
 							name="password"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
+							pattern=".{4,}"
 							required
 						/>
 						<div class="invalid-feedback">4 characters minimum</div>
