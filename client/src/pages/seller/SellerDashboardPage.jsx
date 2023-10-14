@@ -61,7 +61,7 @@ const SellerDashboardPage = () => {
 					<div className="col-3 mt-3">
 						<AsideComp asideItems={asideItems} />
 						<button
-							className="btn btn-sm btn-danger w-100 ms-3"
+							className="btn btn-sm btn-danger w-100"
 							onClick={handleLogOut}>
 							Log out
 						</button>

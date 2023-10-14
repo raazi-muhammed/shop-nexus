@@ -4,6 +4,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import server from "../../server";
 import toast from "react-hot-toast";
 import categoryArry from "../../utils/category";
+import {
+	formLabelClass,
+	inputDivClass,
+	formClass,
+	submitButtonClass,
+} from "../../utils/styleClasses";
 
 const SellerEditSingleProductPage = () => {
 	const navigate = useNavigate();
@@ -147,129 +153,150 @@ const SellerEditSingleProductPage = () => {
 
 	return (
 		<div className="w-100">
-			<p>{productId}</p>
+			<p className="text-small text-secondary text-end">{productId}</p>
 
 			<form
 				noValidate
 				onChange={handleFormChange}
-				className={validationSetting}
+				className={`${validationSetting} ${formClass}`}
 				onSubmit={handleSubmit}>
-				<div className="mb-3">
-					<label htmlFor="product-name" className="form-label">
-						Product Name
+				<div className="row">
+					<label htmlFor="product-name" className={formLabelClass}>
+						Product
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="product-name"
-						value={productName}
-						name="productName"
-						onChange={(e) => setProductName(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="product-name"
+							value={productName}
+							name="productName"
+							onChange={(e) => setProductName(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label className="form-label" htmlFor="categorySelect">
-						Select a Category:
+				<div className="row">
+					<label className={formLabelClass} htmlFor="categorySelect">
+						Category
 					</label>
-					<select
-						value={category}
-						onChange={(e) => setCategory(e.target.value)}
-						className="form-select"
-						id="categorySelect">
-						{categoryArry.map((e) => (
-							<option value={e}>{e}</option>
-						))}
-					</select>
+					<div className={inputDivClass}>
+						<select
+							value={category}
+							onChange={(e) => setCategory(e.target.value)}
+							className="form-select"
+							id="categorySelect">
+							{categoryArry.map((e) => (
+								<option value={e}>{e}</option>
+							))}
+						</select>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="description" className="form-label">
+				<div className="row">
+					<label htmlFor="description" className={formLabelClass}>
 						Description
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="description"
-						value={description}
-						name="description"
-						onChange={(e) => setDescription(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="description"
+							value={description}
+							name="description"
+							onChange={(e) => setDescription(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="price" className="form-label">
+				<div className="row">
+					<label htmlFor="price" className={formLabelClass}>
 						Price
 					</label>
-					<input
-						type="number"
-						className="form-control"
-						id="price"
-						value={price}
-						name="price"
-						onChange={(e) => setPrice(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="number"
+							className="form-control"
+							id="price"
+							value={price}
+							name="price"
+							onChange={(e) => setPrice(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="discounted-price" className="form-label">
+				<div className="row">
+					<label htmlFor="discounted-price" className={formLabelClass}>
 						Discounted Price
 					</label>
-					<input
-						type="number"
-						className="form-control"
-						id="discounted-price"
-						value={discountedPrice}
-						name="discountedPrice"
-						onChange={(e) => setDiscountedPrice(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="number"
+							className="form-control"
+							id="discounted-price"
+							value={discountedPrice}
+							name="discountedPrice"
+							onChange={(e) => setDiscountedPrice(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
 
-				<div className="mb-3">
-					<label htmlFor="number" className="form-label">
+				<div className="row">
+					<label htmlFor="number" className={formLabelClass}>
 						Stock
 					</label>
-					<input
-						type="number"
-						className="form-control"
-						id="stock"
-						value={stock}
-						name="stock"
-						onChange={(e) => setStock(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="number"
+							className="form-control"
+							id="stock"
+							value={stock}
+							name="stock"
+							onChange={(e) => setStock(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<section className="d-flex overflow-auto gap-3 my-3">
-					{imagesToDisplay.map((e, i) => (
-						<div className="col-3">
-							<img className="w-100 rounded-4" src={e.url} alt="" />
-							<button
-								type="button"
-								className="btn btn-danger btn-sm mt-2 w-100"
-								onClick={(event) => handleRemoveItem(e.url)}>
-								Remove
-							</button>
-						</div>
-					))}
-				</section>
-				<div className="mb-3">
-					<label htmlFor="image-url" className="form-label">
+				<div className="row">
+					<label
+						htmlFor="image-url"
+						className={`mt-lg-5 ${formLabelClass} `}></label>
+					<div className={inputDivClass}>
+						<section className="d-flex overflow-auto gap-3">
+							{imagesToDisplay.map((e, i) => (
+								<div className="col-3">
+									<img className="w-100 rounded-4" src={e.url} alt="" />
+									<button
+										type="button"
+										className="btn btn-danger btn-sm mt-2 w-100"
+										onClick={(event) => handleRemoveItem(e.url)}>
+										Remove
+									</button>
+								</div>
+							))}
+						</section>
+					</div>
+				</div>
+				<div className="row">
+					<label htmlFor="image-url" className={formLabelClass}>
 						Add Image
 					</label>
-					<input
-						type="file"
-						className="form-control"
-						id="image-url"
-						name="imageUrl"
-						onChange={(e) => handleFileInputChange(e)}
-						accept="image/*"
-						multiple
-					/>
+					<div className={inputDivClass}>
+						<input
+							type="file"
+							className="form-control"
+							id="image-url"
+							name="imageUrl"
+							onChange={(e) => handleFileInputChange(e)}
+							accept="image/*"
+							multiple
+						/>
+					</div>
 				</div>
 
 				<div className="row gap-3 m-1">

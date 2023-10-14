@@ -3,6 +3,12 @@ import React, { useEffect, useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import {
+	formLabelClass,
+	inputDivClass,
+	formClass,
+	submitButtonClass,
+} from "../../utils/styleClasses";
 
 const SellerDetailsEditPage = () => {
 	const [data, setData] = useState({});
@@ -99,143 +105,161 @@ const SellerDetailsEditPage = () => {
 
 			<form
 				noValidate
-				className={validationSetting}
+				className={`${formClass} ${validationSetting}`}
 				onChange={handleFormChange}
 				onSubmit={handleSubmit}>
-				<div className="mb-3 d-flex align-items-center gap-3 ">
-					<img
-						className="rounded-circle"
-						style={{ width: "4rem", height: "4rem" }}
-						src={
-							shopImageUrl
-								? shopImageUrl
-								: "http://localhost:3000/images/profile-pic-1697175479482_300657077.png"
-						}
-						alt=""
-					/>
-					<input
-						className="form-control"
-						style={{ height: "3rem" }}
-						type="file"
-						id="formFileMultiple"
-						accept="image/*"
-						onChange={(e) => handleFileInputChange(e)}
-					/>
-					<div class="invalid-feedback">Invalid</div>
+				<div className="row align-items-center">
+					<div className={formLabelClass}>
+						<img
+							className="rounded-circle"
+							style={{ width: "4rem", height: "4rem" }}
+							src={
+								shopImageUrl
+									? shopImageUrl
+									: "http://localhost:3000/images/profile-pic-1697175479482_300657077.png"
+							}
+							alt=""
+						/>
+					</div>
+					<div className={inputDivClass}>
+						<input
+							className="form-control"
+							style={{ height: "3rem" }}
+							type="file"
+							id="formFileMultiple"
+							accept="image/*"
+							onChange={(e) => handleFileInputChange(e)}
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="shop-name" className="form-label">
+				<div className="row">
+					<label htmlFor="shop-name" className={formLabelClass}>
 						Shop Name
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="shop-name"
-						name="shopName"
-						value={shopName}
-						onChange={(e) => setShopName(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="shop-name"
+							name="shopName"
+							value={shopName}
+							onChange={(e) => setShopName(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="email" className="form-label">
+				<div className="row">
+					<label htmlFor="email" className={formLabelClass}>
 						Email
 					</label>
-					<input
-						type="email"
-						className="form-control"
-						id="email"
-						name="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="email"
+							className="form-control"
+							id="email"
+							name="email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="phone-number" className="form-label">
+				<div className="row">
+					<label htmlFor="phone-number" className={formLabelClass}>
 						Phone Number
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="phone-number"
-						name="phoneNumber"
-						value={phoneNumber}
-						onChange={(e) => setPhoneNumber(e.target.value)}
-						pattern="^(?:\+\d{1,3}\s?)?(?:\(\d{1,4}\)\s?)?\d{10,14}$"
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="phone-number"
+							name="phoneNumber"
+							value={phoneNumber}
+							onChange={(e) => setPhoneNumber(e.target.value)}
+							pattern="^(?:\+\d{1,3}\s?)?(?:\(\d{1,4}\)\s?)?\d{10,14}$"
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="gstin-number" className="form-label">
+				<div className="row">
+					<label htmlFor="gstin-number" className={formLabelClass}>
 						GSTIN Number
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="gstin-number"
-						name="gstinNumber"
-						value={gstinNumber}
-						onChange={(e) => setGstinNumber(e.target.value)}
-						pattern="^\d{6,}$"
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="gstin-number"
+							name="gstinNumber"
+							value={gstinNumber}
+							onChange={(e) => setGstinNumber(e.target.value)}
+							pattern="^\d{6,}$"
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="zip-code" className="form-label">
+				<div className="row">
+					<label htmlFor="zip-code" className={formLabelClass}>
 						Zip code
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="zip-code"
-						name="zipCode"
-						value={zipCode}
-						onChange={(e) => setZipCode(e.target.value)}
-						pattern="^\d{6}$"
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="zip-code"
+							name="zipCode"
+							value={zipCode}
+							onChange={(e) => setZipCode(e.target.value)}
+							pattern="^\d{6}$"
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="address1" className="form-label">
+				<div className="row">
+					<label htmlFor="address1" className={formLabelClass}>
 						address 1
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="address1"
-						name="address1"
-						value={address1}
-						onChange={(e) => setAddress1(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="address1"
+							name="address1"
+							value={address1}
+							onChange={(e) => setAddress1(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="address2" className="form-label">
+				<div className="row">
+					<label htmlFor="address2" className={formLabelClass}>
 						address 2
 					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="address2"
-						name="address2"
-						value={address2}
-						onChange={(e) => setAddress2(e.target.value)}
-						required
-					/>
-					<div class="invalid-feedback">Invalid</div>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="address2"
+							name="address2"
+							value={address2}
+							onChange={(e) => setAddress2(e.target.value)}
+							required
+						/>
+						<div class="invalid-feedback">Invalid</div>
+					</div>
 				</div>
 
 				<button
 					disabled={!allowSubmission}
 					type="submit"
-					className="btn btn-secondary text-white btn-block col-12">
+					className={submitButtonClass}>
 					Update Data
 				</button>
 			</form>

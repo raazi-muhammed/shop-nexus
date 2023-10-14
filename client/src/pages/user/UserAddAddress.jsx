@@ -7,6 +7,7 @@ import {
 	formLabelClass,
 	inputDivClass,
 	formClass,
+	submitButtonClass,
 } from "../../utils/styleClasses";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import { useDispatch } from "react-redux";
@@ -206,7 +207,7 @@ const UserAddAddress = () => {
 			<button
 				disabled={!allowSubmission}
 				type="submit"
-				className="btn btn-secondary text-white col-12 col-lg-6 align-self-center">
+				className={submitButtonClass}>
 				Update Data
 			</button>
 		</form>

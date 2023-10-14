@@ -4,7 +4,7 @@ import server from "../server";
 import Icons from "../assets/Icons";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-const { trash, close } = Icons;
+const { trash, close, cart } = Icons;
 
 import { useDispatch, useSelector } from "react-redux";
 import { displayCart, hideCart } from "../app/feature/cart/cartSlice";
