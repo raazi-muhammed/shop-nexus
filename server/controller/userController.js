@@ -170,7 +170,8 @@ router.put(
 
 			user = await User.findOneAndUpdate(
 				{ _id: req.user.id },
-				{ fullName, email }
+				{ fullName, email },
+				{ new: true }
 			);
 
 			if (req.file) {
@@ -178,7 +179,7 @@ router.put(
 				user = await User.findOneAndUpdate(
 					{ _id: req.user.id },
 					{ $set: { "avatar.url": fileUrl } },
-					{ new: true, upsert: true }
+					{ new: true }
 				);
 			}
 
@@ -223,7 +224,8 @@ router.post("/add-address", isAuthenticated, async (req, res) => {
 						addressType,
 					},
 				},
-			}
+			},
+			{ new: true }
 		);
 
 		res.status(200).json({

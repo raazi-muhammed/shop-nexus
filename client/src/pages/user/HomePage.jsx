@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserHeader from "../../components/UserHeader";
 import UserNavbar from "../../components/UserNavbar";
 import { Route, Routes } from "react-router-dom";
@@ -10,16 +10,40 @@ import SingleProductPage from "./SingleProductPage";
 import FooterComp from "../../components/FooterComp";
 import UserDashboard from "./UserDashboard";
 import UserSingleShopPage from "./UserSingleShopPage";
+
 import CartUser from "../../components/CartUser";
 import WishListUser from "../../components/WishListUser";
+import { useDispatch, useSelector } from "react-redux";
+import server from "../../server";
+import axios from "axios";
 
-import { useSelector } from "react-redux";
+import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+import toast from "react-hot-toast";
 
 const HomePage = () => {
 	const cartState = useSelector((state) => state.cart.isCartVisible);
 	const wishListState = useSelector(
 		(state) => state.wishList.isWishListVisible
 	);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		console.log("hi");
+		axios
+			.get(`${server}/user/load-user`, { withCredentials: true })
+			.then((res) => {
+				if (res.data.success === false) {
+					toast.error("You are Blocked");
+				} else {
+					toast.success("Logged In");
+					console.log(res.data.user);
+					dispatch(setUserDataReducer(res.data.user));
+				}
+			})
+			.catch((err) => {
+				console.log(err.response.data.message);
+			});
+	}, []);
 
 	return (
 		<div>

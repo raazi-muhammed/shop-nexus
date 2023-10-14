@@ -2,20 +2,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
+import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+import { useSelector } from "react-redux";
 
 const UserAllAddress = () => {
-	const [userData, setUserData] = useState();
-
-	useEffect(() => {
-		axios
-			.get(`${server}/user/user-details`, { withCredentials: true })
-			.then((res) => {
-				setUserData(res.data?.user);
-			})
-			.catch((err) =>
-				toast.error(err.data?.data?.message || "An error occurred")
-			);
-	}, []);
+	const userData = useSelector((state) => state.userData.userData);
 
 	const handleRemoveAddress = (addressId) => {
 		axios

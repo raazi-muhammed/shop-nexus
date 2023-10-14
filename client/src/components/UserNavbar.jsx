@@ -11,8 +11,10 @@ import category from "../utils/category";
 import { useDispatch, useSelector } from "react-redux";
 import { displayCart, hideCart } from "../app/feature/cart/cartSlice";
 import { displayWishList } from "../app/feature/wishList/wishListSlice";
+import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
 
 const UserNavbar = () => {
+	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
 
 	const navItems = [
@@ -23,7 +25,8 @@ const UserNavbar = () => {
 		{ name: "FAQs", link: "/faqs" },
 	];
 
-	const [userData, setUserData] = useState("Log In");
+	//const [userData, setUserData] = useState("Log In");
+
 	/* useEffect(() => {
 		axios
 			.get(
@@ -44,7 +47,7 @@ const UserNavbar = () => {
 			.catch((err) => console.log(err));
 	}, []); */
 
-	useEffect(() => {
+	/* useEffect(() => {
 		axios
 			.get(`${server}/user/load-user`, { withCredentials: true })
 			.then((res) => {
@@ -58,7 +61,7 @@ const UserNavbar = () => {
 			.catch((err) => {
 				console.log(err.response.data.message);
 			});
-	}, []);
+	}, []); */
 
 	return (
 		<section className="w-100 bg-light">
@@ -92,7 +95,9 @@ const UserNavbar = () => {
 							{cart}
 						</button>
 						<Link
-							to={userData._id ? `/user/dashboard/${userData._id} ` : `/login`}>
+							to={
+								userData?._id ? `/user/dashboard/${userData._id} ` : `/login`
+							}>
 							<button className="btn btn-sm btn-secondary text-white">
 								{profile}{" "}
 								{userData?.fullName ? `${userData.fullName} ` : `Log In`}

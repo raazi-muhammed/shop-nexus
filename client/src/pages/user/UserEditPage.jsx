@@ -7,12 +7,17 @@ import {
 	inputDivClass,
 	formClass,
 } from "../../utils/styleClasses";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 
 const UserEditPage = () => {
-	const [userData, setUserData] = useState("");
-	const [userName, setUserName] = useState("");
-	const [email, setEmail] = useState("");
-	const [userAvatar, setUserAvatar] = useState("");
+	const userData = useSelector((state) => state.userData.userData);
+	const dispatch = useDispatch();
+
+	//const [userData, setUserData] = useState("");
+	const [userName, setUserName] = useState(userData.fullName);
+	const [email, setEmail] = useState(userData.email);
+	const [userAvatar, setUserAvatar] = useState(userData.avatar?.url);
 
 	const [validationSetting, setValidationSetting] =
 		useState("needs-validation");
@@ -23,18 +28,11 @@ const UserEditPage = () => {
 	};
 
 	useEffect(() => {
-		axios
-			.get(`${server}/user/user-details`, { withCredentials: true })
-			.then((res) => {
-				setUserName(res.data?.user?.fullName);
-				setEmail(res.data?.user?.email);
-				setUserData(res.data.user);
-				setUserAvatar(res.data?.user?.avatar?.url);
-			})
-			.catch((err) =>
-				toast.error(err.data.data.message || "An error occurred")
-			);
+		setUserName(userData.fullName);
+		setEmail(userData.email);
+		setUserAvatar(userData.avatar?.url);
 	}, []);
+
 	const handleEditUser = (e) => {
 		e.preventDefault();
 
@@ -52,7 +50,7 @@ const UserEditPage = () => {
 			.put(`${server}/user/edit-user-details`, userFormData, config)
 			.then((res) => {
 				toast.success(res.data.message || "Success");
-				setUserAvatar(res.data?.user?.avatar?.url);
+				dispatch(setUserDataReducer(res.data.user));
 			})
 			.catch((err) =>
 				toast.error(err.data.data.message || "An Error occurred")

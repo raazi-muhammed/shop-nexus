@@ -8,8 +8,12 @@ import {
 	inputDivClass,
 	formClass,
 } from "../../utils/styleClasses";
+import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+import { useDispatch } from "react-redux";
 
 const UserAddAddress = () => {
+	const dispatch = useDispatch();
+
 	const navigate = useNavigate();
 	const [fullName, setFullName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
@@ -47,6 +51,7 @@ const UserAddAddress = () => {
 			})
 			.then((res) => {
 				//replaced the last part of URL
+				dispatch(setUserDataReducer(res.data.user));
 				navigate(location.pathname.replace(/[^/]*$/, "address"));
 				toast.success(res.data.message || "Address Added");
 			})
