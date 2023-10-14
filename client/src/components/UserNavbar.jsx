@@ -10,8 +10,13 @@ import toast from "react-hot-toast";
 import CartUser from "./CartUser";
 import WishListUser from "./WishListUser";
 import category from "../utils/category";
+import { useDispatch, useSelector } from "react-redux";
+import { displayCart, hideCart } from "../app/feature/cart/cartSlice";
 
 const UserNavbar = () => {
+	const cartState = useSelector((state) => state.cart.isCartVisible);
+	const dispatch = useDispatch();
+
 	const [isCartOpen, setIsCartOpen] = useState(false);
 	const [isWishListOpen, setIsWishListOpen] = useState(false);
 	const navItems = [
@@ -21,6 +26,7 @@ const UserNavbar = () => {
 		{ name: "Events", link: "/" },
 		{ name: "FAQs", link: "/faqs" },
 	];
+
 	const [userData, setUserData] = useState("Log In");
 	/* useEffect(() => {
 		axios
@@ -59,40 +65,53 @@ const UserNavbar = () => {
 	}, []);
 
 	return (
-		<section className="d-flex justify-content-between p-2 bg-light">
-			<div>
-				<label className="visually-hidden " for="categorySelect">
-					Select a Category:
-				</label>
-				<select
-					className="w-75 form-select form-select-sm bg-secondary text-white px-3"
-					id="categorySelect">
-					<option value="">Select Category</option>
-					{category.map((e) => (
-						<option value={e}>{e}</option>
-					))}
-				</select>
+		<section className="w-100 bg-light">
+			<div className="container container-xl">
+				<div className="d-flex justify-content-between p-2">
+					<section>
+						<label className="visually-hidden " htmlFor="categorySelect">
+							Select a Category:
+						</label>
+						<p>{JSON.stringify(cartState)}</p>
+						<select
+							className="w-75 form-select form-select-sm bg-secondary text-white px-3"
+							id="categorySelect">
+							<option value="">Select Category</option>
+							{category.map((e) => (
+								<option key={e} value={e}>
+									{e}
+								</option>
+							))}
+						</select>
+					</section>
+					<NavComponent navItems={navItems} />
+					<section className="d-flex gap-3">
+						<button
+							onClick={() => {
+								dispatch(displayCart());
+								setIsWishListOpen(true);
+							}}
+							className="btn btn-sm btn-secondary text-white">
+							{heart}
+						</button>
+						<button
+							onClick={() => setIsCartOpen(true)}
+							className="btn btn-sm btn-secondary text-white">
+							{cart}
+						</button>
+						{/* <Link to="/login"> */}
+						<Link
+							to={userData._id ? `/user/dashboard/${userData._id} ` : `/login`}>
+							<button className="btn btn-sm btn-secondary text-white">
+								{profile}{" "}
+								{userData?.fullName ? `${userData.fullName} ` : `Log In`}
+							</button>
+						</Link>
+					</section>
+				</div>
 			</div>
-			<NavComponent navItems={navItems} />
-			<section className="d-flex gap-3">
-				<button
-					onClick={() => setIsWishListOpen(true)}
-					className="btn btn-sm btn-secondary text-white">
-					{heart}
-				</button>
-				<button
-					onClick={() => setIsCartOpen(true)}
-					className="btn btn-sm btn-secondary text-white">
-					{cart}
-				</button>
-				{/* <Link to="/login"> */}
-				<Link to={userData._id ? `/user/dashboard/${userData._id} ` : `/login`}>
-					<button className="btn btn-sm btn-secondary text-white">
-						{profile} {userData?.fullName ? `${userData.fullName} ` : `Log In`}
-					</button>
-				</Link>
-			</section>
-			{isCartOpen ? (
+
+			{/* {isCartOpen ? (
 				<aside className="bg-white aside-card overflow-auto ">
 					<button
 						onClick={() => setIsCartOpen(false)}
@@ -111,7 +130,7 @@ const UserNavbar = () => {
 					</button>
 					<WishListUser />
 				</aside>
-			) : null}
+			) : null} */}
 		</section>
 	);
 };

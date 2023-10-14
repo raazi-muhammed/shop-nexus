@@ -10,8 +10,13 @@ import SingleProductPage from "./SingleProductPage";
 import FooterComp from "../../components/FooterComp";
 import UserDashboard from "./UserDashboard";
 import UserSingleShopPage from "./UserSingleShopPage";
+import CartUser from "../../components/CartUser";
+import { useDispatch, useSelector } from "react-redux";
 
 const HomePage = () => {
+	const cartState = useSelector((state) => state.cart.isCartVisible);
+	const dispatch = useDispatch();
+
 	return (
 		<div>
 			<UserHeader />
@@ -25,6 +30,18 @@ const HomePage = () => {
 				<Route path="/user/dashboard/:userId/*" element={<UserDashboard />} />
 				<Route path="/" element={<HomeContentPage />} />
 			</Routes>
+
+			{cartState ? (
+				<aside className="bg-white aside-card overflow-auto ">
+					<button
+						onClick={() => setIsCartOpen(false)}
+						className="btn btn-sm text-primary w-100">
+						Close
+					</button>
+					<CartUser />
+				</aside>
+			) : null}
+
 			<FooterComp />
 		</div>
 	);
