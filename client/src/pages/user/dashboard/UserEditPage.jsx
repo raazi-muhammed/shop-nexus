@@ -1,14 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
 import {
 	formLabelClass,
 	inputDivClass,
 	formClass,
-} from "../../utils/styleClasses";
+} from "../../../utils/styleClasses";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+import { setUserDataReducer } from "../../../app/feature/userData/userDataSlice";
 
 const UserEditPage = () => {
 	const userData = useSelector((state) => state.userData.userData);

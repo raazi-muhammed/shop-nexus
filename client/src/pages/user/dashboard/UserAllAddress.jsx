@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
-import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+import { setUserDataReducer } from "../../../app/feature/userData/userDataSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const UserAllAddress = () => {

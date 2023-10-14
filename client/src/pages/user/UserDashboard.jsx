@@ -4,9 +4,9 @@ import axios from "axios";
 import server from "../../server";
 import toast from "react-hot-toast";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import UserEditPage from "./UserEditPage";
-import UserAddAddress from "./userAddAddress";
-import UserAllAddress from "./UserAllAddress";
+import UserEditPage from "./dashboard/UserEditPage";
+import UserAddAddress from "./dashboard/userAddAddress";
+import UserAllAddress from "./dashboard/UserAllAddress";
 
 const UserDashboard = () => {
 	const navigate = useNavigate();

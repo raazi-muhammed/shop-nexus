@@ -1,32 +1,26 @@
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import axios from "axios";
+import ProductCartMain from "../../../components/ProductCartMain";
 
-import ProductCartMain from "../../components/ProductCartMain";
-import toast from "react-hot-toast";
-
-const ProductsPage = ({ type }) => {
+const BestSellingPage = ({ type }) => {
 	const [productData, setProductData] = useState([]);
+
 	useEffect(() => {
-		axios
-			.get(`${server}/products/all-products`)
-			.then((res) => {
-				setProductData(res.data.products);
-			})
-			.catch((err) => {
-				toast.error("Loading failed");
-			});
+		axios.get(`${server}/products/best-selling`).then((res) => {
+			setProductData(res.data.products);
+		});
 	}, []);
 
 	return (
 		<div className="w-100 container container-xxl  ">
 			<div
-				className={`row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 p-4 ${type}`}>
+				className={`row w-100   row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 p-4 ${type}`}>
 				{productData.map((product) => (
 					<ProductCartMain
 						key={product._id}
-						price={product.price}
 						productId={product._id}
+						price={product.price}
 						rating={product.rating}
 						name={product.name}
 						sold={product.total_sell}
@@ -40,8 +34,8 @@ const ProductsPage = ({ type }) => {
 	);
 };
 
-ProductsPage.defaultProps = {
-	type: "flex-wrap",
+BestSellingPage.defaultProps = {
+	type: "flex-wrap min-vh-100",
 };
 
-export default ProductsPage;
+export default BestSellingPage;

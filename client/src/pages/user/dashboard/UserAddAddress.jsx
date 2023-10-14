@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import {
@@ -8,8 +8,8 @@ import {
 	inputDivClass,
 	formClass,
 	submitButtonClass,
-} from "../../utils/styleClasses";
-import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+} from "../../../utils/styleClasses";
+import { setUserDataReducer } from "../../../app/feature/userData/userDataSlice";
 import { useDispatch } from "react-redux";
 
 const UserAddAddress = () => {
