@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import server from "../server";
 import Icons from "../assets/Icons";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const { trash, close, cart } = Icons;
 
 import { useDispatch, useSelector } from "react-redux";
@@ -38,6 +38,12 @@ const CartUser = () => {
 		window.location.reload();
 	};
 
+	const handleCheckout = () => {
+		dispatch(hideCart());
+		navigate("/user/checkout");
+		console.log("cart");
+	};
+
 	return (
 		<section className="p-3 pt-5 w-100">
 			<div className="d-flex justify-content-between">
@@ -52,7 +58,7 @@ const CartUser = () => {
 				<p className="mt-3 text-sm text-secondary ">No items on Cart</p>
 			)}
 			{cartItems?.map((cartItem, i) => (
-				<div key={i} className="row w-100 m-0 my-2 align-items-center">
+				<div key={i} className="col row w-100 m-0 my-2 align-items-center">
 					<div className="col-3 m-0 p-0 ">
 						<img className="m-0 w-100 p-0" src={cartItem.imageUrl} />
 					</div>
@@ -72,6 +78,12 @@ const CartUser = () => {
 					<hr className="text-secondary" />
 				</div>
 			))}
+
+			<button
+				onClick={handleCheckout}
+				className="btn btn-primary position-absolute m-3 fixed-bottom">
+				Check Out
+			</button>
 		</section>
 	);
 };

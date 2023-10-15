@@ -19,6 +19,7 @@ import axios from "axios";
 
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import toast from "react-hot-toast";
+import CheckOutPage from "./CheckOutPage";
 
 const HomePage = () => {
 	const cartState = useSelector((state) => state.cart.isCartVisible);
@@ -57,6 +58,7 @@ const HomePage = () => {
 				<Route path="/product/:id/*" element={<SingleProductPage />} />
 				<Route path="/shop/:id/*" element={<UserSingleShopPage />} />
 				<Route path="/user/dashboard/:userId/*" element={<UserDashboard />} />
+				<Route path="/user/checkout/*" element={<CheckOutPage />} />
 				<Route path="/" element={<HomeContentPage />} />
 			</Routes>
 
