@@ -8,10 +8,12 @@ var cookies = require("cookie-parser");
 app.use(cookies());
 
 /* Controllers */
+const adminRoutes = require("./routes/adminRoutes");
+const productRoutes = require("./routes/productRoutes");
+
 const userController = require("./controller/userController");
 const productController = require("./controller/productController");
 const sellerController = require("./controller/sellerController");
-const adminRoutes = require("./routes/adminRoutes");
 const cartController = require("./controller/cartController");
 const wishListController = require("./controller/wishListController");
 const orderController = require("./controller/orderController");
@@ -57,10 +59,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/images", express.static(__dirname + "/uploads"));
 
 // Router
-app.use("/api/v1/user/", userController);
-app.use("/api/v1/products/", productController);
-app.use("/api/v1/seller/", sellerController);
+app.use("/api/v1/products/", productRoutes);
 app.use("/api/v1/admin/", adminRoutes);
+
+app.use("/api/v1/user/", userController);
+app.use("/api/v1/seller/", sellerController);
 app.use("/api/v1/cart/", cartController);
 app.use("/api/v1/wish-list/", wishListController);
 app.use("/api/v1/order/", orderController);
