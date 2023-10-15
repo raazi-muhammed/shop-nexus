@@ -1,87 +1,61 @@
-const { isAuthenticated } = require("../middleware/auth");
 const User = require("../model/User");
+const asyncErrorHandler = require("../utils/asyncErrorHandler");
 
-const router = require("express").Router();
+const getCart = asyncErrorHandler(async (req, res, next) => {
+	const userId = req.user._id;
 
-router.post("/add-to-cart", isAuthenticated, async (req, res) => {
-	try {
-		const { product_id, price, name, imageUrl } = req.body;
-		const userId = req.user._id;
+	const updatedUser = await User.findOne({ _id: userId }).populate(
+		"cart.product"
+	);
 
-		const cartItem = {
-			product: product_id,
-			price,
-		};
-
-		const updatedUser = await User.findOneAndUpdate(
-			{ _id: userId },
-			{
-				$addToSet: { cart: cartItem },
-			},
-			{ new: true }
-		).populate("cart.product");
-
-		res.status(200).json({
-			success: true,
-			message: "Added to Cart",
-			user: updatedUser,
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({
-			success: false,
-			message: "Internal Server Error",
-		});
-	}
+	res.status(200).json({
+		success: true,
+		message: "Added to Cart",
+		user: updatedUser,
+	});
 });
 
-router.get("/get-all-cart", isAuthenticated, async (req, res) => {
-	try {
-		const userId = req.user._id;
+const addToCart = asyncErrorHandler(async (req, res, next) => {
+	const { product_id, price, name, imageUrl } = req.body;
+	const userId = req.user._id;
 
-		const updatedUser = await User.findOne({ _id: userId }).populate(
-			"cart.product"
-		);
+	const cartItem = {
+		product: product_id,
+		price,
+	};
 
-		res.status(200).json({
-			success: true,
-			message: "Added to Cart",
-			user: updatedUser,
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({
-			success: false,
-			message: "Internal Server Error",
-		});
-	}
+	const updatedUser = await User.findOneAndUpdate(
+		{ _id: userId },
+		{
+			$addToSet: { cart: cartItem },
+		},
+		{ new: true }
+	).populate("cart.product");
+
+	res.status(200).json({
+		success: true,
+		message: "Added to Cart",
+		user: updatedUser,
+	});
 });
 
-router.put("/remove-from-cart", isAuthenticated, async (req, res) => {
-	try {
-		const userId = req.user._id;
-		const { product_id } = req.body;
+const removeFromCart = asyncErrorHandler(async (req, res, next) => {
+	const userId = req.user._id;
+	const { product_id } = req.body;
 
-		const updatedUser = await User.findOneAndUpdate(
-			{ _id: userId },
-			{
-				$pull: { cart: { product: product_id } },
-			},
-			{ new: true }
-		).populate("cart.product");
+	const updatedUser = await User.findOneAndUpdate(
+		{ _id: userId },
+		{
+			$pull: { cart: { product: product_id } },
+		},
+		{ new: true }
+	).populate("cart.product");
 
-		res.status(200).json({
-			success: true,
-			message: "Removed from Cart",
-			user: updatedUser,
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({
-			success: false,
-			message: "Internal Server Error",
-		});
-	}
+	res.status(200).json({
+		success: true,
+		message: "Removed from Cart",
+		user: updatedUser,
+	});
 });
 
-module.exports = router;
+module.exports = { getCart, addToCart, removeFromCart };

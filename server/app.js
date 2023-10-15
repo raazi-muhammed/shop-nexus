@@ -10,13 +10,12 @@ app.use(cookies());
 /* Controllers */
 const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const wishListRoutes = require("./routes/wishListRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const userController = require("./controller/userController");
-const productController = require("./controller/productController");
 const sellerController = require("./controller/sellerController");
-const cartController = require("./controller/cartController");
-const wishListController = require("./controller/wishListController");
-const orderController = require("./controller/orderController");
 const googleAuth = require("./controller/googleAuth");
 const errorHandling = require("./middleware/errorHandling");
 
@@ -61,12 +60,12 @@ app.use("/images", express.static(__dirname + "/uploads"));
 // Router
 app.use("/api/v1/products/", productRoutes);
 app.use("/api/v1/admin/", adminRoutes);
+app.use("/api/v1/cart/", cartRoutes);
+app.use("/api/v1/wish-list/", wishListRoutes);
+app.use("/api/v1/order/", orderRoutes);
 
 app.use("/api/v1/user/", userController);
 app.use("/api/v1/seller/", sellerController);
-app.use("/api/v1/cart/", cartController);
-app.use("/api/v1/wish-list/", wishListController);
-app.use("/api/v1/order/", orderController);
 app.use("/auth/", googleAuth);
 
 app.get("*", (req, res) => {
