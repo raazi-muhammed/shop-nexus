@@ -13,8 +13,8 @@ const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const wishListRoutes = require("./routes/wishListRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const userRoutes = require("./routes/userRoutes");
 
-const userController = require("./controller/userController");
 const sellerController = require("./controller/sellerController");
 const googleAuth = require("./controller/googleAuth");
 const errorHandling = require("./middleware/errorHandling");
@@ -63,8 +63,8 @@ app.use("/api/v1/admin/", adminRoutes);
 app.use("/api/v1/cart/", cartRoutes);
 app.use("/api/v1/wish-list/", wishListRoutes);
 app.use("/api/v1/order/", orderRoutes);
+app.use("/api/v1/user/", userRoutes);
 
-app.use("/api/v1/user/", userController);
 app.use("/api/v1/seller/", sellerController);
 app.use("/auth/", googleAuth);
 
