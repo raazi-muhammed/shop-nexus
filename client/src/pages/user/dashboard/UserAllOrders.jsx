@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import server from "../../../server";
 
-const AdminOrdersPage = () => {
+const UserAllOrders = () => {
 	const navigate = useNavigate();
 	const [orderData, setOrderData] = useState([]);
 
@@ -15,7 +15,9 @@ const AdminOrdersPage = () => {
 				setOrderData(res.data.orderData);
 				console.log(res.data);
 			})
-			.catch((err) => toast.error(err.response?.data?.message));
+			.catch((err) => {
+				toast.error(err.response?.data?.message);
+			});
 	}, []);
 
 	function convertISOToDate(isoDate) {
@@ -26,7 +28,6 @@ const AdminOrdersPage = () => {
 		const formattedDate = `${year}-${month}-${day}`;
 		return formattedDate;
 	}
-
 	return (
 		<div className="w-100">
 			<div class="table-responsive px-3 py-2">
@@ -68,4 +69,4 @@ const AdminOrdersPage = () => {
 	);
 };
 
-export default AdminOrdersPage;
+export default UserAllOrders;

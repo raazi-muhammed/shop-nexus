@@ -7,6 +7,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import UserEditPage from "./dashboard/UserEditPage";
 import UserAddAddress from "./dashboard/userAddAddress";
 import UserAllAddress from "./dashboard/UserAllAddress";
+import UserAllOrders from "./dashboard/UserAllOrders";
 
 const UserDashboard = () => {
 	const navigate = useNavigate();
@@ -15,6 +16,7 @@ const UserDashboard = () => {
 		{ name: "Edit User", link: "" },
 		{ name: "Add Address", link: "add-address" },
 		{ name: "Addresses", link: "address" },
+		{ name: "Orders", link: "orders" },
 	];
 	const handleLogOut = () => {
 		axios
@@ -27,9 +29,9 @@ const UserDashboard = () => {
 	};
 
 	return (
-		<main className="vw-100 min-vh-100 p-2">
+		<main className="vw-100 min-vh-100">
 			<div className="w-100 container container-xxl  ">
-				<div className="row">
+				<div className="row py-5">
 					<section className="col-12 col-md-4 col-lg-3">
 						<AsideComp asideItems={asideItems} />
 						<button
@@ -38,10 +40,11 @@ const UserDashboard = () => {
 							Log out
 						</button>
 					</section>
-					<section className="col px-4 py-3 ">
+					<section className="col-12 col-md-8 col-lg-9">
 						<Routes>
 							<Route path="/add-address" element={<UserAddAddress />} />
 							<Route path="/address" element={<UserAllAddress />} />
+							<Route path="/orders" element={<UserAllOrders />} />
 							<Route path="/" element={<UserEditPage />} />
 						</Routes>
 					</section>
