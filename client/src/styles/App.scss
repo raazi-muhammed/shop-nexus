@@ -16,6 +16,14 @@ $form-feedback-valid-color: $primary;
 $form-valid-border-color: $light;
 $form-valid-color: $primary;
 
+/* Table */
+$table-cell-padding-y: 1rem;
+$table-cell-padding-x: 1rem;
+$table-bg: white;
+
+$table-border-width: 0.6rem;
+$table-border-color: #f1f0ff;
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 .btn,
@@ -72,4 +80,12 @@ body {
 	height: 100vh;
 	width: 20rem;
 	z-index: 100;
+}
+
+thead {
+	background-color: #00000000;
+}
+
+tbody {
+	padding: 1rem;
 }

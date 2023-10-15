@@ -7,6 +7,9 @@ import AdminUserPage from "./AdminUserPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import AdminProductsPage from "./AdminProductsPage";
 import AdminProductEditPage from "./AdminProductEditPage";
+import AdminSellerPage from "./AdminSellerPage";
+import AdminOrdersPage from "./AdminOrdersPage";
+import SingleOrderDetails from "./SingleOrderDetails";
 
 const AdminDashboardPage = () => {
 	const [data, setData] = useState([]);
@@ -31,8 +34,10 @@ const AdminDashboardPage = () => {
 			.catch((err) => console.log(err));
 	};
 	const asideItems = [
-		{ name: "User", link: "user" },
+		{ name: "Users", link: "users" },
+		{ name: "Sellers", link: "sellers" },
 		{ name: "Products", link: "products" },
+		{ name: "Orders", link: "orders" },
 	];
 
 	const handleLogOut = () => {
@@ -45,30 +50,37 @@ const AdminDashboardPage = () => {
 			});
 	};
 	return (
-		<div>
-			<nav style={{ height: "2rem" }}>
-				<p className="h3 mb-1 m-4 ">Admin Page</p>
-			</nav>
-			<main className="row vw-100 p-3">
-				<section className="col-3">
-					<AsideComp asideItems={asideItems} />
-					<button
-						className="btn btn-sm btn-danger w-100 ms-3"
-						onClick={handleLogOut}>
-						Log out
-					</button>
-				</section>
-				<section className="ps-5 col">
-					<Routes>
-						<Route path="/user" element={<AdminUserPage />} />
-						<Route path="/products" element={<AdminProductsPage />} />
-						<Route
-							path="/edit-product/:productId"
-							element={<AdminProductEditPage />}
-						/>
-					</Routes>
-				</section>
-			</main>
+		<div className="vw-100">
+			<div className="container container-xxl">
+				<nav style={{ height: "2rem" }}>
+					<p className="h3 mb-1 m-4 ">Admin Page</p>
+				</nav>
+			</div>
+			<div className="container container-xxl">
+				<main className="row p-3">
+					<section className="mt-3 col-3">
+						<AsideComp asideItems={asideItems} />
+						<button
+							className="btn btn-sm btn-danger w-100"
+							onClick={handleLogOut}>
+							Log out
+						</button>
+					</section>
+					<section className="col-9">
+						<Routes>
+							<Route path="/users" element={<AdminUserPage />} />
+							<Route path="/sellers" element={<AdminSellerPage />} />
+							<Route path="/products" element={<AdminProductsPage />} />
+							<Route path="/orders" element={<AdminOrdersPage />} />
+							<Route path="/orders/:orderId" element={<SingleOrderDetails />} />
+							<Route
+								path="/edit-product/:productId"
+								element={<AdminProductEditPage />}
+							/>
+						</Routes>
+					</section>
+				</main>
+			</div>
 		</div>
 	);
 };

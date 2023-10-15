@@ -12,4 +12,29 @@ const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 	console.log(data);
 });
 
-module.exports = { addToOrder };
+const getAllOrders = asyncErrorHandler(async (req, res, next) => {
+	const orderData = await Order.find({});
+
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
+const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
+	const { orderId } = req.params;
+	console.log(orderId);
+	console.log("Hihihi");
+
+	const orderData = await Order.findOne({ orderId }).populate(
+		"orderItems.product"
+	);
+	console.log(orderData);
+
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
+module.exports = { addToOrder, getAllOrders, getSingleOrders };

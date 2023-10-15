@@ -2,6 +2,7 @@ const express = require("express");
 router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../model/User");
+const Shop = require("../model/Shop");
 const ErrorHandler = require("../utils/errorHandler");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 
@@ -40,6 +41,29 @@ const getAllUsers = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getAllSellers = asyncErrorHandler(async (req, res, next) => {
+	const shopData = await Shop.find({});
+	res.status(200).json({
+		success: true,
+		shopDetails: shopData,
+	});
+});
+
+const adminBlockAndUnBlockSeller = asyncErrorHandler(async (req, res) => {
+	const { id, action } = req.body;
+	const userData = await Shop.findOneAndUpdate(
+		{ _id: id },
+		{ isBlocked: action },
+		{ new: true, upsert: true }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: action ? "Blocked user" : "Unblocked User",
+		userDetails: userData,
+	});
+});
+
 const adminBlockAndUnBlockUser = asyncErrorHandler(async (req, res) => {
 	const { id, action } = req.body;
 	const userData = await User.findOneAndUpdate(
@@ -60,4 +84,6 @@ module.exports = {
 	adminLogIn,
 	getAllUsers,
 	adminBlockAndUnBlockUser,
+	getAllSellers,
+	adminBlockAndUnBlockSeller,
 };
