@@ -14,6 +14,7 @@ const sellerController = require("./controller/sellerController");
 const adminController = require("./controller/adminController");
 const cartController = require("./controller/cartController");
 const wishListController = require("./controller/wishListController");
+const orderController = require("./controller/orderController");
 const googleAuth = require("./controller/googleAuth");
 const ErrorHandler = require("./utils/errorHandler");
 
@@ -62,6 +63,7 @@ app.use("/api/v1/seller/", sellerController);
 app.use("/api/v1/admin/", adminController);
 app.use("/api/v1/cart/", cartController);
 app.use("/api/v1/wish-list/", wishListController);
+app.use("/api/v1/order/", orderController);
 app.use("/auth/", googleAuth);
 
 app.get("*", (req, res) => {

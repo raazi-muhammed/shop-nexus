@@ -44,6 +44,18 @@ const CartUser = () => {
 		console.log("cart");
 	};
 
+	useEffect(() => {
+		axios
+			.get(`${server}/cart/get-all-cart`, { withCredentials: true })
+			.then((res) => {
+				console.log(res.data?.user);
+				dispatch(setUserDataReducer(res.data?.user));
+			})
+			.catch((err) =>
+				toast.error(err?.response?.data?.message || "Error Loading Wishlist")
+			);
+	}, []);
+
 	return (
 		<section className="p-3 pt-5 w-100">
 			<div className="d-flex justify-content-between">
@@ -60,17 +72,22 @@ const CartUser = () => {
 			{cartItems?.map((cartItem, i) => (
 				<div key={i} className="col row w-100 m-0 my-2 align-items-center">
 					<div className="col-3 m-0 p-0 ">
-						<img className="m-0 w-100 p-0" src={cartItem.imageUrl} />
+						<img
+							className="m-0 w-100 p-0"
+							src={
+								cartItem.product?.images ? cartItem.product?.images[0].url : ""
+							}
+						/>
 					</div>
 					<section
-						onClick={() => handelProductClick(cartItem.product_id)}
+						onClick={() => handelProductClick(cartItem.product?._id)}
 						className="col-7 my-auto">
-						<p className="text-small mb-0">{cartItem.name}</p>
+						<p className="text-small mb-0">{cartItem.product?.name}</p>
 						<p className="text-secondary fw-bold">{`${cartItem.price} × ${cartItem.quantity}`}</p>
 					</section>
 					<div className="col-2 my-auto">
 						<button
-							onClick={(e) => handleRemoveFromCart(cartItem.product_id)}
+							onClick={(e) => handleRemoveFromCart(cartItem.product?._id)}
 							className="btn btn-light text-secondary btn-sm m-0">
 							{trash}
 						</button>

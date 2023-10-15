@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { setPaymentInfo } from "../../../app/feature/order/orderSlice";
+import { useDispatch } from "react-redux";
 const CheckOutPaymentPage = () => {
 	const [expanded, setExpanded] = useState("cash on delivery");
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
+	const handleCashOnDelivery = () => {
+		console.log("COD");
+		const paymentInfo = {
+			type: "Cash on Delivery",
+			status: "Not Received",
+		};
+		dispatch(setPaymentInfo(paymentInfo));
+		navigate("/user/checkout/success");
+	};
 	return (
 		<div className="row gap-3">
 			<section className="bg-white p-3 rounded-4 ">
@@ -27,7 +39,7 @@ const CheckOutPaymentPage = () => {
 						</label>
 						{expanded === "cod" && (
 							<button
-								onClick={() => navigate("/user/checkout/success")}
+								onClick={handleCashOnDelivery}
 								className="mt-3 btn btn-primary btn-sm">
 								Confirm
 							</button>

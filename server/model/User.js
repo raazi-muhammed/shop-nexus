@@ -69,16 +69,9 @@ const userSchema = new mongoose.Schema({
 	cart: [
 		{
 			_id: false,
-			product_id: {
-				type: String,
-				required: true,
-			},
-			name: {
-				type: String,
-				required: true,
-			},
-			imageUrl: {
-				type: String,
+			product: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Product",
 				required: true,
 			},
 			quantity: {
@@ -94,16 +87,9 @@ const userSchema = new mongoose.Schema({
 	wishList: [
 		{
 			_id: false,
-			product_id: {
-				type: String,
-				required: true,
-			},
-			name: {
-				type: String,
-				required: true,
-			},
-			imageUrl: {
-				type: String,
+			product: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Product",
 				required: true,
 			},
 			price: {

@@ -9,10 +9,8 @@ router.post("/add-to-wish-list", isAuthenticated, async (req, res) => {
 		const userId = req.user._id;
 
 		const cartItem = {
-			product_id,
+			product: product_id,
 			price,
-			name,
-			imageUrl,
 		};
 
 		const updatedUser = await User.findOneAndUpdate(
@@ -21,7 +19,9 @@ router.post("/add-to-wish-list", isAuthenticated, async (req, res) => {
 				$addToSet: { wishList: cartItem },
 			},
 			{ new: true }
-		);
+		).populate("wishList.product");
+
+		console.log(updatedUser);
 
 		res.status(200).json({
 			success: true,
@@ -41,12 +41,13 @@ router.get("/get-all-wish-list", isAuthenticated, async (req, res) => {
 	try {
 		const userId = req.user._id;
 
-		const updatedUser = await User.findOne({ _id: userId });
-		const wishListItems = updatedUser.wishList;
+		const updatedUser = await User.findOne({ _id: userId }).populate(
+			"wishList.product"
+		);
 
 		res.status(200).json({
 			success: true,
-			wishListItems,
+			user: updatedUser,
 		});
 	} catch (err) {
 		console.log(err);
@@ -65,10 +66,10 @@ router.put("/remove-from-wish-list", isAuthenticated, async (req, res) => {
 		const updatedUser = await User.findOneAndUpdate(
 			{ _id: userId },
 			{
-				$pull: { wishList: { product_id } },
+				$pull: { wishList: { product: product_id } },
 			},
 			{ new: true }
-		);
+		).populate("wishList.product");
 
 		res.status(200).json({
 			success: true,

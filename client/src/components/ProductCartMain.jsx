@@ -22,9 +22,7 @@ const ProductCartMain = ({
 	const handleAddToCart = () => {
 		const itemData = {
 			product_id: productId,
-			name: name,
 			price: discount_price,
-			imageUrl: imgUrl,
 		};
 		axios
 			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
@@ -37,9 +35,7 @@ const ProductCartMain = ({
 	const handleAddToWishList = () => {
 		const itemData = {
 			product_id: productId,
-			name: name,
 			price: discount_price,
-			imageUrl: imgUrl,
 		};
 		axios
 			.post(`${server}/wish-list/add-to-wish-list`, itemData, {

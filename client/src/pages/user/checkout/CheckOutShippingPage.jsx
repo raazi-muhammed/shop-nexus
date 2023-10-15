@@ -7,6 +7,11 @@ import {
 	formClass,
 	submitButtonClass,
 } from "../../../utils/styleClasses";
+import {
+	setShippingAddress,
+	setOrderItems,
+	setTotalPrice,
+} from "../../../app/feature/order/orderSlice";
 
 const CheckOutShippingPage = () => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -44,6 +49,28 @@ const CheckOutShippingPage = () => {
 	};
 	const handleShippingSubmit = (e) => {
 		e.preventDefault();
+		const shippingInfo = {
+			fullName,
+			phoneNumber,
+			pinCode,
+			state,
+			city,
+			address1: addressLine1,
+			address2: addressLine2,
+			addressType,
+		};
+		const orderItems = userData.cart.map((cartItem) => {
+			const data = {
+				product: cartItem.product._id,
+				shop: cartItem.product.shop.id,
+				quantity: cartItem.quantity,
+			};
+			return data;
+		});
+
+		dispatch(setShippingAddress(shippingInfo));
+		dispatch(setOrderItems(orderItems));
+
 		navigate("payment");
 	};
 

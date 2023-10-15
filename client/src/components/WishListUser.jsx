@@ -40,6 +40,18 @@ const WishListUser = () => {
 		window.location.reload();
 	};
 
+	useEffect(() => {
+		axios
+			.get(`${server}/wish-list/get-all-wish-list`, { withCredentials: true })
+			.then((res) => {
+				console.log(res.data?.user);
+				dispatch(setUserDataReducer(res.data?.user));
+			})
+			.catch((err) =>
+				toast.error(err?.response?.data?.message || "Error Loading Wishlist")
+			);
+	}, []);
+
 	return (
 		<section className="p-3 pt-5 w-100">
 			<div className="d-flex justify-content-between">
@@ -57,19 +69,28 @@ const WishListUser = () => {
 			{wishListItems?.map((wishListItem, i) => (
 				<div key={i} className="row w-100 m-0 my-2 align-items-center">
 					<div className="col-3 m-0 p-0 ">
-						<img className="m-0 w-100 p-0" src={wishListItem.imageUrl} />
+						<img
+							className="m-0 w-100 p-0"
+							src={
+								wishListItem.product?.images
+									? wishListItem.product?.images[0].url
+									: ""
+							}
+						/>
 					</div>
 
 					<section
-						onClick={() => handelProductClick(wishListItem.product_id)}
+						onClick={() => handelProductClick(wishListItem.product?._id)}
 						className="col-7 my-auto">
-						<p className="text-small mb-0">{wishListItem.name}</p>
-						<p className="text-secondary fw-bold">{wishListItem.price}</p>
+						<p className="text-small mb-0">{wishListItem.product?.name}</p>
+						<p className="text-secondary fw-bold">{wishListItem?.price}</p>
 					</section>
 
 					<div className="col-2 my-auto">
 						<button
-							onClick={(e) => handleRemoveFromWishList(wishListItem.product_id)}
+							onClick={(e) =>
+								handleRemoveFromWishList(wishListItem.product?._id || "")
+							}
 							className="btn btn-light text-secondary btn-sm m-0">
 							{trash}
 						</button>

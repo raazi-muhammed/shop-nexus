@@ -62,8 +62,16 @@ const productSchema = new mongoose.Schema({
 		type: Number,
 	},
 	shop: {
-		type: Object,
-		required: true,
+		_id: false,
+		name: {
+			type: String,
+			required: true,
+		},
+		id: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Shop",
+			required: true,
+		},
 	},
 	sold_out: {
 		type: Boolean,

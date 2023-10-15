@@ -3,18 +3,20 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 import CheckOutShippingPage from "./checkout/CheckOutShippingPage";
 import CheckOutPaymentPage from "./checkout/CheckOutPaymentPage";
 import { useDispatch, useSelector } from "react-redux";
+import { setUser, setTotalPrice } from "../../app/feature/order/orderSlice";
 import SuccessPage from "./checkout/SuccessPage";
 
 const CheckOutPage = () => {
 	const location = useLocation();
 
 	const userData = useSelector((state) => state.userData.userData);
+	const orderState = useSelector((state) => state.order);
 	const dispatch = useDispatch();
 
 	const [totalAmountWithOutDiscount, setTotalAmountWithOutDiscount] =
-		useState();
-	const [discountAmount, setDiscountAmount] = useState();
-	const [totalAmount, setTotalAmount] = useState();
+		useState("-");
+	const [discountAmount, setDiscountAmount] = useState("-");
+	const [totalAmount, setTotalAmount] = useState("-");
 
 	useEffect(() => {
 		try {
@@ -22,15 +24,24 @@ const CheckOutPage = () => {
 				return (a += e.price);
 			}, 0);
 
+			console.log(_totalAmountWithOutDiscount);
+
 			const _discountAmount = 0;
 
 			setDiscountAmount(_discountAmount);
 			setTotalAmountWithOutDiscount(_totalAmountWithOutDiscount);
 			setTotalAmount(_totalAmountWithOutDiscount - _discountAmount);
+			console.log(_totalAmountWithOutDiscount - _discountAmount);
+
+			/* NEED TO REMOVE OR CHANGE */
+			/* ------------------------------------------------------------------  */
+			dispatch(setUser(userData._id));
+			dispatch(setTotalPrice(_totalAmountWithOutDiscount - _discountAmount));
 		} catch (error) {
-			setDiscountAmount(0);
-			setTotalAmountWithOutDiscount(0);
-			setTotalAmount(0);
+			console.log(error);
+			setDiscountAmount("Error");
+			setTotalAmountWithOutDiscount("Error");
+			setTotalAmount("Error");
 		}
 	}, []);
 
@@ -78,7 +89,7 @@ const CheckOutPage = () => {
 								{userData?.cart?.map((cartItem) => (
 									<div>
 										<p className="text-primary fw-bold mb-1">
-											{cartItem?.name}{" "}
+											{cartItem?.product.name}{" "}
 											<span className="text-small text-secondary bg-light rounded px-2">
 												×{cartItem?.quantity}
 											</span>
@@ -90,7 +101,7 @@ const CheckOutPage = () => {
 									<div className="col-12 d-flex">
 										<p className="col text-secondary">Price</p>
 										<p className="col-3 mt-auto text-end text-secondary">
-											{totalAmountWithOutDiscount}
+											{JSON.stringify(totalAmountWithOutDiscount)}
 										</p>
 									</div>
 									<div className="col-12 d-flex">
@@ -110,6 +121,7 @@ const CheckOutPage = () => {
 									</div>
 								</div>
 							</section>
+							<p>{JSON.stringify(orderState)}</p>
 						</aside>
 					) : null}
 					<main className="col">
