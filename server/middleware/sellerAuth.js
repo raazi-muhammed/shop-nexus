@@ -1,15 +1,14 @@
-const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncError = require("./catchAsyncError");
+const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const jwt = require("jsonwebtoken");
 const User = require("../model/User");
 
-exports.isSellerAuthenticated = catchAsyncError(async (req, res, next) => {
+exports.isSellerAuthenticated = asyncErrorHandler(async (req, res, next) => {
 	let token;
 	try {
 		token = req.cookies["sellerToken"];
 	} catch (err) {
 		res.status(500).json({ success: false, message: "Authentication Failed" });
-		return next(new ErrorHandler("No token Found"));
+		return next("no token");
 	}
 
 	if (!token) {

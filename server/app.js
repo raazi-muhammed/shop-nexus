@@ -11,12 +11,12 @@ app.use(cookies());
 const userController = require("./controller/userController");
 const productController = require("./controller/productController");
 const sellerController = require("./controller/sellerController");
-const adminController = require("./controller/adminController");
+const adminRoutes = require("./routes/adminRoutes");
 const cartController = require("./controller/cartController");
 const wishListController = require("./controller/wishListController");
 const orderController = require("./controller/orderController");
 const googleAuth = require("./controller/googleAuth");
-const ErrorHandler = require("./utils/errorHandler");
+const errorHandling = require("./middleware/errorHandling");
 
 /* Cors */
 const cors = require("cors");
@@ -60,7 +60,7 @@ app.use("/images", express.static(__dirname + "/uploads"));
 app.use("/api/v1/user/", userController);
 app.use("/api/v1/products/", productController);
 app.use("/api/v1/seller/", sellerController);
-app.use("/api/v1/admin/", adminController);
+app.use("/api/v1/admin/", adminRoutes);
 app.use("/api/v1/cart/", cartController);
 app.use("/api/v1/wish-list/", wishListController);
 app.use("/api/v1/order/", orderController);
@@ -71,7 +71,7 @@ app.get("*", (req, res) => {
 });
 
 /* Error handler */
-app.use(ErrorHandler);
+app.use(errorHandling);
 
 app.listen(PORT, () => {
 	console.log(`Server is running on ${PORT}`);

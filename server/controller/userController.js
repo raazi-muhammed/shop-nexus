@@ -6,7 +6,6 @@ const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { upload } = require("../multer");
 const { isAuthenticated } = require("../middleware/auth");
-const catchAsyncError = require("../middleware/catchAsyncError");
 
 router.post("/create-user", async (req, res, next) => {
 	try {
@@ -260,31 +259,25 @@ router.post("/remove-address", isAuthenticated, async (req, res) => {
 });
 
 //Load user
-router.get(
-	"/load-user",
-	isAuthenticated,
-	catchAsyncError(async (req, res, next) => {
-		try {
-			const user = await User.findById(req.user.id);
+router.get("/load-user", isAuthenticated, async (req, res, next) => {
+	try {
+		const user = await User.findById(req.user.id);
 
-			if (user.isBlocked) {
-				res.status(200).json({
-					success: false,
-					message: "You are Blocked",
-				});
-				return;
-			}
-
+		if (user.isBlocked) {
 			res.status(200).json({
-				success: true,
-				user,
+				success: false,
+				message: "You are Blocked",
 			});
-		} catch (error) {
-			res
-				.status(500)
-				.json({ success: false, message: "Error in Loading User" });
+			return;
 		}
-	})
-);
+
+		res.status(200).json({
+			success: true,
+			user,
+		});
+	} catch (error) {
+		res.status(500).json({ success: false, message: "Error in Loading User" });
+	}
+});
 
 module.exports = router;

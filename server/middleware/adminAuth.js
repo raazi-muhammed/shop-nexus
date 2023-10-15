@@ -1,8 +1,7 @@
-const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncError = require("./catchAsyncError");
+const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const bcrypt = require("bcrypt");
 
-exports.isAdminAuthenticated = catchAsyncError(async (req, res, next) => {
+exports.isAdminAuthenticated = asyncErrorHandler(async (req, res, next) => {
 	try {
 		const { userName, password } = req.cookies["adminDetails"];
 
