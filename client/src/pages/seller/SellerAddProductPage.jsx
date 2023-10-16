@@ -9,8 +9,10 @@ import {
 	formClass,
 	submitButtonClass,
 } from "../../utils/styleClasses";
+import { useNavigate } from "react-router-dom";
 
 const SellerAddProductPage = ({ shopId, shopName }) => {
+	const navigate = useNavigate();
 	const [productName, setProductName] = useState("");
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
@@ -56,6 +58,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setAllowSubmission(false);
 		const formData = {
 			productName,
 			category,
@@ -74,6 +77,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 				withCredentials: true,
 			})
 			.then((res) => {
+				navigate(-1);
 				toast.success(res.data.message);
 			})
 			.catch((err) => {

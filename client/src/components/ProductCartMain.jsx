@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
 import { useDispatch } from "react-redux";
+
 const { heart, cart } = Icons;
 
 const ProductCartMain = ({
@@ -19,11 +20,13 @@ const ProductCartMain = ({
 	productId,
 }) => {
 	const dispatch = useDispatch();
+
 	const handleAddToCart = () => {
 		const itemData = {
 			product_id: productId,
 			price: discount_price,
 		};
+		console.log("hihih");
 		axios
 			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
 			.then((res) => {

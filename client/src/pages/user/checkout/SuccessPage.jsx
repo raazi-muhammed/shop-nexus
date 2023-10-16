@@ -5,37 +5,42 @@ import axios from "axios";
 import server from "../../../server";
 import { setUserDataReducer } from "../../../app/feature/userData/userDataSlice";
 import toast from "react-hot-toast";
-
+import { debounce } from "lodash";
 const SuccessPage = () => {
 	const orderState = useSelector((state) => state.order);
 	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
 	const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
-	useEffect(() => {
-		axios
-			.post(
-				`${server}/order/add-to-order`,
-				{ orderState },
-				{ withCredentials: true }
-			)
-			.then((res) => {
-				setIsOrderPlaced(true);
-				axios
-					.delete(`${server}/cart/clear-all-cart-items`, {
-						withCredentials: true,
-					})
-					.then((response) => dispatch(setUserDataReducer(response.data.user)))
-					.catch((err) => {
-						console.log(err);
-						toast.error(err?.response?.data?.message || "Some Error ocurred");
-					});
-			})
-			.catch((err) => {
-				console.log(err);
-				toast.error(err?.response?.data?.message || "Some Error ocurred");
-			});
-	}, []);
+	useEffect(
+		debounce(() => {
+			axios
+				.post(
+					`${server}/order/add-to-order`,
+					{ orderState },
+					{ withCredentials: true }
+				)
+				.then((res) => {
+					setIsOrderPlaced(true);
+					axios
+						.delete(`${server}/cart/clear-all-cart-items`, {
+							withCredentials: true,
+						})
+						.then((response) =>
+							dispatch(setUserDataReducer(response.data.user))
+						)
+						.catch((err) => {
+							console.log(err);
+							toast.error(err?.response?.data?.message || "Some Error ocurred");
+						});
+				})
+				.catch((err) => {
+					console.log(err);
+					toast.error(err?.response?.data?.message || "Some Error ocurred");
+				});
+		}, 1000),
+		[]
+	);
 	return (
 		<div className="text-center">
 			{isOrderPlaced ? (
