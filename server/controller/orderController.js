@@ -37,4 +37,54 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-module.exports = { addToOrder, getAllOrders, getSingleOrders };
+
+
+const cancelOrder = asyncErrorHandler(async (req, res, next) => {
+	const orderId = req.params.orderId;
+
+	const eventToAdd = {
+		name: "Order Canceled",
+	};
+
+	const orderData = await Order.findOneAndUpdate(
+		{ orderId },
+		{
+			$addToSet: { events: eventToAdd },
+			status: "Canceled",
+		}
+	);
+
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
+const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
+	const userId = req.user._id;
+	const orderData = await Order.find({ user: userId });
+
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
+const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
+	const userId = req.user._id;
+	const orderData = await Order.find({ user: userId });
+
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
+module.exports = {
+	addToOrder,
+	getAllOrders,
+	getSingleOrders,
+	getUsersAllOrders,
+	cancelOrder,
+};
+

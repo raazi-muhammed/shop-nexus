@@ -9,6 +9,8 @@ import SellerAddProductPage from "./SellerAddProductPage";
 import SellerDetailsEditPage from "./SellerDetailsEditPage";
 import SellerEditSingleProductPage from "./SellerEditSingleProductPage";
 import toast from "react-hot-toast";
+import SellerAllOrders from "./SellerAllOrders";
+import SellerSingleOrderDetails from "./SellerSingleOrderDetails";
 
 const SellerDashboardPage = () => {
 	const navigate = useNavigate();
@@ -28,6 +30,10 @@ const SellerDashboardPage = () => {
 		{
 			name: "Edit Shop",
 			link: `/seller/dashboard/${shopId}/edit-shop`,
+		},
+		{
+			name: "All Orders",
+			link: `/seller/dashboard/${shopId}/orders`,
 		},
 	];
 
@@ -66,7 +72,7 @@ const SellerDashboardPage = () => {
 							Log out
 						</button>
 					</div>
-					<section className="col-8 mx-auto">
+					<section className="col-9 mx-auto">
 						<Routes>
 							<Route
 								path="/all-products"
@@ -79,6 +85,11 @@ const SellerDashboardPage = () => {
 								}
 							/>
 							<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
+							<Route path="/orders" element={<SellerAllOrders />} />
+							<Route
+								path="/orders/:orderId"
+								element={<SellerSingleOrderDetails />}
+							/>
 							<Route
 								path="/edit-single-product/:productId"
 								element={<SellerEditSingleProductPage />}
