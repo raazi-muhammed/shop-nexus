@@ -72,11 +72,53 @@ const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
-	const userId = req.user._id;
-	const orderData = await Order.find({ user: userId });
+	const shopId = req.params.shopId;
+	const orderData = await Order.find({
+		"orderItems.shop": shopId,
+	});
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
+const getSingleOrderDetailsForShop = asyncErrorHandler(
+	async (req, res, next) => {
+		const { orderId, shopId } = req.params;
+
+		const orderData = await Order.findOne({ orderId }).populate(
+			"orderItems.product"
+		);
+
+		//filtering products that are only from the seller
+		const newProducts = orderData.orderItems.filter((e) => e.shop == shopId);
+		const newOrderData = {
+			...orderData._doc,
+			orderItems: newProducts,
+		};
+
+		res.status(200).json({
+			success: true,
+			orderData: newOrderData,
+		});
+	}
+);
+
+const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
+	const { orderId } = req.params;
+	const { orderStatus } = req.body;
+
+	console.log(orderStatus);
+
+	const orderData = await Order.findOneAndUpdate(
+		{ orderId },
+		{ status: orderStatus },
+		{ new: true }
+	);
 
 	res.status(200).json({
 		success: true,
+		message: "Status Changed",
 		orderData,
 	});
 });
@@ -87,4 +129,7 @@ module.exports = {
 	getSingleOrders,
 	getUsersAllOrders,
 	cancelOrder,
+	getSellerAllOrders,
+	getSingleOrderDetailsForShop,
+	changeOrderStatus,
 };

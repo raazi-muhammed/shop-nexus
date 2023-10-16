@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { useSelector } from "react-redux";
@@ -8,14 +8,14 @@ import server from "../../server";
 
 const SellerAllOrders = () => {
 	const userData = useSelector((state) => state.userData.userData);
-
+	const { shopId } = useParams();
 	const navigate = useNavigate();
 	const [orderData, setOrderData] = useState([]);
 
 	useEffect(() => {
 		console.log(userData);
 		axios
-			.get(`${server}/user/get-all-orders`, {
+			.get(`${server}/seller/get-all-orders/${shopId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -38,7 +38,7 @@ const SellerAllOrders = () => {
 	return (
 		<div className="w-100">
 			{orderData.length === 0 ? (
-				<p className="text-secondary">You haven't Ordered anything</p>
+				<p className="text-secondary">There aren't any orders</p>
 			) : (
 				<div class="table-responsive px-3 py-2">
 					<table class="table">
@@ -71,6 +71,8 @@ const SellerAllOrders = () => {
 									<td className="fw-bold">{`₹${order.totalPrice}`}</td>
 									{order.status === "Canceled" ? (
 										<td className="rounded-end text-danger fw-bold ">{`${order.status}`}</td>
+									) : order.status === "Delivered" ? (
+										<td className="rounded-end text-success fw-bold">{`${order.status}`}</td>
 									) : (
 										<td className="rounded-end text-warning fw-bold">{`${order.status}`}</td>
 									)}

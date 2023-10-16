@@ -4,20 +4,23 @@ import { useParams } from "react-router-dom";
 
 import toast from "react-hot-toast";
 import server from "../../server";
+import orderStatesArray from "../../utils/orderState";
 
 const SellerSingleOrderDetails = () => {
 	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
-	const { orderId } = useParams();
-
+	const { shopId, orderId } = useParams();
+	const [orderState, setOrderState] = useState();
+	const [refresh, setRefresh] = useState(true);
 	useEffect(() => {
 		axios
-			.get(`${server}/user/get-order-details/${orderId}`, {
+			.get(`${server}/seller/get-order-details/${orderId}/${shopId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
 				setOrderDetails(res?.data?.orderData);
+				setOrderState(res?.data?.orderData?.status);
 			});
-	}, []);
+	}, [refresh]);
 
 	function convertISOToDate(isoDate) {
 		const date = new Date(isoDate); // Create a Date object from the ISO date string
@@ -27,35 +30,51 @@ const SellerSingleOrderDetails = () => {
 		const formattedDate = `${year}-${month}-${day}`;
 		return formattedDate;
 	}
-
-	const handleCancelOrder = () => {
-		axios.defaults.withCredentials = true;
-
+	const handleOrderStatusChange = () => {
 		axios
-			.put(`${server}/user/cancel-order/${orderId}`, {
-				withCredentials: true,
-			})
+			.patch(
+				`${server}/seller/change-order-status/${orderId}`,
+				{
+					orderStatus: orderState,
+				},
+				{ withCredentials: true }
+			)
 			.then((res) => {
-				console.log(res);
+				setRefresh(!refresh);
+				toast.success(res?.data?.message || "Success");
 			})
-			.catch((err) =>
-				toast.error(err?.response?.data?.message || "An error occurred")
-			);
+			.catch((err) => console.log(err));
+		console.log("hi");
 	};
-
 	return (
 		<div>
-			{orderDetails.status !== "Canceled" && (
-				<section>
-					<button onClick={handleCancelOrder} className="btn btn-sm btn-danger">
-						Cancel Order
+			<section className="my-4">
+				<p className="m-0 p-0">Change Order Status</p>
+				<div className="d-flex ">
+					<select
+						value={orderState}
+						onChange={(e) => setOrderState(e.target.value)}
+						className="form-select"
+						id="categorySelect">
+						{orderStatesArray.map((orderSt) => (
+							<option value={orderSt}>{orderSt}</option>
+						))}
+					</select>
+					<button
+						onClick={handleOrderStatusChange}
+						className="btn btn-secondary text-white text-nowrap ms-3 px-3">
+						Change Status
 					</button>
-				</section>
-			)}
+				</div>
+			</section>
 			<section className="bg-white rounded-4  p-4">
 				<p className="text-small text-secondary my-2">Status</p>
 				{orderDetails.status === "Canceled" ? (
 					<p className="bg-danger-subtle text-danger fw-bold  p-1 px-3 rounded-pill d-inline">
+						{orderDetails.status}
+					</p>
+				) : orderDetails.status === "Delivered" ? (
+					<p className="bg-success-subtle text-success fw-bold  p-1 px-3 rounded-pill d-inline">
 						{orderDetails.status}
 					</p>
 				) : (

@@ -1,4 +1,9 @@
 const {
+	getSellerAllOrders,
+	getSingleOrderDetailsForShop,
+	changeOrderStatus,
+} = require("../controller/orderController");
+const {
 	sellerLogin,
 	sellerCreateShop,
 	sellerActivateShop,
@@ -7,6 +12,7 @@ const {
 	getProductsFromShop,
 	sellerLogOut,
 } = require("../controller/sellerController");
+
 const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 const { upload } = require("../multer");
 
@@ -40,6 +46,30 @@ router.get(
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getProductsFromShop(req, res, next);
+	}
+);
+
+router.get(
+	"/get-all-orders/:shopId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getSellerAllOrders(req, res, next);
+	}
+);
+
+router.get(
+	"/get-order-details/:orderId/:shopId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getSingleOrderDetailsForShop(req, res, next);
+	}
+);
+
+router.patch(
+	"/change-order-status/:orderId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		changeOrderStatus(req, res, next);
 	}
 );
 
