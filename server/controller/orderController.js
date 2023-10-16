@@ -23,8 +23,6 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 
 const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
-	console.log(orderId);
-	console.log("Hihihi");
 
 	const orderData = await Order.findOne({ orderId }).populate(
 		"orderItems.product"
@@ -37,4 +35,30 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-module.exports = { addToOrder, getAllOrders, getSingleOrders };
+const cancelOrder = asyncErrorHandler(async (req, res, next) => {
+	const userId = req.user._id;
+	//const orderData = await Order.find({ user: userId });
+
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
+const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
+	const userId = req.user._id;
+	const orderData = await Order.find({ user: userId });
+
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
+module.exports = {
+	addToOrder,
+	getAllOrders,
+	getSingleOrders,
+	getUsersAllOrders,
+	cancelOrder,
+};

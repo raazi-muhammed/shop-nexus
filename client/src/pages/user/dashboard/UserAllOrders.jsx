@@ -3,14 +3,20 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import server from "../../../server";
+import { useSelector } from "react-redux";
 
 const UserAllOrders = () => {
+	const userData = useSelector((state) => state.userData.userData);
+
 	const navigate = useNavigate();
 	const [orderData, setOrderData] = useState([]);
 
 	useEffect(() => {
+		console.log(userData);
 		axios
-			.get(`${server}/admin/get-all-orders`, { withCredentials: true })
+			.get(`${server}/user/get-all-orders`, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				setOrderData(res.data.orderData);
 				console.log(res.data);

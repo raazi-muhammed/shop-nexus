@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { setPaymentInfo } from "../../../app/feature/order/orderSlice";
+import {
+	setEvents,
+	setPaymentInfo,
+} from "../../../app/feature/order/orderSlice";
 import { useDispatch } from "react-redux";
 const CheckOutPaymentPage = () => {
 	const [expanded, setExpanded] = useState("cash on delivery");
@@ -14,7 +17,11 @@ const CheckOutPaymentPage = () => {
 			type: "Cash on Delivery",
 			status: "Not Received",
 		};
+		const eventData = {
+			name: "Order Placed",
+		};
 		dispatch(setPaymentInfo(paymentInfo));
+		dispatch(setEvents(eventData));
 		navigate("/user/checkout/success");
 	};
 	return (

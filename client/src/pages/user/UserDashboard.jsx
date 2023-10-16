@@ -8,6 +8,7 @@ import UserEditPage from "./dashboard/UserEditPage";
 import UserAddAddress from "./dashboard/userAddAddress";
 import UserAllAddress from "./dashboard/UserAllAddress";
 import UserAllOrders from "./dashboard/UserAllOrders";
+import UserSingleOrderDetails from "./dashboard/UserSingleOrderDetails";
 
 const UserDashboard = () => {
 	const navigate = useNavigate();
@@ -45,6 +46,10 @@ const UserDashboard = () => {
 							<Route path="/add-address" element={<UserAddAddress />} />
 							<Route path="/address" element={<UserAllAddress />} />
 							<Route path="/orders" element={<UserAllOrders />} />
+							<Route
+								path="/orders/:orderId"
+								element={<UserSingleOrderDetails />}
+							/>
 							<Route path="/" element={<UserEditPage />} />
 						</Routes>
 					</section>

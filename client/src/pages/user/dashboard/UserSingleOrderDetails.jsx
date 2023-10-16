@@ -1,15 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import server from "../../server";
+import server from "../../../server";
+import toast from "react-hot-toast";
 
-const SingleOrderDetails = () => {
+const UserSingleOrderDetails = () => {
 	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
 	const { orderId } = useParams();
 
 	useEffect(() => {
 		axios
-			.get(`${server}/admin/get-order-details/${orderId}`, {
+			.get(`${server}/user/get-order-details/${orderId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -25,9 +26,27 @@ const SingleOrderDetails = () => {
 		const formattedDate = `${year}-${month}-${day}`;
 		return formattedDate;
 	}
+	const handleCancelOrder = () => {
+		axios
+			.put(`${server}/user/cancel-order/${orderId}`, {
+				withCredentials: true,
+			})
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) =>
+				toast.error(err?.response?.data?.message || "An error occurred")
+			);
+	};
 
 	return (
 		<div>
+			<section>
+				<button onClick={handleCancelOrder} className="btn btn-sm btn-danger">
+					{" "}
+					Cancel Order
+				</button>
+			</section>
 			<section className="bg-white rounded-4  p-4">
 				<p className="text-primary m-0">Order Id: {orderId}</p>
 				<p className="text-primary">
@@ -94,4 +113,4 @@ const SingleOrderDetails = () => {
 	);
 };
 
-export default SingleOrderDetails;
+export default UserSingleOrderDetails;
