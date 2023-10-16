@@ -71,6 +71,16 @@ const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
+	const userId = req.user._id;
+	const orderData = await Order.find({ user: userId });
+
+	res.status(200).json({
+		success: true,
+		orderData,
+	});
+});
+
 module.exports = {
 	addToOrder,
 	getAllOrders,
