@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import LoginPage from "./pages/user/LoginPage";
 import SignUpPage from "./pages/user/SignUpPage";
 import ActivationPage from "./pages/user/ActivationPage";
@@ -13,9 +13,10 @@ import SellerSignUpPage from "./pages/seller/SellerSignUpPage";
 import SellerDashboardPage from "./pages/seller/SellerDashboardPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
+	const navigate = useNavigate();
 	return (
 		<>
 			<Routes>

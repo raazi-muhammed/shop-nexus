@@ -6,10 +6,7 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
-	console.log(orderData);
-
 	const data = await Order.create(orderData);
-	console.log(data);
 
 	res.status(200).json({
 		success: true,
