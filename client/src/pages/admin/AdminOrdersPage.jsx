@@ -58,7 +58,11 @@ const AdminOrdersPage = () => {
 									order.createdAt
 								)}`}</td>
 								<td className="fw-bold">{`₹${order.totalPrice}`}</td>
-								<td className="rounded-end">{`${order.status}`}</td>
+								{order.status === "Canceled" ? (
+									<td className="rounded-end text-danger fw-bold ">{`${order.status}`}</td>
+								) : (
+									<td className="rounded-end text-warning fw-bold">{`${order.status}`}</td>
+								)}
 							</tr>
 						))}
 					</tbody>

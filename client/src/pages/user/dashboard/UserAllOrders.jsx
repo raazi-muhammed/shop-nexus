@@ -36,41 +36,49 @@ const UserAllOrders = () => {
 	}
 	return (
 		<div className="w-100">
-			<div class="table-responsive px-3 py-2">
-				<table class="table">
-					<thead>
-						<tr>
-							<th className="text-secondary bg-transparent py-0">No</th>
-							<th className="text-secondary bg-transparent py-0">Order Id</th>
-							<th className="text-secondary bg-transparent py-0">Items</th>
-							<th className="text-secondary bg-transparent py-0">Address</th>
-							<th className="text-secondary bg-transparent py-0">Date</th>
-							<th className="text-secondary bg-transparent py-0">Price</th>
-							<th className="text-secondary bg-transparent py-0">Status</th>
-						</tr>
-					</thead>
-					<tbody>
-						{orderData?.map((order, i) => (
+			{orderData.length === 0 ? (
+				<p className="text-secondary">You haven't Ordered anything</p>
+			) : (
+				<div class="table-responsive px-3 py-2">
+					<table class="table">
+						<thead>
 							<tr>
-								<td className="rounded-start text-end">{`${i + 1}`}</td>
-								<td className="text-nowrap">
-									<Link className="text-secondary" to={`${order.orderId}`}>
-										{" "}
-										{`${order.orderId}`}
-									</Link>
-								</td>
-								<td className="text-nowrap">{`${order.orderItems.length} Item(s)`}</td>
-								<td className="text-nowrap">{`${order.shippingAddress.address2}, ${order.shippingAddress.address1}, ${order.shippingAddress.city}`}</td>
-								<td className="text-nowrap">{`${convertISOToDate(
-									order.createdAt
-								)}`}</td>
-								<td className="fw-bold">{`₹${order.totalPrice}`}</td>
-								<td className="rounded-end">{`${order.status}`}</td>
+								<th className="text-secondary bg-transparent py-0">No</th>
+								<th className="text-secondary bg-transparent py-0">Order Id</th>
+								<th className="text-secondary bg-transparent py-0">Items</th>
+								<th className="text-secondary bg-transparent py-0">Address</th>
+								<th className="text-secondary bg-transparent py-0">Date</th>
+								<th className="text-secondary bg-transparent py-0">Price</th>
+								<th className="text-secondary bg-transparent py-0">Status</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
+						</thead>
+						<tbody>
+							{orderData?.map((order, i) => (
+								<tr>
+									<td className="rounded-start text-end">{`${i + 1}`}</td>
+									<td className="text-nowrap">
+										<Link className="text-secondary" to={`${order.orderId}`}>
+											{" "}
+											{`${order.orderId}`}
+										</Link>
+									</td>
+									<td className="text-nowrap">{`${order.orderItems.length} Item(s)`}</td>
+									<td className="text-nowrap">{`${order.shippingAddress.address2}, ${order.shippingAddress.address1}, ${order.shippingAddress.city}`}</td>
+									<td className="text-nowrap">{`${convertISOToDate(
+										order.createdAt
+									)}`}</td>
+									<td className="fw-bold">{`₹${order.totalPrice}`}</td>
+									{order.status === "Canceled" ? (
+										<td className="rounded-end text-danger fw-bold ">{`${order.status}`}</td>
+									) : (
+										<td className="rounded-end text-warning fw-bold">{`${order.status}`}</td>
+									)}
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			)}
 		</div>
 	);
 };

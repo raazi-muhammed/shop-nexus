@@ -10,6 +10,11 @@ const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 
 	const data = await Order.create(orderData);
 	console.log(data);
+
+	res.status(200).json({
+		success: true,
+		data,
+	});
 });
 
 const getAllOrders = asyncErrorHandler(async (req, res, next) => {

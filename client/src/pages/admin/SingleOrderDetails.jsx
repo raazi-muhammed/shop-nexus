@@ -29,7 +29,17 @@ const SingleOrderDetails = () => {
 	return (
 		<div>
 			<section className="bg-white rounded-4  p-4">
-				<p className="text-primary m-0">Order Id: {orderId}</p>
+				<p className="text-small text-secondary my-2">Status</p>
+				{orderDetails.status === "Canceled" ? (
+					<p className="bg-danger-subtle text-danger fw-bold  p-1 px-3 rounded-pill d-inline">
+						{orderDetails.status}
+					</p>
+				) : (
+					<p className="bg-warning-subtle text-warning fw-bold  p-1 px-3 rounded-pill d-inline">
+						{orderDetails.status}
+					</p>
+				)}
+				<p className="text-primary m-0 mt-3">Order Id: {orderId}</p>
 				<p className="text-primary">
 					Date: {convertISOToDate(orderDetails.createdAt)}
 				</p>

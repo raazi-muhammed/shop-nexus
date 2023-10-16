@@ -121,7 +121,6 @@ const CheckOutPage = () => {
 									</div>
 								</div>
 							</section>
-							<p>{JSON.stringify(orderState)}</p>
 						</aside>
 					) : null}
 					<main className="col">
