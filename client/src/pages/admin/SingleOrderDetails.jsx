@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../server";
+import convertISOToDate from "../../utils/convertISOToDate";
 
 const SingleOrderDetails = () => {
 	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
@@ -17,21 +18,16 @@ const SingleOrderDetails = () => {
 			});
 	}, []);
 
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
-
 	return (
 		<div>
 			<section className="bg-white rounded-4  p-4">
 				<p className="text-small text-secondary my-2">Status</p>
 				{orderDetails.status === "Canceled" ? (
 					<p className="bg-danger-subtle text-danger fw-bold  p-1 px-3 rounded-pill d-inline">
+						{orderDetails.status}
+					</p>
+				) : orderDetails.status === "Delivered" ? (
+					<p className="bg-success-subtle text-success fw-bold  p-1 px-3 rounded-pill d-inline">
 						{orderDetails.status}
 					</p>
 				) : (
@@ -98,6 +94,15 @@ const SingleOrderDetails = () => {
 						<p className="m-0">{`${orderDetails.shippingAddress?.address1}`}</p>
 						<p className="m-0">{` ${orderDetails.shippingAddress?.pinCode}, ${orderDetails.shippingAddress?.city}, ${orderDetails.shippingAddress?.state}`}</p>
 					</div>
+				</section>
+				<section>
+					<p className="mt-3 h4 fw-bold text-secondary">Events</p>
+					{orderDetails?.events?.map((e) => (
+						<div className="row">
+							<p className="m-0 col-4 fw-bold ">{e.name}</p>
+							<p className="m-0 col">{convertISOToDate(e.date, true)}</p>
+						</div>
+					))}
 				</section>
 			</section>
 		</div>

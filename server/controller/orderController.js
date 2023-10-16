@@ -44,7 +44,7 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
 
 	const eventToAdd = {
-		name: "Order Canceled",
+		name: "Canceled",
 	};
 
 	const orderData = await Order.findOneAndUpdate(
@@ -108,11 +108,16 @@ const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 	const { orderStatus } = req.body;
 
-	console.log(orderStatus);
+	const eventToAdd = {
+		name: orderStatus,
+	};
 
 	const orderData = await Order.findOneAndUpdate(
 		{ orderId },
-		{ status: orderStatus },
+		{
+			$addToSet: { events: eventToAdd },
+			status: orderStatus,
+		},
 		{ new: true }
 	);
 

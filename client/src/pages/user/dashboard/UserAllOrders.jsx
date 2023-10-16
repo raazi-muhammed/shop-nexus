@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import server from "../../../server";
 import { useSelector } from "react-redux";
+import convertISOToDate from "../../../utils/convertISOToDate";
 
 const UserAllOrders = () => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -26,14 +27,6 @@ const UserAllOrders = () => {
 			});
 	}, []);
 
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
 	return (
 		<div className="w-100">
 			{orderData.length === 0 ? (
@@ -70,6 +63,8 @@ const UserAllOrders = () => {
 									<td className="fw-bold">{`₹${order.totalPrice}`}</td>
 									{order.status === "Canceled" ? (
 										<td className="rounded-end text-danger fw-bold ">{`${order.status}`}</td>
+									) : order.status === "Delivered" ? (
+										<td className="rounded-end text-success fw-bold">{`${order.status}`}</td>
 									) : (
 										<td className="rounded-end text-warning fw-bold">{`${order.status}`}</td>
 									)}

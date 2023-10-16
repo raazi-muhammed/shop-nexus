@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import server from "../../server";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import convertISOToDate from "../../utils/convertISOToDate";
 
 const AdminOrdersPage = () => {
 	const navigate = useNavigate();
@@ -17,15 +18,6 @@ const AdminOrdersPage = () => {
 			})
 			.catch((err) => toast.error(err.response?.data?.message));
 	}, []);
-
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
 
 	return (
 		<div className="w-100">
@@ -60,6 +52,8 @@ const AdminOrdersPage = () => {
 								<td className="fw-bold">{`₹${order.totalPrice}`}</td>
 								{order.status === "Canceled" ? (
 									<td className="rounded-end text-danger fw-bold ">{`${order.status}`}</td>
+								) : order.status === "Delivered" ? (
+									<td className="rounded-end text-success fw-bold">{`${order.status}`}</td>
 								) : (
 									<td className="rounded-end text-warning fw-bold">{`${order.status}`}</td>
 								)}

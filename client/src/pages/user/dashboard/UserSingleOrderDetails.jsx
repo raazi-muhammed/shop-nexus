@@ -57,6 +57,10 @@ const UserSingleOrderDetails = () => {
 					<p className="bg-danger-subtle text-danger fw-bold  p-1 px-3 rounded-pill d-inline">
 						{orderDetails.status}
 					</p>
+				) : orderDetails.status === "Delivered" ? (
+					<p className="bg-success-subtle text-success fw-bold  p-1 px-3 rounded-pill d-inline">
+						{orderDetails.status}
+					</p>
 				) : (
 					<p className="bg-warning-subtle text-warning fw-bold  p-1 px-3 rounded-pill d-inline">
 						{orderDetails.status}

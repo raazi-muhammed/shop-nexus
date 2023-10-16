@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import server from "../../server";
 import orderStatesArray from "../../utils/orderState";
+import { parseISO } from "date-fns";
+import convertISOToDate from "../../utils/convertISOToDate";
 
 const SellerSingleOrderDetails = () => {
 	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
@@ -22,14 +24,6 @@ const SellerSingleOrderDetails = () => {
 			});
 	}, [refresh]);
 
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
 	const handleOrderStatusChange = () => {
 		axios
 			.patch(
@@ -142,6 +136,15 @@ const SellerSingleOrderDetails = () => {
 						<p className="m-0">{`${orderDetails.shippingAddress?.address1}`}</p>
 						<p className="m-0">{` ${orderDetails.shippingAddress?.pinCode}, ${orderDetails.shippingAddress?.city}, ${orderDetails.shippingAddress?.state}`}</p>
 					</div>
+				</section>
+				<section>
+					<p className="mt-3 h4 fw-bold text-secondary">Events</p>
+					{orderDetails?.events?.map((e) => (
+						<div className="row">
+							<p className="m-0 col-4 fw-bold ">{e.name}</p>
+							<p className="m-0 col">{convertISOToDate(e.date, true)}</p>
+						</div>
+					))}
 				</section>
 			</section>
 		</div>

@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 import { useSelector } from "react-redux";
 import server from "../../server";
+import convertISOToDate from "../../utils/convertISOToDate";
 
 const SellerAllOrders = () => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -27,14 +28,6 @@ const SellerAllOrders = () => {
 			});
 	}, []);
 
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
 	return (
 		<div className="w-100">
 			{orderData.length === 0 ? (
