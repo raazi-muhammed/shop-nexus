@@ -39,9 +39,9 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 
 const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
-
 	const eventToAdd = {
 		name: "Canceled",
+		description: req.body.description,
 	};
 
 	const orderData = await Order.findOneAndUpdate(
@@ -54,6 +54,7 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 
 	res.status(200).json({
 		success: true,
+		message: "Order Cancelation Successful",
 		orderData,
 	});
 });

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 const UserSingleOrderDetails = () => {
 	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
+	const [reasonForCancelation, setReasonForCancelation] = useState("");
 	const { orderId } = useParams();
 
 	useEffect(() => {
@@ -31,9 +32,13 @@ const UserSingleOrderDetails = () => {
 		axios.defaults.withCredentials = true;
 
 		axios
-			.put(`${server}/user/cancel-order/${orderId}`, {
-				withCredentials: true,
-			})
+			.put(
+				`${server}/user/cancel-order/${orderId}`,
+				{ description: reasonForCancelation },
+				{
+					withCredentials: true,
+				}
+			)
 			.then((res) => {
 				console.log(res);
 			})
@@ -44,11 +49,40 @@ const UserSingleOrderDetails = () => {
 
 	return (
 		<div>
-			{orderDetails.status !== "Canceled" && (
+			{!(
+				orderDetails.status === "Canceled" ||
+				orderDetails.status === "Delivered"
+			) && (
 				<section>
-					<button onClick={handleCancelOrder} className="btn btn-sm btn-danger">
-						Cancel Order
-					</button>
+					<div class="dropdown">
+						<button
+							type="button"
+							class="btn btn-sm btn-danger dropdown-toggle"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+							data-bs-auto-close="outside">
+							Order Cancelation
+						</button>
+						<form class="dropdown-menu p-4">
+							<div class="mb-3">
+								<label for="reason-for-cancelation" class="form-label">
+									Reason
+								</label>
+								<textarea
+									type="text"
+									class="form-control"
+									value={reasonForCancelation}
+									onChange={(e) => setReasonForCancelation(e.target.value)}
+									id="reason-for-cancelation"
+								/>
+							</div>
+							<button
+								onClick={handleCancelOrder}
+								className="btn btn-sm btn-danger">
+								Cancel Order
+							</button>
+						</form>
+					</div>
 				</section>
 			)}
 			<section className="bg-white rounded-4  p-4">

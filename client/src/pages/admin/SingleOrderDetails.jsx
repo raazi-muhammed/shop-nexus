@@ -101,6 +101,7 @@ const SingleOrderDetails = () => {
 						<div className="row">
 							<p className="m-0 col-4 fw-bold ">{e.name}</p>
 							<p className="m-0 col">{convertISOToDate(e.date, true)}</p>
+							<p className="m-0 col">{e.description || ""}</p>
 						</div>
 					))}
 				</section>

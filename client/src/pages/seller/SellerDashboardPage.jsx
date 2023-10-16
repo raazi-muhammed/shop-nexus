@@ -49,16 +49,6 @@ const SellerDashboardPage = () => {
 			.catch((err) => console.log(err));
 	}, []);
 
-	const handleLogOut = () => {
-		axios
-			.get(`${server}/seller/logout`, { withCredentials: true })
-			.then((res) => {
-				toast.success(res.data.message);
-				navigate("/seller/login");
-				window.location.reload();
-			});
-	};
-
 	return (
 		<main className="vw-100">
 			<SellerNavbar shopName={shopName} />
@@ -66,11 +56,6 @@ const SellerDashboardPage = () => {
 				<section className="row py-5">
 					<div className="col-3 mt-3">
 						<AsideComp asideItems={asideItems} />
-						<button
-							className="btn btn-sm btn-danger w-100"
-							onClick={handleLogOut}>
-							Log out
-						</button>
 					</div>
 					<section className="col-9 mx-auto">
 						<Routes>

@@ -19,15 +19,6 @@ const UserDashboard = () => {
 		{ name: "Addresses", link: "address" },
 		{ name: "Orders", link: "orders" },
 	];
-	const handleLogOut = () => {
-		axios
-			.get(`${server}/user/logout`, { withCredentials: true })
-			.then((res) => {
-				toast.success(res.data.message);
-				navigate("/");
-				window.location.reload();
-			});
-	};
 
 	return (
 		<main className="vw-100 min-vh-100">
@@ -35,11 +26,6 @@ const UserDashboard = () => {
 				<div className="row py-5">
 					<section className="col-12 col-md-4 col-lg-3">
 						<AsideComp asideItems={asideItems} />
-						<button
-							className="btn btn-sm btn-danger w-100"
-							onClick={handleLogOut}>
-							Log out
-						</button>
 					</section>
 					<section className="col-12 col-md-8 col-lg-9">
 						<Routes>
