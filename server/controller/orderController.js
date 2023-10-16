@@ -36,8 +36,19 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 });
 
 const cancelOrder = asyncErrorHandler(async (req, res, next) => {
-	const userId = req.user._id;
-	//const orderData = await Order.find({ user: userId });
+	const orderId = req.params.orderId;
+
+	const eventToAdd = {
+		name: "Order Canceled",
+	};
+
+	const orderData = await Order.findOneAndUpdate(
+		{ orderId },
+		{
+			$addToSet: { events: eventToAdd },
+			status: "Canceled",
+		}
+	);
 
 	res.status(200).json({
 		success: true,

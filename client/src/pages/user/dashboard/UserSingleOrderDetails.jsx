@@ -26,7 +26,10 @@ const UserSingleOrderDetails = () => {
 		const formattedDate = `${year}-${month}-${day}`;
 		return formattedDate;
 	}
+
 	const handleCancelOrder = () => {
+		axios.defaults.withCredentials = true;
+
 		axios
 			.put(`${server}/user/cancel-order/${orderId}`, {
 				withCredentials: true,

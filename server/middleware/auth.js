@@ -8,11 +8,11 @@ exports.isAuthenticated = asyncErrorHandler(async (req, res, next) => {
 	try {
 		token = req.cookies["userToken"];
 	} catch (err) {
-		return next(new ErrorHandler("Not Authenticated", 500));
+		return next(new ErrorHandler("Not Logged In", 500));
 	}
 
 	if (!token) {
-		return next(new ErrorHandler("Not Logged In", 500));
+		return next(new ErrorHandler("Not Authenticated", 500));
 	}
 
 	const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
