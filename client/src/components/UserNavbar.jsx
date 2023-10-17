@@ -94,6 +94,11 @@ const UserNavbar = () => {
 										</Link>
 									</li>
 									<li>
+										<Link class="dropdown-item" to={"/user/change-password"}>
+											Change password
+										</Link>
+									</li>
+									<li>
 										<hr class="m-1 text-secondary" />
 									</li>
 									<li onClick={handleLogOut}>

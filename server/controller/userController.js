@@ -7,6 +7,8 @@ const { upload } = require("../multer");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
 
+const bcrypt = require("bcrypt");
+
 const userLogin = asyncErrorHandler(async (req, res, next) => {
 	let user = await User.findOne(
 		{ email: req.body.email },
@@ -215,6 +217,35 @@ const removeAddress = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const changePassword = asyncErrorHandler(async (req, res, next) => {
+	const { userId, currentPassword, newPassword } = req.body;
+
+	let user = await User.findOne(
+		{ _id: userId },
+		{ password: 1 } // used projection because otherwise password is not returned
+	);
+
+	isPasswordMatch = await user.comparePassword(currentPassword);
+	if (!isPasswordMatch) {
+		res.status(401).json({
+			success: false,
+			errorWith: "password",
+			message: "Password Incorrect",
+		});
+		return;
+	}
+
+	let newUser = await User.findOneAndUpdate(
+		{ _id: userId },
+		{ password: await bcrypt.hash(newPassword, 10) }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: "Password Changed",
+	});
+});
+
 module.exports = {
 	userLogin,
 	loadUser,
@@ -225,143 +256,5 @@ module.exports = {
 	editUserDetails,
 	addAddress,
 	removeAddress,
+	changePassword,
 };
-
-/*
-
-
-router.get("/user-details", isAuthenticated, async (req, res) => {
-	try {
-		const user = await User.findById(req.user.id);
-
-		res.status(200).json({
-			success: true,
-			user,
-		});
-	} catch (error) {
-		res.status(500).json({ success: false, message: "Error in getting User" });
-	}
-});
-
-router.put(
-	"/edit-user-details",
-	isAuthenticated,
-	upload.single("file"),
-	async (req, res) => {
-		try {
-			const { email, fullName } = req.body;
-			let user;
-
-			user = await User.findOneAndUpdate(
-				{ _id: req.user.id },
-				{ fullName, email },
-				{ new: true }
-			);
-
-			if (req.file) {
-				const fileUrl = `http://localhost:3000/images/${req.file.filename}`;
-				user = await User.findOneAndUpdate(
-					{ _id: req.user.id },
-					{ $set: { "avatar.url": fileUrl } },
-					{ new: true }
-				);
-			}
-
-			res.status(200).json({
-				success: true,
-				message: "User Updated",
-				user,
-			});
-		} catch (error) {
-			res
-				.status(500)
-				.json({ success: false, message: "Error in getting User" });
-		}
-	}
-);
-
-router.post("/add-address", isAuthenticated, async (req, res) => {
-	try {
-		const {
-			fullName,
-			phoneNumber,
-			pinCode,
-			state,
-			city,
-			addressLine1,
-			addressLine2,
-			addressType,
-		} = req.body;
-
-		const user = await User.findOneAndUpdate(
-			{ _id: req.user.id },
-			{
-				$addToSet: {
-					addresses: {
-						fullName,
-						phoneNumber,
-						pinCode,
-						state,
-						city,
-						address1: addressLine1,
-						address2: addressLine2,
-						addressType,
-					},
-				},
-			},
-			{ new: true }
-		);
-
-		res.status(200).json({
-			success: true,
-			message: "User Updated",
-			user,
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({ success: false, message: "Error Adding Address" });
-	}
-});
-
-router.post("/remove-address", isAuthenticated, async (req, res) => {
-	try {
-		const { addressId } = req.body;
-		const user = await User.findOneAndUpdate(
-			{ _id: req.user.id },
-			{ $pull: { addresses: { _id: addressId } } },
-			{ new: true }
-		);
-
-		res.status(200).json({
-			success: true,
-			message: "Address Removed",
-			user,
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({ success: false, message: "Error Adding Address" });
-	}
-});
-
-//Load user
-router.get("/load-user", isAuthenticated, async (req, res, next) => {
-	try {
-		const user = await User.findById(req.user.id);
-
-		if (user.isBlocked) {
-			res.status(200).json({
-				success: false,
-				message: "You are Blocked",
-			});
-			return;
-		}
-
-		res.status(200).json({
-			success: true,
-			user,
-		});
-	} catch (error) {
-		res.status(500).json({ success: false, message: "Error in Loading User" });
-	}
-});
- */

@@ -14,6 +14,7 @@ import SellerDashboardPage from "./pages/seller/SellerDashboardPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import { useEffect, useState } from "react";
+import UserChangePassword from "./pages/user/account/UserChangePassword";
 
 function App() {
 	const navigate = useNavigate();
@@ -34,6 +35,7 @@ function App() {
 					element={<SellerDashboardPage />}
 				/>
 
+				<Route path="/user/change-password" element={<UserChangePassword />} />
 				<Route path="/admin/login" element={<AdminLoginPage />} />
 				<Route path="/admin/dashboard/*" element={<AdminDashboardPage />} />
 

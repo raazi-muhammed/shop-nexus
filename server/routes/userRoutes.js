@@ -9,6 +9,7 @@ const {
 	editUserDetails,
 	addAddress,
 	removeAddress,
+	changePassword,
 } = require("../controller/userController");
 
 const {
@@ -63,6 +64,10 @@ router.get("/get-order-details/:orderId", isAuthenticated, (req, res, next) => {
 
 router.put("/cancel-order/:orderId", isAuthenticated, (req, res, next) => {
 	cancelOrder(req, res, next);
+});
+
+router.put("/change-password", isAuthenticated, (req, res, next) => {
+	changePassword(req, res, next);
 });
 
 module.exports = router;
