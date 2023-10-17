@@ -10,6 +10,8 @@ const {
 	addAddress,
 	removeAddress,
 	changePassword,
+	userAuthentication,
+	googleSignIn,
 } = require("../controller/userController");
 
 const {
@@ -24,11 +26,20 @@ const { upload } = require("../multer");
 router.post("/login-user", (req, res, next) => {
 	userLogin(req, res, next);
 });
+
+//checks if user is in our data and if he is blocked
+router.post("/auth-user", (req, res, next) => {
+	userAuthentication(req, res, next);
+});
+
 router.get("/load-user", isAuthenticated, (req, res, next) => {
 	loadUser(req, res, next);
 });
 router.post("/create-user", (req, res, next) => {
 	createUser(req, res, next);
+});
+router.post("/google-sign-in", (req, res, next) => {
+	googleSignIn(req, res, next);
 });
 router.post("/activation", (req, res, next) => {
 	activateUser(req, res, next);

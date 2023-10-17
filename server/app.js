@@ -16,7 +16,6 @@ const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
 
-const googleAuth = require("./controller/googleAuth");
 const errorHandling = require("./middleware/errorHandling");
 
 /* Cors */
@@ -65,8 +64,6 @@ app.use("/api/v1/wish-list/", wishListRoutes);
 app.use("/api/v1/order/", orderRoutes);
 app.use("/api/v1/user/", userRoutes);
 app.use("/api/v1/seller/", sellerRoutes);
-
-app.use("/auth/", googleAuth);
 
 app.get("*", (req, res) => {
 	console.log("no matching url");

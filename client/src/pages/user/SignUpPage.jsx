@@ -4,8 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import server from "../../server";
 import toast from "react-hot-toast";
+import { useUserAuth } from "../../context/userAuthContext";
 
 const SignUpPage = () => {
+	const { signUp } = useUserAuth();
+
 	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
 	const [age, setAge] = useState("");
@@ -21,7 +24,7 @@ const SignUpPage = () => {
 		setValidationSetting("was-validated");
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
 		const newForm = {
@@ -31,21 +34,24 @@ const SignUpPage = () => {
 			password,
 			confirmPassword,
 		};
-		axios
-			.post(`${server}/user/create-user`, newForm)
-			.then((res) => {
-				console.log(res);
-				toast.success(res.data.message);
-			})
-			.catch((err) => {
-				const message = err.response.data.message;
-				const errorWith = err.response.data.errorWith;
-				if (errorWith === "email") setEmailErr(message);
-				if (!errorWith) toast.error(message);
-			});
-	};
-	const handleGoogle = () => {
-		window.open("http://localhost:3000/auth/google", "_self");
+		try {
+			await signUp(email, password);
+			axios
+				.post(`${server}/user/create-user`, newForm)
+				.then((res) => {
+					console.log(res);
+					toast.success(res.data.message);
+				})
+				.catch((err) => {
+					const message = err.response.data.message;
+					const errorWith = err.response.data.errorWith;
+					if (errorWith === "email") setEmailErr(message);
+					if (!errorWith) toast.error(message);
+				});
+		} catch (error) {
+			console.log(error);
+			setEmailErr(error.message);
+		}
 	};
 
 	return (
@@ -118,10 +124,10 @@ const SignUpPage = () => {
 							name="password"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
-							pattern=".{4,}"
+							pattern=".{6,}"
 							required
 						/>
-						<div class="invalid-feedback">4 characters minimum</div>
+						<div class="invalid-feedback">6 characters minimum</div>
 					</div>
 					<div className="mb-3">
 						<label htmlFor="confirm-password" className="form-label">
@@ -146,11 +152,6 @@ const SignUpPage = () => {
 						className="btn btn-primary btn-block col-12 ">
 						Sign Up
 					</button>
-					{/* <button
-						className="btn btn-secondary mt-2 text-white w-100"
-						onClick={handleGoogle}>
-						Sign In with Google
-					</button> */}
 				</form>
 				<p className="text-center mt-2">
 					Alread Have an Account?{" "}

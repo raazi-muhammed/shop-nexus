@@ -10,6 +10,11 @@ const ErrorHandler = require("../utils/errorHandler");
 const bcrypt = require("bcrypt");
 
 const userLogin = asyncErrorHandler(async (req, res, next) => {
+	let user = await User.findOne({ email: req.body.email });
+	sendToken(user, 201, res, "userToken");
+});
+
+const userAuthentication = asyncErrorHandler(async (req, res, next) => {
 	let user = await User.findOne(
 		{ email: req.body.email },
 		{ password: 1, email: 1, fullName: 1, isBlocked: 1 } // used projection because otherwise password is not returned
@@ -24,16 +29,6 @@ const userLogin = asyncErrorHandler(async (req, res, next) => {
 		return;
 	}
 
-	isPasswordMatch = await user.comparePassword(req.body.password);
-	if (!isPasswordMatch) {
-		res.status(401).json({
-			success: false,
-			errorWith: "password",
-			message: "Password Incorrect",
-		});
-		return;
-	}
-
 	if (user.isBlocked) {
 		res.status(401).json({
 			success: false,
@@ -42,7 +37,11 @@ const userLogin = asyncErrorHandler(async (req, res, next) => {
 		});
 		return;
 	}
-	sendToken(user, 201, res, "userToken");
+
+	res.status(200).json({
+		success: true,
+		message: "Valid User",
+	});
 });
 
 const loadUser = asyncErrorHandler(async (req, res, next) => {
@@ -55,6 +54,29 @@ const loadUser = asyncErrorHandler(async (req, res, next) => {
 		success: true,
 		user,
 	});
+});
+
+const googleSignIn = asyncErrorHandler(async (req, res, next) => {
+	//console.log(req.body);
+	const { email, displayName, photoURL } = req.body.user;
+
+	let user;
+	user = await User.findOne({ email: email });
+
+	if (!user) {
+		user = await User.create({
+			fullName: displayName,
+			email: email,
+			password: "password",
+			"avatar.url": photoURL,
+		});
+	}
+	if (user.isBlocked) {
+		return next(new ErrorHandler("You are Blocked", 200));
+	}
+
+	console.log(user);
+	sendToken(user, 201, res, "userToken");
 });
 
 const createUser = asyncErrorHandler(async (req, res, next) => {
@@ -116,7 +138,7 @@ const activateUser = asyncErrorHandler(async (req, res, next) => {
 		email: email,
 		age: age,
 		password: password,
-		profilePic: profilePic,
+		"avatar.url": profilePic,
 	});
 
 	sendToken(dataUser, 201, res);
@@ -257,4 +279,6 @@ module.exports = {
 	addAddress,
 	removeAddress,
 	changePassword,
+	userAuthentication,
+	googleSignIn,
 };

@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import server from "../../server";
 import orderStatesArray from "../../utils/orderState";
-import { parseISO } from "date-fns";
 import convertISOToDate from "../../utils/convertISOToDate";
 
 const SellerSingleOrderDetails = () => {

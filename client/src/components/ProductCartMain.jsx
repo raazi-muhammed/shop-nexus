@@ -51,12 +51,12 @@ const ProductCartMain = ({
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
 	};
 	return (
-		<div className="col p-2">
-			<section className=" bg-white d-flex flex-column rounded-4">
+		<div className="col p-2 ">
+			<section className="h-100 bg-white d-flex flex-column rounded-4">
 				<Link to={`/product/${productId}`}>
 					<img className="rounded-4 w-100 " src={imgUrl} alt="" />
 				</Link>
-				<section className="d-flex flex-column p-4 pb-0 ">
+				<section className="d-flex flex-column p-4 pb-0 mt-auto">
 					<Link className="text-secondary text-small text-decoration-none">
 						{shopName}
 					</Link>

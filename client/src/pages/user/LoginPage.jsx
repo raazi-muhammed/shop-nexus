@@ -5,9 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import server from "../../server";
 import toast from "react-hot-toast";
+import { useUserAuth } from "../../context/userAuthContext";
 
 const LoginPage = () => {
 	const navigate = useNavigate();
+	const { login, user, googleSignIn } = useUserAuth();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -22,19 +24,53 @@ const LoginPage = () => {
 		setValidationSetting("was-validated");
 	};
 
-	const handleSubmit = (e) => {
+	const handleGoogleSignIn = async (e) => {
+		e.preventDefault();
+		try {
+			const data = await googleSignIn();
+			axios
+				.post(`${server}/user/google-sign-in`, data, { withCredentials: true })
+				.then((res) => {
+					console.log(res);
+					if (res.data.success) navigate("/");
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
+
 		const newForm = {
 			email: email,
 			password: password,
 		};
 
 		axios
-			.post(`${server}/user/login-user`, newForm, { withCredentials: true })
-			.then((res) => {
-				console.log(res.data);
-				if (res.data.success) navigate("/");
+			.post(`${server}/user/auth-user`, newForm, { withCredentials: true })
+			.then(async (res) => {
+				try {
+					await login(email, password);
+					axios
+						.post(`${server}/user/login-user`, newForm, {
+							withCredentials: true,
+						})
+						.then((res) => {
+							console.log(res.data);
+							if (res.data.success) navigate("/");
+						})
+						.catch((err) => {
+							toast.error(message);
+						});
+				} catch (error) {
+					setPasswordErr(error.message);
+					console.log(error);
+				}
 			})
 			.catch((err) => {
 				const message = err.response.data.message;
@@ -44,11 +80,6 @@ const LoginPage = () => {
 				if (!errorWith) toast.error(message);
 			});
 	};
-
-	/* 	const handleGoogle = () => {
-		window.open("http://localhost:3000/auth/google", "_self");
-	}; */
-
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-white rounded-4">
 			<section className="col-6 p-0 overflow-hidden ">
@@ -121,7 +152,7 @@ const LoginPage = () => {
 								</label>
 							</div>
 						</div>
-						<Link to="#" className="col-6">
+						<Link to="/user/forgot-password" className="col-6">
 							Forgot Password?
 						</Link>
 					</div>
@@ -132,11 +163,11 @@ const LoginPage = () => {
 						Log In
 					</button>
 				</form>
-				{/* <button
+				<button
 					className="btn btn-secondary mt-2 text-white w-100"
-					onClick={handleGoogle}>
+					onClick={handleGoogleSignIn}>
 					Sign In with Google
-				</button> */}
+				</button>
 				<p className="text-center mt-3">
 					Don’t Have an Account{" "}
 					<Link className="text-secondary fw-bold" to="/sign-up">
