@@ -33,39 +33,53 @@ const SellerAllOrders = () => {
 			) : (
 				<div className="table-responsive px-3 py-2">
 					<table className="table">
-						<thead>
-							<tr>
-								<th className="text-secondary bg-transparent py-0">No</th>
-								<th className="text-secondary bg-transparent py-0">Order Id</th>
-								<th className="text-secondary bg-transparent py-0">Items</th>
-								<th className="text-secondary bg-transparent py-0">Address</th>
-								<th className="text-secondary bg-transparent py-0">Date</th>
-								<th className="text-secondary bg-transparent py-0">Price</th>
-								<th className="text-secondary bg-transparent py-0">Status</th>
+						<thead className="d-flex flex-column gap-3">
+							<tr className="row flex-nowrap">
+								<th className="col-1 text-secondary bg-transparent py-0">No</th>
+								<th className="col-3 text-secondary bg-transparent py-0">
+									Order Id
+								</th>
+								<th className="col-1 text-secondary bg-transparent py-0">
+									Items
+								</th>
+								<th className="col-3 text-secondary bg-transparent py-0">
+									Address
+								</th>
+								<th className="col-1 text-secondary bg-transparent py-0">
+									Date
+								</th>
+								<th className="col-1 text-secondary bg-transparent py-0">
+									Price
+								</th>
+								<th className="col-2 text-secondary bg-transparent py-0">
+									Status
+								</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody className="d-flex flex-column gap-3 ">
 							{orderData?.map((order, i) => (
-								<tr key={i}>
-									<td className="rounded-start text-end">{`${i + 1}`}</td>
-									<td className="text-nowrap">
+								<tr key={i} className="row flex-nowrap">
+									<td className="col-1 rounded-start text-start">{`${
+										i + 1
+									}`}</td>
+									<td className="col-3 text-nowrap overflow-ellipsis">
 										<Link className="text-secondary" to={`${order.orderId}`}>
 											{" "}
 											{`${order.orderId}`}
 										</Link>
 									</td>
-									<td className="text-nowrap">{`${order.orderItems.length} Item(s)`}</td>
-									<td className="text-nowrap">{`${order.shippingAddress.address2}, ${order.shippingAddress.address1}, ${order.shippingAddress.city}`}</td>
-									<td className="text-nowrap">{`${convertISOToDate(
+									<td className="col-1 text-nowrap overflow-ellipsis">{`${order.orderItems.length} Item(s)`}</td>
+									<td className="col-3 text-nowrap overflow-ellipsis">{`${order.shippingAddress.address2}, ${order.shippingAddress.address1}, ${order.shippingAddress.city}`}</td>
+									<td className="col-1 text-nowrap overflow-ellipsis">{`${convertISOToDate(
 										order.createdAt
 									)}`}</td>
-									<td className="fw-bold">{`₹${order.totalPrice}`}</td>
+									<td className="col-1 fw-bold">{`₹${order.totalPrice}`}</td>
 									{order.status === "Canceled" ? (
-										<td className="rounded-end text-danger fw-bold ">{`${order.status}`}</td>
+										<td className="col-1 rounded-end text-danger fw-bold ">{`${order.status}`}</td>
 									) : order.status === "Delivered" ? (
-										<td className="rounded-end text-success fw-bold">{`${order.status}`}</td>
+										<td className="col-2 rounded-end text-success fw-bold">{`${order.status}`}</td>
 									) : (
-										<td className="rounded-end text-warning fw-bold">{`${order.status}`}</td>
+										<td className="col-2 rounded-end text-warning fw-bold">{`${order.status}`}</td>
 									)}
 								</tr>
 							))}

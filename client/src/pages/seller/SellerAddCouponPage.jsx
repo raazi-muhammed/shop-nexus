@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import axios from "axios";
+import server from "../../server";
+import toast from "react-hot-toast";
 import {
 	formLabelClass,
 	inputDivClass,
 	formClass,
 	submitButtonClass,
 } from "../../utils/styleClasses";
+import { useParams } from "react-router-dom";
 
 const SellerAddCouponPage = () => {
+	const { shopId } = useParams();
 	const [name, setName] = useState("");
 	const [code, setCode] = useState("");
 	const [status, setStatus] = useState("");
@@ -25,6 +30,20 @@ const SellerAddCouponPage = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+
+		const formData = {
+			shopId,
+			name,
+			code,
+			status,
+			discountPercentage,
+			expires,
+			minAmount,
+			maxAmount,
+		};
+		axios.post(`${server}/seller/add-coupon`, formData, {
+			withCredentials: true,
+		});
 	};
 	return (
 		<section>

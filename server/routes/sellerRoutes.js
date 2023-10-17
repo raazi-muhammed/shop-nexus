@@ -14,6 +14,11 @@ const {
 	sellerLogOut,
 } = require("../controller/sellerController");
 
+const {
+	addCoupon,
+	getCouponFromSeller,
+} = require("../controller/couponController");
+
 const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 const { upload } = require("../multer");
 
@@ -85,5 +90,18 @@ router.patch(
 router.get("/logout", async (req, res, next) => {
 	sellerLogOut(req, res, next);
 });
+
+/* Coupon ------------------------------------------------------------------  */
+router.post("/add-coupon", isSellerAuthenticated, async (req, res, next) => {
+	addCoupon(req, res, next);
+});
+
+router.get(
+	"/get-all-coupons/:shopId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getCouponFromSeller(req, res, next);
+	}
+);
 
 module.exports = router;

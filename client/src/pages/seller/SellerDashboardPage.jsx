@@ -13,6 +13,7 @@ import SellerAllOrders from "./SellerAllOrders";
 import SellerSingleOrderDetails from "./SellerSingleOrderDetails";
 import SellerStockManagement from "./SellerStockManagement";
 import SellerAddCouponPage from "./SellerAddCouponPage";
+import SellerAllCouponsPage from "./SellerAllCouponsPage";
 
 const SellerDashboardPage = () => {
 	const navigate = useNavigate();
@@ -44,6 +45,10 @@ const SellerDashboardPage = () => {
 		{
 			name: "New Coupon",
 			link: `/seller/dashboard/${shopId}/new-coupon`,
+		},
+		{
+			name: "All Coupons",
+			link: `/seller/dashboard/${shopId}/coupons`,
 		},
 	];
 
@@ -90,6 +95,7 @@ const SellerDashboardPage = () => {
 								element={<SellerSingleOrderDetails />}
 							/>
 							<Route path="/new-coupon" element={<SellerAddCouponPage />} />
+							<Route path="/coupons" element={<SellerAllCouponsPage />} />
 							<Route
 								path="/edit-single-product/:productId"
 								element={<SellerEditSingleProductPage />}

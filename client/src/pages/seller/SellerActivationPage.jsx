@@ -7,6 +7,7 @@ import { debounce } from "lodash";
 
 const SellerActivationPage = () => {
 	const navigate = useNavigate();
+
 	const [message, setMessage] = useState("Seller Verification on process");
 	const [searchParams, setSearchParams] = useSearchParams();
 	const activation_token = searchParams.get("activation_token");
