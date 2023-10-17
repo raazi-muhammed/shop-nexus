@@ -27,25 +27,27 @@ const SellerNavbar = ({ shopName }) => {
 						</Link>
 					</div>
 					<section className="d-flex gap-3">
-						<div class="btn-group">
-							<button class="btn btn-secondary btn-sm text-white" type="button">
+						<div className="btn-group">
+							<button
+								className="btn btn-secondary btn-sm text-white"
+								type="button">
 								<span className="mx-1"> {shopName}</span>
 							</button>
 							<button
 								type="button"
-								class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
+								className="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
 								data-bs-toggle="dropdown"
 								aria-expanded="false">
-								<span class="visually-hidden">Toggle Dropdown</span>
+								<span className="visually-hidden">Toggle Dropdown</span>
 							</button>
-							<ul class="dropdown-menu">
+							<ul className="dropdown-menu">
 								<li>
-									<Link class="dropdown-item text-small" href="#">
+									<Link className="dropdown-item text-small" href="#">
 										{shopId}
 									</Link>
 								</li>
 								<li onClick={handleLogOut}>
-									<Link class="dropdown-item text-danger fw-bold" href="#">
+									<Link className="dropdown-item text-danger fw-bold" href="#">
 										Logout
 									</Link>
 								</li>

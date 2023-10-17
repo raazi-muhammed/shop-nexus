@@ -10,6 +10,9 @@ const opts = {
 	overwrite: true,
 	invalidate: true,
 	resource_type: "auto",
+	transformation: [
+		{ width: 700, height: 700, crop: "fill" }, // Adjust the width, height, and crop mode as needed
+	],
 	folder: "shop-nexus",
 };
 

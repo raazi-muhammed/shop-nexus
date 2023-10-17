@@ -14,14 +14,12 @@ const SellerAllOrders = () => {
 	const [orderData, setOrderData] = useState([]);
 
 	useEffect(() => {
-		console.log(userData);
 		axios
 			.get(`${server}/seller/get-all-orders/${shopId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
 				setOrderData(res.data.orderData);
-				console.log(res.data);
 			})
 			.catch((err) => {
 				toast.error(err.response?.data?.message);
@@ -33,8 +31,8 @@ const SellerAllOrders = () => {
 			{orderData.length === 0 ? (
 				<p className="text-secondary">There aren't any orders</p>
 			) : (
-				<div class="table-responsive px-3 py-2">
-					<table class="table">
+				<div className="table-responsive px-3 py-2">
+					<table className="table">
 						<thead>
 							<tr>
 								<th className="text-secondary bg-transparent py-0">No</th>
@@ -48,7 +46,7 @@ const SellerAllOrders = () => {
 						</thead>
 						<tbody>
 							{orderData?.map((order, i) => (
-								<tr>
+								<tr key={i}>
 									<td className="rounded-start text-end">{`${i + 1}`}</td>
 									<td className="text-nowrap">
 										<Link className="text-secondary" to={`${order.orderId}`}>

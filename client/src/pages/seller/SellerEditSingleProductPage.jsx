@@ -216,12 +216,13 @@ const SellerEditSingleProductPage = () => {
 					</label>
 					<div className={inputDivClass}>
 						<input
-							type="number"
+							type="text"
 							className="form-control"
 							id="price"
 							value={price}
 							name="price"
 							onChange={(e) => setPrice(e.target.value)}
+							pattern="^[0-9]\d*$"
 							required
 						/>
 						<div class="invalid-feedback">Invalid</div>
@@ -233,12 +234,13 @@ const SellerEditSingleProductPage = () => {
 					</label>
 					<div className={inputDivClass}>
 						<input
-							type="number"
+							type="text"
 							className="form-control"
 							id="discounted-price"
 							value={discountedPrice}
 							name="discountedPrice"
 							onChange={(e) => setDiscountedPrice(e.target.value)}
+							pattern="^[0-9]\d*$"
 							required
 						/>
 						<div class="invalid-feedback">Invalid</div>
@@ -251,12 +253,13 @@ const SellerEditSingleProductPage = () => {
 					</label>
 					<div className={inputDivClass}>
 						<input
-							type="number"
+							type="text"
 							className="form-control"
 							id="stock"
 							value={stock}
 							name="stock"
 							onChange={(e) => setStock(e.target.value)}
+							pattern="^[0-9]\d*$"
 							required
 						/>
 						<div class="invalid-feedback">Invalid</div>

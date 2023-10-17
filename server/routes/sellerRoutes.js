@@ -3,6 +3,7 @@ const {
 	getSingleOrderDetailsForShop,
 	changeOrderStatus,
 } = require("../controller/orderController");
+const { setNewStockAmount } = require("../controller/productController");
 const {
 	sellerLogin,
 	sellerCreateShop,
@@ -70,6 +71,14 @@ router.patch(
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		changeOrderStatus(req, res, next);
+	}
+);
+
+router.patch(
+	"/change-stock-value",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		setNewStockAmount(req, res, next);
 	}
 );
 

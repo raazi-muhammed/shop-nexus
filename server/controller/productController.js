@@ -232,17 +232,29 @@ const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const setNewStockAmount = asyncErrorHandler(async (req, res, next) => {
+	const { stock, productId } = req.body;
+	const products = await Products.findOneAndUpdate(
+		{ _id: productId },
+		{ stock: stock },
+		{ new: true }
+	);
+
+	res.status(200).json({
+		success: true,
+		data: products,
+	});
+});
+
 const changeStockBasedOnOrder = asyncErrorHandler(async (req, res, next) => {
 	const { stock, productId } = req;
 
-	console.log("changeStockBasedOnOrder");
-	console.log(stock, productId);
 	const shopDetails = await Products.findOneAndUpdate(
 		{ _id: productId },
 		{ $inc: { stock: -stock } },
 		{ new: true }
 	);
-	console.log(shopDetails);
+
 	res.status(200).json({
 		success: true,
 		data: shopDetails,
@@ -263,4 +275,5 @@ module.exports = {
 	addProduct,
 	getProductsFromShop,
 	changeStockBasedOnOrder,
+	setNewStockAmount,
 };

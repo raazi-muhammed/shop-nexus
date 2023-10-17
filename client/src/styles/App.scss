@@ -82,10 +82,7 @@ body {
 	z-index: 100;
 }
 
-thead {
-	background-color: #00000000;
-}
-
-tbody {
-	padding: 1rem;
+.overflow-ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

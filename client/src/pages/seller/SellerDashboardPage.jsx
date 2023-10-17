@@ -11,6 +11,8 @@ import SellerEditSingleProductPage from "./SellerEditSingleProductPage";
 import toast from "react-hot-toast";
 import SellerAllOrders from "./SellerAllOrders";
 import SellerSingleOrderDetails from "./SellerSingleOrderDetails";
+import SellerStockManagement from "./SellerStockManagement";
+import SellerAddCouponPage from "./SellerAddCouponPage";
 
 const SellerDashboardPage = () => {
 	const navigate = useNavigate();
@@ -28,12 +30,20 @@ const SellerDashboardPage = () => {
 			link: `/seller/dashboard/${shopId}/new-product`,
 		},
 		{
+			name: "Stock Management",
+			link: `/seller/dashboard/${shopId}/stock-management`,
+		},
+		{
 			name: "Edit Shop",
 			link: `/seller/dashboard/${shopId}/edit-shop`,
 		},
 		{
 			name: "All Orders",
 			link: `/seller/dashboard/${shopId}/orders`,
+		},
+		{
+			name: "New Coupon",
+			link: `/seller/dashboard/${shopId}/new-coupon`,
 		},
 	];
 
@@ -70,11 +80,16 @@ const SellerDashboardPage = () => {
 								}
 							/>
 							<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
+							<Route
+								path="/stock-management"
+								element={<SellerStockManagement />}
+							/>
 							<Route path="/orders" element={<SellerAllOrders />} />
 							<Route
 								path="/orders/:orderId"
 								element={<SellerSingleOrderDetails />}
 							/>
+							<Route path="/new-coupon" element={<SellerAddCouponPage />} />
 							<Route
 								path="/edit-single-product/:productId"
 								element={<SellerEditSingleProductPage />}

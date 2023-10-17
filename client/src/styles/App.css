@@ -12034,10 +12034,7 @@ body {
   z-index: 100;
 }
 
-thead {
-  background-color: rgba(0, 0, 0, 0);
-}
-
-tbody {
-  padding: 1rem;
+.overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }/*# sourceMappingURL=App.css.map */
