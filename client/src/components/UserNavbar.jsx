@@ -54,8 +54,8 @@ const UserNavbar = () => {
 						aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav">
+					<div class="collapse navbar-collapse " id="navbarSupportedContent">
+						<ul class="navbar-nav w-100">
 							<li class="nav-item my-3 my-lg-auto">
 								<section>
 									<label className="visually-hidden " htmlFor="categorySelect">
@@ -73,7 +73,7 @@ const UserNavbar = () => {
 									</select>
 								</section>
 							</li>
-							<li>
+							<li className="mx-auto">
 								<div className="d-flex justify-content-between p-2">
 									<NavComponent navItems={navItems} />
 								</div>

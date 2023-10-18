@@ -1,5 +1,17 @@
-function convertISOToDate(isoDate, time = false) {
+function convertISOToDate(isoDate, time = false, type = "normal") {
 	const date = new Date(isoDate);
+
+	if (type === "input") {
+		if (isNaN(date)) {
+			return "Invalid date format";
+		}
+
+		const year = date.getFullYear();
+		const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Adding 1 because months are zero-indexed
+		const day = date.getDate().toString().padStart(2, "0");
+
+		return `${year}-${month}-${day}`;
+	}
 
 	// Create an array of month names to use for formatting
 	const months = [

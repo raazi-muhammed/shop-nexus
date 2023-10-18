@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import Icons from "../assets/Icons";
+const { shopIcon } = Icons;
 const UserHeader = () => {
 	return (
 		<div>
@@ -36,8 +37,9 @@ const UserHeader = () => {
 							</li>
 						</ul>
 						<Link to={"/seller/sign-up"}>
-							<button className="btn btn-secondary text-white my-3 my-lg-auto">
-								Become A seller
+							<button className="btn btn-secondary text-white my-3 my-lg-auto px-3">
+								<span className="pb-3 mb-1">{shopIcon}</span>
+								<span className="ps-2 mb-0">Become A seller</span>
 							</button>
 						</Link>
 					</div>

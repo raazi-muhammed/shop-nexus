@@ -42,8 +42,7 @@ const SellerAllCouponsPage = () => {
 							<p className="m-0">{coupon.maxAmount}</p>
 						</section>
 						<section className="d-flex align-items-center justify-content-end  col-1 gap-3 ">
-							<Link
-								to={`/seller/dashboard/${coupon.code}/edit-single-product/${coupon.code}`}>
+							<Link to={`${coupon._id}`}>
 								<button className="btn btn-secondary text-white btn-sm">
 									{edit}
 								</button>
@@ -52,25 +51,6 @@ const SellerAllCouponsPage = () => {
 					</div>
 				))}
 			</section>
-			{/* <div className="ps-0 p-3 bg-white m-1 row rounded-4 align-items-center">
-				<section className="col-3">
-					<p className="m-0">{category}</p>
-					<p className="fw-bold">{`${stock} in Stock`}</p>
-				</section>
-				<p className="col-2">{`$${price}`}</p>
-				<section className="d-flex align-items-center justify-content-end  col-1 gap-3 ">
-					<Link to={`/product/${id}`}>
-						<button className="btn btn-secondary text-white btn-sm">
-							{eye}
-						</button>
-					</Link>
-					<Link to={`/seller/dashboard/${shopId}/edit-single-product/${id}`}>
-						<button className="btn btn-secondary text-white btn-sm">
-							{edit}
-						</button>
-					</Link>
-				</section>
-			</div> */}
 		</div>
 	);
 };

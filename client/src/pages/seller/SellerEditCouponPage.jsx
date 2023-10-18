@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import server from "../../server";
 import toast from "react-hot-toast";
@@ -9,11 +9,12 @@ import {
 	submitButtonClass,
 } from "../../utils/styleClasses";
 import { useNavigate, useParams } from "react-router-dom";
+import convertISOToDate from "../../utils/convertISOToDate";
 
-const SellerAddCouponPage = () => {
+const SellerEditCouponPage = () => {
 	const navigate = useNavigate();
 	const [couponCodeErr, setCouponCodeErr] = useState("");
-	const { shopId } = useParams();
+	const { shopId, couponId } = useParams();
 	const [name, setName] = useState("");
 	const [code, setCode] = useState("");
 	const [status, setStatus] = useState("Active");
@@ -30,12 +31,33 @@ const SellerAddCouponPage = () => {
 		setValidationSetting("was-validated");
 	};
 
+	useEffect(() => {
+		axios
+			.get(`${server}/seller/get-coupon-details/${couponId}`, {
+				withCredentials: true,
+			})
+			.then((res) => {
+				console.log(res.data.couponData);
+				const _couponData = res.data.couponData;
+				setName(_couponData.name);
+				setCode(_couponData.code);
+				setStatus(_couponData.status);
+				setDiscountPercentage(_couponData.discountPercentage);
+				setExpires(convertISOToDate(_couponData.expires, false, "input"));
+				setMinAmount(_couponData.minAmount);
+				setMaxAmount(_couponData.maxAmount);
+			})
+			.catch((err) => {
+				toast.error(err.response?.data?.message || "An error occurred");
+			});
+	}, []);
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
 
 		const formData = {
-			shopId,
+			couponId,
 			name,
 			code,
 			status,
@@ -45,18 +67,19 @@ const SellerAddCouponPage = () => {
 			maxAmount,
 		};
 		axios
-			.post(`${server}/seller/add-coupon`, formData, {
+			.post(`${server}/seller/edit-coupon`, formData, {
 				withCredentials: true,
 			})
 			.then((res) => {
+				console.log(res.data);
 				toast.success(res.data?.message || "Success");
-				navigate(`/seller/dashboard/${shopId}/coupons`);
 			})
 			.catch((err) => {
 				const message = err.response?.data?.message;
 				message ? setCouponCodeErr(message) : toast.error("An error occurred");
 			});
 	};
+
 	return (
 		<section>
 			<form
@@ -200,11 +223,11 @@ const SellerAddCouponPage = () => {
 					disabled={!allowSubmission}
 					type="submit"
 					className={submitButtonClass}>
-					Add Coupone
+					Update Coupon
 				</button>
 			</form>
 		</section>
 	);
 };
 
-export default SellerAddCouponPage;
+export default SellerEditCouponPage;

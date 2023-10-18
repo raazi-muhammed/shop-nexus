@@ -6,6 +6,10 @@ const addCoupon = asyncErrorHandler(async (req, res, next) => {
 	console.log(req.body);
 	const couponDataForm = { ...req.body, events: [{ name: "Coupon Created" }] };
 
+	const couponAlready = await Coupon.find({ code: couponDataForm.code });
+	if (couponAlready.length !== 0)
+		return next(new ErrorHandler("Coupon code taken", 400));
+
 	const couponData = await Coupon.create(couponDataForm);
 
 	res.status(200).json({
@@ -32,7 +36,7 @@ const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
 	if (couponData.length === 0)
 		return next(new ErrorHandler("No coupon found", 400));
 
-	if (couponData[0].status !== "Valid")
+	if (couponData[0].status !== "Active")
 		return next(new ErrorHandler("Coupon not Valid", 400));
 
 	if (couponData[0].minAmount >= totalAmount)
@@ -54,5 +58,50 @@ const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
 		//couponData,
 	});
 });
+const editCoupon = asyncErrorHandler(async (req, res, next) => {
+	const {
+		couponId,
+		name,
+		code,
+		status,
+		discountPercentage,
+		expires,
+		minAmount,
+		maxAmount,
+	} = req.body;
 
-module.exports = { addCoupon, getCouponFromSeller, applyCouponCode };
+	const couponAlready = await Coupon.find({ code });
+	if (couponAlready.length !== 0)
+		return next(new ErrorHandler("Coupon code taken", 400));
+
+	const couponData = await Coupon.findOneAndUpdate(
+		{ _id: couponId },
+		{ code, name, status, minAmount, maxAmount, discountPercentage, expires },
+		{ new: true }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: "Coupon Updated",
+		couponData,
+	});
+});
+
+const getCouponDetails = asyncErrorHandler(async (req, res, next) => {
+	const { couponId } = req.params;
+	const couponData = await Coupon.findOne({ _id: couponId });
+
+	res.status(200).json({
+		success: true,
+		message: "Got Coupon",
+		couponData,
+	});
+});
+
+module.exports = {
+	addCoupon,
+	getCouponFromSeller,
+	applyCouponCode,
+	getCouponDetails,
+	editCoupon,
+};

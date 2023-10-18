@@ -14,6 +14,7 @@ import SellerSingleOrderDetails from "./SellerSingleOrderDetails";
 import SellerStockManagement from "./SellerStockManagement";
 import SellerAddCouponPage from "./SellerAddCouponPage";
 import SellerAllCouponsPage from "./SellerAllCouponsPage";
+import SellerEditCouponPage from "./SellerEditCouponPage";
 
 const SellerDashboardPage = () => {
 	const navigate = useNavigate();
@@ -96,6 +97,10 @@ const SellerDashboardPage = () => {
 							/>
 							<Route path="/new-coupon" element={<SellerAddCouponPage />} />
 							<Route path="/coupons" element={<SellerAllCouponsPage />} />
+							<Route
+								path="/coupons/:couponId"
+								element={<SellerEditCouponPage />}
+							/>
 							<Route
 								path="/edit-single-product/:productId"
 								element={<SellerEditSingleProductPage />}

@@ -17,6 +17,8 @@ const {
 const {
 	addCoupon,
 	getCouponFromSeller,
+	getCouponDetails,
+	editCoupon,
 } = require("../controller/couponController");
 
 const { isSellerAuthenticated } = require("../middleware/sellerAuth");
@@ -95,12 +97,22 @@ router.get("/logout", async (req, res, next) => {
 router.post("/add-coupon", isSellerAuthenticated, async (req, res, next) => {
 	addCoupon(req, res, next);
 });
+router.post("/edit-coupon", isSellerAuthenticated, async (req, res, next) => {
+	editCoupon(req, res, next);
+});
 
 router.get(
 	"/get-all-coupons/:shopId",
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getCouponFromSeller(req, res, next);
+	}
+);
+router.get(
+	"/get-coupon-details/:couponId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getCouponDetails(req, res, next);
 	}
 );
 
