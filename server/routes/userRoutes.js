@@ -11,7 +11,7 @@ const {
 	removeAddress,
 	changePassword,
 	userAuthentication,
-	googleSignIn,
+	providerSignIn,
 } = require("../controller/userController");
 
 const {
@@ -39,8 +39,8 @@ router.get("/load-user", isAuthenticated, (req, res, next) => {
 router.post("/create-user", (req, res, next) => {
 	createUser(req, res, next);
 });
-router.post("/google-sign-in", (req, res, next) => {
-	googleSignIn(req, res, next);
+router.post("/provider-sign-in", (req, res, next) => {
+	providerSignIn(req, res, next);
 });
 router.post("/activation", (req, res, next) => {
 	activateUser(req, res, next);

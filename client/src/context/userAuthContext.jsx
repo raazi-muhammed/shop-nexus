@@ -5,6 +5,7 @@ import {
 	signOut,
 	onAuthStateChanged,
 	GoogleAuthProvider,
+	GithubAuthProvider,
 	signInWithPopup,
 	sendPasswordResetEmail,
 } from "firebase/auth";
@@ -28,6 +29,10 @@ export function UserAuthContextProvider({ children }) {
 		const googleAuthProvider = new GoogleAuthProvider();
 		return signInWithPopup(auth, googleAuthProvider);
 	};
+	const gitHubSignIn = () => {
+		const githubAuthProvider = new GithubAuthProvider();
+		return signInWithPopup(auth, githubAuthProvider);
+	};
 	const forgotPassword = (email) => {
 		return sendPasswordResetEmail(auth, email, {
 			url: "http://localhost:5173/login",
@@ -43,7 +48,15 @@ export function UserAuthContextProvider({ children }) {
 	}, []);
 	return (
 		<userAuthContext.Provider
-			value={{ user, signUp, login, logOut, googleSignIn, forgotPassword }}>
+			value={{
+				user,
+				signUp,
+				login,
+				logOut,
+				googleSignIn,
+				forgotPassword,
+				gitHubSignIn,
+			}}>
 			{children}
 		</userAuthContext.Provider>
 	);

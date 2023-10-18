@@ -5,6 +5,12 @@ import axios from "axios";
 import server from "../../server";
 import toast from "react-hot-toast";
 import { useUserAuth } from "../../context/userAuthContext";
+import {
+	formLabelClass,
+	inputDivClass,
+	formClass,
+	submitButtonClass,
+} from "../../utils/styleClasses";
 
 const SignUpPage = () => {
 	const { signUp } = useUserAuth();
@@ -156,7 +162,6 @@ const SignUpPage = () => {
 				<p className="text-center mt-2">
 					Alread Have an Account?{" "}
 					<Link className="text-secondary fw-bold" to="/login">
-						{" "}
 						Log In
 					</Link>
 				</p>

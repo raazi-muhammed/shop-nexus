@@ -56,19 +56,19 @@ const loadUser = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-const googleSignIn = asyncErrorHandler(async (req, res, next) => {
+const providerSignIn = asyncErrorHandler(async (req, res, next) => {
 	//console.log(req.body);
-	const { email, displayName, photoURL } = req.body.user;
+	const { email, fullName, avatarUrl } = req.body;
 
 	let user;
 	user = await User.findOne({ email: email });
 
 	if (!user) {
 		user = await User.create({
-			fullName: displayName,
-			email: email,
+			fullName,
+			email,
 			password: "password",
-			"avatar.url": photoURL,
+			"avatar.url": avatarUrl,
 		});
 	}
 	if (user.isBlocked) {
@@ -280,5 +280,5 @@ module.exports = {
 	removeAddress,
 	changePassword,
 	userAuthentication,
-	googleSignIn,
+	providerSignIn,
 };
