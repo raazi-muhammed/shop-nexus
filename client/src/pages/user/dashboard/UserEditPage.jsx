@@ -114,6 +114,7 @@ const UserEditPage = () => {
 				</label>
 				<div className={inputDivClass}>
 					<input
+						disabled="true"
 						type="email"
 						className="form-control"
 						id="email"

@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../../server";
 import toast from "react-hot-toast";
+import easyinvoice from "easyinvoice";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const UserSingleOrderDetails = () => {
+	const [loading, setLoading] = useState(false);
 	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
 	const [reasonForCancelation, setReasonForCancelation] = useState("");
 	const { orderId } = useParams();
@@ -28,6 +31,19 @@ const UserSingleOrderDetails = () => {
 		return formattedDate;
 	}
 
+	const handleInvoiceDownload = () => {
+		setLoading(true);
+		axios
+			.get(`${server}/order/get-invoice/${orderId}`, { withCredentials: true })
+			.then((res) => {
+				easyinvoice.download("myInvoice.pdf", res.data.result.pdf);
+			})
+			.catch((err) => toast.error("An Error Occurred"))
+			.finally(() => {
+				setLoading(false);
+			});
+	};
+
 	const handleCancelOrder = () => {
 		axios.defaults.withCredentials = true;
 
@@ -49,42 +65,60 @@ const UserSingleOrderDetails = () => {
 
 	return (
 		<div>
-			{!(
-				orderDetails.status === "Canceled" ||
-				orderDetails.status === "Delivered"
-			) && (
-				<section>
-					<div class="dropdown">
-						<button
-							type="button"
-							class="btn btn-sm btn-danger dropdown-toggle"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							data-bs-auto-close="outside">
-							Order Cancelation
-						</button>
-						<form class="dropdown-menu p-4">
-							<div class="mb-3">
-								<label for="reason-for-cancelation" class="form-label">
-									Reason
-								</label>
-								<textarea
-									type="text"
-									class="form-control"
-									value={reasonForCancelation}
-									onChange={(e) => setReasonForCancelation(e.target.value)}
-									id="reason-for-cancelation"
-								/>
-							</div>
+			<section className="d-flex justify-content-between mb-4">
+				{!(
+					orderDetails.status === "Canceled" ||
+					orderDetails.status === "Delivered"
+				) && (
+					<section>
+						<div class="dropdown">
 							<button
-								onClick={handleCancelOrder}
-								className="btn btn-sm btn-danger">
-								Cancel Order
+								type="button"
+								class="btn btn-sm btn-danger dropdown-toggle"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								data-bs-auto-close="outside">
+								Order Cancelation
 							</button>
-						</form>
-					</div>
+							<form class="dropdown-menu p-4">
+								<div class="mb-3" style={{ width: "15rem" }}>
+									<label for="reason-for-cancelation" class="form-label">
+										Reason
+									</label>
+									<textarea
+										type="text"
+										class="form-control"
+										value={reasonForCancelation}
+										onChange={(e) => setReasonForCancelation(e.target.value)}
+										id="reason-for-cancelation"
+									/>
+								</div>
+								<button
+									onClick={handleCancelOrder}
+									className="btn btn-sm btn-danger">
+									Cancel Order
+								</button>
+							</form>
+						</div>
+					</section>
+				)}
+				<section>
+					<button
+						disabled={loading}
+						onClick={handleInvoiceDownload}
+						className="btn btn-dark btn-sm d-flex">
+						<ClipLoader
+							className="m-0 p-0 text-primary mx-auto my-auto me-1"
+							loading={loading}
+							size={15}
+							color="white"
+							aria-label="Loading Spinner"
+							data-testid="loader"
+						/>
+						<p>Download Invoice</p>
+					</button>
 				</section>
-			)}
+			</section>
 			<section className="bg-white rounded-4  p-4">
 				<p className="text-small text-secondary my-2">Status</p>
 				{orderDetails.status === "Canceled" ? (

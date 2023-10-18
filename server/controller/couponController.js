@@ -71,8 +71,8 @@ const editCoupon = asyncErrorHandler(async (req, res, next) => {
 	} = req.body;
 
 	const couponAlready = await Coupon.find({ code });
-	if (couponAlready.length !== 0)
-		return next(new ErrorHandler("Coupon code taken", 400));
+	/* if (couponAlready.length !== 0)
+		return next(new ErrorHandler("Coupon code taken", 400)); */
 
 	const couponData = await Coupon.findOneAndUpdate(
 		{ _id: couponId },

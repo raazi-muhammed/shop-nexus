@@ -6,7 +6,7 @@ import ProductCartMain from "../../../components/ProductCartMain";
 import toast from "react-hot-toast";
 import ClipLoader from "react-spinners/ClipLoader";
 
-const ProductsPage = () => {
+const ProductsPage = ({ showHeading }) => {
 	const [loading, setLoading] = useState(false);
 	const [productData, setProductData] = useState([]);
 	useEffect(() => {
@@ -21,12 +21,14 @@ const ProductsPage = () => {
 			})
 			.finally(() => {
 				setLoading(false);
-			});;
+			});
 	}, []);
 
 	return (
 		<main className="vw-100 min-vh-100 p-24 mt-4">
 			<div className="w-100 container container-xxl  ">
+				{showHeading && <h2 className="text-secondary mx-4">Products</h2>}
+
 				{loading && (
 					<div className="d-flex justify-content-center ">
 						<ClipLoader
@@ -58,6 +60,10 @@ const ProductsPage = () => {
 			</div>
 		</main>
 	);
+};
+
+ProductsPage.defaults = {
+	showHeading: false,
 };
 
 export default ProductsPage;

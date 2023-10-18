@@ -142,7 +142,7 @@ const LoginPage = () => {
 					srcSet=""
 				/>
 			</section>
-			<section className="col-6 p-5 my-auto">
+			<section className="col-6 p-5 my-auto" style={{ height: "40rem" }}>
 				<h3>Log In</h3>
 				<p className="text-secondary">Welcome back! Log in</p>
 				<form

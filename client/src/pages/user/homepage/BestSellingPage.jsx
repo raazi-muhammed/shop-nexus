@@ -4,7 +4,7 @@ import axios from "axios";
 import ProductCartMain from "../../../components/ProductCartMain";
 import ClipLoader from "react-spinners/ClipLoader";
 
-const BestSellingPage = () => {
+const BestSellingPage = ({ showHeading }) => {
 	const [loading, setLoading] = useState(false);
 	const [productData, setProductData] = useState([]);
 
@@ -23,6 +23,8 @@ const BestSellingPage = () => {
 	return (
 		<main className="vw-100 min-vh-100 mt-4">
 			<div className="w-100 container container-xxl  ">
+				{showHeading && <h2 className="text-secondary mx-4">Best Selling</h2>}
+
 				{loading && (
 					<div className="d-flex justify-content-center ">
 						<ClipLoader
@@ -54,6 +56,10 @@ const BestSellingPage = () => {
 			</div>
 		</main>
 	);
+};
+
+BestSellingPage.defaults = {
+	showHeading: false,
 };
 
 export default BestSellingPage;

@@ -50,7 +50,7 @@ const SellerLoginPage = () => {
 			<section className="col-6 p-0 overflow-hidden ">
 				<img src={loginCover} className="h-100 rounded-start-4 m-0" alt="" />
 			</section>
-			<section className="col-6 p-5 my-auto">
+			<section className="col-6 p-5 my-auto" style={{ height: "35rem" }}>
 				<h3> Seller Log In </h3>
 				<p className="text-light">Welcome back! Log in</p>
 				<form
@@ -62,6 +62,7 @@ const SellerLoginPage = () => {
 						<label htmlFor="email" className="form-label">
 							Email
 						</label>
+
 						<input
 							type="email"
 							className={`form-control ${emailErr ? "is-invalid" : ""}`}
@@ -119,7 +120,7 @@ const SellerLoginPage = () => {
 					<button
 						disabled={!allowSubmission}
 						type="submit"
-						className="btn btn-secondary text-white btn-block col-12 ">
+						className="btn btn-secondary text-white btn-block col-12">
 						Log In
 					</button>
 				</form>
