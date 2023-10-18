@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const SellerStockManagement = () => {
+	const [loading, setLoading] = useState(false);
 	const { shopId } = useParams();
 	const [data, setData] = useState([{ images: [{ url: "" }] }]);
 	const [updatedStock, setUpdatedStock] = useState(0);
@@ -25,6 +27,7 @@ const SellerStockManagement = () => {
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get(`${server}/seller/get-products-from-shop/${shopId}`, {
 				withCredentials: true,
@@ -32,11 +35,15 @@ const SellerStockManagement = () => {
 			.then((res) => {
 				setData(res.data.data);
 			})
-			.catch((err) => toast.error(err.response.data.message));
+			.catch((err) => toast.error(err.response.data.message))
+			.finally(() => {
+				setLoading(false);
+			});
 	}, [refresh]);
 
 	const handleSubmit = async (e, productId) => {
 		e.preventDefault();
+		setLoading(true);
 		setAllowSubmission(false);
 		const data = {
 			stock: updatedStock,
@@ -51,7 +58,10 @@ const SellerStockManagement = () => {
 				setRefresh(!refresh);
 				toast.success(res.data?.message || "Success");
 			})
-			.catch((err) => toast);
+			.catch((err) => toast)
+			.finally(() => {
+				setLoading(false);
+			});
 	};
 
 	return (
@@ -62,7 +72,14 @@ const SellerStockManagement = () => {
 				<p className="col-2 m-0">Price</p>
 			</section>
 			{!data[0]?.name ? (
-				<p className="d-flex justify-content-center mt-5">Loading...</p>
+				<ClipLoader
+					className="m-0 p-0 text-primary mx-auto mt-5 "
+					loading={loading}
+					size={30}
+					color="primary"
+					aria-label="Loading Spinner"
+					data-testid="loader"
+				/>
 			) : (
 				<>
 					{data.map((product, i) => (

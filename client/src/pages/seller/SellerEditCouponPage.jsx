@@ -13,6 +13,7 @@ import convertISOToDate from "../../utils/convertISOToDate";
 
 const SellerEditCouponPage = () => {
 	const navigate = useNavigate();
+	const today = new Date().toISOString().slice(0, 10);
 	const [couponCodeErr, setCouponCodeErr] = useState("");
 	const { shopId, couponId } = useParams();
 	const [name, setName] = useState("");
@@ -173,6 +174,7 @@ const SellerEditCouponPage = () => {
 					<div className={inputDivClass}>
 						<input
 							type="date"
+							min={today}
 							className="form-control"
 							id="product-name"
 							value={expires}

@@ -6,14 +6,17 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import server from "../../server";
 import convertISOToDate from "../../utils/convertISOToDate";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const SellerAllOrders = () => {
+	const [loading, setLoading] = useState(false);
 	const userData = useSelector((state) => state.userData.userData);
 	const { shopId } = useParams();
 	const navigate = useNavigate();
-	const [orderData, setOrderData] = useState([]);
+	const [orderData, setOrderData] = useState();
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get(`${server}/seller/get-all-orders/${shopId}`, {
 				withCredentials: true,
@@ -23,12 +26,27 @@ const SellerAllOrders = () => {
 			})
 			.catch((err) => {
 				toast.error(err.response?.data?.message);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	}, []);
 
 	return (
 		<div className="w-100">
-			{orderData.length === 0 ? (
+			{loading && (
+				<div className="min-vh-100 w-100 d-flex justify-content-center ">
+					<ClipLoader
+						className="m-0 p-0 text-primary mx-auto mt-5 "
+						loading={loading}
+						size={30}
+						color="primary"
+						aria-label="Loading Spinner"
+						data-testid="loader"
+					/>
+				</div>
+			)}
+			{orderData?.length === 0 ? (
 				<p className="text-secondary">There aren't any orders</p>
 			) : (
 				<div className="table-responsive px-3 py-2">

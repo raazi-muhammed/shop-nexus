@@ -29,7 +29,6 @@ const HomePage = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		console.log("hi");
 		axios
 			.get(`${server}/user/load-user`, { withCredentials: true })
 			.then((res) => {
@@ -37,7 +36,6 @@ const HomePage = () => {
 					toast.error("You are Blocked");
 				} else {
 					toast.success("Logged In");
-					console.log(res.data.user);
 					dispatch(setUserDataReducer(res.data.user));
 				}
 			})

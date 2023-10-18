@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const SellerAddCouponPage = () => {
 	const navigate = useNavigate();
+	const today = new Date().toISOString().slice(0, 10);
 	const [couponCodeErr, setCouponCodeErr] = useState("");
 	const { shopId } = useParams();
 	const [name, setName] = useState("");
@@ -150,6 +151,7 @@ const SellerAddCouponPage = () => {
 					<div className={inputDivClass}>
 						<input
 							type="date"
+							min={today}
 							className="form-control"
 							id="product-name"
 							value={expires}

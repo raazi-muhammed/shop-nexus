@@ -5,14 +5,17 @@ import toast from "react-hot-toast";
 import server from "../../../server";
 import { useSelector } from "react-redux";
 import convertISOToDate from "../../../utils/convertISOToDate";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const UserAllOrders = () => {
+	const [loading, setLoading] = useState(false);
 	const userData = useSelector((state) => state.userData.userData);
 
 	const navigate = useNavigate();
-	const [orderData, setOrderData] = useState([]);
+	const [orderData, setOrderData] = useState(null);
 
 	useEffect(() => {
+		setLoading(true);
 		console.log(userData);
 		axios
 			.get(`${server}/user/get-all-orders`, {
@@ -24,12 +27,27 @@ const UserAllOrders = () => {
 			})
 			.catch((err) => {
 				toast.error(err.response?.data?.message);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	}, []);
 
 	return (
 		<div className="w-100">
-			{orderData.length === 0 ? (
+			{loading && (
+				<div className="min-vh-100 w-100 d-flex justify-content-center ">
+					<ClipLoader
+						className="m-0 p-0 text-primary mx-auto mt-5 "
+						loading={loading}
+						size={30}
+						color="primary"
+						aria-label="Loading Spinner"
+						data-testid="loader"
+					/>
+				</div>
+			)}
+			{orderData?.length === 0 ? (
 				<p className="text-secondary">You haven't Ordered anything</p>
 			) : (
 				<div class="table-responsive px-3 py-2">
