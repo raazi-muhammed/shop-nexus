@@ -1,39 +1,32 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import server from "../../server";
-
+import server from "../../../server";
+import toast from "react-hot-toast";
+import easyinvoice from "easyinvoice";
 import ClipLoader from "react-spinners/ClipLoader";
-import SingleOrderDetails from "../../components/SingleOrderDetails";
+import formatPrice from "../../../utils/formatPrice";
+import SingleOrderDetails from "../../../components/SingleOrderDetails";
 
-const AdminSingleOrderDetails = () => {
+const UserSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(true);
 
 	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
+
 	const { orderId } = useParams();
 
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/admin/get-order-details/${orderId}`, {
+			.get(`${server}/user/get-order-details/${orderId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
-				console.log(res);
 				setOrderDetails(res?.data?.orderData);
 			})
-			.finally(() => setLoading(false));
-	}, []);
-
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
+			.finally(() => [setLoading(false)]);
+	}, [refresh]);
 
 	return (
 		<div>
@@ -54,11 +47,10 @@ const AdminSingleOrderDetails = () => {
 					orderId={orderId}
 					setRefresh={setRefresh}
 					refresh={refresh}
-					showEvents={true}
 				/>
 			)}
 		</div>
 	);
 };
 
-export default AdminSingleOrderDetails;
+export default UserSingleOrderDetails;

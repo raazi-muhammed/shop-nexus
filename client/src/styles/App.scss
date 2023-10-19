@@ -24,6 +24,9 @@ $table-bg: white;
 $table-border-width: 0.6rem;
 $table-border-color: #f1f0ff;
 
+/* Pagination */
+$pagination-border-radius-sm: 1rem;
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 .btn,

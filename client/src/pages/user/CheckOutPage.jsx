@@ -5,6 +5,10 @@ import CheckOutPaymentPage from "./checkout/CheckOutPaymentPage";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setTotalPrice } from "../../app/feature/order/orderSlice";
 import SuccessPage from "./checkout/SuccessPage";
+import server from "../../server";
+import axios from "axios";
+import toast from "react-hot-toast";
+import formatPrice from "../../utils/formatPrice";
 
 const CheckOutPage = () => {
 	const location = useLocation();
@@ -101,13 +105,15 @@ const CheckOutPage = () => {
 									<div className="col-12 d-flex">
 										<p className="col text-secondary">Price</p>
 										<p className="col-3 mt-auto text-end text-secondary">
-											{JSON.stringify(totalAmountWithOutDiscount)}
+											{formatPrice(totalAmountWithOutDiscount)}
 										</p>
 									</div>
 									<div className="col-12 d-flex">
 										<p className="col text-secondary">Discount</p>
 										<p className="col-3 mt-auto text-end text-secondary">
-											{discountAmount}
+											{discountAmount !== "-"
+												? formatPrice(discountAmount)
+												: "-"}
 										</p>
 									</div>
 									<hr className="text-secondary" />
@@ -116,7 +122,7 @@ const CheckOutPage = () => {
 											Discounted Amount
 										</p>
 										<p className="col-3 mt-auto text-end text-primary fw-bold m-0">
-											{totalAmount}
+											{formatPrice(totalAmount)}
 										</p>
 									</div>
 								</div>

@@ -13,10 +13,29 @@ const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 });
 
 const getAllOrders = asyncErrorHandler(async (req, res, next) => {
-	const orderData = await Order.find({});
+	const ITEMS_PER_PAGE = 10;
+	const { page } = req.query;
+	const skip = (page - 1) * ITEMS_PER_PAGE;
+	const countPromise = Order.estimatedDocumentCount({});
+
+	const orderDataPromise = Order.find({}).limit(ITEMS_PER_PAGE).skip(skip);
+
+	const [count, orderData] = await Promise.all([
+		countPromise,
+		orderDataPromise,
+	]);
+
+	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
+	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
 
 	res.status(200).json({
 		success: true,
+		pagination: {
+			count,
+			page,
+			pageCount,
+			startIndex,
+		},
 		orderData,
 	});
 });

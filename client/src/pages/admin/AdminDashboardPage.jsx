@@ -10,6 +10,7 @@ import AdminProductEditPage from "./AdminProductEditPage";
 import AdminSellerPage from "./AdminSellerPage";
 import AdminOrdersPage from "./AdminOrdersPage";
 import SingleOrderDetails from "./SingleOrderDetails";
+import AdminCouponsPage from "./AdminCouponPage";
 
 const AdminDashboardPage = () => {
 	const [data, setData] = useState([]);
@@ -38,6 +39,7 @@ const AdminDashboardPage = () => {
 		{ name: "Sellers", link: "sellers" },
 		{ name: "Products", link: "products" },
 		{ name: "Orders", link: "orders" },
+		{ name: "Coupons", link: "coupons" },
 	];
 
 	const handleLogOut = () => {
@@ -77,6 +79,7 @@ const AdminDashboardPage = () => {
 								path="/edit-product/:productId"
 								element={<AdminProductEditPage />}
 							/>
+							<Route path="/coupons" element={<AdminCouponsPage />} />
 						</Routes>
 					</section>
 				</main>

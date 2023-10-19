@@ -9,6 +9,7 @@ const { trash, close, cart } = Icons;
 import { useDispatch, useSelector } from "react-redux";
 import { displayCart, hideCart } from "../app/feature/cart/cartSlice";
 import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
+import formatPrice from "../utils/formatPrice";
 
 const CartUser = () => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -83,7 +84,9 @@ const CartUser = () => {
 						onClick={() => handelProductClick(cartItem.product?._id)}
 						className="col-7 my-auto">
 						<p className="text-small mb-0">{cartItem.product?.name}</p>
-						<p className="text-secondary fw-bold">{`${cartItem.price} × ${cartItem.quantity}`}</p>
+						<p className="text-secondary fw-bold">{`${formatPrice(
+							cartItem.price
+						)} × ${cartItem.quantity}`}</p>
 					</section>
 					<div className="col-2 my-auto">
 						<button

@@ -1,6 +1,7 @@
 @charset "UTF-8";
 /* Form */
 /* Table */
+/* Pagination */
 /*!
  * Bootstrap  v5.3.2 (https://getbootstrap.com/)
  * Copyright 2011-2023 The Bootstrap Authors
@@ -4782,7 +4783,7 @@ textarea.form-control-lg {
   --bs-pagination-padding-x: 0.5rem;
   --bs-pagination-padding-y: 0.25rem;
   --bs-pagination-font-size: 0.875rem;
-  --bs-pagination-border-radius: var(--bs-border-radius-sm);
+  --bs-pagination-border-radius: 1rem;
 }
 
 .badge {

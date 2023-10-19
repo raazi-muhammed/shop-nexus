@@ -1,34 +1,37 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import server from "../../../server";
-import formatPrice from "../../../utils/formatPrice";
 
-const UserAllOrders = () => {
+import { useSelector } from "react-redux";
+import server from "../../server";
+import convertISOToDate from "../../utils/convertISOToDate";
+import ClipLoader from "react-spinners/ClipLoader";
+
+const SellerAllOrders = () => {
+	const [loading, setLoading] = useState(false);
+	const userData = useSelector((state) => state.userData.userData);
+	const { shopId } = useParams();
 	const navigate = useNavigate();
-	const [orderData, setOrderData] = useState([]);
+	const [orderData, setOrderData] = useState();
 
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/admin/get-all-orders`, { withCredentials: true })
+			.get(`${server}/seller/get-all-orders/${shopId}`, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				setOrderData(res.data.orderData);
 			})
 			.catch((err) => {
 				toast.error(err.response?.data?.message);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	}, []);
 
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
 	return (
 		<div className="w-100">
 			{loading && (
@@ -44,10 +47,10 @@ const UserAllOrders = () => {
 				</div>
 			)}
 			{orderData?.length === 0 ? (
-				<p className="text-secondary">You haven't Ordered anything</p>
+				<p className="text-secondary">There aren't any orders</p>
 			) : (
-				<div class="table-responsive px-3 py-2">
-					<table class="table">
+				<div className="table-responsive px-3 py-2">
+					<table className="table">
 						<thead>
 							<tr>
 								<th className="text-secondary bg-transparent py-0">No</th>
@@ -61,9 +64,9 @@ const UserAllOrders = () => {
 						</thead>
 						<tbody>
 							{orderData?.map((order, i) => (
-								<tr>
+								<tr key={i}>
 									<td className="rounded-start text-end">{`${i + 1}`}</td>
-									<td className="text-nowrap">
+									<td className="col-3 text-nowrap">
 										<Link className="text-secondary" to={`${order.orderId}`}>
 											{" "}
 											{`${order.orderId}`}
@@ -74,7 +77,7 @@ const UserAllOrders = () => {
 									<td className="text-nowrap">{`${convertISOToDate(
 										order.createdAt
 									)}`}</td>
-									<td className="fw-bold">{formatPrice(order.totalPrice)}</td>
+									<td className="fw-bold">{`₹${order.totalPrice}`}</td>
 									{order.status === "Canceled" ? (
 										<td className="rounded-end text-danger fw-bold ">{`${order.status}`}</td>
 									) : order.status === "Delivered" ? (
@@ -92,4 +95,4 @@ const UserAllOrders = () => {
 	);
 };
 
-export default UserAllOrders;
+export default SellerAllOrders;

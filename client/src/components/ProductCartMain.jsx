@@ -6,6 +6,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
 import { useDispatch } from "react-redux";
+import formatPrice from "../utils/formatPrice";
+
 const { heart, cart } = Icons;
 
 const ProductCartMain = ({
@@ -63,8 +65,10 @@ const ProductCartMain = ({
 						<p className="text-small">{sold} Sold</p>
 					</section>
 					<section className="d-flex gap-1 ">
-						<p className="h4 mb-0">${discount_price}</p>
-						<p className="text-small text-decoration-line-through">${price}</p>
+						<p className="h4 mb-0">{formatPrice(discount_price)}</p>
+						<p className="text-small text-decoration-line-through">
+							{formatPrice(price)}
+						</p>
 					</section>
 				</section>
 				<section className="m-2 d-flex gap-2">
