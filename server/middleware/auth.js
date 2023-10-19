@@ -1,19 +1,18 @@
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const jwt = require("jsonwebtoken");
 const User = require("../model/User");
+const ErrorHandler = require("../utils/errorHandler");
 
 exports.isAuthenticated = asyncErrorHandler(async (req, res, next) => {
 	let token;
 	try {
 		token = req.cookies["userToken"];
 	} catch (err) {
-		res.status(500).json({ success: false, message: "No token found" });
-		return;
+		return next(new ErrorHandler("Not Logged In", 500));
 	}
 
 	if (!token) {
-		res.status(500).json({ success: false, message: "No value of Token" });
-		return;
+		return next(new ErrorHandler("Not Authenticated", 500));
 	}
 
 	const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);

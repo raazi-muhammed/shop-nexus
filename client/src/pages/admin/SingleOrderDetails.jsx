@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../server";
+import convertISOToDate from "../../utils/convertISOToDate";
 
 import ClipLoader from "react-spinners/ClipLoader";
 import SingleOrderDetails from "../../components/SingleOrderDetails";
@@ -20,20 +21,10 @@ const AdminSingleOrderDetails = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
-				console.log(res);
 				setOrderDetails(res?.data?.orderData);
 			})
 			.finally(() => setLoading(false));
 	}, []);
-
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
 
 	return (
 		<div>

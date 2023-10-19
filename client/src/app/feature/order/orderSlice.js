@@ -6,6 +6,7 @@ const initialState = {
 	shippingAddress: {},
 	totalPrice: 0,
 	paymentInfo: {},
+	events: {},
 };
 
 export const orderSlice = createSlice({
@@ -27,6 +28,9 @@ export const orderSlice = createSlice({
 		setPaymentInfo: (state, action) => {
 			state.paymentInfo = action.payload;
 		},
+		setEvents: (state, action) => {
+			state.events = action.payload;
+		},
 	},
 });
 
@@ -36,5 +40,6 @@ export const {
 	setShippingAddress,
 	setTotalPrice,
 	setPaymentInfo,
+	setEvents,
 } = orderSlice.actions;
 export default orderSlice.reducer;

@@ -54,7 +54,6 @@ const orderSchema = new mongoose.Schema({
 	},
 	paidAt: {
 		type: Date,
-		default: Date.now(),
 	},
 	deliveredAt: {
 		type: Date,
@@ -63,6 +62,21 @@ const orderSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now(),
 	},
+	events: [
+		{
+			name: {
+				type: String,
+				required: true,
+			},
+			date: {
+				type: Date,
+				default: Date.now(),
+			},
+			description: {
+				type: String,
+			},
+		},
+	],
 });
 
 module.exports = mongoose.model("Order", orderSchema);

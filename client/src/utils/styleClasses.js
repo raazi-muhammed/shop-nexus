@@ -1,4 +1,5 @@
-const formLabelClass = "form-label mt-lg-3 text-lg-end col-lg-2";
+const formLabelClass =
+	"form-label mt-lg-3 text-lg-end col-lg-2 text-nowrap overflow-ellipsis ";
 const inputDivClass = "col";
 const formClass = "d-flex flex-column gap-3";
 const submitButtonClass =

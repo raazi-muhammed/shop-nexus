@@ -9,8 +9,10 @@ import {
 	formClass,
 	submitButtonClass,
 } from "../../utils/styleClasses";
+import { useNavigate } from "react-router-dom";
 
 const SellerAddProductPage = ({ shopId, shopName }) => {
+	const navigate = useNavigate();
 	const [productName, setProductName] = useState("");
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
@@ -56,6 +58,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setAllowSubmission(false);
 		const formData = {
 			productName,
 			category,
@@ -74,6 +77,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 				withCredentials: true,
 			})
 			.then((res) => {
+				navigate(-1);
 				toast.success(res.data.message);
 			})
 			.catch((err) => {
@@ -94,14 +98,14 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 					<div className={inputDivClass}>
 						<input
 							type="text"
-							className="form-control"
+							className="form-control "
 							id="product-name"
 							value={productName}
 							name="productName"
 							onChange={(e) => setProductName(e.target.value)}
 							required
 						/>
-						<div class="invalid-feedback">Invalid</div>
+						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
 				<div className="row">
@@ -116,7 +120,9 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 							id="categorySelect">
 							<option value="">Select Category</option>
 							{categoryArry.map((e) => (
-								<option value={e}>{e}</option>
+								<option key={e} value={e}>
+									{e}
+								</option>
 							))}
 						</select>
 					</div>
@@ -135,7 +141,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 							onChange={(e) => setDescription(e.target.value)}
 							required
 						/>
-						<div class="invalid-feedback">Invalid</div>
+						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
 				<div className="row">
@@ -144,15 +150,16 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 					</label>
 					<div className={inputDivClass}>
 						<input
-							type="number"
+							type="text"
 							className="form-control"
 							id="price"
 							value={price}
 							name="price"
 							onChange={(e) => setPrice(e.target.value)}
+							pattern="^[0-9]\d*$"
 							required
 						/>
-						<div class="invalid-feedback">Invalid</div>
+						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
 				<div className="row">
@@ -161,15 +168,16 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 					</label>
 					<div className={inputDivClass}>
 						<input
-							type="number"
+							type="text"
 							className="form-control"
 							id="discounted-price"
 							value={discountedPrice}
 							name="discountedPrice"
 							onChange={(e) => setDiscountedPrice(e.target.value)}
+							pattern="^[0-9]\d*$"
 							required
 						/>
-						<div class="invalid-feedback">Invalid</div>
+						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
 				<div className="row">
@@ -187,24 +195,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 							multiple
 							required
 						/>
-						<div class="invalid-feedback">Invalid</div>
-					</div>
-				</div>
-				<div className="row">
-					<label htmlFor="rating" className={formLabelClass}>
-						Rating
-					</label>
-					<div className={inputDivClass}>
-						<input
-							type="number"
-							className="form-control"
-							id="rating"
-							value={rating}
-							name="rating"
-							onChange={(e) => setRating(e.target.value)}
-							required
-						/>
-						<div class="invalid-feedback">Invalid</div>
+						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
 				<div className="row">
@@ -213,15 +204,16 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 					</label>
 					<div className={inputDivClass}>
 						<input
-							type="number"
+							type="text"
 							className="form-control"
 							id="stock"
 							value={stock}
 							name="stock"
 							onChange={(e) => setStock(e.target.value)}
+							pattern="^[0-9]\d*$"
 							required
 						/>
-						<div class="invalid-feedback">Invalid</div>
+						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
 				<button

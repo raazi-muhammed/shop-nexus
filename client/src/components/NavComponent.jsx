@@ -12,8 +12,8 @@ const NavComponent = ({ navItems }) => {
 						onClick={(e) => setCurrentNav(i)}
 						className={
 							currentNav === i
-								? "btn btn-sm text-white bg-secondary"
-								: "btn btn-sm text-secondary"
+								? "text-nowrap btn btn-sm text-white bg-secondary"
+								: "text-nowrap btn btn-sm text-secondary"
 						}>
 						{e.name}
 					</button>

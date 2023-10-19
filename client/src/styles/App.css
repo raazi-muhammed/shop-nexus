@@ -1877,7 +1877,7 @@ progress {
   padding: 1rem 1rem;
   color: var(--bs-table-color-state, var(--bs-table-color-type, var(--bs-table-color)));
   background-color: var(--bs-table-bg);
-  border-bottom-width: 0.6rem;
+  border-bottom-width: var(--bs-border-width);
   box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));
 }
 .table > tbody {
@@ -1888,7 +1888,7 @@ progress {
 }
 
 .table-group-divider {
-  border-top: calc(0.6rem * 2) solid currentcolor;
+  border-top: calc(var(--bs-border-width) * 2) solid currentcolor;
 }
 
 .caption-top {
@@ -1900,10 +1900,10 @@ progress {
 }
 
 .table-bordered > :not(caption) > * {
-  border-width: 0.6rem 0;
+  border-width: var(--bs-border-width) 0;
 }
 .table-bordered > :not(caption) > * > * {
-  border-width: 0 0.6rem;
+  border-width: 0 var(--bs-border-width);
 }
 
 .table-borderless > :not(caption) > * > * {
@@ -12035,10 +12035,7 @@ body {
   z-index: 100;
 }
 
-thead {
-  background-color: rgba(0, 0, 0, 0);
-}
-
-tbody {
-  padding: 1rem;
+.overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }/*# sourceMappingURL=App.css.map */

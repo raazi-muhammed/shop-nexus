@@ -58,4 +58,22 @@ const removeFromCart = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-module.exports = { getCart, addToCart, removeFromCart };
+const clearAllCartItems = asyncErrorHandler(async (req, res, next) => {
+	const userId = req.user._id;
+
+	const updatedUser = await User.findOneAndUpdate(
+		{ _id: userId },
+		{ $set: { cart: [] } },
+		{ new: true }
+	).populate("cart.product");
+
+	console.log(userId, updatedUser);
+
+	res.status(200).json({
+		success: true,
+		message: "Cart Cleared",
+		user: updatedUser,
+	});
+});
+
+module.exports = { getCart, addToCart, removeFromCart, clearAllCartItems };

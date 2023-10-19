@@ -9,6 +9,12 @@ import SellerAddProductPage from "./SellerAddProductPage";
 import SellerDetailsEditPage from "./SellerDetailsEditPage";
 import SellerEditSingleProductPage from "./SellerEditSingleProductPage";
 import toast from "react-hot-toast";
+import SellerAllOrders from "./SellerAllOrders";
+import SellerSingleOrderDetails from "./SellerSingleOrderDetails";
+import SellerStockManagement from "./SellerStockManagement";
+import SellerAddCouponPage from "./SellerAddCouponPage";
+import SellerAllCouponsPage from "./SellerAllCouponsPage";
+import SellerEditCouponPage from "./SellerEditCouponPage";
 
 const SellerDashboardPage = () => {
 	const navigate = useNavigate();
@@ -26,8 +32,24 @@ const SellerDashboardPage = () => {
 			link: `/seller/dashboard/${shopId}/new-product`,
 		},
 		{
+			name: "Stock Management",
+			link: `/seller/dashboard/${shopId}/stock-management`,
+		},
+		{
 			name: "Edit Shop",
 			link: `/seller/dashboard/${shopId}/edit-shop`,
+		},
+		{
+			name: "All Orders",
+			link: `/seller/dashboard/${shopId}/orders`,
+		},
+		{
+			name: "New Coupon",
+			link: `/seller/dashboard/${shopId}/new-coupon`,
+		},
+		{
+			name: "All Coupons",
+			link: `/seller/dashboard/${shopId}/coupons`,
 		},
 	];
 
@@ -43,16 +65,6 @@ const SellerDashboardPage = () => {
 			.catch((err) => console.log(err));
 	}, []);
 
-	const handleLogOut = () => {
-		axios
-			.get(`${server}/seller/logout`, { withCredentials: true })
-			.then((res) => {
-				toast.success(res.data.message);
-				navigate("/seller/login");
-				window.location.reload();
-			});
-	};
-
 	return (
 		<main className="vw-100">
 			<SellerNavbar shopName={shopName} />
@@ -60,13 +72,8 @@ const SellerDashboardPage = () => {
 				<section className="row py-5">
 					<div className="col-3 mt-3">
 						<AsideComp asideItems={asideItems} />
-						<button
-							className="btn btn-sm btn-danger w-100"
-							onClick={handleLogOut}>
-							Log out
-						</button>
 					</div>
-					<section className="col-8 mx-auto">
+					<section className="col-9 mx-auto">
 						<Routes>
 							<Route
 								path="/all-products"
@@ -79,6 +86,21 @@ const SellerDashboardPage = () => {
 								}
 							/>
 							<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
+							<Route
+								path="/stock-management"
+								element={<SellerStockManagement />}
+							/>
+							<Route path="/orders" element={<SellerAllOrders />} />
+							<Route
+								path="/orders/:orderId"
+								element={<SellerSingleOrderDetails />}
+							/>
+							<Route path="/new-coupon" element={<SellerAddCouponPage />} />
+							<Route path="/coupons" element={<SellerAllCouponsPage />} />
+							<Route
+								path="/coupons/:couponId"
+								element={<SellerEditCouponPage />}
+							/>
 							<Route
 								path="/edit-single-product/:productId"
 								element={<SellerEditSingleProductPage />}

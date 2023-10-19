@@ -63,7 +63,7 @@ const AdminDashboardPage = () => {
 					<section className="mt-3 col-3">
 						<AsideComp asideItems={asideItems} />
 						<button
-							className="btn btn-sm btn-danger w-100"
+							className="btn btn-sm btn-danger w-100 mt-3"
 							onClick={handleLogOut}>
 							Log out
 						</button>

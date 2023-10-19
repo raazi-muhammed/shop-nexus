@@ -4,31 +4,34 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import server from "../../../server";
 import formatPrice from "../../../utils/formatPrice";
+import { useSelector } from "react-redux";
+import convertISOToDate from "../../../utils/convertISOToDate";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const UserAllOrders = () => {
+	const [loading, setLoading] = useState(false);
+	const userData = useSelector((state) => state.userData.userData);
+
 	const navigate = useNavigate();
-	const [orderData, setOrderData] = useState([]);
+	const [orderData, setOrderData] = useState(null);
 
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/admin/get-all-orders`, { withCredentials: true })
+			.get(`${server}/user/get-all-orders`, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				setOrderData(res.data.orderData);
 			})
 			.catch((err) => {
 				toast.error(err.response?.data?.message);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	}, []);
 
-	function convertISOToDate(isoDate) {
-		const date = new Date(isoDate); // Create a Date object from the ISO date string
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based, so add 1
-		const day = String(date.getDate()).padStart(2, "0");
-		const formattedDate = `${year}-${month}-${day}`;
-		return formattedDate;
-	}
 	return (
 		<div className="w-100">
 			{loading && (
