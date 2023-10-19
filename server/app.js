@@ -9,7 +9,7 @@ app.use(cookies());
 
 //require("./socket/connectSocket");
 
-/* Controllers */
+/* Routes */
 const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
@@ -17,6 +17,8 @@ const wishListRoutes = require("./routes/wishListRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
+const conversationRoutes = require("./routes/conversationRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 const errorHandling = require("./middleware/errorHandling");
 //const socketController = require("./controller/socketController");
 
@@ -66,6 +68,8 @@ app.use("/api/v1/wish-list/", wishListRoutes);
 app.use("/api/v1/order/", orderRoutes);
 app.use("/api/v1/user/", userRoutes);
 app.use("/api/v1/seller/", sellerRoutes);
+app.use("/api/v1/message/", messageRoutes);
+app.use("/api/v1/conversation/", conversationRoutes);
 //app.use("/api/v1/chat/", socketController);
 
 app.get("*", (req, res) => {

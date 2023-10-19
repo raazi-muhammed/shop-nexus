@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import UserChangePassword from "./pages/user/account/UserChangePassword";
 import { UserAuthContextProvider } from "./context/userAuthContext";
 import ForgotPasswordPage from "./pages/user/account/ForgotPasswordPage";
+import ChattingComp from "./components/ChattingComp";
 
 function App() {
 	const navigate = useNavigate();
@@ -42,6 +43,10 @@ function App() {
 					<Route
 						path="/user/change-password"
 						element={<UserChangePassword />}
+					/>
+					<Route
+						path="/user/message/:senderId/:receiverId"
+						element={<ChattingComp />}
 					/>
 					<Route
 						path="/user/forgot-password"

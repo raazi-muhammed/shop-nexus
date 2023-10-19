@@ -10,12 +10,13 @@ const { heart, cart } = Icons;
 import ReactImageMagnify from "react-image-magnify";
 import ProductSuggestion from "./ProductSuggestion";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
 import formatPrice from "../../utils/formatPrice";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);
+	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
 
 	const [imgSelect, setImgSelect] = useState(0);
@@ -181,6 +182,12 @@ const SingleProductPage = () => {
 											<Link to={`/shop/${shopData?._id}`}>
 												<button className="btn-sm btn btn-light">
 													View Shop
+												</button>
+											</Link>
+											<Link
+												to={`/user/message/${userData._id}/${shopData?._id}`}>
+												<button className="btn-sm btn btn-light">
+													Message Shop
 												</button>
 											</Link>
 										</section>
