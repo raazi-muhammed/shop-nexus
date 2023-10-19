@@ -2,20 +2,25 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AdminUserPage = () => {
 	const [data, setData] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(true);
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get(`${server}/admin/get-all-users`, { withCredentials: true })
 			.then((res) => setData(res.data.userDetails))
-			.catch((err) => toast.error(err.response.data.message));
+			.catch((err) => toast.error(err.response.data.message))
+			.finally(() => setLoading(false));
 	}, [refresh]);
 
 	const handleDelete = (id, action) => {
 		console.log(id);
 		setRefresh(!refresh);
+
 		axios
 			.post(
 				`${server}/admin/block-user`,
@@ -60,6 +65,14 @@ const AdminUserPage = () => {
 					</section>
 				</div>
 			))}
+			<ClipLoader
+				className="m-0 p-0 text-primary mx-auto mt-5 "
+				loading={loading}
+				size={30}
+				color="primary"
+				aria-label="Loading Spinner"
+				data-testid="loader"
+			/>
 		</section>
 	);
 };

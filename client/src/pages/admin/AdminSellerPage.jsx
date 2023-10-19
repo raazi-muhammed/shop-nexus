@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import server from "../../server";
 import axios from "axios";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AdminSellerPage = () => {
 	const [data, setData] = useState([]);
+	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(true);
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get(`${server}/admin/get-all-sellers`, { withCredentials: true })
 			.then((res) => setData(res.data.shopDetails))
-			.catch((err) => toast.error(err.response.data.message));
+			.catch((err) => toast.error(err.response.data.message))
+			.finally(() => setLoading(false));
 	}, [refresh]);
 
 	const handBlockAndUnBlock = (id, action) => {
@@ -59,6 +63,14 @@ const AdminSellerPage = () => {
 					</section>
 				</div>
 			))}
+			<ClipLoader
+				className="m-0 p-0 text-primary mx-auto mt-5 "
+				loading={loading}
+				size={30}
+				color="primary"
+				aria-label="Loading Spinner"
+				data-testid="loader"
+			/>
 		</section>
 	);
 };

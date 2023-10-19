@@ -5,13 +5,18 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import convertISOToDate from "../../utils/convertISOToDate";
 import Pagination from "../../components/Pagination";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AdminOrdersPage = () => {
 	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
+
 	const [orderData, setOrderData] = useState([]);
 	const [pagination, setPagination] = useState([]);
 
 	useEffect(() => {
+		setLoading(true);
+
 		axios
 			.get(`${server}/admin/get-all-orders?page=${pagination.page || 1}`, {
 				withCredentials: true,
@@ -20,13 +25,25 @@ const AdminOrdersPage = () => {
 				setOrderData(res.data.orderData);
 				setPagination(res.data.pagination);
 			})
-			.catch((err) => toast.error(err.response?.data?.message));
+			.catch((err) => toast.error(err.response?.data?.message))
+			.finally(() => setLoading(false));
 	}, [pagination.page]);
 
 	return (
 		<div className="w-100">
+			{loading && (
+				<div className="min-vh-100 w-100 d-flex justify-content-center ">
+					<ClipLoader
+						className="m-0 p-0 text-primary mx-auto mt-5 "
+						loading={loading}
+						size={30}
+						color="primary"
+						aria-label="Loading Spinner"
+						data-testid="loader"
+					/>
+				</div>
+			)}
 			<Pagination pagination={pagination} setPagination={setPagination} />
-
 			<div class="table-responsive px-3 py-2">
 				<table class="table">
 					<thead>

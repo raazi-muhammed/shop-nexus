@@ -34,9 +34,29 @@ const getProductByCategory = asyncErrorHandler(async (req, res, next) => {
 
 const getProductsIncludingDeleted = asyncErrorHandler(
 	async (req, res, next) => {
-		let products = await Products.find({});
+		const ITEMS_PER_PAGE = 10;
+		const { page } = req.query;
+		const skip = (page - 1) * ITEMS_PER_PAGE;
+		const countPromise = Products.estimatedDocumentCount({});
+
+		let productsPromise = Products.find({}).limit(ITEMS_PER_PAGE).skip(skip);
+
+		const [products, count] = await Promise.all([
+			productsPromise,
+			countPromise,
+		]);
+
+		const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
+		const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+
 		res.status(200).json({
 			success: true,
+			pagination: {
+				count,
+				page,
+				pageCount,
+				startIndex,
+			},
 			products,
 		});
 	}

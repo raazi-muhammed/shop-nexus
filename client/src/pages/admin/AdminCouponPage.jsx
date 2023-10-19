@@ -5,13 +5,17 @@ import { Link, useParams } from "react-router-dom";
 import Icons from "../../assets/Icons";
 import convertISOToDate from "../../utils/convertISOToDate";
 import Pagination from "../../components/Pagination";
+import ClipLoader from "react-spinners/ClipLoader";
 const { eye, edit } = Icons;
 
 const AdminCouponsPage = () => {
 	const [couponData, setCouponData] = useState([]);
-	const [pagination, setPagination] = useState([]);
+	const [loading, setLoading] = useState(false);
+
+	const [pagination, setPagination] = useState({});
 
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get(`${server}/admin/get-all-coupons?page=${pagination.page || 1}`, {
 				withCredentials: true,
@@ -20,10 +24,25 @@ const AdminCouponsPage = () => {
 				setCouponData(res.data?.couponData);
 				setPagination(res.data.pagination);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => console.log(err))
+			.finally(() => {
+				setLoading(false);
+			});
 	}, [pagination.page]);
 	return (
 		<div>
+			{loading && (
+				<div className="min-vh-100 w-100 d-flex justify-content-center ">
+					<ClipLoader
+						className="m-0 p-0 text-primary mx-auto mt-5 "
+						loading={loading}
+						size={30}
+						color="primary"
+						aria-label="Loading Spinner"
+						data-testid="loader"
+					/>
+				</div>
+			)}
 			<Pagination pagination={pagination} setPagination={setPagination} />
 			<section className="d-flex flex-column flex-nowrap  gap-2">
 				{couponData.map((coupon) => (
