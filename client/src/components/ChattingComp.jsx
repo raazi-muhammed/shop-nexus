@@ -2,15 +2,15 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import server from "../server";
 import { useParams } from "react-router-dom";
-//import { io } from "socket.io-client";
+import { io } from "socket.io-client";
 
 const ChattingComp = () => {
-	//const socket = useRef(io("http://localhost:8080"));
+	const socket = useRef(io("http://localhost:8080"));
 	const { senderId, receiverId } = useParams("");
-	const [messages, setMessages] = useState([]);
+	const [displayMessages, setDisplayMessages] = useState([]);
 	const [message, setMessage] = useState("");
 	const [conversationID, setConversationID] = useState("");
-
+	const [refresh, setRefresh] = useState(true);
 	//creating the conversation if not available if conversatinis there getting the messages
 	useEffect(() => {
 		axios
@@ -25,44 +25,56 @@ const ChattingComp = () => {
 					.get(`${server}/message/get-messages/${res.data.conversationId}`)
 					.then((res) => {
 						console.log(res);
-						setMessages(res.data.messages);
+						setDisplayMessages(res.data.messages);
 					});
 			});
 	}, []);
 
 	const handleSendMessage = (e) => {
 		e.preventDefault();
+		console.log(socket.current.id);
 
-		axios
+		/* axios
 			.post(`${server}/message/new-message`, {
 				conversationId: conversationID,
 				sender: senderId,
 				text: message,
 			})
 			.then((res) => console.log(res))
-			.catch((err) => console.log(err));
+			.catch((err) => console.log(err)); */
 
 		setMessage("");
-		/* socket.current.emit("send-message", {
-			conversationId: "65313c5cdfff6c90789e5b3b",
-			sender: "652f63f1710105376460575b",
+		socket.current.emit("send-message", {
+			conversationId: conversationID,
+			senderId,
+			receiverId,
 			message,
-		}); */
+		});
 	};
 
-	/* 	useEffect(() => {
-		socket.current.on("receive-message", (message) => {
-			console.log(message);
+	useEffect(() => {
+		socket.current.emit("add-user", senderId);
+	}, [refresh]);
+
+	useEffect(() => {
+		setDisplayMessages([]);
+		socket.current.on("receive-message", (res) => {
+			console.log(res.message);
+			/* setDisplayMessages((messages) => [
+				...messages,
+				{ sender: res.senderId, text: res.message },
+			]); */
 		});
-	}, [socket]); */
+	}, [socket]);
 
 	return (
 		<main className="w-100 position-relative p-5" style={{ height: "50rem" }}>
 			<p>conversationID: {conversationID}</p>
 			<p>Sender: {senderId}</p>
 			<p>Receiver: {receiverId}</p>
+			<button onClick={(e) => setRefresh(!refresh)}>refresh</button>
 			<section className="overflow-auto h-100">
-				{messages?.map((msg) => (
+				{displayMessages?.map((msg) => (
 					<div
 						className={`p-2 px-3 m-1 my-2 rounded-4 ${
 							senderId === msg.sender

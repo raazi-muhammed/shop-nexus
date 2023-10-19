@@ -4,12 +4,48 @@ const io = require("socket.io")(8080, {
 	},
 });
 
+let users = [];
+
+const addUser = (userId, socketId) => {
+	!users.some((user) => user.userId === userId) &&
+		users.push({ userId, socketId });
+};
+
+const removeUser = (userId, socketId) => {
+	users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+	return users.find((user) => user.userId == userId);
+};
+
 io.on("connection", (socket) => {
-	console.log(socket.id);
+	console.log(socket.id, "connected");
 
-	socket.on("send-message", (payload) => {
-		console.log(payload);
+	socket.on("add-user", (userId) => {
+		console.log(userId, socket.id);
+		addUser(userId, socket.id);
+		console.log(users);
+	});
 
-		io.to(payload.conversationId).emit("receive-message", payload.message);
+	socket.on("send-message", ({ senderId, receiverId, message }) => {
+		try {
+			const receiver = getUser(receiverId);
+			console.log(receiver, "receiver");
+
+			io.to(receiver.socketId).emit("receive-message", {
+				senderId,
+				receiver,
+				message,
+			});
+		} catch (err) {
+			console.log(err);
+		}
+	});
+
+	socket.on("disconnect", () => {
+		//console.log("user disconnected");
+		console.log(socket.id, "removed");
+		removeUser(socket.id);
 	});
 });
