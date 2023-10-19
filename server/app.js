@@ -66,7 +66,7 @@ app.use("/api/v1/user/", userRoutes);
 app.use("/api/v1/seller/", sellerRoutes);
 
 app.get("*", (req, res) => {
-	console.log("no matching url");
+	console.log("No matching url");
 });
 
 /* Error handler */

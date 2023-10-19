@@ -8,7 +8,8 @@ const connectDatabase = () => {
 		})
 		.then((data) => {
 			console.log("MongoDB Connected");
-		});
+		})
+		.catch((err) => console.log(err));
 };
 
 module.exports = connectDatabase;
