@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 var cookies = require("cookie-parser");
 app.use(cookies());
 
+//require("./socket/connectSocket");
+
 /* Controllers */
 const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes");
@@ -15,8 +17,8 @@ const wishListRoutes = require("./routes/wishListRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
-
 const errorHandling = require("./middleware/errorHandling");
+//const socketController = require("./controller/socketController");
 
 /* Cors */
 const cors = require("cors");
@@ -64,6 +66,7 @@ app.use("/api/v1/wish-list/", wishListRoutes);
 app.use("/api/v1/order/", orderRoutes);
 app.use("/api/v1/user/", userRoutes);
 app.use("/api/v1/seller/", sellerRoutes);
+//app.use("/api/v1/chat/", socketController);
 
 app.get("*", (req, res) => {
 	console.log("No matching url");
