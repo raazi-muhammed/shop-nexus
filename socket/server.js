@@ -7,6 +7,10 @@ const io = require("socket.io")(8080, {
 let users = [];
 
 const addUser = (userId, socketId) => {
+	users.map((user) =>
+		user.userId === userId ? (user.socketId = socketId) : null
+	);
+
 	!users.some((user) => user.userId === userId) &&
 		users.push({ userId, socketId });
 };

@@ -7,12 +7,14 @@ router.post("/get-conversation", async (req, res) => {
 		let conversationId;
 
 		const conversationAlready = await Conversation.findOne({
-			members: { $in: [senderId, receiverId] },
+			user: senderId,
+			shop: receiverId,
 		});
 
 		if (!conversationAlready) {
 			const newConversation = await Conversation.create({
-				members: [senderId, receiverId],
+				user: senderId,
+				shop: receiverId,
 			});
 			conversationId = newConversation._id;
 		} else {
@@ -22,6 +24,25 @@ router.post("/get-conversation", async (req, res) => {
 		res.status(200).json({
 			success: true,
 			conversationId,
+		});
+	} catch (err) {
+		res.status(500).json({
+			success: false,
+		});
+	}
+});
+
+router.get("/get-all-conversation/:userId", async (req, res) => {
+	try {
+		const { userId } = req.params;
+
+		const conversations = await Conversation.find({
+			user: userId,
+		}).populate("shop");
+
+		res.status(200).json({
+			success: true,
+			conversations,
 		});
 	} catch (err) {
 		res.status(500).json({

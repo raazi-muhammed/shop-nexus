@@ -4,6 +4,10 @@ const Message = require("../model/Message");
 router.post("/new-message", async (req, res) => {
 	try {
 		const newMessage = await Message.create(req.body);
+
+		res.status(200).json({
+			success: true,
+		});
 	} catch (err) {
 		console.log(err);
 	}

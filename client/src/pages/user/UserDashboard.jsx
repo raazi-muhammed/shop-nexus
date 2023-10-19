@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import AsideComp from "../../components/AsideComp";
-import axios from "axios";
-import server from "../../server";
-import toast from "react-hot-toast";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import UserEditPage from "./dashboard/UserEditPage";
 import UserAddAddress from "./dashboard/userAddAddress";
@@ -10,6 +7,7 @@ import UserAllAddress from "./dashboard/UserAllAddress";
 import UserAllOrders from "./dashboard/UserAllOrders";
 import UserSingleOrderDetails from "./dashboard/UserSingleOrderDetails";
 import ChattingComp from "../../components/ChattingComp";
+import UserConversationsPage from "./dashboard/UserConversationsPage";
 
 const UserDashboard = () => {
 	const navigate = useNavigate();
@@ -34,7 +32,7 @@ const UserDashboard = () => {
 							<Route path="/add-address" element={<UserAddAddress />} />
 							<Route path="/address" element={<UserAllAddress />} />
 							<Route path="/orders" element={<UserAllOrders />} />
-							<Route path="/messages" element={<ChattingComp />} />
+							<Route path="/messages" element={<UserConversationsPage />} />
 							<Route
 								path="/orders/:orderId"
 								element={<UserSingleOrderDetails />}
