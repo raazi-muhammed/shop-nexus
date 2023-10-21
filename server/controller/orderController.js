@@ -22,7 +22,10 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const skip = (page - 1) * ITEMS_PER_PAGE;
 	const countPromise = Order.estimatedDocumentCount({});
 
-	const orderDataPromise = Order.find({}).limit(ITEMS_PER_PAGE).skip(skip);
+	const orderDataPromise = Order.find({})
+		.limit(ITEMS_PER_PAGE)
+		.skip(skip)
+		.sort({ createdAt: -1 });
 
 	const [count, orderData] = await Promise.all([
 		countPromise,
@@ -91,11 +94,34 @@ const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 
 const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.params.shopId;
-	const orderData = await Order.find({
+	const ITEMS_PER_PAGE = 10;
+	const { page } = req.query;
+	const skip = (page - 1) * ITEMS_PER_PAGE;
+	const countPromise = Order.estimatedDocumentCount({});
+
+	const orderDataPromise = Order.find({
 		"orderItems.shop": shopId,
-	});
+	})
+		.sort({ createdAt: -1 })
+		.limit(ITEMS_PER_PAGE)
+		.skip(skip);
+
+	const [count, orderData] = await Promise.all([
+		countPromise,
+		orderDataPromise,
+	]);
+
+	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
+	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+
 	res.status(200).json({
 		success: true,
+		pagination: {
+			count,
+			page,
+			pageCount,
+			startIndex,
+		},
 		orderData,
 	});
 });

@@ -49,10 +49,31 @@ const getAllCoupons = asyncErrorHandler(async (req, res, next) => {
 
 const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
 	const { shopId } = req.params;
+	const ITEMS_PER_PAGE = 10;
+	const { page } = req.query;
+	const skip = (page - 1) * ITEMS_PER_PAGE;
+	const countPromise = Coupon.estimatedDocumentCount({});
 
-	const couponData = await Coupon.find({ shopId });
+	const couponDataPromise = Coupon.find({ shopId })
+		.limit(ITEMS_PER_PAGE)
+		.skip(skip);
+
+	const [couponData, count] = await Promise.all([
+		couponDataPromise,
+		countPromise,
+	]);
+
+	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
+	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+
 	res.status(200).json({
 		success: true,
+		pagination: {
+			count,
+			page,
+			pageCount,
+			startIndex,
+		},
 		message: "Got Coupon",
 		couponData,
 	});

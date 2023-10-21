@@ -41,10 +41,10 @@ const SignUpPage = () => {
 			confirmPassword,
 		};
 		try {
-			await signUp(email, password);
 			axios
 				.post(`${server}/user/create-user`, newForm)
-				.then((res) => {
+				.then(async (res) => {
+					await signUp(email, password);
 					console.log(res);
 					toast.success(res.data.message);
 				})

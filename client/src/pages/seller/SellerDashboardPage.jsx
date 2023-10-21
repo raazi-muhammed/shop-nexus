@@ -70,10 +70,10 @@ const SellerDashboardPage = () => {
 			<SellerNavbar shopName={shopName} />
 			<div className="w-100 container container-xxl  ">
 				<section className="row py-5">
-					<div className="col-3 mt-3">
+					<section className="col-12 col-md-4 col-lg-3 mb-3">
 						<AsideComp asideItems={asideItems} />
-					</div>
-					<section className="col-9 mx-auto">
+					</section>
+					<section className="col-12 col-md-8 col-lg-9">
 						<Routes>
 							<Route
 								path="/all-products"

@@ -4,9 +4,11 @@ import server from "../../server";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
+import Pagination from "../../components/Pagination";
 
 const SellerStockManagement = () => {
 	const [loading, setLoading] = useState(false);
+	const [pagination, setPagination] = useState({});
 	const { shopId } = useParams();
 	const [data, setData] = useState([{ images: [{ url: "" }] }]);
 	const [updatedStock, setUpdatedStock] = useState(0);
@@ -29,17 +31,23 @@ const SellerStockManagement = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/seller/get-products-from-shop/${shopId}`, {
-				withCredentials: true,
-			})
+			.get(
+				`${server}/seller/get-products-from-shop/${shopId}?page=${
+					pagination?.page || 1
+				}`,
+				{
+					withCredentials: true,
+				}
+			)
 			.then((res) => {
 				setData(res.data.data);
+				setPagination(res.data.pagination);
 			})
 			.catch((err) => toast.error(err.response.data.message))
 			.finally(() => {
 				setLoading(false);
 			});
-	}, [refresh]);
+	}, [refresh, pagination?.page]);
 
 	const handleSubmit = async (e, productId) => {
 		e.preventDefault();
@@ -66,6 +74,7 @@ const SellerStockManagement = () => {
 
 	return (
 		<div className="d-flex flex-column gap-2">
+			<Pagination pagination={pagination} setPagination={setPagination} />
 			<section className="row py-0 mb-0 p-5 text-secondary fw-bold">
 				<p className="col-6 m-0 ">Product Details</p>
 				<p className="col-3 m-0">Info</p>

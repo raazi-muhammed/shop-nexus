@@ -59,8 +59,8 @@ const AdminDashboardPage = () => {
 				</nav>
 			</div>
 			<div className="container container-xxl">
-				<main className="row p-3">
-					<section className="mt-3 col-3">
+				<main className="row py-5">
+					<section className="col-12 col-md-4 col-lg-3 mb-3">
 						<AsideComp asideItems={asideItems} />
 						<button
 							className="btn btn-sm btn-danger w-100 mt-3"
@@ -68,7 +68,7 @@ const AdminDashboardPage = () => {
 							Log out
 						</button>
 					</section>
-					<section className="col-9">
+					<section className="col-12 col-md-8 col-lg-9">
 						<Routes>
 							<Route path="/users" element={<AdminUserPage />} />
 							<Route path="/sellers" element={<AdminSellerPage />} />

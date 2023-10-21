@@ -208,7 +208,7 @@ const UserAddAddress = () => {
 				disabled={!allowSubmission}
 				type="submit"
 				className={submitButtonClass}>
-				Update Data
+				Add Address
 			</button>
 		</form>
 	);

@@ -170,17 +170,6 @@ const editShopDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
-	const ShopDetails = await Shop.find({ _id: req.params.shopId });
-	const shopName = ShopDetails[0].shopName;
-
-	const shopDetails = await Products.find({ "shop.name": shopName });
-	res.status(200).json({
-		success: true,
-		data: shopDetails,
-	});
-});
-
 const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 	res.status(200).clearCookie("sellerToken").json({
 		success: true,
@@ -194,6 +183,5 @@ module.exports = {
 	sellerActivateShop,
 	getShopDetails,
 	editShopDetails,
-	getProductsFromShop,
 	sellerLogOut,
 };

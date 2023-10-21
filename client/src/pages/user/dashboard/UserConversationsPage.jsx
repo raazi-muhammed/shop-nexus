@@ -29,7 +29,7 @@ const UserConversationsPage = () => {
 					<p className="text-primary fw-bold my-auto ps-3">{e.shop.shopName}</p>
 				</div>
 			))}
-			<p>{JSON.stringify(data)}</p>
+			{/* <p>{JSON.stringify(data)}</p> */}
 		</div>
 	);
 };

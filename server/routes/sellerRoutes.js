@@ -3,14 +3,16 @@ const {
 	getSingleOrderDetailsForShop,
 	changeOrderStatus,
 } = require("../controller/orderController");
-const { setNewStockAmount } = require("../controller/productController");
+const {
+	setNewStockAmount,
+	getProductsFromShop,
+} = require("../controller/productController");
 const {
 	sellerLogin,
 	sellerCreateShop,
 	sellerActivateShop,
 	getShopDetails,
 	editShopDetails,
-	getProductsFromShop,
 	sellerLogOut,
 } = require("../controller/sellerController");
 

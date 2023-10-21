@@ -24,7 +24,7 @@ const UserDashboard = () => {
 		<main className="vw-100 min-vh-100">
 			<div className="w-100 container container-xxl  ">
 				<div className="row py-5">
-					<section className="col-12 col-md-4 col-lg-3">
+					<section className="col-12 col-md-4 col-lg-3 mb-5">
 						<AsideComp asideItems={asideItems} />
 					</section>
 					<section className="col-12 col-md-8 col-lg-9">

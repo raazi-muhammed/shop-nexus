@@ -245,10 +245,32 @@ const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
 	const ShopDetails = await Shop.find({ _id: req.params.shopId });
 	const shopName = ShopDetails[0].shopName;
 
-	const shopDetails = await Products.find({ "shop.name": shopName });
+	const ITEMS_PER_PAGE = 10;
+	const { page } = req.query;
+	const skip = (page - 1) * ITEMS_PER_PAGE;
+	const countPromise = Products.estimatedDocumentCount();
+
+	const shopProductsPromise = Products.find({ "shop.name": shopName })
+		.limit(ITEMS_PER_PAGE)
+		.skip(skip);
+
+	const [shopProducts, count] = await Promise.all([
+		shopProductsPromise,
+		countPromise,
+	]);
+
+	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
+	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+
 	res.status(200).json({
 		success: true,
-		data: shopDetails,
+		pagination: {
+			count,
+			page,
+			pageCount,
+			startIndex,
+		},
+		data: shopProducts,
 	});
 });
 
