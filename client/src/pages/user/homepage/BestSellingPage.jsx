@@ -50,6 +50,7 @@ const BestSellingPage = ({ showHeading }) => {
 							shopName={product.shop.name}
 							imgUrl={product.images[0]?.url}
 							discount_price={product.discount_price}
+							stock={product.stock}
 						/>
 					))}
 				</div>

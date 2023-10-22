@@ -19,6 +19,7 @@ const ProductCartMain = ({
 	imgUrl,
 	shopName,
 	productId,
+	stock,
 }) => {
 	const dispatch = useDispatch();
 
@@ -27,7 +28,6 @@ const ProductCartMain = ({
 			product_id: productId,
 			price: discount_price,
 		};
-		console.log("hihih");
 		axios
 			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
 			.then((res) => {
@@ -74,11 +74,19 @@ const ProductCartMain = ({
 					</section>
 				</section>
 				<section className="m-2 d-flex gap-2">
-					<button
-						className="btn btn-sm btn-primary flex-grow-1 d-flex gap-2 align-items-center"
-						onClick={handleAddToCart}>
-						{cart} Add to Cart
-					</button>
+					{stock <= 0 ? (
+						<section className="w-100">
+							<p className="bg-danger-subtle p-1 px-2 m-0  rounded-4 text-danger">
+								Currently Unavailable
+							</p>
+						</section>
+					) : (
+						<button
+							className="btn btn-sm btn-primary flex-grow-1 d-flex gap-2 align-items-center"
+							onClick={handleAddToCart}>
+							{cart} Add to Cart
+						</button>
+					)}
 					<button
 						onClick={handleAddToWishList}
 						className="btn btn-sm btn-secondary text-white">

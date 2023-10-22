@@ -5,6 +5,8 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const easyinvoice = require("easyinvoice");
 const fs = require("fs");
 const convertISOToDate = require("../utils/convertISOToDate");
+const { changeStockBasedOnOrder } = require("./productController");
+
 const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
@@ -23,6 +25,7 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const countPromise = Order.estimatedDocumentCount({});
 
 	const orderDataPromise = Order.find({})
+		.populate("orderItems.product")
 		.limit(ITEMS_PER_PAGE)
 		.skip(skip)
 		.sort({ createdAt: -1 });
@@ -75,6 +78,13 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 		}
 	);
 
+	console.log(orderData);
+	orderData.orderItems.map((e) => {
+		req.stock = e.quantity * -1;
+		req.productId = e.product;
+		changeStockBasedOnOrder(req, res, next);
+	});
+
 	res.status(200).json({
 		success: true,
 		message: "Order Cancelation Successful",
@@ -84,7 +94,9 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 
 const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
-	const orderData = await Order.find({ user: userId });
+	const orderData = await Order.find({ user: userId })
+		.populate("orderItems.product")
+		.sort({ createdAt: -1 });
 
 	res.status(200).json({
 		success: true,
@@ -102,6 +114,7 @@ const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const orderDataPromise = Order.find({
 		"orderItems.shop": shopId,
 	})
+		.populate("orderItems.product")
 		.sort({ createdAt: -1 })
 		.limit(ITEMS_PER_PAGE)
 		.skip(skip);

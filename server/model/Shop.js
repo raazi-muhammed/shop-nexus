@@ -2,93 +2,94 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const shopSchema = new mongoose.Schema({
-	shopName: {
-		type: String,
-		required: [true, "Please enter your shop name!"],
-	},
-	email: {
-		type: String,
-		required: [true, "Please enter your shop email address"],
-	},
-	password: {
-		type: String,
-		required: [true, "Please enter your password"],
-		minLength: [6, "Password should be greater than 6 characters"],
-	},
-	description: {
-		type: String,
-	},
-	address1: {
-		type: String,
-		required: true,
-	},
-	address2: {
-		type: String,
-		required: true,
-	},
-	phoneNumber: {
-		type: Number,
-		required: true,
-	},
-	GSTIN_Number: {
-		type: String,
-	},
-	role: {
-		type: String,
-		default: "Seller",
-	},
-	image: {
-		public_id: {
+const shopSchema = new mongoose.Schema(
+	{
+		shopName: {
 			type: String,
-			//required: true,
+			required: [true, "Please enter your shop name!"],
 		},
-		url: {
+		email: {
 			type: String,
-			//required: true,
+			required: [true, "Please enter your shop email address"],
 		},
-	},
-	zipCode: {
-		type: Number,
-		required: true,
-	},
-	withdrawMethod: {
-		type: Object,
-	},
-	availableBalance: {
-		type: Number,
-		default: 0,
-	},
-	transactions: [
-		{
-			amount: {
-				type: Number,
-				required: true,
-			},
-			status: {
+		password: {
+			type: String,
+			required: [true, "Please enter your password"],
+			minLength: [6, "Password should be greater than 6 characters"],
+		},
+		description: {
+			type: String,
+		},
+		address1: {
+			type: String,
+			required: true,
+		},
+		address2: {
+			type: String,
+			required: true,
+		},
+		phoneNumber: {
+			type: Number,
+			required: true,
+		},
+		GSTIN_Number: {
+			type: String,
+		},
+		role: {
+			type: String,
+			default: "Seller",
+		},
+		image: {
+			public_id: {
 				type: String,
-				default: "Processing",
+				//required: true,
 			},
-			createdAt: {
-				type: Date,
-				default: Date.now(),
-			},
-			updatedAt: {
-				type: Date,
+			url: {
+				type: String,
+				//required: true,
 			},
 		},
-	],
-	isBlocked: {
-		type: Boolean,
-		default: false,
+		zipCode: {
+			type: Number,
+			required: true,
+		},
+		withdrawMethod: {
+			type: Object,
+		},
+		availableBalance: {
+			type: Number,
+			default: 0,
+		},
+		transactions: [
+			{
+				amount: {
+					type: Number,
+					required: true,
+				},
+				status: {
+					type: String,
+					default: "Processing",
+				},
+				createdAt: {
+					type: Date,
+					default: Date.now(),
+				},
+				updatedAt: {
+					type: Date,
+				},
+			},
+		],
+		isBlocked: {
+			type: Boolean,
+			default: false,
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now(),
+		},
 	},
-	createdAt: {
-		type: Date,
-		default: Date.now(),
-	},
-	resetPasswordToken: String,
-	resetPasswordTime: Date,
-});
+	{ timestamps: true }
+);
 
 // Hash password
 shopSchema.pre("save", async function (next) {
