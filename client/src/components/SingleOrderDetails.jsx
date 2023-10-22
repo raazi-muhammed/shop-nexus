@@ -138,7 +138,12 @@ const SingleOrderDetails = ({
 						</p>
 
 						<p className="text-small text-secondary my-2">Payment Status</p>
-						<p className="bg-danger-subtle text-danger fw-bold  p-1 px-3 rounded-pill d-inline">
+						<p
+							className={`fw-bold  p-1 px-3 rounded-pill d-inline ${
+								orderDetails.paymentInfo?.status === "Received"
+									? "bg-success-subtle text-success"
+									: "bg-danger-subtle text-danger"
+							}`}>
 							{orderDetails.paymentInfo?.status}
 						</p>
 

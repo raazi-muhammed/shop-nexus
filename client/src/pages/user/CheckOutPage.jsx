@@ -159,6 +159,7 @@ const CheckOutPage = () => {
 									</div>
 								</div>
 							</section>
+							<p>{JSON.stringify(orderState)}</p>
 							<section className="bg-white rounded-4 p-4 mt-4">
 								<form
 									noValidate
@@ -201,7 +202,10 @@ const CheckOutPage = () => {
 						<div>
 							<Routes>
 								<Route path="/" element={<CheckOutShippingPage />} />
-								<Route path="/payment" element={<CheckOutPaymentPage />} />
+								<Route
+									path="/payment"
+									element={<CheckOutPaymentPage totalAmount={totalAmount} />}
+								/>
 								<Route path="/success" element={<SuccessPage />} />
 							</Routes>
 						</div>

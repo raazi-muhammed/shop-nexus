@@ -29,6 +29,7 @@
 		"passport-google-oauth20": "^2.0.0",
 		"passport-local": "^1.0.0",
 		"pdfjs-dist": "^3.11.174",
+		"razorpay": "^2.9.2",
 		"sharp": "^0.32.6",
 		"socket.io": "^4.7.2",
 		"socket.io-client": "^4.7.2",
