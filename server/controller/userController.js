@@ -268,6 +268,48 @@ const changePassword = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
+	const user = await User.findById(req.user.id);
+
+	const walletInfo = user.wallet;
+	res.status(200).json({
+		success: true,
+		walletInfo,
+	});
+});
+
+const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
+	console.log("wallet changed balance");
+	const { amountToAdd, description } = req.body;
+
+	if (amountToAdd < 0) {
+		const user = await User.findOne({ _id: req.user.id });
+		console.log(user.wallet.balance, amountToAdd * -1);
+		if (user.wallet.balance < amountToAdd * -1)
+			return next(new ErrorHandler("Not enough Balance on Wallet", 401));
+	}
+
+	const eventToAdd = {
+		amount: amountToAdd,
+		description,
+	};
+
+	const user = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{
+			$inc: { "wallet.balance": amountToAdd },
+			$addToSet: { "wallet.events": eventToAdd },
+		},
+		{ new: true, upsert: true }
+	);
+
+	const walletInfo = user.wallet;
+	res.status(200).json({
+		success: true,
+		walletInfo,
+	});
+});
+
 module.exports = {
 	userLogin,
 	loadUser,
@@ -281,4 +323,6 @@ module.exports = {
 	changePassword,
 	userAuthentication,
 	providerSignIn,
+	getWalletDetails,
+	changeWalletBalance,
 };

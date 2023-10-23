@@ -12,6 +12,8 @@ const {
 	changePassword,
 	userAuthentication,
 	providerSignIn,
+	getWalletDetails,
+	changeWalletBalance,
 } = require("../controller/userController");
 
 const {
@@ -84,6 +86,14 @@ router.put("/change-password", isAuthenticated, (req, res, next) => {
 
 router.put("/apply-coupon", isAuthenticated, (req, res, next) => {
 	applyCouponCode(req, res, next);
+});
+
+router.get("/get-wallet-details", isAuthenticated, (req, res, next) => {
+	getWalletDetails(req, res, next);
+});
+
+router.patch("/change-wallet-balance", isAuthenticated, (req, res, next) => {
+	changeWalletBalance(req, res, next);
 });
 
 module.exports = router;

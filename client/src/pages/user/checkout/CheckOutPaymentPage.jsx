@@ -105,6 +105,36 @@ const CheckOutPaymentPage = ({ totalAmount }) => {
 		};
 		document.body.appendChild(script);
 	};
+
+	const handleWallet = () => {
+		axios
+			.patch(
+				`${server}/user/change-wallet-balance`,
+				{
+					amountToAdd: totalAmount * -1,
+					description: `Paid ${totalAmount} for an Order`,
+				},
+				{ withCredentials: true }
+			)
+			.then((res) => {
+				console.log(res);
+				const paymentInfo = {
+					type: "Wallet",
+					status: "Received",
+				};
+				const eventData = {
+					name: "Paid from Wallet",
+				};
+
+				dispatch(setPaymentInfo(paymentInfo));
+				dispatch(setEvents(eventData));
+				navigate("/user/checkout/success");
+			})
+			.catch((err) =>
+				toast.error(err.response?.data?.message || "An error occurred")
+			);
+	};
+
 	const handleCashOnDelivery = () => {
 		const paymentInfo = {
 			type: "Cash on Delivery",
@@ -117,6 +147,7 @@ const CheckOutPaymentPage = ({ totalAmount }) => {
 		dispatch(setEvents(eventData));
 		navigate("/user/checkout/success");
 	};
+
 	return (
 		<div className="row gap-3">
 			<section className="bg-white p-3 rounded-4 ">
@@ -170,7 +201,28 @@ const CheckOutPaymentPage = ({ totalAmount }) => {
 					<button
 						onClick={handleRazorPay}
 						className="mt-3 btn btn-primary btn-sm">
-						Confirm
+						Continue with Razorpay
+					</button>
+				)}
+			</section>
+			<section className="bg-white p-3 rounded-4 ">
+				<div onClick={() => setExpanded("wallet")}>
+					<p className="m-0 d-flex align-content-center ">
+						{expanded === "wallet" ? (
+							<span className="d-block text-primary me-2">
+								{checkCircleFill}
+							</span>
+						) : (
+							<span className="d-block text-primary me-2">{hollowCircle}</span>
+						)}
+						Wallet
+					</p>
+				</div>
+				{expanded === "wallet" && (
+					<button
+						onClick={handleWallet}
+						className="mt-3 btn btn-primary btn-sm">
+						Continue with wallet
 					</button>
 				)}
 			</section>

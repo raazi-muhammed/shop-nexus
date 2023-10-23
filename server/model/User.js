@@ -103,6 +103,30 @@ const userSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		wallet: {
+			balance: {
+				type: Number,
+				default: 0,
+			},
+			events: [
+				{
+					amount: {
+						type: Number,
+						required: true,
+					},
+					description: {
+						type: String,
+					},
+					details: {
+						type: Object,
+					},
+					date: {
+						type: Date,
+						default: Date.now(),
+					},
+				},
+			],
+		},
 	},
 	{ timestamps: true }
 );

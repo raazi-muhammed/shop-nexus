@@ -27,6 +27,7 @@ router.post("/create-razorpay-order", async (req, res) => {
 		});
 	} catch (err) {
 		console.log(err);
+		next(new ErrorHandler("Razorpay failed", 500));
 	}
 });
 

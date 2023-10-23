@@ -159,7 +159,7 @@ const CheckOutPage = () => {
 									</div>
 								</div>
 							</section>
-							<p>{JSON.stringify(orderState)}</p>
+
 							<section className="bg-white rounded-4 p-4 mt-4">
 								<form
 									noValidate
