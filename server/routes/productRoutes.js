@@ -12,6 +12,7 @@ const {
 	recoverProduct,
 	addProduct,
 	getProductsFromShop,
+	searchProducts,
 } = require("../controller/productController");
 
 const { isAdminAuthenticated } = require("../middleware/adminAuth");
@@ -25,6 +26,10 @@ router.get("/all-products", (req, res, next) => {
 });
 router.get("/filter-products/:category", (req, res, next) => {
 	getProductByCategory(req, res, next);
+});
+
+router.get("/search-products", (req, res, next) => {
+	searchProducts(req, res, next);
 });
 router.get("/all-products-including-deleted", (req, res, next) => {
 	getProductsIncludingDeleted(req, res, next);

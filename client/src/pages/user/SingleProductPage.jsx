@@ -14,6 +14,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import formatPrice from "../../utils/formatPrice";
 import NavComponent from "../../components/layout/NavComponent";
 import RatingStar from "../../components/product/RatingStar";
+import { getCategoryByKey } from "../../constants/categoriesConstants";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);
@@ -139,7 +140,7 @@ const SingleProductPage = () => {
 							<section className="col-12 col-sm-6 px-4">
 								<h3>{productData.name}</h3>
 								<p className="text-secondary fw-bold mb-2">
-									{productData.category}
+									{getCategoryByKey(productData.category)}
 								</p>
 								<div className="d-flex align-items-center  gap-2 mb-3">
 									<RatingStar rating={productData.rating} />

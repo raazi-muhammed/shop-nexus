@@ -31,4 +31,13 @@ const categoriesConstants = [
 	},
 ];
 
+export function getCategoryByKey(key) {
+	const category = categoriesConstants.find((category) => category.key === key);
+	if (category) {
+		return category.value;
+	} else {
+		return "Others";
+	}
+}
+
 export default categoriesConstants;

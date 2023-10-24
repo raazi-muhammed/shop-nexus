@@ -32,6 +32,38 @@ const getProductByCategory = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const searchProducts = asyncErrorHandler(async (req, res, next) => {
+	console.log(req.query, "hihi");
+	const { category, searchTerm } = req.query;
+
+	let filter = {
+		isDeleted: { $ne: true },
+	};
+
+	if (searchTerm) {
+		filter.$or = [
+			{
+				name: { $regex: searchTerm, $options: "i" },
+			},
+			{
+				description: { $regex: searchTerm, $options: "i" },
+			},
+		];
+	}
+
+	if (category) {
+		filter.category = category;
+	}
+
+	//console.log(filter);
+
+	let products = await Products.find(filter);
+	res.status(200).json({
+		success: true,
+		products,
+	});
+});
+
 const getProductsIncludingDeleted = asyncErrorHandler(
 	async (req, res, next) => {
 		const ITEMS_PER_PAGE = 10;
@@ -318,4 +350,5 @@ module.exports = {
 	getProductsFromShop,
 	changeStockBasedOnOrder,
 	setNewStockAmount,
+	searchProducts,
 };

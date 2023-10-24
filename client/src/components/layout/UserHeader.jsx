@@ -1,9 +1,19 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Icons from "../../assets/Icons";
+import { useDispatch } from "react-redux";
+import { setSearchTermOptions } from "../../app/feature/search/searchOptionsSlice";
 const { shopIcon } = Icons;
 
 const UserHeader = () => {
+	const navigate = useNavigate();
+	const [searchTerm, setSearchTerm] = useState("");
+	const dispatch = useDispatch();
+	const handleSearch = (e) => {
+		e.preventDefault();
+		dispatch(setSearchTermOptions(searchTerm));
+		navigate(`/search`);
+	};
 	return (
 		<div>
 			<header class="navbar navbar-expand-lg bg-body-primary  bg-primary">
@@ -27,10 +37,12 @@ const UserHeader = () => {
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav mx-auto my-3 my-lg-auto">
 							<li class="nav-item">
-								<form class="d-flex" role="search">
+								<form onSubmit={handleSearch} class="d-flex" role="search">
 									<input
 										class="form-control me-2"
 										type="search"
+										value={searchTerm}
+										onChange={(e) => setSearchTerm(e.target.value)}
 										placeholder="Search"
 										aria-label="Search"
 									/>

@@ -1,6 +1,7 @@
 import React from "react";
 import Icons from "../../assets/Icons";
 import { Link } from "react-router-dom";
+import { getCategoryByKey } from "../../constants/categoriesConstants";
 const { eye, edit } = Icons;
 
 const AdminProductCardRow = ({
@@ -26,7 +27,7 @@ const AdminProductCardRow = ({
 				</div>
 			</section>
 			<section className="col-3">
-				<p className="m-0">{category}</p>
+				<p className="m-0">{getCategoryByKey(category)}</p>
 				<p className="fw-bold">{`${stock} in Stock`}</p>
 			</section>
 			<p className="col-2">{`${isDeleted}`}</p>

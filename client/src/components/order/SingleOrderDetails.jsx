@@ -41,7 +41,6 @@ const SingleOrderDetails = ({
 
 	const handleReturnItem = (e) => {
 		e.preventDefault();
-		console.log("hihi");
 		axios.defaults.withCredentials = true;
 
 		axios

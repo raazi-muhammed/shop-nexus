@@ -11,6 +11,7 @@ import server from "../../server";
 import toast from "react-hot-toast";
 import { useUserAuth } from "../../context/userAuthContext";
 import NavComponent from "./NavComponent";
+import { setCategoryOptions } from "../../app/feature/search/searchOptionsSlice";
 
 const UserNavbar = () => {
 	const navigate = useNavigate();
@@ -24,6 +25,10 @@ const UserNavbar = () => {
 		{ name: "Events", link: "/" },
 		{ name: "FAQs", link: "/faqs" },
 	];
+
+	const categoryChange = (e) => {
+		dispatch(setCategoryOptions(e.target.value));
+	};
 
 	const handleLogOut = async () => {
 		try {
@@ -62,11 +67,12 @@ const UserNavbar = () => {
 										Select a Category:
 									</label>
 									<select
+										onChange={categoryChange}
 										className="w-75 form-select form-select-sm bg-secondary text-white px-3"
 										id="categorySelect">
 										<option value="">Select Category</option>
 										{categoriesConstants.map((e) => (
-											<option key={e.key} value={e.value}>
+											<option key={e.key} value={e.key}>
 												{e.value}
 											</option>
 										))}
