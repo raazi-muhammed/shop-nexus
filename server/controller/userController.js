@@ -6,6 +6,7 @@ const sendToken = require("../utils/jwtToken");
 const { upload } = require("../multer");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
+const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
 
@@ -271,7 +272,38 @@ const changePassword = asyncErrorHandler(async (req, res, next) => {
 const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 	const user = await User.findById(req.user.id);
 
-	const walletInfo = user.wallet;
+	/* const user = await User.aggregate([
+		{ $match: { _id: new mongoose.Types.ObjectId(req.user.id) } },
+		{
+			$project: {
+				_id: 0,
+				wallet: 1,
+			},
+		},
+		{
+			$unwind: "$wallet.events",
+		},
+		{
+			$sort: { "wallet.events.price": -1 }, // Sort events by date in descending order
+		},
+		{
+			$group: {
+				_id: null, // Group all documents into a single group
+				balance: { $first: "$wallet.balance" }, // Take the 'wallet' field from the first document
+				events: { $push: "$wallet.events" }, // Push all unwound events into an 'events' array
+			},
+		},
+	]); */
+
+	const sortedEvents = [...user.wallet.events];
+	sortedEvents.reverse();
+
+	const walletInfo = {
+		balance: user.wallet.balance,
+		events: sortedEvents,
+	};
+	console.log(walletInfo);
+
 	res.status(200).json({
 		success: true,
 		walletInfo,

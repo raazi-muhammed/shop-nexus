@@ -172,7 +172,16 @@ const UserWallet = () => {
 						</section>
 						<section className="col text-end">
 							<p className="text-small  text-secondary m-0">Amount</p>
-							<p className="mb-0 fw-bold">{event.amount}</p>
+
+							{event.amount < 0 ? (
+								<p className="mb-0 text-danger fw-bold">
+									-{formatPrice(event.amount * -1)}
+								</p>
+							) : (
+								<p className="mb-0 text-success fw-bold">
+									+{formatPrice(event.amount)}
+								</p>
+							)}
 						</section>
 					</div>
 				))}
