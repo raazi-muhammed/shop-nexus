@@ -2,10 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../../server";
-import toast from "react-hot-toast";
-import easyinvoice from "easyinvoice";
 import ClipLoader from "react-spinners/ClipLoader";
-import formatPrice from "../../../utils/formatPrice";
 import SingleOrderDetails from "../../../components/SingleOrderDetails";
 
 const UserSingleOrderDetails = () => {

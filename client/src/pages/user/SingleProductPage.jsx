@@ -145,23 +145,38 @@ const SingleProductPage = () => {
 									<RatingStar rating={productData.rating} />
 									<p className="text-small mt-2 m-0">{`${productData.total_sell} Sold`}</p>
 								</div>
-								<div>
+								{productData.stock < 20 && productData.stock !== 0 && (
+									<p className="bg-danger-subtle p-1 px-2  rounded-4 d-inline text-danger">
+										Only {productData.stock} Left in Stock
+									</p>
+								)}
+								<div className="mt-3">
 									<p className="h4 mb-0 fw-bold text-primary">
 										{formatPrice(productData.discount_price)}
 									</p>
 								</div>
+
 								<section className="my-3 d-flex gap-2">
-									<button
-										onClick={handleAddToCart}
-										className="btn btn-sm btn-primary d-flex gap-2 align-items-center">
-										{cart} Add to Cart
-									</button>
+									{productData.stock <= 0 ? (
+										<section>
+											<p className="bg-danger-subtle p-1 px-2  rounded-4 text-danger">
+												Currently Unavailable
+											</p>
+										</section>
+									) : (
+										<button
+											onClick={handleAddToCart}
+											className="btn btn-sm btn-primary d-flex gap-2 align-items-center">
+											{cart} Add to Cart
+										</button>
+									)}
 									<button
 										onClick={handleAddToWishList}
 										className="btn btn-sm btn-secondary text-white">
 										{heart} Add to Wishlist
 									</button>
 								</section>
+
 								<hr className="text-secondary my-4" />
 								<section>
 									<p className="text-primary fw-bold">About Seller</p>

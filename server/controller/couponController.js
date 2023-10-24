@@ -24,7 +24,10 @@ const getAllCoupons = asyncErrorHandler(async (req, res, next) => {
 	const skip = (page - 1) * ITEMS_PER_PAGE;
 	const countPromise = Coupon.estimatedDocumentCount({});
 
-	const couponDataPromise = Coupon.find({}).limit(ITEMS_PER_PAGE).skip(skip);
+	const couponDataPromise = Coupon.find({})
+		.sort({ createdAt: -1 })
+		.limit(ITEMS_PER_PAGE)
+		.skip(skip);
 
 	const [couponData, count] = await Promise.all([
 		couponDataPromise,
@@ -55,6 +58,7 @@ const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
 	const countPromise = Coupon.estimatedDocumentCount({});
 
 	const couponDataPromise = Coupon.find({ shopId })
+		.sort({ createdAt: -1 })
 		.limit(ITEMS_PER_PAGE)
 		.skip(skip);
 

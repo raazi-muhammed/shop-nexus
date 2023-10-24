@@ -18,8 +18,9 @@ const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
 const conversationRoutes = require("./routes/conversationRoutes");
-const messageRoutes = require("./routes/messageRoutes");
 const errorHandling = require("./middleware/errorHandling");
+const messageRoutes = require("./routes/messageRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 //const socketController = require("./controller/socketController");
 
 /* Cors */
@@ -70,6 +71,7 @@ app.use("/api/v1/user/", userRoutes);
 app.use("/api/v1/seller/", sellerRoutes);
 app.use("/api/v1/message/", messageRoutes);
 app.use("/api/v1/conversation/", conversationRoutes);
+app.use("/api/v1/payment/", paymentRoutes);
 //app.use("/api/v1/chat/", socketController);
 
 app.get("*", (req, res) => {

@@ -5,6 +5,28 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const easyinvoice = require("easyinvoice");
 const fs = require("fs");
 const convertISOToDate = require("../utils/convertISOToDate");
+const { changeStockBasedOnOrder } = require("./productController");
+const User = require("../model/User");
+const { changeWalletBalance } = require("./userController");
+
+const refundedToUser = async (orderId) => {
+	const orderData = await Order.findOne({ orderId });
+	if (orderData.paymentInfo.status === "Received") {
+		const eventToAdd = {
+			amount: orderData.totalPrice,
+			description: "Refunded from an Order",
+		};
+		const user = await User.findOneAndUpdate(
+			{ _id: orderData.user },
+			{
+				$inc: { "wallet.balance": eventToAdd.amount },
+				$addToSet: { "wallet.events": eventToAdd },
+			},
+			{ new: true, upsert: true }
+		);
+	}
+};
+
 const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
@@ -23,6 +45,7 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const countPromise = Order.estimatedDocumentCount({});
 
 	const orderDataPromise = Order.find({})
+		.populate("orderItems.product")
 		.limit(ITEMS_PER_PAGE)
 		.skip(skip)
 		.sort({ createdAt: -1 });
@@ -62,6 +85,9 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 
 const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
+
+	await refundedToUser(orderId);
+
 	const eventToAdd = {
 		name: "Canceled",
 		description: req.body.description,
@@ -75,6 +101,13 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 		}
 	);
 
+	console.log(orderData);
+	orderData.orderItems.map((e) => {
+		req.stock = e.quantity * -1;
+		req.productId = e.product;
+		changeStockBasedOnOrder(req, res, next);
+	});
+
 	res.status(200).json({
 		success: true,
 		message: "Order Cancelation Successful",
@@ -82,9 +115,40 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const returnOrder = asyncErrorHandler(async (req, res, next) => {
+	const orderId = req.params.orderId;
+	const eventToAdd = {
+		name: "Returned",
+		description: req.body.description,
+	};
+
+	const orderData = await Order.findOneAndUpdate(
+		{ orderId },
+		{
+			$addToSet: { events: eventToAdd },
+			status: "Processing Return",
+		}
+	);
+
+	console.log(orderData);
+	orderData.orderItems.map((e) => {
+		req.stock = e.quantity * -1;
+		req.productId = e.product;
+		changeStockBasedOnOrder(req, res, next);
+	});
+
+	res.status(200).json({
+		success: true,
+		message: "Order Returning on Processing",
+		orderData,
+	});
+});
+
 const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
-	const orderData = await Order.find({ user: userId });
+	const orderData = await Order.find({ user: userId })
+		.populate("orderItems.product")
+		.sort({ createdAt: -1 });
 
 	res.status(200).json({
 		success: true,
@@ -102,6 +166,7 @@ const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const orderDataPromise = Order.find({
 		"orderItems.shop": shopId,
 	})
+		.populate("orderItems.product")
 		.sort({ createdAt: -1 })
 		.limit(ITEMS_PER_PAGE)
 		.skip(skip);
@@ -151,6 +216,8 @@ const getSingleOrderDetailsForShop = asyncErrorHandler(
 const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 	const { orderStatus } = req.body;
+
+	if (orderStatus === "Return Approved") await refundedToUser(orderId);
 
 	const eventToAdd = {
 		name: orderStatus,
@@ -247,4 +314,5 @@ module.exports = {
 	getSingleOrderDetailsForShop,
 	changeOrderStatus,
 	invoiceGenerator,
+	returnOrder,
 };

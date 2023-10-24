@@ -53,6 +53,7 @@ const HomePage = () => {
 				<Route path="/new-products" element={<ProductsPage />} />
 				<Route path="/best-selling" element={<BestSellingPage />} />
 				<Route path="/faqs" element={<FAQsPage />} />
+				<Route path="/search" element={<SearchResults />} />
 				<Route path="/product/:id/*" element={<SingleProductPage />} />
 				<Route path="/shop/:id/*" element={<UserSingleShopPage />} />
 				<Route path="/user/dashboard/:userId/*" element={<UserDashboard />} />

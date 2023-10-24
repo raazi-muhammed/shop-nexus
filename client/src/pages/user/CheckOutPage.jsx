@@ -28,8 +28,6 @@ const CheckOutPage = () => {
 				return (a += e.price);
 			}, 0);
 
-			console.log(_totalAmountWithOutDiscount);
-
 			let _discountAmount;
 			if (discountAmount == "-") _discountAmount = 0;
 			else _discountAmount = discountAmount;
@@ -159,6 +157,7 @@ const CheckOutPage = () => {
 									</div>
 								</div>
 							</section>
+
 							<section className="bg-white rounded-4 p-4 mt-4">
 								<form
 									noValidate
@@ -201,7 +200,10 @@ const CheckOutPage = () => {
 						<div>
 							<Routes>
 								<Route path="/" element={<CheckOutShippingPage />} />
-								<Route path="/payment" element={<CheckOutPaymentPage />} />
+								<Route
+									path="/payment"
+									element={<CheckOutPaymentPage totalAmount={totalAmount} />}
+								/>
 								<Route path="/success" element={<SuccessPage />} />
 							</Routes>
 						</div>

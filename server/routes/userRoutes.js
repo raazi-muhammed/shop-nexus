@@ -12,12 +12,15 @@ const {
 	changePassword,
 	userAuthentication,
 	providerSignIn,
+	getWalletDetails,
+	changeWalletBalance,
 } = require("../controller/userController");
 
 const {
 	getUsersAllOrders,
 	getSingleOrders,
 	cancelOrder,
+	returnOrder,
 } = require("../controller/orderController");
 
 const { isAuthenticated } = require("../middleware/auth");
@@ -78,12 +81,24 @@ router.put("/cancel-order/:orderId", isAuthenticated, (req, res, next) => {
 	cancelOrder(req, res, next);
 });
 
+router.put("/return-order/:orderId", isAuthenticated, (req, res, next) => {
+	returnOrder(req, res, next);
+});
+
 router.put("/change-password", isAuthenticated, (req, res, next) => {
 	changePassword(req, res, next);
 });
 
 router.put("/apply-coupon", isAuthenticated, (req, res, next) => {
 	applyCouponCode(req, res, next);
+});
+
+router.get("/get-wallet-details", isAuthenticated, (req, res, next) => {
+	getWalletDetails(req, res, next);
+});
+
+router.patch("/change-wallet-balance", isAuthenticated, (req, res, next) => {
+	changeWalletBalance(req, res, next);
 });
 
 module.exports = router;

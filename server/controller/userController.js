@@ -6,6 +6,7 @@ const sendToken = require("../utils/jwtToken");
 const { upload } = require("../multer");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
+const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
 
@@ -268,6 +269,79 @@ const changePassword = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
+	const user = await User.findById(req.user.id);
+
+	/* const user = await User.aggregate([
+		{ $match: { _id: new mongoose.Types.ObjectId(req.user.id) } },
+		{
+			$project: {
+				_id: 0,
+				wallet: 1,
+			},
+		},
+		{
+			$unwind: "$wallet.events",
+		},
+		{
+			$sort: { "wallet.events.price": -1 }, // Sort events by date in descending order
+		},
+		{
+			$group: {
+				_id: null, // Group all documents into a single group
+				balance: { $first: "$wallet.balance" }, // Take the 'wallet' field from the first document
+				events: { $push: "$wallet.events" }, // Push all unwound events into an 'events' array
+			},
+		},
+	]); */
+
+	const sortedEvents = [...user.wallet.events];
+	sortedEvents.reverse();
+
+	const walletInfo = {
+		balance: user.wallet.balance,
+		events: sortedEvents,
+	};
+	console.log(walletInfo);
+
+	res.status(200).json({
+		success: true,
+		walletInfo,
+	});
+});
+
+const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
+	console.log("wallet changed balance");
+	const { amountToAdd, description } = req.body;
+
+	if (amountToAdd < 0) {
+		const user = await User.findOne({ _id: req.user.id });
+		console.log(user.wallet.balance, amountToAdd * -1);
+		if (user.wallet.balance < amountToAdd * -1)
+			return next(new ErrorHandler("Not enough Balance on Wallet", 401));
+	}
+
+	const eventToAdd = {
+		amount: amountToAdd,
+		description,
+	};
+
+	const user = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{
+			$inc: { "wallet.balance": amountToAdd },
+			$addToSet: { "wallet.events": eventToAdd },
+		},
+		{ new: true, upsert: true }
+	);
+
+	const walletInfo = user.wallet;
+	res.status(200).json({
+		success: true,
+		walletInfo,
+	});
+});
+
 module.exports = {
 	userLogin,
 	loadUser,
@@ -281,4 +355,6 @@ module.exports = {
 	changePassword,
 	userAuthentication,
 	providerSignIn,
+	getWalletDetails,
+	changeWalletBalance,
 };

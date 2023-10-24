@@ -99,7 +99,7 @@ const SellerStockManagement = () => {
 								<img
 									className="rounded-2"
 									style={{ width: "5rem", height: "5rem" }}
-									src={product.images[0].url}
+									src={product?.images[0]?.url}
 									alt=""
 									srcSet=""
 								/>

@@ -8,7 +8,10 @@ import UserAllOrders from "./dashboard/UserAllOrders";
 import UserSingleOrderDetails from "./dashboard/UserSingleOrderDetails";
 import ChattingComp from "../../components/ChattingComp";
 import UserConversationsPage from "./dashboard/UserConversationsPage";
+
 import AsideComp from "../../components/layout/AsideComp";
+
+import UserWallet from "./dashboard/UserWallet";
 
 const UserDashboard = () => {
 	const navigate = useNavigate();
@@ -19,6 +22,7 @@ const UserDashboard = () => {
 		{ name: "Addresses", link: "address" },
 		{ name: "Orders", link: "orders" },
 		{ name: "Messages", link: "messages" },
+		{ name: "Wallet", link: "wallet" },
 	];
 
 	return (
@@ -34,6 +38,7 @@ const UserDashboard = () => {
 							<Route path="/address" element={<UserAllAddress />} />
 							<Route path="/orders" element={<UserAllOrders />} />
 							<Route path="/messages" element={<UserConversationsPage />} />
+							<Route path="/wallet" element={<UserWallet />} />
 							<Route
 								path="/orders/:orderId"
 								element={<UserSingleOrderDetails />}
