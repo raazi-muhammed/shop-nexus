@@ -27,6 +27,7 @@ const UserNavbar = () => {
 	];
 
 	const categoryChange = (e) => {
+		navigate(`/search`);
 		dispatch(setCategoryOptions(e.target.value));
 	};
 

@@ -5,14 +5,14 @@ import RatingStar from "./RatingStar";
 
 const ProductSearchResult = ({ productDetails }) => {
 	return (
-		<div className="col">
+		<div className="col pb-2">
 			<section className="h-100 bg-white d-flex flex-column rounded-4">
 				<Link
 					className="text-decoration-none row"
 					to={`/product/${productDetails._id}`}>
-					<div className="col-3">
+					<div className="col-3 d-flex">
 						<img
-							className="rounded-4 w-100 "
+							className="rounded-4 w-100 my-auto"
 							src={productDetails.images[0].url}
 							alt=""
 							style={{ width: "4rem" }}
