@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import convertISOToDate from "../utils/convertISOToDate";
-import { useParams } from "react-router-dom";
+import convertISOToDate from "../../utils/convertISOToDate";
 import ClipLoader from "react-spinners/ClipLoader";
-import formatPrice from "../utils/formatPrice";
+import formatPrice from "../../utils/formatPrice";
 import axios from "axios";
-import server from "../server";
+import server from "../../server";
 import toast from "react-hot-toast";
 import { addDays } from "date-fns";
 

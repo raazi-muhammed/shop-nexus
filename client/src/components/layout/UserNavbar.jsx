@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Icons from "../../assets/Icons";
 const { heart, cart, profile } = Icons;
-import category from "../../utils/category";
+import categoriesConstants from "../../constants/categoriesConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { displayCart } from "../../app/feature/cart/cartSlice";
 import { displayWishList } from "../../app/feature/wishList/wishListSlice";
@@ -65,9 +65,9 @@ const UserNavbar = () => {
 										className="w-75 form-select form-select-sm bg-secondary text-white px-3"
 										id="categorySelect">
 										<option value="">Select Category</option>
-										{category.map((e) => (
-											<option key={e} value={e}>
-												{e}
+										{categoriesConstants.map((e) => (
+											<option key={e.key} value={e.value}>
+												{e.value}
 											</option>
 										))}
 									</select>

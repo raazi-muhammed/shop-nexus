@@ -4,9 +4,10 @@ import { useParams } from "react-router-dom";
 
 import toast from "react-hot-toast";
 import server from "../../server";
-import orderStatesArray from "../../utils/orderState";
-import SingleOrderDetails from "../../components/SingleOrderDetails";
+import orderStateConstants from "../../constants/orderStateConstants";
+
 import ClipLoader from "react-spinners/ClipLoader";
+import SingleOrderDetails from "../../components/order/SingleOrderDetails";
 
 const SellerSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
@@ -67,8 +68,8 @@ const SellerSingleOrderDetails = () => {
 								onChange={(e) => setOrderState(e.target.value)}
 								className="form-select"
 								id="categorySelect">
-								{orderStatesArray.map((orderSt) => (
-									<option value={orderSt}>{orderSt}</option>
+								{orderStateConstants.map((orderSt) => (
+									<option value={orderSt.key}>{orderSt.value}</option>
 								))}
 							</select>
 							<button

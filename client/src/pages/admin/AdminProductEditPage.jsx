@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../server";
 import toast from "react-hot-toast";
-import categoryArry from "../../utils/category";
+import categoriesConstants from "../../constants/categoriesConstants";
 
 const AdminProductEditPage = () => {
 	const { productId } = useParams();
@@ -62,8 +62,8 @@ const AdminProductEditPage = () => {
 						className="form-select"
 						id="categorySelect">
 						<option value="">Select Category</option>
-						{categoryArry.map((e) => (
-							<option value={e}>{e}</option>
+						{categoriesConstants.map((e) => (
+							<option value={e.key}>{e.value}</option>
 						))}
 					</select>
 				</div>

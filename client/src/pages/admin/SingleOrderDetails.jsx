@@ -2,10 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../server";
-import convertISOToDate from "../../utils/convertISOToDate";
-
 import ClipLoader from "react-spinners/ClipLoader";
-import SingleOrderDetails from "../../components/SingleOrderDetails";
+import SingleOrderDetails from "../../components/order/SingleOrderDetails";
 
 const AdminSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);

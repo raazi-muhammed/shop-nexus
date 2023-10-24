@@ -20,6 +20,7 @@ import UserNavbar from "../../components/layout/UserNavbar";
 import CartUser from "../../components/user/CartUser";
 import WishListUser from "../../components/user/WishListUser";
 import FooterComp from "../../components/layout/FooterComp";
+import SearchResults from "./homepage/SearchResults";
 
 const HomePage = () => {
 	const cartState = useSelector((state) => state.cart.isCartVisible);

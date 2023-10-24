@@ -1,7 +1,7 @@
 import React from "react";
-import convertISOToDate from "../utils/convertISOToDate";
-import formatPrice from "../utils/formatPrice";
+import formatPrice from "../../utils/formatPrice";
 import { useNavigate } from "react-router-dom";
+import convertISOToDate from "../../utils/convertISOToDate";
 
 const OrderCardMain = ({
 	status,

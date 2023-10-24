@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
-import categoryArry from "../../utils/category";
+import categoriesConstants from "../../constants/categoriesConstants";
 import {
 	formLabelClass,
 	inputDivClass,
@@ -119,9 +119,9 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 							className="form-select"
 							id="categorySelect">
 							<option value="">Select Category</option>
-							{categoryArry.map((e) => (
-								<option key={e} value={e}>
-									{e}
+							{categoriesConstants.map((e) => (
+								<option key={e.key} value={e.key}>
+									{e.value}
 								</option>
 							))}
 						</select>

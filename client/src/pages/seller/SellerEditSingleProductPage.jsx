@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import server from "../../server";
 import toast from "react-hot-toast";
-import categoryArry from "../../utils/category";
+import categoriesConstants from "../../constants/categoriesConstants";
 import {
 	formLabelClass,
 	inputDivClass,
@@ -187,8 +187,8 @@ const SellerEditSingleProductPage = () => {
 							onChange={(e) => setCategory(e.target.value)}
 							className="form-select"
 							id="categorySelect">
-							{categoryArry.map((e) => (
-								<option value={e}>{e}</option>
+							{categoriesConstants.map((e) => (
+								<option value={e.key}>{e.value}</option>
 							))}
 						</select>
 					</div>

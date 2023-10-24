@@ -5,10 +5,9 @@ import toast from "react-hot-toast";
 
 import { useSelector } from "react-redux";
 import server from "../../server";
-import convertISOToDate from "../../utils/convertISOToDate";
 import ClipLoader from "react-spinners/ClipLoader";
 import Pagination from "../../components/Pagination";
-import OrderCardMain from "../../components/OrderCardMain";
+import OrderCardMain from "../../components/order/OrderCardMain";
 
 const SellerAllOrders = () => {
 	const [loading, setLoading] = useState(false);

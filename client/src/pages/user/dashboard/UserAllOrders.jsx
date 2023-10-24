@@ -7,7 +7,7 @@ import formatPrice from "../../../utils/formatPrice";
 import { useSelector } from "react-redux";
 import convertISOToDate from "../../../utils/convertISOToDate";
 import ClipLoader from "react-spinners/ClipLoader";
-import OrderCardMain from "../../../components/OrderCardMain";
+import OrderCardMain from "../../../components/order/OrderCardMain";
 
 const UserAllOrders = () => {
 	const [loading, setLoading] = useState(false);
