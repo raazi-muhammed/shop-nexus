@@ -28,8 +28,6 @@ const CheckOutPage = () => {
 				return (a += e.price);
 			}, 0);
 
-			console.log(_totalAmountWithOutDiscount);
-
 			let _discountAmount;
 			if (discountAmount == "-") _discountAmount = 0;
 			else _discountAmount = discountAmount;

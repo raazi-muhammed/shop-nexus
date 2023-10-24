@@ -6,6 +6,7 @@ import formatPrice from "../utils/formatPrice";
 import axios from "axios";
 import server from "../server";
 import toast from "react-hot-toast";
+import { addDays } from "date-fns";
 
 const SingleOrderDetails = ({
 	orderDetails,
@@ -15,7 +16,14 @@ const SingleOrderDetails = ({
 	showEvents,
 }) => {
 	const [invoiceLoading, setInvoiceLoading] = useState(false);
-	const [reasonForCancelation, setReasonForCancelation] = useState("");
+	const [reason, setReason] = useState("");
+
+	const isReturnableFunc = () => {
+		const returnMaxDate = addDays(new Date(orderDetails.createdAt), 7);
+		const today = new Date();
+		return returnMaxDate > today ? true : false;
+	};
+	const [isReturnable, setIsReturnable] = useState(isReturnableFunc);
 
 	const handleInvoiceDownload = () => {
 		setInvoiceLoading(true);
@@ -32,6 +40,28 @@ const SingleOrderDetails = ({
 			});
 	};
 
+	const handleReturnItem = (e) => {
+		e.preventDefault();
+		console.log("hihi");
+		axios.defaults.withCredentials = true;
+
+		axios
+			.put(
+				`${server}/user/return-order/${orderId}`,
+				{ description: reason },
+				{
+					withCredentials: true,
+				}
+			)
+			.then((res) => {
+				toast.success(res.data?.message || "Order Returning on Process");
+				setRefresh(!refresh);
+			})
+			.catch((err) =>
+				toast.error(err?.response?.data?.message || "An error occurred")
+			);
+	};
+
 	const handleCancelOrder = (e) => {
 		e.preventDefault();
 		axios.defaults.withCredentials = true;
@@ -39,7 +69,7 @@ const SingleOrderDetails = ({
 		axios
 			.put(
 				`${server}/user/cancel-order/${orderId}`,
-				{ description: reasonForCancelation },
+				{ description: reason },
 				{
 					withCredentials: true,
 				}
@@ -56,10 +86,7 @@ const SingleOrderDetails = ({
 	return (
 		<>
 			<section className="d-flex justify-content-between mb-4">
-				{!(
-					orderDetails.status === "Canceled" ||
-					orderDetails.status === "Delivered"
-				) && (
+				{orderDetails.status === "Processing" && (
 					<section>
 						<div class="dropdown">
 							<button
@@ -78,8 +105,8 @@ const SingleOrderDetails = ({
 									<textarea
 										type="text"
 										class="form-control"
-										value={reasonForCancelation}
-										onChange={(e) => setReasonForCancelation(e.target.value)}
+										value={reason}
+										onChange={(e) => setReason(e.target.value)}
 										id="reason-for-cancelation"
 									/>
 								</div>
@@ -87,6 +114,39 @@ const SingleOrderDetails = ({
 									onClick={handleCancelOrder}
 									className="btn btn-sm btn-danger">
 									Cancel Order
+								</button>
+							</form>
+						</div>
+					</section>
+				)}
+				{isReturnable && orderDetails.status === "Delivered" && (
+					<section>
+						<div class="dropdown">
+							<button
+								type="button"
+								class="btn btn-sm btn-danger dropdown-toggle"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								data-bs-auto-close="outside">
+								Return Item
+							</button>
+							<form class="dropdown-menu p-4">
+								<div class="mb-3" style={{ width: "15rem" }}>
+									<label for="reason-for-cancelation" class="form-label">
+										Reason
+									</label>
+									<textarea
+										type="text"
+										class="form-control"
+										value={reason}
+										onChange={(e) => setReason(e.target.value)}
+										id="reason-for-cancelation"
+									/>
+								</div>
+								<button
+									onClick={handleReturnItem}
+									className="btn btn-sm btn-danger">
+									Return
 								</button>
 							</form>
 						</div>
@@ -115,7 +175,8 @@ const SingleOrderDetails = ({
 					<p className="bg-danger-subtle text-danger fw-bold  p-1 px-3 rounded-pill d-inline">
 						{orderDetails.status}
 					</p>
-				) : orderDetails.status === "Delivered" ? (
+				) : orderDetails.status === "Delivered" ||
+				  orderDetails.status === "Return Approved" ? (
 					<p className="bg-success-subtle text-success fw-bold  p-1 px-3 rounded-pill d-inline">
 						{orderDetails.status}
 					</p>

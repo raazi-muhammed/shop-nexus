@@ -20,7 +20,7 @@ const OrderCardMain = ({
 				<p className="text-small text-secondary m-0">Status</p>
 				{status === "Canceled" ? (
 					<p className="rounded-end text-danger fw-bold ">{`${status}`}</p>
-				) : status === "Delivered" ? (
+				) : status === "Delivered" || status === "Return Approved" ? (
 					<p className="rounded-end text-success fw-bold">{`${status}`}</p>
 				) : (
 					<p className="rounded-end text-warning fw-bold">{`${status}`}</p>

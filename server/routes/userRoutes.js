@@ -20,6 +20,7 @@ const {
 	getUsersAllOrders,
 	getSingleOrders,
 	cancelOrder,
+	returnOrder,
 } = require("../controller/orderController");
 
 const { isAuthenticated } = require("../middleware/auth");
@@ -78,6 +79,10 @@ router.get("/get-order-details/:orderId", isAuthenticated, (req, res, next) => {
 
 router.put("/cancel-order/:orderId", isAuthenticated, (req, res, next) => {
 	cancelOrder(req, res, next);
+});
+
+router.put("/return-order/:orderId", isAuthenticated, (req, res, next) => {
+	returnOrder(req, res, next);
 });
 
 router.put("/change-password", isAuthenticated, (req, res, next) => {
