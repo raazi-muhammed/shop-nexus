@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
 import toast from "react-hot-toast";
-import AsideComp from "../../components/AsideComp";
+
 import AdminUserPage from "./AdminUserPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import AdminProductsPage from "./AdminProductsPage";
@@ -11,6 +11,7 @@ import AdminSellerPage from "./AdminSellerPage";
 import AdminOrdersPage from "./AdminOrdersPage";
 import SingleOrderDetails from "./SingleOrderDetails";
 import AdminCouponsPage from "./AdminCouponPage";
+import AsideComp from "../../components/layout/AsideComp";
 
 const AdminDashboardPage = () => {
 	const [data, setData] = useState([]);

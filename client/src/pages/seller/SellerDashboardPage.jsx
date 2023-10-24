@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import SellerNavbar from "../../components/SellerNavbar";
+
 import axios from "axios";
 import server from "../../server";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import SellerAllProducts from "./SellerAllProducts";
-import AsideComp from "../../components/AsideComp";
+
 import SellerAddProductPage from "./SellerAddProductPage";
 import SellerDetailsEditPage from "./SellerDetailsEditPage";
 import SellerEditSingleProductPage from "./SellerEditSingleProductPage";
@@ -15,6 +15,8 @@ import SellerStockManagement from "./SellerStockManagement";
 import SellerAddCouponPage from "./SellerAddCouponPage";
 import SellerAllCouponsPage from "./SellerAllCouponsPage";
 import SellerEditCouponPage from "./SellerEditCouponPage";
+import AsideComp from "../../components/layout/AsideComp";
+import SellerNavbar from "../../components/layout/SellerNavbar";
 
 const SellerDashboardPage = () => {
 	const navigate = useNavigate();

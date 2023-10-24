@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Icons from "../assets/Icons";
-import server from "../server";
+import Icons from "../../assets/Icons";
+import server from "../../server";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { setUserDataReducer } from "../app/feature/userData/userDataSlice";
+import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import { useDispatch } from "react-redux";
-import formatPrice from "../utils/formatPrice";
+import formatPrice from "../../utils/formatPrice";
 
 const { heart, cart } = Icons;
 

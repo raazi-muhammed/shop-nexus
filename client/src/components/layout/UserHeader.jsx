@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Icons from "../assets/Icons";
+import Icons from "../../assets/Icons";
 const { shopIcon } = Icons;
+
 const UserHeader = () => {
 	return (
 		<div>

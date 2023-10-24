@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
-import ProductCardRow from "../../components/ProductCardRow";
 import toast from "react-hot-toast";
 import ClipLoader from "react-spinners/ClipLoader";
 import Pagination from "../../components/Pagination";
+import ProductCardRow from "../../components/product/ProductCardRow";
 
 const SellerAllProducts = ({ shopId }) => {
 	const [loading, setLoading] = useState(false);

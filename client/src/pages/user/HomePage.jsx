@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
-import UserHeader from "../../components/UserHeader";
-import UserNavbar from "../../components/UserNavbar";
 import { Route, Routes } from "react-router-dom";
 import FAQsPage from "./homepage/FAQsPage";
 import ProductsPage from "./homepage/ProductsPage";
 import BestSellingPage from "./homepage/BestSellingPage";
 import HomeContentPage from "./homepage/HomeContentPage";
 import SingleProductPage from "./SingleProductPage";
-import FooterComp from "../../components/FooterComp";
 import UserDashboard from "./UserDashboard";
 import UserSingleShopPage from "./UserSingleShopPage";
 
-import CartUser from "../../components/CartUser";
-import WishListUser from "../../components/WishListUser";
 import { useDispatch, useSelector } from "react-redux";
 import server from "../../server";
 import axios from "axios";
@@ -20,6 +15,11 @@ import axios from "axios";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import toast from "react-hot-toast";
 import CheckOutPage from "./CheckOutPage";
+import UserHeader from "../../components/layout/UserHeader";
+import UserNavbar from "../../components/layout/UserNavbar";
+import CartUser from "../../components/user/CartUser";
+import WishListUser from "../../components/user/WishListUser";
+import FooterComp from "../../components/layout/FooterComp";
 
 const HomePage = () => {
 	const cartState = useSelector((state) => state.cart.isCartVisible);

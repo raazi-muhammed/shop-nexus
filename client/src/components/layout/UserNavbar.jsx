@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Icons from "../assets/Icons";
+import Icons from "../../assets/Icons";
 const { heart, cart, profile } = Icons;
-import NavComponent from "./NavComponent";
-import category from "../utils/category";
+import category from "../../utils/category";
 import { useDispatch, useSelector } from "react-redux";
-import { displayCart } from "../app/feature/cart/cartSlice";
-import { displayWishList } from "../app/feature/wishList/wishListSlice";
+import { displayCart } from "../../app/feature/cart/cartSlice";
+import { displayWishList } from "../../app/feature/wishList/wishListSlice";
 import axios from "axios";
-import server from "../server";
+import server from "../../server";
 import toast from "react-hot-toast";
-import { useUserAuth } from "../context/userAuthContext";
+import { useUserAuth } from "../../context/userAuthContext";
+import NavComponent from "./NavComponent";
 
 const UserNavbar = () => {
 	const navigate = useNavigate();

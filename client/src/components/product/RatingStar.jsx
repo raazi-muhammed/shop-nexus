@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import Icons from "../assets/Icons";
+import Icons from "../../assets/Icons";
 const { star, hollowStar } = Icons;
 
 const RatingStar = ({ rating }) => {

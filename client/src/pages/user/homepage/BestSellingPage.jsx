@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import server from "../../../server";
 import axios from "axios";
-import ProductCartMain from "../../../components/ProductCartMain";
 import ClipLoader from "react-spinners/ClipLoader";
+import ProductCartMain from "../../../components/product/ProductCartMain";
 
 const BestSellingPage = ({ showHeading }) => {
 	const [loading, setLoading] = useState(false);

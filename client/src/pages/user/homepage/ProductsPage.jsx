@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import server from "../../../server";
 import axios from "axios";
-
-import ProductCartMain from "../../../components/ProductCartMain";
 import toast from "react-hot-toast";
 import ClipLoader from "react-spinners/ClipLoader";
+import ProductCartMain from "../../../components/product/ProductCartMain";
 
 const ProductsPage = ({ showHeading }) => {
 	const [loading, setLoading] = useState(false);

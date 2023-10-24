@@ -2,9 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
 import { Link, Route, Routes, useParams } from "react-router-dom";
-import RatingStar from "../../components/RatingStar";
 import Icons from "../../assets/Icons";
-import NavComponent from "../../components/NavComponent";
+
 import toast from "react-hot-toast";
 const { heart, cart } = Icons;
 import ReactImageMagnify from "react-image-magnify";
@@ -13,6 +12,8 @@ import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
 import formatPrice from "../../utils/formatPrice";
+import NavComponent from "../../components/layout/NavComponent";
+import RatingStar from "../../components/product/RatingStar";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);

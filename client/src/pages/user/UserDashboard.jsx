@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AsideComp from "../../components/AsideComp";
+
 import { Route, Routes, useNavigate } from "react-router-dom";
 import UserEditPage from "./dashboard/UserEditPage";
 import UserAddAddress from "./dashboard/userAddAddress";
@@ -8,6 +8,7 @@ import UserAllOrders from "./dashboard/UserAllOrders";
 import UserSingleOrderDetails from "./dashboard/UserSingleOrderDetails";
 import ChattingComp from "../../components/ChattingComp";
 import UserConversationsPage from "./dashboard/UserConversationsPage";
+import AsideComp from "../../components/layout/AsideComp";
 
 const UserDashboard = () => {
 	const navigate = useNavigate();

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../server";
 import toast from "react-hot-toast";
-import ProductCartMain from "../../components/ProductCartMain";
+import ProductCartMain from "../../components/product/ProductCartMain";
 
 const UserSingleShopPage = () => {
 	const { id } = useParams();

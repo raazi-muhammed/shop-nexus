@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
-import ProductCartMain from "../../components/ProductCartMain";
+import ProductCartMain from "../../components/product/ProductCartMain";
 
 const ProductSuggestion = ({ productCategory }) => {
 	const [productsData, setProductsData] = useState([]);

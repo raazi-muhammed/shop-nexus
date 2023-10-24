@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import server from "../server";
+import server from "../../server";
 import toast from "react-hot-toast";
 
 const SellerNavbar = ({ shopName }) => {
