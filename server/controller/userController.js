@@ -58,7 +58,6 @@ const loadUser = asyncErrorHandler(async (req, res, next) => {
 });
 
 const providerSignIn = asyncErrorHandler(async (req, res, next) => {
-	//console.log(req.body);
 	const { email, fullName, avatarUrl } = req.body;
 
 	let user;
@@ -76,7 +75,6 @@ const providerSignIn = asyncErrorHandler(async (req, res, next) => {
 		return next(new ErrorHandler("You are Blocked", 200));
 	}
 
-	console.log(user);
 	sendToken(user, 201, res, "userToken");
 });
 
@@ -302,7 +300,6 @@ const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 		balance: user.wallet.balance,
 		events: sortedEvents,
 	};
-	console.log(walletInfo);
 
 	res.status(200).json({
 		success: true,
@@ -311,12 +308,11 @@ const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 });
 
 const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
-	console.log("wallet changed balance");
 	const { amountToAdd, description } = req.body;
 
 	if (amountToAdd < 0) {
 		const user = await User.findOne({ _id: req.user.id });
-		console.log(user.wallet.balance, amountToAdd * -1);
+
 		if (user.wallet.balance < amountToAdd * -1)
 			return next(new ErrorHandler("Not enough Balance on Wallet", 401));
 	}

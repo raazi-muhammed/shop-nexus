@@ -8,6 +8,7 @@ const convertISOToDate = require("../utils/convertISOToDate");
 const { changeStockBasedOnOrder } = require("./productController");
 const User = require("../model/User");
 const { changeWalletBalance } = require("./userController");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
 const refundedToUser = async (orderId) => {
 	const orderData = await Order.findOne({ orderId });
@@ -146,12 +147,18 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 
 const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
-	const orderData = await Order.find({ user: userId })
-		.populate("orderItems.product")
-		.sort({ createdAt: -1 });
+
+	const [pagination, orderData] = await findWithPaginationAndSorting(
+		req,
+		Order,
+		{
+			user: userId,
+		}
+	);
 
 	res.status(200).json({
 		success: true,
+		pagination,
 		orderData,
 	});
 });

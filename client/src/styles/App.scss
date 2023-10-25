@@ -25,6 +25,9 @@ $table-border-color: #f1f0ff;
 
 /* Pagination */
 $pagination-border-radius-sm: 1rem;
+$pagination-color: $primary;
+$pagination-bg: $light;
+$pagination-hover-bg: #c3c1f5;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
