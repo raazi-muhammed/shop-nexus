@@ -48,10 +48,10 @@ const LoginPage = () => {
 					if (res.data.success) navigate("/");
 				})
 				.catch((err) => {
-					console.log(err);
+					toast.error(err.message);
 				});
 		} catch (error) {
-			console.log(error);
+			toast.error(error.message);
 		}
 	};
 
@@ -80,10 +80,10 @@ const LoginPage = () => {
 					if (res.data.success) navigate("/");
 				})
 				.catch((err) => {
-					console.log(err);
+					toast.error(err.message);
 				});
 		} catch (error) {
-			console.log(error);
+			toast.error(error.message);
 		}
 	};
 
