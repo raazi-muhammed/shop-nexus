@@ -6,8 +6,7 @@ import { socket } from "../socket";
 const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 	const { senderId, receiverId } = chatInfo;
 
-	//const [displayMessages, setDisplayMessages] = useState([]);
-	const displayMessages = useRef([]);
+	const [messagesToShow, setMessagesToShow] = useState([]);
 	const [message, setMessage] = useState("");
 	const [conversationID, setConversationID] = useState("");
 
@@ -25,7 +24,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 					.get(`${server}/message/get-messages/${res.data.conversationId}`)
 					.then((res) => {
 						console.log(res);
-						displayMessages.current = res.data.messages;
+						setMessagesToShow(res.data.messages);
 					});
 			});
 	}, [chatInfo, toPersonInfo]);
@@ -42,8 +41,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 			.then((res) => console.log(res))
 			.catch((err) => console.log(err));
 
-		const oldMsg = displayMessages.current;
-		displayMessages.current = [...oldMsg, { sender: senderId, text: message }];
+		setMessagesToShow([...messagesToShow, { sender: senderId, text: message }]);
 
 		setMessage("");
 		socket.emit("send-message", {
@@ -52,13 +50,6 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 			receiverId,
 			message,
 		});
-
-		try {
-			window.setInterval(function () {
-				var elem = document.getElementById("messages-chat");
-				elem.scrollTop = elem.scrollHeight;
-			}, 5000);
-		} catch (error) {}
 	};
 
 	useEffect(() => {
@@ -68,23 +59,25 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 	useEffect(() => {
 		socket.on("receive-message", (res) => {
 			console.log(res?.message);
-			const oldMsg = displayMessages.current;
-			displayMessages.current = [
-				...oldMsg,
-				{ sender: res.senderId, text: res.message },
-			];
-		});
 
-		try {
-			window.setInterval(function () {
-				var elem = document.getElementById("messages-chat");
-				elem.scrollTop = elem.scrollHeight;
-			}, 5000);
-		} catch (error) {}
+			setMessagesToShow((prevMessagesToShow) => [
+				...prevMessagesToShow,
+				{ sender: res.senderId, text: res.message },
+			]);
+		});
 	}, [socket]);
 
+	useEffect(() => {
+		const divRef = document.querySelector("#messages-chat");
+		divRef.scrollIntoView({
+			behavior: "smooth",
+			block: "end",
+			inline: "nearest",
+		});
+	}, [messagesToShow]);
+
 	return (
-		<main className="w-100" style={{ height: "45rem" }}>
+		<main className="w-100" style={{ height: "85vh" }}>
 			<div className="d-flex align-content-center">
 				<div>
 					<img
@@ -98,18 +91,8 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 					{toPersonInfo?.name}
 				</p>
 			</div>
-			<div className="d-flex flex-wrap">
-				<p className="text-small text-secondary m-0">
-					conversationID: {conversationID} ||
-				</p>
-				<p className="text-small text-secondary m-0">Sender: {senderId} || </p>
-				<p className="text-small text-secondary m-0">
-					Receiver: {receiverId} ||{" "}
-				</p>
-			</div>
-
-			<section id="messages-chat" className="overflow-auto h-75">
-				{displayMessages?.current?.map((msg) => (
+			<section className="overflow-auto h-75">
+				{messagesToShow?.map((msg) => (
 					<div
 						className={`p-2 px-3  m-1 my-2 rounded-4 ${
 							senderId === msg.sender
@@ -123,6 +106,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 						<p className="m-0 text-small text-light">{msg.sender}</p>
 					</div>
 				))}
+				<hr className="text-light" id="messages-chat" />
 			</section>
 			<section className="w-100">
 				<form onSubmit={handleSendMessage} class="input-group mb-3">
