@@ -3,7 +3,6 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
 
 const addCoupon = asyncErrorHandler(async (req, res, next) => {
-	console.log(req.body);
 	const couponDataForm = { ...req.body, events: [{ name: "Coupon Created" }] };
 
 	const couponAlready = await Coupon.find({ code: couponDataForm.code });
@@ -80,6 +79,33 @@ const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
 		},
 		message: "Got Coupon",
 		couponData,
+	});
+});
+
+const getApplicableCoupons = asyncErrorHandler(async (req, res, next) => {
+	const { totalAmount } = req.query;
+
+	const couponData = await Coupon.find({
+		status: "Active",
+		minAmount: { $lt: totalAmount },
+		maxAmount: { $gt: totalAmount },
+	})
+		.sort({ createdAt: -1 })
+		.limit(10);
+
+	if (couponData.length === 0)
+		return next(new ErrorHandler("No coupon found", 400));
+
+	const date = new Date();
+	const filteredCoupons = couponData.filter((_coupon) => {
+		const couponDate = new Date(_coupon.expires);
+		return date < couponDate;
+	});
+
+	res.status(200).json({
+		success: true,
+		message: "Got Coupon",
+		couponData: filteredCoupons,
 	});
 });
 
@@ -160,4 +186,5 @@ module.exports = {
 	getCouponDetails,
 	editCoupon,
 	getAllCoupons,
+	getApplicableCoupons,
 };

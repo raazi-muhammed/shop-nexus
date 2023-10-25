@@ -16,7 +16,7 @@ const OrderCardMain = ({
 		<div
 			onClick={() => navigate(`${orderId}`)}
 			className="p-3 bg-white mb-3 row rounded-4 align-items-center ">
-			<section className="col">
+			<section className="col-4">
 				<p className="text-small text-secondary m-0">Status</p>
 				{status === "Canceled" ? (
 					<p className="rounded-end text-danger fw-bold ">{`${status}`}</p>
@@ -28,7 +28,7 @@ const OrderCardMain = ({
 				<p className="text-small text-secondary m-0">Date</p>
 				<p className="fw-bold m-0">{`${convertISOToDate(createdAt)}`}</p>
 			</section>
-			<section className="col-5">
+			<section className="col-4">
 				<p className="text-small text-secondary m-0">Items</p>
 				{orderItems.map((e) => (
 					<div className="mb-2">
@@ -39,7 +39,7 @@ const OrderCardMain = ({
 					</div>
 				))}
 			</section>
-			<section className="col">
+			<section className="col-4">
 				<p className="text-small text-secondary m-0">Total Price</p>
 				<p>{formatPrice(totalPrice)}</p>
 				<p className="text-small text-secondary m-0 ">Address</p>

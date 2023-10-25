@@ -151,7 +151,7 @@ const UserWallet = () => {
 						disabled={!allowSubmission}
 						type="submit"
 						className="mt-3 btn btn-primary btn-sm">
-						Update
+						Add via Razorpay
 					</button>
 				</form>
 			</div>

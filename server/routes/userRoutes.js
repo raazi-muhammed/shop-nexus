@@ -25,7 +25,10 @@ const {
 
 const { isAuthenticated } = require("../middleware/auth");
 const { upload } = require("../multer");
-const { applyCouponCode } = require("../controller/couponController");
+const {
+	applyCouponCode,
+	getApplicableCoupons,
+} = require("../controller/couponController");
 
 router.post("/login-user", (req, res, next) => {
 	userLogin(req, res, next);
@@ -91,6 +94,10 @@ router.put("/change-password", isAuthenticated, (req, res, next) => {
 
 router.put("/apply-coupon", isAuthenticated, (req, res, next) => {
 	applyCouponCode(req, res, next);
+});
+
+router.get("/get-coupons-to-display", isAuthenticated, (req, res, next) => {
+	getApplicableCoupons(req, res, next);
 });
 
 router.get("/get-wallet-details", isAuthenticated, (req, res, next) => {

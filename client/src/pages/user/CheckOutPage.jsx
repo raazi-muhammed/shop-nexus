@@ -9,6 +9,8 @@ import server from "../../server";
 import axios from "axios";
 import toast from "react-hot-toast";
 import formatPrice from "../../utils/formatPrice";
+import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+import CouponComp from "../../components/checkout/couponComp";
 
 const CheckOutPage = () => {
 	const location = useLocation();
@@ -21,6 +23,18 @@ const CheckOutPage = () => {
 		useState("-");
 	const [discountAmount, setDiscountAmount] = useState("-");
 	const [totalAmount, setTotalAmount] = useState("-");
+
+	useEffect(() => {
+		axios
+			.get(`${server}/cart/get-all-cart`, { withCredentials: true })
+			.then((res) => {
+				console.log(res.data?.user);
+				dispatch(setUserDataReducer(res.data?.user));
+			})
+			.catch((err) => {
+				toast.error(err?.response?.data?.message || "Error Loading Wishlist");
+			});
+	}, []);
 
 	useEffect(() => {
 		try {
@@ -43,11 +57,11 @@ const CheckOutPage = () => {
 			dispatch(setTotalPrice(_totalAmountWithOutDiscount - _discountAmount));
 		} catch (error) {
 			console.log(error);
-			setDiscountAmount("Error");
-			setTotalAmountWithOutDiscount("Error");
-			setTotalAmount("Error");
+			setDiscountAmount("-");
+			setTotalAmountWithOutDiscount("-");
+			setTotalAmount("-");
 		}
-	}, [discountAmount]);
+	}, [discountAmount, userData]);
 
 	const navItems = [
 		{ name: "Shipping", link: "" },
@@ -62,36 +76,6 @@ const CheckOutPage = () => {
 		});
 	}, [location.pathname]);
 
-	const [couponErr, setCouponErr] = useState("");
-	const [validationSetting, setValidationSetting] =
-		useState("needs-validation");
-	const [allowSubmission, setAllowSubmission] = useState(false);
-	const handleFormChange = (e) => {
-		setAllowSubmission(e.currentTarget.checkValidity());
-		setValidationSetting("was-validated");
-	};
-
-	const [couponCode, setCouponCode] = useState();
-
-	const handleApplyCoupon = (e) => {
-		e.preventDefault();
-		setAllowSubmission(false);
-		const formData = {
-			totalAmount,
-			couponCode,
-		};
-		axios
-			.put(`${server}/user/apply-coupon`, formData, { withCredentials: true })
-			.then((res) => {
-				toast.success(res.data?.message || "Success");
-				setDiscountAmount(res.data?.discountAmount);
-			})
-			.catch((err) =>
-				err.response?.data?.message
-					? setCouponErr(err.response?.data?.message)
-					: toast.error("An error occurred")
-			);
-	};
 	return (
 		<div className="container container-xxl min-vh-100">
 			<div className="py-5">
@@ -157,43 +141,10 @@ const CheckOutPage = () => {
 									</div>
 								</div>
 							</section>
-
-							<section className="bg-white rounded-4 p-4 mt-4">
-								<form
-									noValidate
-									onChange={handleFormChange}
-									className={`row ${validationSetting}`}
-									onSubmit={handleApplyCoupon}>
-									<div>
-										<label for="coupon-code" class="form-label ms-2">
-											Apply Coupon Code
-										</label>
-										<input
-											type="text"
-											class="form-control"
-											className={`form-control ${
-												couponErr ? "is-invalid" : ""
-											}`}
-											onChange={(e) => {
-												setCouponErr("");
-												setCouponCode(e.target.value);
-											}}
-											id="coupon-code"
-											value={couponCode}
-											required
-										/>
-										<div class="ms-2 invalid-feedback">
-											{couponErr ? couponErr : "Invalid"}
-										</div>
-									</div>
-									<button
-										disabled={!allowSubmission}
-										type="submit"
-										className="btn btn-primary btn-sm text-white px-3 col-6 mt-3 mx-auto">
-										Apply
-									</button>
-								</form>
-							</section>
+							<CouponComp
+								totalAmountWithOutDiscount={totalAmountWithOutDiscount}
+								setDiscountAmount={setDiscountAmount}
+							/>
 						</aside>
 					) : null}
 					<main className="col">
