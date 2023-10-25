@@ -1,16 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import server from "../server";
-import { useParams } from "react-router-dom";
 import { socket } from "../socket";
 
-const ChattingComp = () => {
-	const { senderId, receiverId } = useParams("");
+const ChattingComp = ({ chatInfo, toPersonInfo }) => {
+	const { senderId, receiverId } = chatInfo;
+
 	//const [displayMessages, setDisplayMessages] = useState([]);
 	const displayMessages = useRef([]);
 	const [message, setMessage] = useState("");
 	const [conversationID, setConversationID] = useState("");
-	const [refresh, setRefresh] = useState(true);
 
 	//creating the conversation if not available if conversatinis there getting the messages
 	useEffect(() => {
@@ -29,13 +28,11 @@ const ChattingComp = () => {
 						displayMessages.current = res.data.messages;
 					});
 			});
-	}, []);
+	}, [chatInfo, toPersonInfo]);
 
 	const handleSendMessage = (e) => {
 		e.preventDefault();
-
 		console.log(socket.id);
-
 		axios
 			.post(`${server}/message/new-message`, {
 				conversationId: conversationID,
@@ -55,32 +52,63 @@ const ChattingComp = () => {
 			receiverId,
 			message,
 		});
+
+		try {
+			window.setInterval(function () {
+				var elem = document.getElementById("messages-chat");
+				elem.scrollTop = elem.scrollHeight;
+			}, 5000);
+		} catch (error) {}
 	};
 
 	useEffect(() => {
 		socket.emit("add-user", senderId);
-	}, []);
+	}, [chatInfo]);
 
 	useEffect(() => {
 		socket.on("receive-message", (res) => {
 			console.log(res?.message);
-
 			const oldMsg = displayMessages.current;
 			displayMessages.current = [
 				...oldMsg,
 				{ sender: res.senderId, text: res.message },
 			];
-			setRefresh(!refresh);
 		});
+
+		try {
+			window.setInterval(function () {
+				var elem = document.getElementById("messages-chat");
+				elem.scrollTop = elem.scrollHeight;
+			}, 5000);
+		} catch (error) {}
 	}, [socket]);
 
 	return (
-		<main className="w-100 position-relative p-5" style={{ height: "50rem" }}>
-			<p>conversationID: {conversationID}</p>
-			<p>Sender: {senderId}</p>
-			<p>Receiver: {receiverId}</p>
+		<main className="w-100" style={{ height: "45rem" }}>
+			<div className="d-flex align-content-center">
+				<div>
+					<img
+						className="rounded-circle"
+						src={toPersonInfo?.imageUrl}
+						alt=""
+						style={{ width: "2rem" }}
+					/>
+				</div>
+				<p className="m-0 fw-bold text-secondary ms-2 mt-1  ">
+					{toPersonInfo?.name}
+				</p>
+			</div>
+			<div className="d-flex flex-wrap">
+				<p className="text-small text-secondary m-0">
+					conversationID: {conversationID} ||
+				</p>
+				<p className="text-small text-secondary m-0">Sender: {senderId} || </p>
+				<p className="text-small text-secondary m-0">
+					Receiver: {receiverId} ||{" "}
+				</p>
+			</div>
 
-			<section className="overflow-auto h-75">
+			<section id="messages-chat" className="overflow-auto h-75">
 				{displayMessages?.current?.map((msg) => (
 					<div
 						className={`p-2 px-3  m-1 my-2 rounded-4 ${
@@ -100,7 +128,7 @@ const ChattingComp = () => {
 				<form onSubmit={handleSendMessage} class="input-group mb-3">
 					<input
 						type="text"
-						class="form-control"
+						class="form-control rounded-start-pill"
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
 						placeholder="message..."
@@ -108,7 +136,7 @@ const ChattingComp = () => {
 						aria-describedby="button-addon2"
 					/>
 					<button
-						class="btn btn-secondary text-white"
+						class="btn px-3 btn-secondary text-white rounded-end-pill"
 						type="submit"
 						id="send-button">
 						Send

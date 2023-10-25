@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
-import { Link, Route, Routes, useParams } from "react-router-dom";
+import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import Icons from "../../assets/Icons";
 
 import toast from "react-hot-toast";
@@ -18,6 +18,7 @@ import { getCategoryByKey } from "../../constants/categoriesConstants";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
 
@@ -31,6 +32,17 @@ const SingleProductPage = () => {
 		{ name: "Reviews", link: "reviews" },
 		{ name: "About Seller", link: "about-seller" },
 	];
+
+	const handleMessageShop = () => {
+		axios
+			.post(`${server}/conversation/get-conversation`, {
+				senderId: userData._id,
+				receiverId: shopData?._id,
+			})
+			.then((res) => {
+				navigate(`/user/dashboard/${userData._id}/messages`);
+			});
+	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -201,12 +213,11 @@ const SingleProductPage = () => {
 													View Shop
 												</button>
 											</Link>
-											<Link
-												to={`/user/message/${userData._id}/${shopData?._id}`}>
-												<button className="btn-sm btn btn-light">
-													Message Shop
-												</button>
-											</Link>
+											<button
+												onClick={handleMessageShop}
+												className="btn-sm btn btn-light">
+												Message Shop
+											</button>
 										</section>
 									</section>
 								</section>

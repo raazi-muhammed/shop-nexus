@@ -5,20 +5,24 @@ router.post("/get-conversation", async (req, res) => {
 	try {
 		const { senderId, receiverId } = req.body;
 		let conversationId;
-
+		console.log(req.body);
 		const conversationAlready = await Conversation.findOne({
-			user: senderId,
-			shop: receiverId,
+			$or: [
+				{ user: senderId, shop: receiverId },
+				{ user: receiverId, shop: senderId },
+			],
 		});
 
-		if (!conversationAlready) {
+		console.log(conversationAlready);
+
+		if (conversationAlready) {
+			conversationId = conversationAlready._id;
+		} else {
 			const newConversation = await Conversation.create({
 				user: senderId,
 				shop: receiverId,
 			});
 			conversationId = newConversation._id;
-		} else {
-			conversationId = conversationAlready._id;
 		}
 
 		res.status(200).json({
@@ -37,9 +41,12 @@ router.get("/get-all-conversation/:userId", async (req, res) => {
 		const { userId } = req.params;
 
 		const conversations = await Conversation.find({
-			user: userId,
-		}).populate("shop");
+			$or: [{ user: userId }, { shop: userId }],
+		})
+			.populate("shop")
+			.populate("user");
 
+		console.log(conversations);
 		res.status(200).json({
 			success: true,
 			conversations,

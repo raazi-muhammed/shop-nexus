@@ -24,6 +24,7 @@ const getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
+	socket.removeAllListeners();
 	console.log(socket.id, "connected");
 
 	socket.on("add-user", (userId) => {
