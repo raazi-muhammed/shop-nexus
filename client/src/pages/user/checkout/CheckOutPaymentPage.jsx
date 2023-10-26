@@ -72,6 +72,7 @@ const CheckOutPaymentPage = ({ totalAmount }) => {
 				);
 
 				const { amount, id: order_id, currency } = result.data.order;
+
 				const {
 					data: { key: razorpayKey },
 				} = await axios.get(`${server}/payment/get-razorpay-key`);

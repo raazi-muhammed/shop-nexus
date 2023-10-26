@@ -21,6 +21,8 @@ import CartUser from "../../components/user/CartUser";
 import WishListUser from "../../components/user/WishListUser";
 import FooterComp from "../../components/layout/FooterComp";
 import SearchResults from "./homepage/SearchResults";
+import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
+import SuccessPlus from "./nexusPlus/SuccessPlus";
 
 const HomePage = () => {
 	const cartState = useSelector((state) => state.cart.isCartVisible);
@@ -55,6 +57,8 @@ const HomePage = () => {
 				<Route path="/best-selling" element={<BestSellingPage />} />
 				<Route path="/faqs" element={<FAQsPage />} />
 				<Route path="/search" element={<SearchResults />} />
+				<Route path="/shop-nexus-plus" element={<UserShopNexusPlus />} />
+				<Route path="/shop-nexus-plus/success" element={<SuccessPlus />} />
 				<Route path="/product/:id/*" element={<SingleProductPage />} />
 				<Route path="/shop/:id/*" element={<UserSingleShopPage />} />
 				<Route path="/user/dashboard/:userId/*" element={<UserDashboard />} />

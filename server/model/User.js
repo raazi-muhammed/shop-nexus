@@ -103,6 +103,15 @@ const userSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		plusMember: {
+			active: {
+				type: Boolean,
+				default: false,
+			},
+			details: {
+				type: Object,
+			},
+		},
 		wallet: {
 			balance: {
 				type: Number,

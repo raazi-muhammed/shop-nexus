@@ -21,6 +21,7 @@ const CheckOutPage = () => {
 
 	const [totalAmountWithOutDiscount, setTotalAmountWithOutDiscount] =
 		useState("-");
+	const [shippingCharge, setShippingCharge] = useState(100);
 	const [discountAmount, setDiscountAmount] = useState("-");
 	const [totalAmount, setTotalAmount] = useState("-");
 
@@ -32,7 +33,7 @@ const CheckOutPage = () => {
 				dispatch(setUserDataReducer(res.data?.user));
 			})
 			.catch((err) => {
-				toast.error(err?.response?.data?.message || "Error Loading Wishlist");
+				toast.error(err?.response?.data?.message || "Error Loading Cart");
 			});
 	}, []);
 
@@ -46,10 +47,12 @@ const CheckOutPage = () => {
 			if (discountAmount == "-") _discountAmount = 0;
 			else _discountAmount = discountAmount;
 
+			if (userData.plusMember.active) setShippingCharge(0);
 			//setDiscountAmount(_discountAmount);
 			setTotalAmountWithOutDiscount(_totalAmountWithOutDiscount);
-			setTotalAmount(_totalAmountWithOutDiscount - _discountAmount);
-			console.log(_totalAmountWithOutDiscount - _discountAmount);
+			setTotalAmount(
+				_totalAmountWithOutDiscount + shippingCharge - _discountAmount
+			);
 
 			/* NEED TO REMOVE OR CHANGE */
 			/* ------------------------------------------------------------------  */
@@ -122,6 +125,19 @@ const CheckOutPage = () => {
 											{formatPrice(totalAmountWithOutDiscount)}
 										</p>
 									</div>
+									<div className="col-12 d-flex">
+										<p className="mb-0 col text-secondary">Shipping Charge</p>
+										<p className="mb-0 col-3 mt-auto text-end text-secondary">
+											{shippingCharge === 0
+												? "FREE"
+												: formatPrice(shippingCharge)}
+										</p>
+									</div>
+									<Link
+										to={"/shop-nexus-plus"}
+										className="text-small text-light mb-2">
+										Get Free shipping
+									</Link>
 									<div className="col-12 d-flex">
 										<p className="col text-secondary">Discount</p>
 										<p className="col-3 mt-auto text-end text-secondary">

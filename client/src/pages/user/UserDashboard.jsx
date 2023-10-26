@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import UserEditPage from "./dashboard/UserEditPage";
 import UserAddAddress from "./dashboard/userAddAddress";
 import UserAllAddress from "./dashboard/UserAllAddress";
@@ -12,9 +12,11 @@ import UserConversationsPage from "./dashboard/UserConversationsPage";
 import AsideComp from "../../components/layout/AsideComp";
 
 import UserWallet from "./dashboard/UserWallet";
+import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
+import { useSelector } from "react-redux";
 
 const UserDashboard = () => {
-	const navigate = useNavigate();
+	const userData = useSelector((state) => state.userData.userData);
 
 	const asideItems = [
 		{ name: "Edit User", link: "" },
@@ -31,6 +33,35 @@ const UserDashboard = () => {
 				<div className="row py-5">
 					<section className="col-12 col-md-4 col-lg-3 mb-5">
 						<AsideComp asideItems={asideItems} />
+						<Link to={"/shop-nexus-plus"}>
+							<section className="bg-primary rounded-4 mt-2 text-white p-4">
+								{userData.plusMember ? (
+									<>
+										<p className="m-0">Shop Nexus Plus</p>
+										<p className="text-small text-secondary m-0">
+											View Your Benifits
+										</p>
+									</>
+								) : (
+									<div>
+										<button
+											className={
+												"btn text-light fw-light text-start w-100 p-0"
+											}>
+											Become{" "}
+											<span className="fw-bold text-white"> Shop Nexus+</span>{" "}
+											Member
+										</button>
+										<p className="text-small text-secondary mb-1">
+											Get free shipping
+										</p>
+										<p className="text-small text-secondary mb-1">
+											Message seller directly
+										</p>
+									</div>
+								)}
+							</section>
+						</Link>
 					</section>
 					<section className="col-12 col-md-8 col-lg-9">
 						<Routes>

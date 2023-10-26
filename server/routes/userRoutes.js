@@ -14,6 +14,7 @@ const {
 	providerSignIn,
 	getWalletDetails,
 	changeWalletBalance,
+	becomePlusMember,
 } = require("../controller/userController");
 
 const {
@@ -106,6 +107,10 @@ router.get("/get-wallet-details", isAuthenticated, (req, res, next) => {
 
 router.patch("/change-wallet-balance", isAuthenticated, (req, res, next) => {
 	changeWalletBalance(req, res, next);
+});
+
+router.put("/become-plus-member", isAuthenticated, (req, res, next) => {
+	becomePlusMember(req, res, next);
 });
 
 module.exports = router;

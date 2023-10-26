@@ -338,6 +338,25 @@ const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const becomePlusMember = asyncErrorHandler(async (req, res, next) => {
+	const plusMember = {
+		active: true,
+		details: req.body.details,
+	};
+	const user = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{
+			plusMember,
+		},
+		{ new: true, upsert: true }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: "Plus membership activated",
+	});
+});
+
 module.exports = {
 	userLogin,
 	loadUser,
@@ -353,4 +372,5 @@ module.exports = {
 	providerSignIn,
 	getWalletDetails,
 	changeWalletBalance,
+	becomePlusMember,
 };

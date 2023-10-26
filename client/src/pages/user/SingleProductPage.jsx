@@ -34,6 +34,7 @@ const SingleProductPage = () => {
 	];
 
 	const handleMessageShop = () => {
+		if (!userData.plusMember?.active) return navigate("/shop-nexus-plus");
 		axios
 			.post(`${server}/conversation/get-conversation`, {
 				senderId: userData._id,
