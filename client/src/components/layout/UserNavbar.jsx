@@ -22,7 +22,7 @@ const UserNavbar = () => {
 		{ name: "Home", link: "/" },
 		{ name: "Best Selling", link: "/best-selling" },
 		{ name: "Products", link: "/new-products" },
-		{ name: "Events", link: "/" },
+		{ name: "Events", link: "/events" },
 		{ name: "FAQs", link: "/faqs" },
 	];
 

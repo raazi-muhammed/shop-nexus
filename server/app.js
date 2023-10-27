@@ -21,6 +21,7 @@ const conversationRoutes = require("./routes/conversationRoutes");
 const errorHandling = require("./middleware/errorHandling");
 const messageRoutes = require("./routes/messageRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const eventRoutes = require("./routes/eventRoutes");
 //const socketController = require("./controller/socketController");
 
 /* Cors */
@@ -72,6 +73,7 @@ app.use("/api/v1/seller/", sellerRoutes);
 app.use("/api/v1/message/", messageRoutes);
 app.use("/api/v1/conversation/", conversationRoutes);
 app.use("/api/v1/payment/", paymentRoutes);
+app.use("/api/v1/event/", eventRoutes);
 //app.use("/api/v1/chat/", socketController);
 
 app.get("*", (req, res) => {

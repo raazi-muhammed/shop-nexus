@@ -18,6 +18,7 @@ import SellerEditCouponPage from "./SellerEditCouponPage";
 import AsideComp from "../../components/layout/AsideComp";
 import SellerNavbar from "../../components/layout/SellerNavbar";
 import SellerConversationsPage from "./SellerConversationsPage";
+import SellerNewEvent from "./SellerNewEvent";
 
 const SellerDashboardPage = () => {
 	const navigate = useNavigate();
@@ -57,6 +58,10 @@ const SellerDashboardPage = () => {
 		{
 			name: "Messages",
 			link: `/seller/dashboard/${shopId}/messages`,
+		},
+		{
+			name: "New Event",
+			link: `/seller/dashboard/${shopId}/new-event`,
 		},
 	];
 
@@ -109,6 +114,7 @@ const SellerDashboardPage = () => {
 								element={<SellerEditCouponPage />}
 							/>
 							<Route path="/messages" element={<SellerConversationsPage />} />
+							<Route path="/new-event" element={<SellerNewEvent />} />
 							<Route
 								path="/edit-single-product/:productId"
 								element={<SellerEditSingleProductPage />}

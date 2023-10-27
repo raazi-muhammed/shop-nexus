@@ -23,6 +23,7 @@ import FooterComp from "../../components/layout/FooterComp";
 import SearchResults from "./homepage/SearchResults";
 import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
 import SuccessPlus from "./nexusPlus/SuccessPlus";
+import EventsPage from "./homepage/Eventspage";
 
 const HomePage = () => {
 	const cartState = useSelector((state) => state.cart.isCartVisible);
@@ -55,6 +56,7 @@ const HomePage = () => {
 			<Routes>
 				<Route path="/new-products" element={<ProductsPage />} />
 				<Route path="/best-selling" element={<BestSellingPage />} />
+				<Route path="/events" element={<EventsPage />} />
 				<Route path="/faqs" element={<FAQsPage />} />
 				<Route path="/search" element={<SearchResults />} />
 				<Route path="/shop-nexus-plus" element={<UserShopNexusPlus />} />
