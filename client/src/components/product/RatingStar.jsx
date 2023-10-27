@@ -7,8 +7,8 @@ const RatingStar = ({ rating }) => {
 	const [starArray, setStarArray] = useState([]);
 	useEffect(() => {
 		const newArray = [];
-		for (let i = 0; i < 5; i++) {
-			if (i < rating / 2) newArray.push(star);
+		for (let i = 0; i < 10; i += 2) {
+			if (i < rating) newArray.push(star);
 			else newArray.push(hollowStar);
 		}
 		setStarArray(newArray);

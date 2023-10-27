@@ -6,8 +6,10 @@ import { useSelector } from "react-redux";
 import ProductSearchResult from "../../../components/product/ProductSearchResult";
 import { debounce } from "lodash";
 import RatingStar from "../../../components/product/RatingStar";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const SearchResults = () => {
+	const [loading, setLoading] = useState(false);
 	const searchOptions = useSelector(
 		(state) => state.searchOptions.searchOptions
 	);
@@ -42,12 +44,14 @@ const SearchResults = () => {
 
 	useEffect(
 		debounce(() => {
+			setLoading(true);
 			axios
 				.get(`${server}/products/search-products?${searchUrl}`)
 				.then((res) => {
 					setSearchResults(res.data.products);
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => console.log(err))
+				.finally(() => setLoading(false));
 		}, 1000),
 		[searchUrl]
 	);
@@ -55,8 +59,7 @@ const SearchResults = () => {
 	return (
 		<main className="vw-100 min-vh-100">
 			<div className="w-100 container container-xxl  ">
-				<div className="row">
-					<p>Search OPTIONS{JSON.stringify(searchOptions)}</p>
+				<div className="row pt-3">
 					<aside className="col-3 bg-white p-4 rounded-4 h-100">
 						<section>
 							<div className="d-flex align-items-center justify-content-between ">
@@ -179,11 +182,28 @@ const SearchResults = () => {
 							</section>
 						</section>
 					</aside>
-					<section className="col-9">
-						{searchResults?.map((product) => (
-							<ProductSearchResult productDetails={product} />
-						))}
-					</section>
+
+					{loading ? (
+						<ClipLoader
+							className="m-0 p-0 text-primary mx-auto mt-5 "
+							loading={loading}
+							size={30}
+							color="primary"
+							aria-label="Loading Spinner"
+							data-testid="loader"
+						/>
+					) : (
+						<section className="col-9">
+							{searchResults.length === 0 && (
+								<p className="text-secondary text-center mt-5">
+									No Search Results
+								</p>
+							)}
+							{searchResults?.map((product) => (
+								<ProductSearchResult productDetails={product} />
+							))}
+						</section>
+					)}
 				</div>
 			</div>
 		</main>

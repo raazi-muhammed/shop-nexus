@@ -1,31 +1,13 @@
 import React from "react";
-import Icons from "../../../assets/Icons";
 import axios from "axios";
 import server from "../../../server";
 import toast from "react-hot-toast";
-const { cartFill, message, calender } = Icons;
+
 import { useNavigate } from "react-router-dom";
+import PlusBenifits from "../../../components/nexusPlus/PlusBenifits";
 
 const UserShopNexusPlus = () => {
 	const navigate = useNavigate();
-
-	const benefits = [
-		{
-			heading: "Free Shipping",
-			subtext: "No additional cost for home delivery.",
-			icon: cartFill,
-		},
-		{
-			heading: "Exclusive Event Access",
-			subtext: "Be the first to know about special events and promotions.",
-			icon: calender,
-		},
-		{
-			heading: "Direct Shop Chat",
-			subtext: "Instantly connect with the shop for questions and assistance.",
-			icon: message,
-		},
-	];
 
 	const handleRazorPay = () => {
 		const script = document.createElement("script");
@@ -63,6 +45,7 @@ const UserShopNexusPlus = () => {
 							.then((res) => {
 								toast.success(res.data?.message || "Success");
 								navigate("/shop-nexus-plus/success");
+								window.location.reload();
 							})
 							.catch((err) => console.log(err));
 					},
@@ -90,7 +73,7 @@ const UserShopNexusPlus = () => {
 	}; */
 
 	return (
-		<main className="vw-100 min-vh-100 mt-4">
+		<main className="w-100 min-vh-100 mt-4">
 			<div className="w-100 container container-xxl  ">
 				<h3 className="text-secondary">Shop Nexus Plus</h3>
 				<p className="text-secondary mb-2">
@@ -101,23 +84,7 @@ const UserShopNexusPlus = () => {
 				</button>
 
 				<p className="h4 text-secondary mt-4">Benefits</p>
-				<section className="row gap-4">
-					{benefits.map((benefit) => (
-						<div class="card col border-0">
-							<div class="card-body">
-								<div className="text-secondary pb-3" style={{ width: "3rem" }}>
-									{benefit.icon}
-								</div>
-								<h5 class="card-title fw-bold text-primary">
-									{benefit.heading}
-								</h5>
-								<p class="card-text text-small text-secondary">
-									{benefit.subtext}
-								</p>
-							</div>
-						</div>
-					))}
-				</section>
+				<PlusBenifits />
 			</div>
 		</main>
 	);

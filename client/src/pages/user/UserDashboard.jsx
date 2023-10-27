@@ -14,6 +14,7 @@ import AsideComp from "../../components/layout/AsideComp";
 import UserWallet from "./dashboard/UserWallet";
 import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
 import { useSelector } from "react-redux";
+import PlusSubscriptionDetails from "./dashboard/PlusSubscriptionDetails";
 
 const UserDashboard = () => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -33,16 +34,16 @@ const UserDashboard = () => {
 				<div className="row py-5">
 					<section className="col-12 col-md-4 col-lg-3 mb-5">
 						<AsideComp asideItems={asideItems} />
-						<Link to={"/shop-nexus-plus"}>
-							<section className="bg-primary rounded-4 mt-2 text-white p-4">
-								{userData.plusMember ? (
-									<>
-										<p className="m-0">Shop Nexus Plus</p>
-										<p className="text-small text-secondary m-0">
-											View Your Benifits
-										</p>
-									</>
-								) : (
+						<section className="bg-primary rounded-4 mt-2 text-white p-4">
+							{userData.plusMember?.active ? (
+								<Link to={"shop-nexus-plus"}>
+									<p className="m-0 text-white">Shop Nexus Plus</p>
+									<p className="text-small text-secondary m-0">
+										View Your Benifits
+									</p>
+								</Link>
+							) : (
+								<Link to={"/shop-nexus-plus"}>
 									<div>
 										<button
 											className={
@@ -59,17 +60,33 @@ const UserDashboard = () => {
 											Message seller directly
 										</p>
 									</div>
-								)}
-							</section>
-						</Link>
+								</Link>
+							)}
+						</section>
 					</section>
 					<section className="col-12 col-md-8 col-lg-9">
 						<Routes>
 							<Route path="/add-address" element={<UserAddAddress />} />
 							<Route path="/address" element={<UserAllAddress />} />
 							<Route path="/orders" element={<UserAllOrders />} />
-							<Route path="/messages" element={<UserConversationsPage />} />
+
+							<Route
+								path="/messages"
+								element={
+									userData.plusMember.active ? (
+										<UserConversationsPage />
+									) : (
+										<UserShopNexusPlus />
+									)
+								}
+							/>
+
 							<Route path="/wallet" element={<UserWallet />} />
+							<Route
+								path="/shop-nexus-plus"
+								element={<PlusSubscriptionDetails />}
+							/>
+
 							<Route
 								path="/orders/:orderId"
 								element={<UserSingleOrderDetails />}

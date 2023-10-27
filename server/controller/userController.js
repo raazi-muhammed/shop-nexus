@@ -6,7 +6,6 @@ const sendToken = require("../utils/jwtToken");
 const { upload } = require("../multer");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
-const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
 
@@ -357,6 +356,24 @@ const becomePlusMember = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const removePlusMembership = asyncErrorHandler(async (req, res, next) => {
+	const plusMember = {
+		active: false,
+		details: { info: "Unsubscribed from Nexus Plus", date: new Date() },
+	};
+	const user = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{
+			plusMember,
+		},
+		{ new: true, upsert: true }
+	);
+	res.status(200).json({
+		success: true,
+		message: "Plus membership deactivated",
+	});
+});
+
 module.exports = {
 	userLogin,
 	loadUser,
@@ -373,4 +390,5 @@ module.exports = {
 	getWalletDetails,
 	changeWalletBalance,
 	becomePlusMember,
+	removePlusMembership,
 };
