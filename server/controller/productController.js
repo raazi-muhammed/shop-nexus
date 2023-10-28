@@ -34,13 +34,10 @@ const getProductByCategory = asyncErrorHandler(async (req, res, next) => {
 });
 
 const searchProducts = asyncErrorHandler(async (req, res, next) => {
-	console.log(req.query, "hihi");
 	const { category, searchTerm, minPrice, maxPrice, rating } = req.query;
-
 	let filter = {
 		isDeleted: { $ne: true },
 	};
-
 	if (searchTerm) {
 		filter.$or = [
 			{
@@ -51,7 +48,6 @@ const searchProducts = asyncErrorHandler(async (req, res, next) => {
 			},
 		];
 	}
-
 	if (category) filter.category = category;
 	if (rating) filter.rating = { $gte: rating };
 	if (maxPrice) filter.discount_price = { $lt: maxPrice };
@@ -59,11 +55,15 @@ const searchProducts = asyncErrorHandler(async (req, res, next) => {
 	if (minPrice && maxPrice)
 		filter.discount_price = { $gt: minPrice, $lt: maxPrice };
 
-	console.log(filter);
+	const [pagination, products] = await findWithPaginationAndSorting(
+		req,
+		Products,
+		filter
+	);
 
-	let products = await Products.find(filter);
 	res.status(200).json({
 		success: true,
+		pagination,
 		products,
 	});
 });

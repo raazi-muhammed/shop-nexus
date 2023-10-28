@@ -8,19 +8,25 @@ import { setUserDataReducer } from "../../../app/feature/userData/userDataSlice"
 import { useDispatch } from "react-redux";
 import Icons from "../../../assets/Icons";
 import formatPrice from "../../../utils/formatPrice";
+import ClipLoader from "react-spinners/ClipLoader";
 const { cart, heart } = Icons;
 
 const SingleEvent = () => {
 	const dispatch = useDispatch();
+	const [loading, setLoading] = useState(false);
 	const { eventId } = useParams();
 	const [eventData, setEventData] = useState([]);
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get(`${server}/event/get-event-details/${eventId}`)
 			.then((res) => {
 				setEventData(res.data?.eventsData);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => console.log(err))
+			.finally(() => {
+				setLoading(false);
+			});
 	}, []);
 
 	const handleAddToCart = (productId, discount_price) => {
@@ -62,6 +68,18 @@ const SingleEvent = () => {
 
 	return (
 		<main className="vw-100 min-vh-100 pt-4">
+			{loading && (
+				<div className="d-flex justify-content-center min-vh-100">
+					<ClipLoader
+						className="text-primary mx-auto mt-5 "
+						loading={loading}
+						size={30}
+						color="primary"
+						aria-label="Loading Spinner"
+						data-testid="loader"
+					/>
+				</div>
+			)}
 			<div className="w-100 container container-xl ">
 				<section className="row rounded-start-4">
 					{eventData?.images && (

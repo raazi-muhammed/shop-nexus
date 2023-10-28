@@ -3,20 +3,38 @@ import React, { useEffect, useState } from "react";
 import server from "../../../server";
 import Icons from "../../../assets/Icons";
 import { Link } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
 const { heart, cart } = Icons;
 
 const EventsPage = () => {
+	const [loading, setLoading] = useState(false);
 	const [events, setEvents] = useState([]);
 	useEffect(() => {
+		setLoading(true);
 		axios
 			.get(`${server}/event/all-events`)
 			.then((res) => {
 				setEvents(res.data?.eventsData);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => console.log(err))
+			.finally(() => {
+				setLoading(false);
+			});
 	}, []);
 	return (
 		<main className="vw-100 min-vh-100 mt-4">
+			{loading && (
+				<div className="d-flex justify-content-center ">
+					<ClipLoader
+						className="text-primary mx-auto mt-5 "
+						loading={loading}
+						size={30}
+						color="primary"
+						aria-label="Loading Spinner"
+						data-testid="loader"
+					/>
+				</div>
+			)}
 			<div className="w-100 container container-xxl  ">
 				{events.map((event) => (
 					<article

@@ -9,11 +9,23 @@ import RatingStar from "../../../components/product/RatingStar";
 import ClipLoader from "react-spinners/ClipLoader";
 import { setCategoryOptions } from "../../../app/feature/search/searchOptionsSlice";
 import categoriesConstants from "../../../constants/categoriesConstants";
+import Sorting from "../../../components/Sorting";
+import Pagination from "../../../components/Pagination";
 
 const SearchResults = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(false);
+	const [pagination, setPagination] = useState({});
+	const [sortOptions, setSortOptions] = useState({
+		sortBy: "createdAt",
+		sortItems: [
+			{ value: "createdAt", title: "Date" },
+			{ value: "rating", title: "Rating" },
+			{ value: "discount_price", title: "Price" },
+			{ value: "total_sell", title: "Total Sold" },
+		],
+	});
 	const searchOptions = useSelector(
 		(state) => state.searchOptions.searchOptions
 	);
@@ -50,14 +62,18 @@ const SearchResults = () => {
 		debounce(() => {
 			setLoading(true);
 			axios
-				.get(`${server}/products/search-products?${searchUrl}`)
+				.get(
+					`${server}/products/search-products?${searchUrl}&page=${
+						pagination.page || 1
+					}&sort=${sortOptions.sortBy}`
+				)
 				.then((res) => {
 					setSearchResults(res.data.products);
 				})
 				.catch((err) => console.log(err))
 				.finally(() => setLoading(false));
 		}, 1000),
-		[searchUrl]
+		[searchUrl, pagination.page, sortOptions]
 	);
 	const categoryChange = (e) => {
 		navigate(`/search`);
@@ -219,6 +235,16 @@ const SearchResults = () => {
 						/>
 					) : (
 						<section className="col-9">
+							<section className="d-flex justify-content-end gap-3 ">
+								<Sorting
+									sortOptions={sortOptions}
+									setSortOptions={setSortOptions}
+								/>
+								<Pagination
+									pagination={pagination}
+									setPagination={setPagination}
+								/>
+							</section>
 							{searchResults.length === 0 && (
 								<p className="text-secondary text-center mt-5">
 									No Search Results
