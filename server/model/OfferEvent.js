@@ -21,6 +21,12 @@ const offerEventsSchema = new mongoose.Schema(
 			type: Number,
 			required: [true, "Please enter your product price!"],
 		},
+		selected_products: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Product",
+			},
+		],
 		shop: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Shop",

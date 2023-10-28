@@ -10,6 +10,9 @@ import {
 	submitButtonClass,
 } from "../../utils/styleClasses";
 import { useNavigate, useParams } from "react-router-dom";
+import ProductCardRow from "../../components/product/ProductCardRow";
+import SellerEventCardProduct from "../../components/events/SellerEventCardProduct";
+import typeOfEventsConstants from "../../constants/typeOfEventConstants";
 
 const SellerNewEvent = () => {
 	const { shopId } = useParams();
@@ -17,9 +20,11 @@ const SellerNewEvent = () => {
 	const [eventName, setEventName] = useState("");
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
+	const [typeOfEvent, setTypeOfEvent] = useState("PRODUCT_BASED");
 	const [price, setPrice] = useState("");
 	const [discountedPrice, setDiscountedPrice] = useState("");
 	const [image, setImage] = useState([]);
+	const [selectedProducts, setSelectedProducts] = useState([]);
 
 	const [validationSetting, setValidationSetting] =
 		useState("needs-validation");
@@ -54,6 +59,33 @@ const SellerNewEvent = () => {
 		setImage(newImage);
 	};
 
+	const [products, setProducts] = useState([]);
+	const [pagination, setPagination] = useState({});
+	const handleGetAllProducts = () => {
+		axios
+			.get(
+				`${server}/seller/get-products-from-shop/${shopId}?page=${
+					pagination?.page || 1
+				}`,
+				{
+					withCredentials: true,
+				}
+			)
+			.then((res) => {
+				setProducts(res.data.data);
+				setPagination(res.data.pagination);
+			})
+			.catch((err) => toast.error(err.response.data.message))
+			.finally(() => {
+				setLoading(false);
+			});
+	};
+
+	const handleProductClick = (e) => {
+		setSelectedProducts([e.target.value]);
+		console.log(selectedProducts);
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
@@ -65,7 +97,7 @@ const SellerNewEvent = () => {
 			discountedPrice,
 			image,
 			shopId,
-			eventName,
+			selectedProducts,
 		};
 		console.log(formData);
 		axios
@@ -104,7 +136,6 @@ const SellerNewEvent = () => {
 						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
-
 				<div className="row">
 					<label htmlFor="description" className={formLabelClass}>
 						Description
@@ -124,16 +155,15 @@ const SellerNewEvent = () => {
 				</div>
 				<div className="row">
 					<label className={formLabelClass} htmlFor="categorySelect">
-						Category
+						Type of Event
 					</label>
 					<div className={inputDivClass}>
 						<select
-							value={category}
-							onChange={(e) => setCategory(e.target.value)}
+							value={typeOfEvent}
+							onChange={(e) => setTypeOfEvent(e.target.value)}
 							className="form-select"
 							id="categorySelect">
-							<option value="">Select Category</option>
-							{categoriesConstants.map((e) => (
+							{typeOfEventsConstants.map((e) => (
 								<option key={e.key} value={e.key}>
 									{e.value}
 								</option>
@@ -141,15 +171,117 @@ const SellerNewEvent = () => {
 						</select>
 					</div>
 				</div>
+
+				{typeOfEvent === "PRODUCT_BASED" ? (
+					<div className="row">
+						<label className={formLabelClass} htmlFor="categorySelect"></label>
+						<div className={inputDivClass}>
+							<button
+								onClick={handleGetAllProducts}
+								type="button"
+								class="btn btn-light w-100"
+								data-bs-toggle="modal"
+								data-bs-target="#exampleModal">
+								Select Products
+							</button>
+						</div>
+					</div>
+				) : (
+					<div className="row">
+						<label className={formLabelClass} htmlFor="categorySelect">
+							Category
+						</label>
+						<div className={inputDivClass}>
+							<select
+								value={category}
+								onChange={(e) => setCategory(e.target.value)}
+								className="form-select"
+								id="categorySelect">
+								<option value="">Select Category</option>
+								{categoriesConstants.map((e) => (
+									<option key={e.key} value={e.key}>
+										{e.value}
+									</option>
+								))}
+							</select>
+						</div>
+					</div>
+				)}
+				<div
+					class="modal fade"
+					id="exampleModal"
+					tabindex="-1"
+					aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog modal-dialog-scrollable">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="modal-title fs-5" id="exampleModalLabel">
+									Add Products
+								</h1>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form>
+									{products.map((product, i) => (
+										<>
+											{!product.isDeleted && (
+												<div class="form-check d-flex align-items-center">
+													<input
+														class="form-check-input"
+														type="checkbox"
+														checked={selectedProducts.includes(product._id)}
+														value={product._id}
+														onClick={(e) => handleProductClick(e)}
+														id={product._id}
+													/>
+													<label
+														class="form-check-label w-100"
+														for={product._id}>
+														<SellerEventCardProduct
+															key={i}
+															id={product._id}
+															name={product.name}
+															stock={product.stock}
+															category={product.category}
+															price={product.discount_price}
+															imgUrl={product.images[0]?.url}
+															shopId={shopId}
+														/>
+													</label>
+												</div>
+											)}
+										</>
+									))}
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button
+									type="button"
+									class="btn btn-sm btn-secondary"
+									data-bs-dismiss="modal">
+									Close
+								</button>
+								<button type="button" class="btn btn-sm btn-primary">
+									Save changes
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div className="row">
 					<label htmlFor="price" className={formLabelClass}>
-						Price
+						Actual Price
 					</label>
 					<div className={inputDivClass}>
 						<input
 							type="text"
 							className="form-control"
-							id="price"
+							id="discounted-price"
 							value={price}
 							name="price"
 							onChange={(e) => setPrice(e.target.value)}

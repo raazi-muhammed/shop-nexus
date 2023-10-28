@@ -10,6 +10,7 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		price,
 		discountedPrice,
 		image,
+		selectedProducts,
 		shopId,
 	} = req.body;
 
@@ -29,6 +30,7 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		price,
 		images: imageUrls,
 		discount_price: discountedPrice,
+		selected_products: selectedProducts,
 		shop: shopId,
 	};
 	const event = await OfferEvent.create(eventDetails);
@@ -38,6 +40,7 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		message: "Event Added",
 	});
 });
+
 const getAllEvents = asyncErrorHandler(async (req, res, next) => {
 	const eventsData = await OfferEvent.find({});
 	res.status(200).json({
@@ -45,4 +48,17 @@ const getAllEvents = asyncErrorHandler(async (req, res, next) => {
 		eventsData,
 	});
 });
-module.exports = { newEvent, getAllEvents };
+
+const getEventDetails = asyncErrorHandler(async (req, res, next) => {
+	const { eventId } = req.params;
+
+	const eventsData = await OfferEvent.findOne({ _id: eventId }).populate(
+		"selected_products"
+	);
+	res.status(200).json({
+		success: true,
+		eventsData,
+	});
+});
+
+module.exports = { newEvent, getAllEvents, getEventDetails };

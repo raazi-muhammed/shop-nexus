@@ -83,6 +83,9 @@ const userSchema = new mongoose.Schema(
 					type: Number,
 					required: true,
 				},
+				type: {
+					type: Object,
+				},
 			},
 		],
 		wishList: [
@@ -96,6 +99,9 @@ const userSchema = new mongoose.Schema(
 				price: {
 					type: Number,
 					required: true,
+				},
+				type: {
+					type: Object,
 				},
 			},
 		],
