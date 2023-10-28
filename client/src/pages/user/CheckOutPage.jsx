@@ -40,7 +40,7 @@ const CheckOutPage = () => {
 	useEffect(() => {
 		try {
 			const _totalAmountWithOutDiscount = userData.cart.reduce((a, e) => {
-				return (a += e.price);
+				return (a += e.price * e.quantity);
 			}, 0);
 
 			let _discountAmount;

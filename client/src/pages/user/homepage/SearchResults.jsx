@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import server from "../../../server";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ProductSearchResult from "../../../components/product/ProductSearchResult";
 import { debounce } from "lodash";
 import RatingStar from "../../../components/product/RatingStar";
 import ClipLoader from "react-spinners/ClipLoader";
+import { setCategoryOptions } from "../../../app/feature/search/searchOptionsSlice";
+import categoriesConstants from "../../../constants/categoriesConstants";
 
 const SearchResults = () => {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(false);
 	const searchOptions = useSelector(
 		(state) => state.searchOptions.searchOptions
@@ -55,12 +59,33 @@ const SearchResults = () => {
 		}, 1000),
 		[searchUrl]
 	);
+	const categoryChange = (e) => {
+		navigate(`/search`);
+		dispatch(setCategoryOptions(e.target.value));
+	};
 
 	return (
 		<main className="vw-100 min-vh-100">
 			<div className="w-100 container container-xxl  ">
 				<div className="row pt-3">
 					<aside className="col-3 bg-white p-4 rounded-4 h-100">
+						<section className="mt-2">
+							<label className="visually-hidden " htmlFor="categorySelect">
+								Select a Category:
+							</label>
+							<select
+								onChange={categoryChange}
+								className="w-100 form-select form-select-sm bg-light px-3"
+								id="categorySelect">
+								<option value="">Select Category</option>
+								{categoriesConstants.map((e) => (
+									<option key={e.key} value={e.key}>
+										{e.value}
+									</option>
+								))}
+							</select>
+						</section>
+						<hr className="text-light" />
 						<section>
 							<div className="d-flex align-items-center justify-content-between ">
 								<p className="text-primary fw-bold  text-small m-0">Rating</p>

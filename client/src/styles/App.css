@@ -12038,4 +12038,14 @@ body {
 .overflow-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.placeholder-color::-moz-placeholder {
+  /* Most modern browsers support this now. */
+  color: #d7d6f6;
+}
+
+.placeholder-color::placeholder {
+  /* Most modern browsers support this now. */
+  color: #d7d6f6;
 }/*# sourceMappingURL=App.css.map */

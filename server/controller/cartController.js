@@ -16,11 +16,12 @@ const getCart = asyncErrorHandler(async (req, res, next) => {
 });
 
 const addToCart = asyncErrorHandler(async (req, res, next) => {
-	const { product_id, price, name, imageUrl } = req.body;
+	const { product_id, price, name, imageUrl, quantity } = req.body;
 	const userId = req.user._id;
 
 	const cartItem = {
 		product: product_id,
+		quantity,
 		price,
 	};
 

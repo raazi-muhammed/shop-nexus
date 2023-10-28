@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import server from "../../server";
 import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import Icons from "../../assets/Icons";
+const { heart, cart, plus, minus } = Icons;
 
 import toast from "react-hot-toast";
-const { heart, cart } = Icons;
 import ReactImageMagnify from "react-image-magnify";
 import ProductSuggestion from "./ProductSuggestion";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
@@ -24,7 +24,7 @@ const SingleProductPage = () => {
 
 	const [imgSelect, setImgSelect] = useState(0);
 	const [productData, setProductData] = useState({ images: [{ url: "" }] });
-
+	const [quantity, setQuantity] = useState(1);
 	const { id } = useParams();
 	const [shopData, setShopData] = useState({});
 	const navItems = [
@@ -69,6 +69,7 @@ const SingleProductPage = () => {
 		const itemData = {
 			product_id: id,
 			name: productData.name,
+			quantity,
 			price: productData.discount_price,
 			imageUrl: productData?.images[0]?.url,
 		};
@@ -169,7 +170,51 @@ const SingleProductPage = () => {
 										{formatPrice(productData.discount_price)}
 									</p>
 								</div>
-
+								<section className="mt-3">
+									<div
+										class="btn-group"
+										role="group"
+										aria-label="Button group with nested dropdown">
+										<button
+											type="button"
+											disabled={quantity <= 1}
+											onClick={() =>
+												setQuantity((currentQuantity) => currentQuantity - 1)
+											}
+											class="btn btn-sm text-primary btn-light p-0">
+											{minus}
+										</button>
+										<div class="btn-group" role="group">
+											<button
+												type="button"
+												class="btn btn-light btn-sm text-primary dropdown-toggle px-3"
+												data-bs-toggle="dropdown"
+												aria-expanded="false">
+												{quantity}
+											</button>
+											<ul class="dropdown-menu">
+												<li onClick={() => setQuantity(5)}>
+													<a class="dropdown-item" href="#">
+														5
+													</a>
+												</li>
+												<li onClick={() => setQuantity(10)}>
+													<a class="dropdown-item" href="#">
+														10
+													</a>
+												</li>
+											</ul>
+										</div>
+										<button
+											onClick={() =>
+												setQuantity((currentQuantity) => currentQuantity + 1)
+											}
+											type="button"
+											class="btn btn-sm text-primary btn-light p-0">
+											{plus}
+										</button>
+									</div>
+								</section>
 								<section className="my-3 d-flex gap-2">
 									{productData.stock <= 0 ? (
 										<section>
@@ -216,7 +261,7 @@ const SingleProductPage = () => {
 											</Link>
 											<button
 												onClick={handleMessageShop}
-												className="btn-sm btn btn-light">
+												className="btn-sm btn btn-secondary text-white ms-2">
 												Message Shop
 											</button>
 										</section>

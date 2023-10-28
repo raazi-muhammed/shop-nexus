@@ -35,11 +35,15 @@ const UserHeader = () => {
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav mx-auto my-3 my-lg-auto">
-							<li class="nav-item">
+						<ul class="navbar-nav mx-auto my-3 my-lg-auto w-50">
+							<li style={{ maxWidth: "25rem" }} class="nav-item w-100 mx-auto">
 								<form onSubmit={handleSearch} class="d-flex" role="search">
 									<input
-										class="form-control me-2"
+										style={{
+											backgroundColor: "#43328a",
+											borderColor: "#5b49a6",
+										}}
+										class="w-100 form-control me-2 text-white border-1 placeholder-color"
 										type="search"
 										value={searchTerm}
 										onChange={(e) => setSearchTerm(e.target.value)}

@@ -4,11 +4,13 @@ const cloudinaryUpload = require("../utils/cloudinaryUpload");
 
 const newEvent = asyncErrorHandler(async (req, res, next) => {
 	const {
+		typeOfEvent,
 		eventName,
 		category,
 		description,
 		price,
 		discountedPrice,
+		discountPercentage,
 		image,
 		selectedProducts,
 		shopId,
@@ -24,6 +26,7 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 	);
 
 	const eventDetails = {
+		type_of_event: typeOfEvent,
 		name: eventName,
 		category,
 		description,
@@ -31,6 +34,7 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		images: imageUrls,
 		discount_price: discountedPrice,
 		selected_products: selectedProducts,
+		discount_percentage: discountPercentage,
 		shop: shopId,
 	};
 	const event = await OfferEvent.create(eventDetails);

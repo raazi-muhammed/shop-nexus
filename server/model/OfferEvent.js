@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const offerEventsSchema = new mongoose.Schema(
 	{
+		type_of_event: {
+			type: String,
+			required: true,
+		},
 		name: {
 			type: String,
 			required: [true, "Please enter your product name!"],
@@ -12,14 +16,15 @@ const offerEventsSchema = new mongoose.Schema(
 		},
 		category: {
 			type: String,
-			required: [true, "Please enter your product category!"],
 		},
 		price: {
 			type: Number,
 		},
 		discount_price: {
 			type: Number,
-			required: [true, "Please enter your product price!"],
+		},
+		discount_percentage: {
+			type: Number,
 		},
 		selected_products: [
 			{

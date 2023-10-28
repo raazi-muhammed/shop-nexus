@@ -91,3 +91,8 @@ body {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+.placeholder-color::placeholder {
+	/* Most modern browsers support this now. */
+	color: $light;
+}

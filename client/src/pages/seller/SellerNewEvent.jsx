@@ -23,6 +23,7 @@ const SellerNewEvent = () => {
 	const [typeOfEvent, setTypeOfEvent] = useState("PRODUCT_BASED");
 	const [price, setPrice] = useState("");
 	const [discountedPrice, setDiscountedPrice] = useState("");
+	const [discountPercentage, setDiscountPercentage] = useState("");
 	const [image, setImage] = useState([]);
 	const [selectedProducts, setSelectedProducts] = useState([]);
 
@@ -89,16 +90,31 @@ const SellerNewEvent = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
-		const formData = {
-			eventName,
-			category,
-			description,
-			price,
-			discountedPrice,
-			image,
-			shopId,
-			selectedProducts,
-		};
+
+		let formData = [];
+		if (typeOfEvent === "PRODUCT_BASED") {
+			formData = {
+				typeOfEvent,
+				eventName,
+				description,
+				price,
+				discountedPrice,
+				image,
+				shopId,
+				selectedProducts,
+			};
+		}
+		if (typeOfEvent === "CATEGORY_BASED") {
+			formData = {
+				typeOfEvent,
+				eventName,
+				category,
+				description,
+				discountPercentage,
+				image,
+				shopId,
+			};
+		}
 		console.log(formData);
 		axios
 			.post(`${server}/event/new-event`, formData, {
@@ -173,39 +189,101 @@ const SellerNewEvent = () => {
 				</div>
 
 				{typeOfEvent === "PRODUCT_BASED" ? (
-					<div className="row">
-						<label className={formLabelClass} htmlFor="categorySelect"></label>
-						<div className={inputDivClass}>
-							<button
-								onClick={handleGetAllProducts}
-								type="button"
-								class="btn btn-light w-100"
-								data-bs-toggle="modal"
-								data-bs-target="#exampleModal">
-								Select Products
-							</button>
+					<>
+						<div className="row">
+							<label
+								className={formLabelClass}
+								htmlFor="categorySelect"></label>
+							<div className={inputDivClass}>
+								<button
+									onClick={handleGetAllProducts}
+									type="button"
+									class="btn btn-light w-100"
+									data-bs-toggle="modal"
+									data-bs-target="#exampleModal">
+									Select Products
+								</button>
+							</div>
 						</div>
-					</div>
+						<div className="row">
+							<label htmlFor="price" className={formLabelClass}>
+								Actual Price
+							</label>
+							<div className={inputDivClass}>
+								<input
+									type="text"
+									className="form-control"
+									id="discounted-price"
+									value={price}
+									name="price"
+									onChange={(e) => setPrice(e.target.value)}
+									pattern="^[0-9]\d*$"
+									required
+								/>
+								<div className="invalid-feedback">Invalid</div>
+							</div>
+						</div>
+						<div className="row">
+							<label htmlFor="discounted-price" className={formLabelClass}>
+								Discounted Price
+							</label>
+							<div className={inputDivClass}>
+								<input
+									type="text"
+									className="form-control"
+									id="discounted-price"
+									value={discountedPrice}
+									name="discountedPrice"
+									onChange={(e) => setDiscountedPrice(e.target.value)}
+									pattern="^[0-9]\d*$"
+									required
+								/>
+								<div className="invalid-feedback">Invalid</div>
+							</div>
+						</div>
+					</>
 				) : (
-					<div className="row">
-						<label className={formLabelClass} htmlFor="categorySelect">
-							Category
-						</label>
-						<div className={inputDivClass}>
-							<select
-								value={category}
-								onChange={(e) => setCategory(e.target.value)}
-								className="form-select"
-								id="categorySelect">
-								<option value="">Select Category</option>
-								{categoriesConstants.map((e) => (
-									<option key={e.key} value={e.key}>
-										{e.value}
-									</option>
-								))}
-							</select>
+					<>
+						<div className="row">
+							<label className={formLabelClass} htmlFor="categorySelect">
+								Category
+							</label>
+							<div className={inputDivClass}>
+								<select
+									value={category}
+									onChange={(e) => setCategory(e.target.value)}
+									className="form-select"
+									id="categorySelect">
+									<option value="">Select Category</option>
+									{categoriesConstants.map((e) => (
+										<option key={e.key} value={e.key}>
+											{e.value}
+										</option>
+									))}
+								</select>
+							</div>
 						</div>
-					</div>
+						<div className="row">
+							<label htmlFor="product-name" className={formLabelClass}>
+								Discount Percentage
+							</label>
+							<div className={inputDivClass}>
+								<input
+									type="text"
+									className="form-control"
+									id="product-name"
+									value={discountPercentage}
+									name="discountPercentage"
+									onChange={(e) => setDiscountPercentage(e.target.value)}
+									pattern="^(0(\.\d*)?|1(\.0+)?)$"
+									required
+								/>
+								<div className="invalid-feedback">
+									Value must be between 0 and 1, and in the format 0.3 (not .3)
+								</div>
+							</div>
+						</div>
+					</>
 				)}
 				<div
 					class="modal fade"
@@ -273,42 +351,7 @@ const SellerNewEvent = () => {
 						</div>
 					</div>
 				</div>
-				<div className="row">
-					<label htmlFor="price" className={formLabelClass}>
-						Actual Price
-					</label>
-					<div className={inputDivClass}>
-						<input
-							type="text"
-							className="form-control"
-							id="discounted-price"
-							value={price}
-							name="price"
-							onChange={(e) => setPrice(e.target.value)}
-							pattern="^[0-9]\d*$"
-							required
-						/>
-						<div className="invalid-feedback">Invalid</div>
-					</div>
-				</div>
-				<div className="row">
-					<label htmlFor="discounted-price" className={formLabelClass}>
-						Discounted Price
-					</label>
-					<div className={inputDivClass}>
-						<input
-							type="text"
-							className="form-control"
-							id="discounted-price"
-							value={discountedPrice}
-							name="discountedPrice"
-							onChange={(e) => setDiscountedPrice(e.target.value)}
-							pattern="^[0-9]\d*$"
-							required
-						/>
-						<div className="invalid-feedback">Invalid</div>
-					</div>
-				</div>
+
 				<div className="row">
 					<label htmlFor="image-url" className={formLabelClass}>
 						Add Images
