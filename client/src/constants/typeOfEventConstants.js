@@ -4,7 +4,7 @@ const typeOfEventsConstants = [
 	{ key: "COMBO_OFFER", value: "Combo Offer" },
 ];
 
-export function getCategoryByKey(key) {
+export function getTypeOfEventByKey(key) {
 	const category = typeOfEventsConstants.find(
 		(category) => category.key === key
 	);

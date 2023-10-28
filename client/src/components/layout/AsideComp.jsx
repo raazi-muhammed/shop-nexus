@@ -10,11 +10,8 @@ const AsideComp = ({ asideItems }) => {
 				<Link key={i} to={e.link}>
 					<button
 						onClick={(e) => setCurrentNav(i)}
-						className={
-							currentNav === i
-								? "btn btn-sm text-start text-white bg-secondary w-100"
-								: "btn btn-sm text-start text-secondary w-100"
-						}>
+						className={`btn btn-sm text-start w-100 
+						${currentNav === i ? "text-white bg-secondary" : "text-secondary"}`}>
 						{e.name}
 					</button>
 				</Link>

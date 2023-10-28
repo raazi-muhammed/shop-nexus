@@ -1,18 +1,17 @@
 import axios from "axios";
 import React, { useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
-import categoriesConstants from "../../constants/categoriesConstants";
+import categoriesConstants from "../../../constants/categoriesConstants";
 import {
 	formLabelClass,
 	inputDivClass,
 	formClass,
 	submitButtonClass,
-} from "../../utils/styleClasses";
+} from "../../../utils/styleClasses";
 import { useNavigate, useParams } from "react-router-dom";
-import ProductCardRow from "../../components/product/ProductCardRow";
-import SellerEventCardProduct from "../../components/events/SellerEventCardProduct";
-import typeOfEventsConstants from "../../constants/typeOfEventConstants";
+import SellerEventCardProduct from "../../../components/events/SellerEventCardProduct";
+import typeOfEventsConstants from "../../../constants/typeOfEventConstants";
 
 const SellerNewEvent = () => {
 	const { shopId } = useParams();
@@ -137,7 +136,7 @@ const SellerNewEvent = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
-				//navigate(-1);
+				navigate(-1);
 				toast.success(res.data?.message || "Success");
 			})
 			.catch((err) => {
@@ -192,10 +191,10 @@ const SellerNewEvent = () => {
 					<div className={inputDivClass}>
 						<input
 							type="date"
-							min={today.toISOString().slice(0, 10)}
+							min={today.toISOString().split("T")[0]}
 							className="form-control"
 							id="product-name"
-							value={startDate}
+							value={startDate.toISOString().split("T")[0]}
 							name="expires"
 							onChange={(e) => setStartDate(e.target.value)}
 							required

@@ -2,6 +2,7 @@ const OfferEvent = require("../model/OfferEvent");
 const Products = require("../model/Products");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const cloudinaryUpload = require("../utils/cloudinaryUpload");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
 const newEvent = asyncErrorHandler(async (req, res, next) => {
 	const {
@@ -46,11 +47,67 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		message: "Event Added",
 	});
 });
+const editEventSeller = asyncErrorHandler(async (req, res, next) => {
+	const { eventId } = req.params;
+
+	const { name, startDate, endDate, description, discountPercentage, image } =
+		req.body;
+
+	const eventDetails = {
+		name,
+		start_date: startDate,
+		end_date: endDate,
+		description,
+		discount_percentage: discountPercentage,
+	};
+
+	if (image) {
+		const imageUrls = await Promise.all(
+			image.map(async (e, i) => {
+				return {
+					public_id: i,
+					url: await cloudinaryUpload(e, "16by9"),
+				};
+			})
+		);
+		eventDetails.images = imageUrls;
+	}
+
+	const event = await OfferEvent.findOneAndUpdate(
+		{ _id: eventId },
+		eventDetails,
+		{ new: true }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: "Event Edited",
+		eventData: event,
+	});
+});
 
 const getAllEvents = asyncErrorHandler(async (req, res, next) => {
 	const eventsData = await OfferEvent.find({});
 	res.status(200).json({
 		success: true,
+		eventsData,
+	});
+});
+
+const getAllEventsFromSeller = asyncErrorHandler(async (req, res, next) => {
+	const { shopId } = req.params;
+
+	const [pagination, eventsData] = await findWithPaginationAndSorting(
+		req,
+		OfferEvent,
+		{
+			shop: shopId,
+		}
+	);
+
+	res.status(200).json({
+		success: true,
+		pagination,
 		eventsData,
 	});
 });
@@ -77,4 +134,10 @@ const getEventDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-module.exports = { newEvent, getAllEvents, getEventDetails };
+module.exports = {
+	newEvent,
+	getAllEvents,
+	getEventDetails,
+	getAllEventsFromSeller,
+	editEventSeller,
+};

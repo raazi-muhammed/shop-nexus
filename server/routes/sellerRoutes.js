@@ -25,6 +25,11 @@ const {
 
 const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 const { upload } = require("../multer");
+const {
+	getAllEventsFromSeller,
+	getEventDetails,
+	editEventSeller,
+} = require("../controller/eventController");
 
 const router = require("express").Router();
 
@@ -110,6 +115,31 @@ router.get(
 		getCouponFromSeller(req, res, next);
 	}
 );
+
+router.get(
+	"/get-all-events/:shopId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getAllEventsFromSeller(req, res, next);
+	}
+);
+
+router.get(
+	"/get-event-details/:eventId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getEventDetails(req, res, next);
+	}
+);
+
+router.put(
+	"/edit-event/:eventId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		editEventSeller(req, res, next);
+	}
+);
+
 router.get(
 	"/get-coupon-details/:couponId",
 	isSellerAuthenticated,
