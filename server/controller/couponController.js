@@ -1,6 +1,7 @@
 const Coupon = require("../model/Coupon");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
 const addCoupon = asyncErrorHandler(async (req, res, next) => {
 	const couponDataForm = { ...req.body, events: [{ name: "Coupon Created" }] };
@@ -51,7 +52,14 @@ const getAllCoupons = asyncErrorHandler(async (req, res, next) => {
 
 const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
 	const { shopId } = req.params;
-	const ITEMS_PER_PAGE = 10;
+
+	const [pagination, couponData] = await findWithPaginationAndSorting(
+		req,
+		Coupon,
+		{ shopId }
+	);
+
+	/* const ITEMS_PER_PAGE = 10;
 	const { page } = req.query;
 	const skip = (page - 1) * ITEMS_PER_PAGE;
 	const countPromise = Coupon.estimatedDocumentCount({});
@@ -67,16 +75,11 @@ const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
 	]);
 
 	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
-	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE; */
 
 	res.status(200).json({
 		success: true,
-		pagination: {
-			count,
-			page,
-			pageCount,
-			startIndex,
-		},
+		pagination,
 		message: "Got Coupon",
 		couponData,
 	});

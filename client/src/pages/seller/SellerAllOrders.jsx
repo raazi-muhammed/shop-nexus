@@ -8,10 +8,20 @@ import server from "../../server";
 import ClipLoader from "react-spinners/ClipLoader";
 import Pagination from "../../components/Pagination";
 import OrderCardMain from "../../components/order/OrderCardMain";
+import Sorting from "../../components/Sorting";
 
 const SellerAllOrders = () => {
 	const [loading, setLoading] = useState(false);
 	const [pagination, setPagination] = useState({});
+	const [sortOptions, setSortOptions] = useState({
+		sortBy: "createdAt",
+		sortItems: [
+			{ value: "createdAt", title: "Date" },
+			{ value: "totalPrice", title: "Price" },
+			{ value: "status", title: "Status" },
+		],
+	});
+
 	const userData = useSelector((state) => state.userData.userData);
 	const { shopId } = useParams();
 	const navigate = useNavigate();
@@ -23,7 +33,7 @@ const SellerAllOrders = () => {
 			.get(
 				`${server}/seller/get-all-orders/${shopId}?page=${
 					pagination.page || 1
-				}`,
+				}&sort=${sortOptions.sortBy}`,
 				{
 					withCredentials: true,
 				}
@@ -38,7 +48,7 @@ const SellerAllOrders = () => {
 			.finally(() => {
 				setLoading(false);
 			});
-	}, [pagination.page]);
+	}, [pagination.page, sortOptions]);
 
 	return (
 		<div className="w-100">
@@ -58,7 +68,13 @@ const SellerAllOrders = () => {
 				<p className="text-secondary">There aren't any orders</p>
 			) : (
 				<>
-					<Pagination pagination={pagination} setPagination={setPagination} />
+					<section className="d-flex justify-content-end gap-3 ">
+						<Sorting
+							sortOptions={sortOptions}
+							setSortOptions={setSortOptions}
+						/>
+						<Pagination pagination={pagination} setPagination={setPagination} />
+					</section>
 					{orderData?.map((order, i) => (
 						<OrderCardMain
 							status={order.status}

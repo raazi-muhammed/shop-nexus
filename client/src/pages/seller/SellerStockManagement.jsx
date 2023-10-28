@@ -5,10 +5,22 @@ import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import Pagination from "../../components/Pagination";
+import Sorting from "../../components/Sorting";
 
 const SellerStockManagement = () => {
 	const [loading, setLoading] = useState(false);
 	const [pagination, setPagination] = useState({});
+	const [sortOptions, setSortOptions] = useState({
+		sortBy: "createdAt",
+		sortItems: [
+			{ value: "createdAt", title: "Date" },
+			{ value: "discount_price", title: "Price" },
+			{ value: "rating", title: "Rating" },
+			{ value: "total_sell", title: "Total Sold" },
+			{ value: "stock", title: "Stock" },
+		],
+	});
+
 	const { shopId } = useParams();
 	const [data, setData] = useState([{ images: [{ url: "" }] }]);
 	const [updatedStock, setUpdatedStock] = useState(0);
@@ -34,7 +46,7 @@ const SellerStockManagement = () => {
 			.get(
 				`${server}/seller/get-products-from-shop/${shopId}?page=${
 					pagination?.page || 1
-				}`,
+				}&sort=${sortOptions.sortBy}`,
 				{
 					withCredentials: true,
 				}
@@ -47,7 +59,7 @@ const SellerStockManagement = () => {
 			.finally(() => {
 				setLoading(false);
 			});
-	}, [refresh, pagination?.page]);
+	}, [refresh, pagination?.page, sortOptions]);
 
 	const handleSubmit = async (e, productId) => {
 		e.preventDefault();
@@ -74,7 +86,10 @@ const SellerStockManagement = () => {
 
 	return (
 		<div className="d-flex flex-column gap-2">
-			<Pagination pagination={pagination} setPagination={setPagination} />
+			<section className="d-flex justify-content-end gap-3 ">
+				<Sorting sortOptions={sortOptions} setSortOptions={setSortOptions} />
+				<Pagination pagination={pagination} setPagination={setPagination} />
+			</section>
 			<section className="row py-0 mb-0 p-5 text-secondary fw-bold">
 				<p className="col-6 m-0 ">Product Details</p>
 				<p className="col-3 m-0">Info</p>

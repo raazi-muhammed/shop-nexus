@@ -3,6 +3,7 @@ const Products = require("../model/Products");
 const cloudinaryUpload = require("../utils/cloudinaryUpload");
 const Shop = require("../model/Shop");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
 const getBestSellingProducts = asyncErrorHandler(async (req, res, next) => {
 	let products = await Products.find({ isDeleted: { $ne: true } }).sort({
@@ -280,31 +281,17 @@ const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
 	const ShopDetails = await Shop.find({ _id: req.params.shopId });
 	const shopName = ShopDetails[0].shopName;
 
-	const ITEMS_PER_PAGE = 10;
-	const { page } = req.query;
-	const skip = (page - 1) * ITEMS_PER_PAGE;
-	const countPromise = Products.estimatedDocumentCount();
-
-	const shopProductsPromise = Products.find({ "shop.name": shopName })
-		.limit(ITEMS_PER_PAGE)
-		.skip(skip);
-
-	const [shopProducts, count] = await Promise.all([
-		shopProductsPromise,
-		countPromise,
-	]);
-
-	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
-	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+	const [pagination, shopProducts] = await findWithPaginationAndSorting(
+		req,
+		Products,
+		{
+			"shop.name": shopName,
+		}
+	);
 
 	res.status(200).json({
 		success: true,
-		pagination: {
-			count,
-			page,
-			pageCount,
-			startIndex,
-		},
+		pagination,
 		data: shopProducts,
 	});
 });

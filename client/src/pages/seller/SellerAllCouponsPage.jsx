@@ -6,6 +6,7 @@ import Icons from "../../assets/Icons";
 import convertISOToDate from "../../utils/convertISOToDate";
 import Pagination from "../../components/Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
+import Sorting from "../../components/Sorting";
 const { eye, edit } = Icons;
 
 const SellerAllCouponsPage = () => {
@@ -13,6 +14,15 @@ const SellerAllCouponsPage = () => {
 	const [couponData, setCouponData] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [pagination, setPagination] = useState({});
+	const [sortOptions, setSortOptions] = useState({
+		sortBy: "createdAt",
+		sortItems: [
+			{ value: "createdAt", title: "Date" },
+			{ value: "minAmount", title: "Min Amount" },
+			{ value: "maxAmount", title: "Max Amount" },
+			{ value: "discountPercentage", title: "Discount Percentage" },
+		],
+	});
 
 	useEffect(() => {
 		setLoading(true);
@@ -20,7 +30,7 @@ const SellerAllCouponsPage = () => {
 			.get(
 				`${server}/seller/get-all-coupons/${shopId}?page=${
 					pagination.page || 1
-				}`,
+				}&sort=${sortOptions.sortBy}`,
 				{
 					withCredentials: true,
 				}
@@ -33,7 +43,7 @@ const SellerAllCouponsPage = () => {
 			.finally(() => {
 				setLoading(false);
 			});
-	}, [pagination.page]);
+	}, [pagination.page, sortOptions]);
 	return (
 		<div>
 			{loading && (
@@ -48,7 +58,10 @@ const SellerAllCouponsPage = () => {
 					/>
 				</div>
 			)}
-			<Pagination pagination={pagination} setPagination={setPagination} />
+			<section className="d-flex justify-content-end gap-3 ">
+				<Sorting sortOptions={sortOptions} setSortOptions={setSortOptions} />
+				<Pagination pagination={pagination} setPagination={setPagination} />
+			</section>
 			<section className="d-flex flex-column gap-2">
 				{couponData.map((coupon) => (
 					<div className="p-3 bg-white m-1 row rounded-4 align-items-center ">

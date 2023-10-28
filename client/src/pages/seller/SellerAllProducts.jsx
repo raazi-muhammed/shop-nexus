@@ -5,10 +5,21 @@ import toast from "react-hot-toast";
 import ClipLoader from "react-spinners/ClipLoader";
 import Pagination from "../../components/Pagination";
 import ProductCardRow from "../../components/product/ProductCardRow";
+import Sorting from "../../components/Sorting";
 
 const SellerAllProducts = ({ shopId }) => {
 	const [loading, setLoading] = useState(false);
 	const [pagination, setPagination] = useState({});
+	const [sortOptions, setSortOptions] = useState({
+		sortBy: "createdAt",
+		sortItems: [
+			{ value: "discount_price", title: "Price" },
+			{ value: "createdAt", title: "Date" },
+			{ value: "rating", title: "Rating" },
+			{ value: "total_sell", title: "Total Sold" },
+			{ value: "stock", title: "Stock" },
+		],
+	});
 
 	const [data, setData] = useState([]);
 	useEffect(() => {
@@ -17,7 +28,7 @@ const SellerAllProducts = ({ shopId }) => {
 			.get(
 				`${server}/seller/get-products-from-shop/${shopId}?page=${
 					pagination?.page || 1
-				}`,
+				}&sort=${sortOptions.sortBy}`,
 				{
 					withCredentials: true,
 				}
@@ -30,7 +41,7 @@ const SellerAllProducts = ({ shopId }) => {
 			.finally(() => {
 				setLoading(false);
 			});
-	}, [pagination?.page]);
+	}, [pagination?.page, sortOptions]);
 
 	return (
 		<div className="d-flex flex-column gap-2">
@@ -46,7 +57,10 @@ const SellerAllProducts = ({ shopId }) => {
 					/>
 				</div>
 			)}
-			<Pagination pagination={pagination} setPagination={setPagination} />
+			<section className="d-flex justify-content-end gap-3 ">
+				<Sorting sortOptions={sortOptions} setSortOptions={setSortOptions} />
+				<Pagination pagination={pagination} setPagination={setPagination} />
+			</section>
 			<section className="row py-0 mb-0 p-5 text-secondary fw-bold">
 				<p className="col-6 m-0 ">Product Details</p>
 				<p className="col-3 m-0">Info</p>

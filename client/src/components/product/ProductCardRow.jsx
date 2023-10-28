@@ -2,6 +2,7 @@ import React from "react";
 import Icons from "../../assets/Icons";
 import { Link } from "react-router-dom";
 import { getCategoryByKey } from "../../constants/categoriesConstants";
+import formatPrice from "../../utils/formatPrice";
 
 const { eye, edit } = Icons;
 
@@ -33,7 +34,7 @@ const ProductCardRow = ({
 				<p className="m-0">{getCategoryByKey(category)}</p>
 				<p className="fw-bold">{`${stock} in Stock`}</p>
 			</section>
-			<p className="col-2">{`$${price}`}</p>
+			<p className="col-2">{formatPrice(price)}</p>
 			<section className="d-flex align-items-center justify-content-end  col-1 gap-3 ">
 				<Link to={`/product/${id}`}>
 					<button className="btn btn-secondary text-white btn-sm">{eye}</button>
