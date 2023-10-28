@@ -63,6 +63,10 @@ const SellerDashboardPage = () => {
 			name: "New Event",
 			link: `/seller/dashboard/${shopId}/new-event`,
 		},
+		{
+			name: "All Event",
+			link: `/seller/dashboard/${shopId}/events`,
+		},
 	];
 
 	useEffect(() => {

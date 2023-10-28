@@ -8,6 +8,8 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		typeOfEvent,
 		eventName,
 		category,
+		startDate,
+		endDate,
 		description,
 		discountPercentage,
 		image,
@@ -27,6 +29,8 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 	const eventDetails = {
 		type_of_event: typeOfEvent,
 		name: eventName,
+		start_date: startDate,
+		end_date: endDate,
 		category,
 		description,
 		images: imageUrls,

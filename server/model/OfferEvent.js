@@ -17,11 +17,13 @@ const offerEventsSchema = new mongoose.Schema(
 		category: {
 			type: String,
 		},
-		price: {
-			type: Number,
+		start_date: {
+			type: Date,
+			require: true,
 		},
-		discount_price: {
-			type: Number,
+		end_date: {
+			type: Date,
+			require: true,
 		},
 		discount_percentage: {
 			type: Number,

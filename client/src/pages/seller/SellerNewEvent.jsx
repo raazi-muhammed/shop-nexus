@@ -16,10 +16,14 @@ import typeOfEventsConstants from "../../constants/typeOfEventConstants";
 
 const SellerNewEvent = () => {
 	const { shopId } = useParams();
+	const today = new Date();
 	const navigate = useNavigate();
 	const [eventName, setEventName] = useState("");
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
+	const [startDate, setStartDate] = useState(today);
+	const [endDate, setEndDate] = useState();
+	const eventEndMaxDate = new Date(startDate);
 	const [typeOfEvent, setTypeOfEvent] = useState("PRODUCT_BASED");
 	const [discountPercentage, setDiscountPercentage] = useState("");
 	const [image, setImage] = useState([]);
@@ -105,6 +109,8 @@ const SellerNewEvent = () => {
 			formData = {
 				typeOfEvent,
 				eventName,
+				startDate,
+				endDate,
 				description,
 				discountPercentage,
 				image,
@@ -116,6 +122,8 @@ const SellerNewEvent = () => {
 			formData = {
 				typeOfEvent,
 				eventName,
+				startDate,
+				endDate,
 				category,
 				description,
 				discountPercentage,
@@ -172,6 +180,42 @@ const SellerNewEvent = () => {
 							value={description}
 							name="description"
 							onChange={(e) => setDescription(e.target.value)}
+							required
+						/>
+						<div className="invalid-feedback">Invalid</div>
+					</div>
+				</div>
+				<div className="row">
+					<label htmlFor="product-name" className={formLabelClass}>
+						Start Date
+					</label>
+					<div className={inputDivClass}>
+						<input
+							type="date"
+							min={today.toISOString().slice(0, 10)}
+							className="form-control"
+							id="product-name"
+							value={startDate}
+							name="expires"
+							onChange={(e) => setStartDate(e.target.value)}
+							required
+						/>
+						<div className="invalid-feedback">Invalid</div>
+					</div>
+				</div>
+				<div className="row">
+					<label htmlFor="product-name" className={formLabelClass}>
+						End Date
+					</label>
+					<div className={inputDivClass}>
+						<input
+							type="date"
+							min={eventEndMaxDate.toISOString().slice(0, 10)}
+							className="form-control"
+							id="product-name"
+							value={endDate}
+							name="expires"
+							onChange={(e) => setEndDate(e.target.value)}
 							required
 						/>
 						<div className="invalid-feedback">Invalid</div>
@@ -312,12 +356,9 @@ const SellerNewEvent = () => {
 							<div class="modal-footer">
 								<button
 									type="button"
-									class="btn btn-sm btn-secondary"
+									class="btn btn-sm btn-secondary text-white"
 									data-bs-dismiss="modal">
 									Close
-								</button>
-								<button type="button" class="btn btn-sm btn-primary">
-									Save changes
 								</button>
 							</div>
 						</div>
