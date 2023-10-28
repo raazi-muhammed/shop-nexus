@@ -1,4 +1,5 @@
 const OfferEvent = require("../model/OfferEvent");
+const Products = require("../model/Products");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const cloudinaryUpload = require("../utils/cloudinaryUpload");
 
@@ -8,8 +9,6 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		eventName,
 		category,
 		description,
-		price,
-		discountedPrice,
 		discountPercentage,
 		image,
 		selectedProducts,
@@ -30,13 +29,12 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		name: eventName,
 		category,
 		description,
-		price,
 		images: imageUrls,
-		discount_price: discountedPrice,
 		selected_products: selectedProducts,
 		discount_percentage: discountPercentage,
 		shop: shopId,
 	};
+
 	const event = await OfferEvent.create(eventDetails);
 
 	res.status(200).json({
@@ -59,6 +57,16 @@ const getEventDetails = asyncErrorHandler(async (req, res, next) => {
 	const eventsData = await OfferEvent.findOne({ _id: eventId }).populate(
 		"selected_products"
 	);
+
+	if (eventsData.type_of_event === "CATEGORY_BASED") {
+		let products = await Products.find({
+			isDeleted: { $ne: true },
+			category: eventsData.category,
+		});
+
+		eventsData.selected_products = products;
+	}
+
 	res.status(200).json({
 		success: true,
 		eventsData,

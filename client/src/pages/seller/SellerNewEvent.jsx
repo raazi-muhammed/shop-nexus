@@ -21,8 +21,6 @@ const SellerNewEvent = () => {
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
 	const [typeOfEvent, setTypeOfEvent] = useState("PRODUCT_BASED");
-	const [price, setPrice] = useState("");
-	const [discountedPrice, setDiscountedPrice] = useState("");
 	const [discountPercentage, setDiscountPercentage] = useState("");
 	const [image, setImage] = useState([]);
 	const [selectedProducts, setSelectedProducts] = useState([]);
@@ -83,7 +81,18 @@ const SellerNewEvent = () => {
 	};
 
 	const handleProductClick = (e) => {
-		setSelectedProducts([e.target.value]);
+		if (typeOfEvent === "COMBO_OFFER") {
+			let newSelectedProducts = new Set(selectedProducts);
+			newSelectedProducts.add(e.target.value);
+			console.log(newSelectedProducts);
+
+			if (selectedProducts.includes(e.target.value))
+				newSelectedProducts.delete(e.target.value);
+
+			console.log(newSelectedProducts);
+
+			setSelectedProducts(Array.from(newSelectedProducts));
+		} else setSelectedProducts([e.target.value]);
 		console.log(selectedProducts);
 	};
 
@@ -92,13 +101,12 @@ const SellerNewEvent = () => {
 		setAllowSubmission(false);
 
 		let formData = [];
-		if (typeOfEvent === "PRODUCT_BASED") {
+		if (typeOfEvent === "PRODUCT_BASED" || typeOfEvent === "COMBO_OFFER") {
 			formData = {
 				typeOfEvent,
 				eventName,
 				description,
-				price,
-				discountedPrice,
+				discountPercentage,
 				image,
 				shopId,
 				selectedProducts,
@@ -188,7 +196,7 @@ const SellerNewEvent = () => {
 					</div>
 				</div>
 
-				{typeOfEvent === "PRODUCT_BASED" ? (
+				{typeOfEvent === "PRODUCT_BASED" || typeOfEvent === "COMBO_OFFER" ? (
 					<>
 						<div className="row">
 							<label
@@ -203,42 +211,6 @@ const SellerNewEvent = () => {
 									data-bs-target="#exampleModal">
 									Select Products
 								</button>
-							</div>
-						</div>
-						<div className="row">
-							<label htmlFor="price" className={formLabelClass}>
-								Actual Price
-							</label>
-							<div className={inputDivClass}>
-								<input
-									type="text"
-									className="form-control"
-									id="discounted-price"
-									value={price}
-									name="price"
-									onChange={(e) => setPrice(e.target.value)}
-									pattern="^[0-9]\d*$"
-									required
-								/>
-								<div className="invalid-feedback">Invalid</div>
-							</div>
-						</div>
-						<div className="row">
-							<label htmlFor="discounted-price" className={formLabelClass}>
-								Discounted Price
-							</label>
-							<div className={inputDivClass}>
-								<input
-									type="text"
-									className="form-control"
-									id="discounted-price"
-									value={discountedPrice}
-									name="discountedPrice"
-									onChange={(e) => setDiscountedPrice(e.target.value)}
-									pattern="^[0-9]\d*$"
-									required
-								/>
-								<div className="invalid-feedback">Invalid</div>
 							</div>
 						</div>
 					</>
@@ -263,28 +235,28 @@ const SellerNewEvent = () => {
 								</select>
 							</div>
 						</div>
-						<div className="row">
-							<label htmlFor="product-name" className={formLabelClass}>
-								Discount Percentage
-							</label>
-							<div className={inputDivClass}>
-								<input
-									type="text"
-									className="form-control"
-									id="product-name"
-									value={discountPercentage}
-									name="discountPercentage"
-									onChange={(e) => setDiscountPercentage(e.target.value)}
-									pattern="^(0(\.\d*)?|1(\.0+)?)$"
-									required
-								/>
-								<div className="invalid-feedback">
-									Value must be between 0 and 1, and in the format 0.3 (not .3)
-								</div>
-							</div>
-						</div>
 					</>
 				)}
+				<div className="row">
+					<label htmlFor="product-name" className={formLabelClass}>
+						Discount Percentage
+					</label>
+					<div className={inputDivClass}>
+						<input
+							type="text"
+							className="form-control"
+							id="product-name"
+							value={discountPercentage}
+							name="discountPercentage"
+							onChange={(e) => setDiscountPercentage(e.target.value)}
+							pattern="^(0(\.\d*)?|1(\.0+)?)$"
+							required
+						/>
+						<div className="invalid-feedback">
+							Value must be between 0 and 1, and in the format 0.3 (not .3)
+						</div>
+					</div>
+				</div>
 				<div
 					class="modal fade"
 					id="exampleModal"
@@ -374,7 +346,7 @@ const SellerNewEvent = () => {
 					disabled={!allowSubmission}
 					type="submit"
 					className={submitButtonClass}>
-					Add Product
+					Add Event
 				</button>
 			</form>
 		</section>

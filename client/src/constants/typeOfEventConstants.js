@@ -1,6 +1,7 @@
 const typeOfEventsConstants = [
 	{ key: "PRODUCT_BASED", value: "Product Based" },
 	{ key: "CATEGORY_BASED", value: "Category Based" },
+	{ key: "COMBO_OFFER", value: "Combo Offer" },
 ];
 
 export function getCategoryByKey(key) {

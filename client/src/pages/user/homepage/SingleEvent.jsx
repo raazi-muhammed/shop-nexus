@@ -81,8 +81,8 @@ const SingleEvent = () => {
 				<hr className="text-secondary" />
 				<section>
 					{eventData?.selected_products?.map((product) => (
-						<section className="row bg-white rounded-4  p-1">
-							<div className="col-4">
+						<section className="row bg-white rounded-4  p-1 mb-3">
+							<div className="col-3">
 								<img className="w-100" src={product?.images[0]?.url} alt="" />
 							</div>
 							<section className="col-8 d-flex flex-column justify-content-center">
@@ -104,7 +104,12 @@ const SingleEvent = () => {
 										<span className="text-light">more...</span>
 										<section className="d-flex gap-1 ">
 											<p className="h4 mb-0 fw-bold">
-												{formatPrice(eventData?.discount_price)}
+												{formatPrice(
+													Math.floor(
+														product?.price *
+															(1 - eventData?.discount_percentage)
+													)
+												)}
 											</p>
 											<p className="text-small text-decoration-line-through">
 												{formatPrice(product?.discount_price)}
@@ -127,7 +132,13 @@ const SingleEvent = () => {
 										<button
 											className="btn btn-sm btn-primary px-2 d-flex gap-2 align-items-center"
 											onClick={() =>
-												handleAddToCart(product?._id, eventData?.discount_price)
+												handleAddToCart(
+													product?._id,
+													Math.floor(
+														product?.price *
+															(1 - eventData?.discount_percentage)
+													)
+												)
 											}>
 											{cart} Add to Cart
 										</button>
@@ -136,7 +147,9 @@ const SingleEvent = () => {
 										onClick={() =>
 											handleAddToWishList(
 												product?._id,
-												eventData?.discount_price
+												Math.floor(
+													product?.price * (1 - eventData?.discount_percentage)
+												)
 											)
 										}
 										className="btn btn-sm btn-secondary text-white">
