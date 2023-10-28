@@ -44,7 +44,6 @@ const WishListUser = () => {
 		axios
 			.get(`${server}/wish-list/get-all-wish-list`, { withCredentials: true })
 			.then((res) => {
-				console.log(res.data?.user);
 				dispatch(setUserDataReducer(res.data?.user));
 			})
 			.catch((err) =>

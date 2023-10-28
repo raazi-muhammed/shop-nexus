@@ -77,6 +77,7 @@ const SellerAllOrders = () => {
 					</section>
 					{orderData?.map((order, i) => (
 						<OrderCardMain
+							key={i}
 							status={order.status}
 							createdAt={order.createdAt}
 							orderItems={order.orderItems}

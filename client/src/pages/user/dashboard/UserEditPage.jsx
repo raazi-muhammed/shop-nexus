@@ -14,7 +14,6 @@ const UserEditPage = () => {
 	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
 
-	//const [userData, setUserData] = useState("");
 	const [userName, setUserName] = useState(userData.fullName);
 	const [email, setEmail] = useState(userData.email);
 	const [userAvatar, setUserAvatar] = useState(userData.avatar?.url);
@@ -114,7 +113,7 @@ const UserEditPage = () => {
 				</label>
 				<div className={inputDivClass}>
 					<input
-						disabled="true"
+						disabled={true}
 						type="email"
 						className="form-control"
 						id="email"

@@ -67,7 +67,7 @@ const SellerAllProducts = ({ shopId }) => {
 				<p className="col-2 m-0">Price</p>
 			</section>
 			{data.map((product, i) => (
-				<>
+				<div key={i}>
 					{!product.isDeleted && (
 						<ProductCardRow
 							key={i}
@@ -80,11 +80,11 @@ const SellerAllProducts = ({ shopId }) => {
 							shopId={shopId}
 						/>
 					)}
-				</>
+				</div>
 			))}
 			{!loading && <p className="fw-bold m-3 text-danger">Deleted</p>}
 			{data.map((product, i) => (
-				<>
+				<div key={i}>
 					{product.isDeleted && (
 						<ProductCardRow
 							key={i}
@@ -97,7 +97,7 @@ const SellerAllProducts = ({ shopId }) => {
 							shopId={shopId}
 						/>
 					)}
-				</>
+				</div>
 			))}
 		</div>
 	);

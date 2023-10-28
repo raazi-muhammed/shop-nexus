@@ -36,7 +36,7 @@ const Pagination = ({ pagination, setPagination }) => {
 					</a>
 				</li>
 				{[...Array(pagination.pageCount)].map((e, i) => (
-					<li class="page-item ">
+					<li key={i} class="page-item ">
 						<a
 							onClick={(e) => handleSinglePageClick(i + 1)}
 							class={`page-link ${

@@ -81,7 +81,9 @@ const SingleEvent = () => {
 				<hr className="text-secondary" />
 				<section>
 					{eventData?.selected_products?.map((product) => (
-						<section className="row bg-white rounded-4  p-1 mb-3">
+						<section
+							key={product._id}
+							className="row bg-white rounded-4  p-1 mb-3">
 							<div className="col-3">
 								<img className="w-100" src={product?.images[0]?.url} alt="" />
 							</div>

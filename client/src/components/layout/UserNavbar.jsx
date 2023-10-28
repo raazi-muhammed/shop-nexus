@@ -48,21 +48,23 @@ const UserNavbar = () => {
 
 	return (
 		<div className="vw-100">
-			<nav class="navbar navbar-expand-lg bg-body-light bg-light">
-				<div class="container container-xxl">
+			<nav className="navbar navbar-expand-lg bg-body-light bg-light">
+				<div className="container container-xxl">
 					<button
-						class="navbar-toggler visually-hidden"
+						className="navbar-toggler visually-hidden"
 						type="button"
 						data-bs-toggle="collapse"
 						data-bs-target="#navbarSupportedContent"
 						aria-controls="navbarSupportedContent"
 						aria-expanded="false"
 						aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
+						<span className="navbar-toggler-icon"></span>
 					</button>
-					<div class="collapse navbar-collapse " id="navbarSupportedContent">
-						<ul class="navbar-nav w-100">
-							<li class="nav-item my-3 my-lg-auto">
+					<div
+						className="collapse navbar-collapse "
+						id="navbarSupportedContent">
+						<ul className="navbar-nav w-100">
+							<li className="nav-item my-3 my-lg-auto">
 								<section>
 									<label className="visually-hidden " htmlFor="categorySelect">
 										Select a Category:
@@ -101,24 +103,26 @@ const UserNavbar = () => {
 							</button>
 						</section>
 						{userData?.fullName ? (
-							<div class="btn-group">
+							<div className="btn-group">
 								<button
 									onClick={() => navigate(`/user/dashboard/${userData._id}`)}
-									class="btn btn-secondary btn-sm text-white text-nowrap"
+									className="btn btn-secondary btn-sm text-white text-nowrap"
 									type="button">
 									<span>{profile}</span>
 									<span className="mx-1"> {userData.fullName}</span>
 								</button>
 								<button
 									type="button"
-									class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
+									className="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
 									data-bs-toggle="dropdown"
 									aria-expanded="false">
-									<span class="visually-hidden">Toggle Dropdown</span>
+									<span className="visually-hidden">Toggle Dropdown</span>
 								</button>
-								<ul class="dropdown-menu">
+								<ul className="dropdown-menu">
 									<li onClick={handleLogOut}>
-										<Link class="dropdown-item text-danger fw-bold" href="#">
+										<Link
+											className="dropdown-item text-danger fw-bold"
+											href="#">
 											Logout
 										</Link>
 									</li>

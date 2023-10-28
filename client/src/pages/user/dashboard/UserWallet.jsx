@@ -31,14 +31,12 @@ const UserWallet = () => {
 		script.onerror = () => toast.error("An error with RazorPay");
 		script.onload = async () => {
 			try {
-				console.log("Hihi");
 				const result = await axios.post(
 					`${server}/payment/create-razorpay-order`,
 					{
 						amount: amountToAdd,
 					}
 				);
-				console.log(result);
 
 				const { amount, id: order_id, currency } = result.data.order;
 				const {
@@ -78,7 +76,6 @@ const UserWallet = () => {
 				const paymentObject = new window.Razorpay(options);
 				paymentObject.open();
 			} catch (error) {
-				console.log(error);
 				toast.error(error.message || "An error ocurred");
 			}
 		};
@@ -89,7 +86,6 @@ const UserWallet = () => {
 		axios
 			.get(`${server}/user/get-wallet-details`, { withCredentials: true })
 			.then((res) => {
-				console.log(res);
 				setWalletInfo(res.data.walletInfo);
 			})
 			.catch((err) => console.log(err));
@@ -163,8 +159,10 @@ const UserWallet = () => {
 			</section>
 			<section>
 				<p className="m-2 mt-4 fw-bold text-secondary">Transactions</p>
-				{walletInfo?.events?.map((event) => (
-					<div className="p-3 bg-white my-3 row rounded-4 align-items-center ">
+				{walletInfo?.events?.map((event, i) => (
+					<div
+						key={i}
+						className="p-3 bg-white my-3 row rounded-4 align-items-center ">
 						<section className="col">
 							<p className="text-small text-secondary m-0">Details</p>
 							<p className="mb-0">{convertISOToDate(event.date, true)}</p>

@@ -97,7 +97,7 @@ const SingleOrderDetails = ({
 							</button>
 							<form class="dropdown-menu p-4">
 								<div class="mb-3" style={{ width: "15rem" }}>
-									<label for="reason-for-cancelation" class="form-label">
+									<label htmlFor="reason-for-cancelation" class="form-label">
 										Reason
 									</label>
 									<textarea
@@ -130,7 +130,7 @@ const SingleOrderDetails = ({
 							</button>
 							<form class="dropdown-menu p-4">
 								<div class="mb-3" style={{ width: "15rem" }}>
-									<label for="reason-for-cancelation" class="form-label">
+									<label htmlFor="reason-for-cancelation" class="form-label">
 										Reason
 									</label>
 									<textarea
@@ -253,8 +253,8 @@ const SingleOrderDetails = ({
 				{showEvents && (
 					<section>
 						<p className="mt-3 h4 fw-bold text-secondary">Events</p>
-						{orderDetails?.events?.map((e) => (
-							<div className="row">
+						{orderDetails?.events?.map((e, i) => (
+							<div key={i} className="row">
 								<p className="m-0 col-4 fw-bold ">{e.name}</p>
 								<p className="m-0 col">{convertISOToDate(e.date, true)}</p>
 							</div>

@@ -42,14 +42,12 @@ const CartUser = () => {
 	const handleCheckout = () => {
 		dispatch(hideCart());
 		navigate("/user/checkout");
-		console.log("cart");
 	};
 
 	useEffect(() => {
 		axios
 			.get(`${server}/cart/get-all-cart`, { withCredentials: true })
 			.then((res) => {
-				console.log(res.data?.user);
 				dispatch(setUserDataReducer(res.data?.user));
 			})
 			.catch((err) =>

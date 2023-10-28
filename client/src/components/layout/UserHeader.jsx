@@ -16,8 +16,8 @@ const UserHeader = () => {
 	};
 	return (
 		<div>
-			<header class="navbar navbar-expand-lg bg-body-primary  bg-primary">
-				<div class="container container-xxl ">
+			<header className="navbar navbar-expand-lg bg-body-primary  bg-primary">
+				<div className="container container-xxl ">
 					<Link
 						to={"/"}
 						className="navbar-brand text-white h3 text-decoration-none ">
@@ -25,25 +25,27 @@ const UserHeader = () => {
 					</Link>
 
 					<button
-						class="navbar-toggler"
+						className="navbar-toggler"
 						type="button"
 						data-bs-toggle="collapse"
 						data-bs-target="#navbarSupportedContent"
 						aria-controls="navbarSupportedContent"
 						aria-expanded="false"
 						aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
+						<span className="navbar-toggler-icon"></span>
 					</button>
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav mx-auto my-3 my-lg-auto w-50">
-							<li style={{ maxWidth: "25rem" }} class="nav-item w-100 mx-auto">
-								<form onSubmit={handleSearch} class="d-flex" role="search">
+					<div className="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul className="navbar-nav mx-auto my-3 my-lg-auto w-50">
+							<li
+								style={{ maxWidth: "25rem" }}
+								className="nav-item w-100 mx-auto">
+								<form onSubmit={handleSearch} className="d-flex" role="search">
 									<input
 										style={{
 											backgroundColor: "#43328a",
 											borderColor: "#5b49a6",
 										}}
-										class="w-100 form-control me-2 text-white border-1 placeholder-color"
+										className="w-100 form-control me-2 text-white border-1 placeholder-color"
 										type="search"
 										value={searchTerm}
 										onChange={(e) => setSearchTerm(e.target.value)}

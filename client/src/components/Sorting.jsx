@@ -13,11 +13,12 @@ const Sorting = ({ sortOptions, setSortOptions }) => {
 			<select
 				onChange={sortByChange}
 				value={sortOptions.sortBy}
-				class="form-select form-select-sm text-primary"
+				className="form-select form-select-sm text-primary"
 				aria-label="Small select example">
-				<option selected>Sort By</option>
 				{sortOptions.sortItems.map((item) => (
-					<option value={item.value}>Sort By: {item.title}</option>
+					<option key={item.value} value={item.value}>
+						Sort By: {item.title}
+					</option>
 				))}
 			</select>
 		</div>

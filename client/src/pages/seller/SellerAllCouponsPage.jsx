@@ -64,7 +64,9 @@ const SellerAllCouponsPage = () => {
 			</section>
 			<section className="d-flex flex-column gap-2">
 				{couponData.map((coupon) => (
-					<div className="p-3 bg-white m-1 row rounded-4 align-items-center ">
+					<div
+						key={coupon.code}
+						className="p-3 bg-white m-1 row rounded-4 align-items-center ">
 						<section className="col-3">
 							<p className="m-0">{coupon.name}</p>
 							<p className="fw-bold m-0">{coupon.code}</p>

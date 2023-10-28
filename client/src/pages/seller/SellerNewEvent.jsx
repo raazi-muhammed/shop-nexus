@@ -250,7 +250,7 @@ const SellerNewEvent = () => {
 								<button
 									onClick={handleGetAllProducts}
 									type="button"
-									class="btn btn-light w-100"
+									className="btn btn-light w-100"
 									data-bs-toggle="modal"
 									data-bs-target="#exampleModal">
 									Select Products
@@ -302,31 +302,31 @@ const SellerNewEvent = () => {
 					</div>
 				</div>
 				<div
-					class="modal fade"
+					className="modal fade"
 					id="exampleModal"
-					tabindex="-1"
+					tabIndex="-1"
 					aria-labelledby="exampleModalLabel"
 					aria-hidden="true">
-					<div class="modal-dialog modal-dialog-scrollable">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h1 class="modal-title fs-5" id="exampleModalLabel">
+					<div className="modal-dialog modal-dialog-scrollable">
+						<div className="modal-content">
+							<div className="modal-header">
+								<h1 className="modal-title fs-5" id="exampleModalLabel">
 									Add Products
 								</h1>
 								<button
 									type="button"
-									class="btn-close"
+									className="btn-close"
 									data-bs-dismiss="modal"
 									aria-label="Close"></button>
 							</div>
-							<div class="modal-body">
+							<div className="modal-body">
 								<form>
 									{products.map((product, i) => (
 										<>
 											{!product.isDeleted && (
-												<div class="form-check d-flex align-items-center">
+												<div className="form-check d-flex align-items-center">
 													<input
-														class="form-check-input"
+														className="form-check-input"
 														type="checkbox"
 														checked={selectedProducts.includes(product._id)}
 														value={product._id}
@@ -334,7 +334,7 @@ const SellerNewEvent = () => {
 														id={product._id}
 													/>
 													<label
-														class="form-check-label w-100"
+														className="form-check-label w-100"
 														for={product._id}>
 														<SellerEventCardProduct
 															key={i}
@@ -353,10 +353,10 @@ const SellerNewEvent = () => {
 									))}
 								</form>
 							</div>
-							<div class="modal-footer">
+							<div className="modal-footer">
 								<button
 									type="button"
-									class="btn btn-sm btn-secondary text-white"
+									className="btn btn-sm btn-secondary text-white"
 									data-bs-dismiss="modal">
 									Close
 								</button>

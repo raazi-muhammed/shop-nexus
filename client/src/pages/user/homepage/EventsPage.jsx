@@ -11,7 +11,6 @@ const EventsPage = () => {
 		axios
 			.get(`${server}/event/all-events`)
 			.then((res) => {
-				console.log(res);
 				setEvents(res.data?.eventsData);
 			})
 			.catch((err) => console.log(err));
@@ -21,6 +20,7 @@ const EventsPage = () => {
 			<div className="w-100 container container-xxl  ">
 				{events.map((event) => (
 					<article
+						key={event._id}
 						className="rounded-5 mb-5 d-flex p-0 align-items-end justify-content-between "
 						style={{
 							backgroundImage: `url(${event?.images[0]?.url})`,
@@ -33,7 +33,7 @@ const EventsPage = () => {
 								backgroundImage:
 									"linear-gradient(rgba(255, 255, 255, 0), white)",
 								backdropFilter: "blur(7px)",
-								"-webkit-backdrop-filter": "blur(7px)",
+								WebkitBackdropFilter: "blur(7px)",
 							}}
 							className="m-0 p-4 rounded-bottom-5 d-flex justify-content-between align-items-end w-100">
 							<section className="col-7">
