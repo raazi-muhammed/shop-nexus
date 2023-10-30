@@ -69,19 +69,10 @@ const HomePage = () => {
 				<Route path="/user/checkout/*" element={<CheckOutPage />} />
 				<Route path="/" element={<HomeContentPage />} />
 			</Routes>
-
-			{cartState ? (
-				<aside className="bg-white aside-card overflow-auto ">
-					<CartUser />
-				</aside>
-			) : null}
-
-			{wishListState ? (
-				<aside className="bg-white aside-card overflow-auto ">
-					<WishListUser />
-				</aside>
-			) : null}
-
+			<aside>
+				<CartUser />
+				<WishListUser />
+			</aside>
 			<FooterComp />
 		</div>
 	);

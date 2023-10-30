@@ -29,6 +29,9 @@ $pagination-color: $primary;
 $pagination-bg: $light;
 $pagination-hover-bg: #c3c1f5;
 
+/* Carosole */
+$carousel-control-color: $secondary;
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 .btn,

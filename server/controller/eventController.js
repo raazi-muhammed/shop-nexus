@@ -47,6 +47,7 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		message: "Event Added",
 	});
 });
+
 const editEventSeller = asyncErrorHandler(async (req, res, next) => {
 	const { eventId } = req.params;
 

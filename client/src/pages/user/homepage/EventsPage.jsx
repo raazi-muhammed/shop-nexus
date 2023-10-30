@@ -4,9 +4,10 @@ import server from "../../../server";
 import Icons from "../../../assets/Icons";
 import { Link } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
+import UserEventMainCard from "../../../components/events/UserEventMainCard";
 const { heart, cart } = Icons;
 
-const EventsPage = () => {
+const EventsPage = ({ onHomePage }) => {
 	const [loading, setLoading] = useState(false);
 	const [events, setEvents] = useState([]);
 	useEffect(() => {
@@ -22,7 +23,7 @@ const EventsPage = () => {
 			});
 	}, []);
 	return (
-		<main className="vw-100 min-vh-100 mt-4">
+		<main className="vw-100 mt-4">
 			{loading && (
 				<div className="d-flex justify-content-center ">
 					<ClipLoader
@@ -35,38 +36,55 @@ const EventsPage = () => {
 					/>
 				</div>
 			)}
-			<div className="w-100 container container-xxl  ">
-				{events.map((event) => (
-					<article
-						key={event._id}
-						className="rounded-5 mb-5 d-flex p-0 align-items-end justify-content-between "
-						style={{
-							backgroundImage: `url(${event?.images[0]?.url})`,
-							backgroundSize: "contain",
-							backgroundPosition: "right",
-							aspectRatio: "24/9",
-						}}>
-						<div
-							style={{
-								backgroundImage:
-									"linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9), white)",
-							}}
-							className="rounded-5 m-0 p-4 d-flex justify-content-start align-items-center h-100 w-100">
-							<section className="w-50">
-								<p className="h1 w-100 fw-bold text-secondary">{event.name}</p>
-								<p className="w-75 text-small m-0">{event.description}</p>
-								<Link to={event._id}>
-									<button className="btn btn-sm p-0 text-secondary fw-bold mb-2">
-										Learn More
-									</button>
-								</Link>
-							</section>
+
+			<div className="w-100 container container-xxl ">
+				{onHomePage ? (
+					<div
+						id="carouselExample"
+						class="carousel slide"
+						data-bs-ride="carousel">
+						<div style={{ aspectRatio: "24/9" }} class="carousel-inner">
+							{events.map((event, i) => (
+								<div class={`carousel-item ${i === 1 ? "active" : null}`}>
+									<UserEventMainCard key={event._id} event={event} />
+								</div>
+							))}
 						</div>
-					</article>
-				))}
+						<button
+							class="carousel-control-prev z-3 h-25 mt-auto w-50"
+							type="button"
+							data-bs-target="#carouselExample"
+							data-bs-slide="prev">
+							<span
+								class="carousel-control-prev-icon rounded-5 ms-auto mt-auto m-3"
+								aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button
+							class="carousel-control-next h-25 mt-auto w-50"
+							type="button"
+							data-bs-target="#carouselExample"
+							data-bs-slide="next">
+							<span
+								class="carousel-control-next-icon rounded-5 me-auto mt-auto m-3"
+								aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
+					</div>
+				) : (
+					<>
+						{events.map((event) => (
+							<UserEventMainCard key={event._id} event={event} />
+						))}
+					</>
+				)}
 			</div>
 		</main>
 	);
+};
+
+EventsPage.defaultProps = {
+	onHomePage: false,
 };
 
 export default EventsPage;
