@@ -198,8 +198,9 @@ const SellerEditSingleProductPage = () => {
 						Description
 					</label>
 					<div className={inputDivClass}>
-						<input
+						<textarea
 							type="text"
+							style={{ height: "10rem" }}
 							className="form-control"
 							id="description"
 							value={description}

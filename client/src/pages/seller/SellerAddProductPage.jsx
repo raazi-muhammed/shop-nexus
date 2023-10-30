@@ -135,6 +135,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						<textarea
 							type="text-area"
 							className="form-control"
+							style={{ height: "10rem" }}
 							id="description"
 							value={description}
 							name="description"

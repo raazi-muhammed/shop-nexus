@@ -37,8 +37,8 @@ const EditSingleEventSeller = () => {
 		e.preventDefault();
 
 		const eventNewData = {
-			name,
-			description,
+			name: name.trim(),
+			description: description.trim(),
 			startDate,
 			endDate,
 			discountPercentage,
@@ -53,8 +53,10 @@ const EditSingleEventSeller = () => {
 				const eventData = res.data.eventData;
 				setName(eventData?.name);
 				setDescription(eventData?.description);
-				setStartDate(new Date(eventData?.start_date));
-				setEndDate(new Date(eventData?.end_date));
+				setStartDate(
+					new Date(eventData?.start_date).toISOString().split("T")[0]
+				);
+				setEndDate(new Date(eventData?.end_date).toISOString().split("T")[0]);
 				setDiscountPercentage(eventData?.discount_percentage);
 				setImageUrl(eventData?.images[0]?.url);
 			})
@@ -93,11 +95,12 @@ const EditSingleEventSeller = () => {
 			})
 			.then((res) => {
 				const eventData = res.data.eventsData;
-				console.log(eventData);
 				setName(eventData?.name);
 				setDescription(eventData?.description);
-				setStartDate(new Date(eventData?.start_date));
-				setEndDate(new Date(eventData?.end_date));
+				setStartDate(
+					new Date(eventData?.start_date).toISOString().split("T")[0]
+				);
+				setEndDate(new Date(eventData?.end_date).toISOString().split("T")[0]);
 				setDiscountPercentage(eventData?.discount_percentage);
 				setImageUrl(eventData?.images[0]?.url);
 			})
@@ -138,6 +141,7 @@ const EditSingleEventSeller = () => {
 						<textarea
 							type="text-area"
 							className="form-control"
+							style={{ height: "10rem" }}
 							id="description"
 							value={description}
 							name="description"
@@ -154,10 +158,9 @@ const EditSingleEventSeller = () => {
 					<div className={inputDivClass}>
 						<input
 							type="date"
-							min={today.toISOString().split("T")[0]}
 							className="form-control"
 							id="product-name"
-							value={startDate.toISOString().split("T")[0]}
+							value={startDate}
 							name="expires"
 							onChange={(e) => setStartDate(e.target.value)}
 							required
@@ -175,7 +178,7 @@ const EditSingleEventSeller = () => {
 							min={eventEndMaxDate.toISOString().slice(0, 10)}
 							className="form-control"
 							id="product-name"
-							value={endDate.toISOString().split("T")[0]}
+							value={endDate}
 							name="expires"
 							onChange={(e) => setEndDate(e.target.value)}
 							required

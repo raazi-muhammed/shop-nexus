@@ -55,10 +55,10 @@ const UserHeader = () => {
 								</form>
 							</li>
 						</ul>
-						<Link to={"/seller/sign-up"}>
+						<Link to={"/seller/login"}>
 							<button className="btn btn-secondary text-white my-3 my-lg-auto px-3">
 								<span className="pb-3 mb-1">{shopIcon}</span>
-								<span className="ps-2 mb-0">Become A seller</span>
+								<span className="ps-2 mb-0">Seller Login</span>
 							</button>
 						</Link>
 					</div>

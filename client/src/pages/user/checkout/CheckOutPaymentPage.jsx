@@ -151,7 +151,7 @@ const CheckOutPaymentPage = ({ totalAmount }) => {
 
 	return (
 		<div className="row gap-3">
-			<section className="bg-white p-3 rounded-4 ">
+			{/* <section className="bg-white p-3 rounded-4 ">
 				<div onClick={() => setExpanded("paypal")}>
 					<p className="m-0 d-flex align-content-center ">
 						{expanded === "paypal" ? (
@@ -184,7 +184,7 @@ const CheckOutPaymentPage = ({ totalAmount }) => {
 						</button>
 					</div>
 				)}
-			</section>
+			</section> */}
 			<section className="bg-white p-3 rounded-4 ">
 				<div onClick={() => setExpanded("razorpay")}>
 					<p className="m-0 d-flex align-content-center ">

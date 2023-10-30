@@ -107,10 +107,10 @@ const SellerNewEvent = () => {
 		if (typeOfEvent === "PRODUCT_BASED" || typeOfEvent === "COMBO_OFFER") {
 			formData = {
 				typeOfEvent,
-				eventName,
+				eventName: eventName.trim(),
 				startDate,
 				endDate,
-				description,
+				description: description.trim(),
 				discountPercentage,
 				image,
 				shopId,
@@ -120,11 +120,11 @@ const SellerNewEvent = () => {
 		if (typeOfEvent === "CATEGORY_BASED") {
 			formData = {
 				typeOfEvent,
-				eventName,
+				eventName: eventName.trim(),
 				startDate,
 				endDate,
 				category,
-				description,
+				description: description.trim(),
 				discountPercentage,
 				image,
 				shopId,
@@ -175,6 +175,7 @@ const SellerNewEvent = () => {
 						<textarea
 							type="text-area"
 							className="form-control"
+							style={{ height: "10rem" }}
 							id="description"
 							value={description}
 							name="description"

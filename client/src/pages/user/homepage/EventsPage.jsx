@@ -52,9 +52,9 @@ const EventsPage = () => {
 									"linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9), white)",
 							}}
 							className="rounded-5 m-0 p-4 d-flex justify-content-start align-items-center h-100 w-100">
-							<section className="w-100">
-								<p className="h1 w-50 fw-bold text-secondary">{event.name}</p>
-								<p className="text-small m-0">{event.description}</p>
+							<section className="w-50">
+								<p className="h1 w-100 fw-bold text-secondary">{event.name}</p>
+								<p className="w-75 text-small m-0">{event.description}</p>
 								<Link to={event._id}>
 									<button className="btn btn-sm p-0 text-secondary fw-bold mb-2">
 										Learn More
