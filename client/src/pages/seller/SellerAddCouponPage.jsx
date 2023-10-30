@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import server from "../../server";
 import toast from "react-hot-toast";
@@ -9,6 +9,9 @@ import {
 	submitButtonClass,
 } from "../../utils/styleClasses";
 import { useNavigate, useParams } from "react-router-dom";
+import couponTypeConstants from "../../constants/couponTypeConstants";
+import categoriesConstants from "../../constants/categoriesConstants";
+import couponStateConstants from "../../constants/couponStateConstants";
 
 const SellerAddCouponPage = () => {
 	const navigate = useNavigate();
@@ -17,7 +20,9 @@ const SellerAddCouponPage = () => {
 	const { shopId } = useParams();
 	const [name, setName] = useState("");
 	const [code, setCode] = useState("");
-	const [status, setStatus] = useState("Active");
+	const [category, setCategory] = useState("");
+	const [status, setStatus] = useState("ACTIVE");
+	const [couponType, setCouponType] = useState("SHOP_BASED");
 	const [discountPercentage, setDiscountPercentage] = useState("");
 	const [expires, setExpires] = useState("");
 	const [minAmount, setMinAmount] = useState("");
@@ -38,6 +43,7 @@ const SellerAddCouponPage = () => {
 		const formData = {
 			shopId,
 			name,
+			type: couponType,
 			code,
 			status,
 			discountPercentage,
@@ -45,6 +51,14 @@ const SellerAddCouponPage = () => {
 			minAmount,
 			maxAmount,
 		};
+
+		if (
+			couponType === "CATEGORY_BASED_SHOP" ||
+			couponType === "CATEGORY_BASED_ALL"
+		) {
+			formData.category = category;
+		}
+
 		axios
 			.post(`${server}/seller/add-coupon`, formData, {
 				withCredentials: true,
@@ -58,6 +72,15 @@ const SellerAddCouponPage = () => {
 				message ? setCouponCodeErr(message) : toast.error("An error occurred");
 			});
 	};
+
+	useEffect(() => {
+		setStatus(
+			couponType === "CATEGORY_BASED_ALL" || couponType === "ALL_PRODUCTS"
+				? "WAITING_APPROVAL"
+				: status
+		);
+	}, [couponType]);
+
 	return (
 		<section>
 			<form
@@ -113,13 +136,22 @@ const SellerAddCouponPage = () => {
 					</label>
 					<div className={inputDivClass}>
 						<select
+							disabled={
+								couponType === "CATEGORY_BASED_ALL" ||
+								couponType === "ALL_PRODUCTS"
+									? true
+									: false
+							}
 							type="text"
 							className="form-select"
 							id="product-name"
 							value={status}
 							onChange={(e) => setStatus(e.target.value)}>
-							<option value="Active">Active</option>
-							<option value="In Active">In Active</option>
+							{couponStateConstants.map((state) => (
+								<option key={state.key} value={state.key}>
+									{state.value}
+								</option>
+							))}
 						</select>
 						<div className="invalid-feedback">Invalid</div>
 					</div>
@@ -144,6 +176,49 @@ const SellerAddCouponPage = () => {
 						</div>
 					</div>
 				</div>
+				<div className="row">
+					<label htmlFor="product-name" className={formLabelClass}>
+						Coupon Type
+					</label>
+					<div className={inputDivClass}>
+						<select
+							type="text"
+							className="form-select"
+							id="product-name"
+							value={couponType}
+							onChange={(e) => setCouponType(e.target.value)}>
+							{couponTypeConstants.map((type) => (
+								<option key={type.key} value={type.key}>
+									{type.value}
+								</option>
+							))}
+						</select>
+						<div className="invalid-feedback">Invalid</div>
+						<div className="invalid-feedback">Invalid</div>
+					</div>
+				</div>
+				{couponType === "CATEGORY_BASED_ALL" ||
+				couponType === "CATEGORY_BASED_SHOP" ? (
+					<div className="row">
+						<label className={formLabelClass} htmlFor="categorySelect">
+							Category
+						</label>
+						<div className={inputDivClass}>
+							<select
+								value={category}
+								onChange={(e) => setCategory(e.target.value)}
+								className="form-select"
+								id="categorySelect">
+								<option value="">Select Category</option>
+								{categoriesConstants.map((e) => (
+									<option key={e.key} value={e.key}>
+										{e.value}
+									</option>
+								))}
+							</select>
+						</div>
+					</div>
+				) : null}
 				<div className="row">
 					<label htmlFor="product-name" className={formLabelClass}>
 						Expires

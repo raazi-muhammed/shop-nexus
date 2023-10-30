@@ -105,7 +105,7 @@ const UserNavbar = () => {
 						{userData?.fullName ? (
 							<div className="btn-group">
 								<button
-									onClick={() => navigate(`/user/dashboard/${userData._id}`)}
+									onClick={() => navigate(`/user/dashboard`)}
 									className="btn btn-secondary btn-sm text-white text-nowrap"
 									type="button">
 									<span>{profile}</span>

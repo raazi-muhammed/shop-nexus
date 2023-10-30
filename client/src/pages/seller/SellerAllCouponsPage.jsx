@@ -7,6 +7,9 @@ import convertISOToDate from "../../utils/convertISOToDate";
 import Pagination from "../../components/Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
 import Sorting from "../../components/Sorting";
+import formatPrice from "../../utils/formatPrice";
+import { getCouponTypeByKey } from "../../constants/couponTypeConstants";
+import { getCouponStateByKey } from "../../constants/couponStateConstants";
 const { eye, edit } = Icons;
 
 const SellerAllCouponsPage = () => {
@@ -67,23 +70,28 @@ const SellerAllCouponsPage = () => {
 					<div
 						key={coupon.code}
 						className="p-3 bg-white m-1 row rounded-4 align-items-center ">
-						<section className="col-3">
-							<p className="m-0">{coupon.name}</p>
+						<section className="col-4">
+							<p className="m-0 text-small fw-bold">
+								{getCouponTypeByKey(coupon.type)}
+							</p>
+							<p className="m-0 text-small">{coupon.name}</p>
 							<p className="fw-bold m-0">{coupon.code}</p>
 						</section>
 						<section className="col-3">
-							<p className="m-0">{coupon.status}</p>
+							<p className="m-0">{getCouponStateByKey(coupon.status)}</p>
 							<p className="fw-bold m-0">{convertISOToDate(coupon.expires)}</p>
 						</section>
 						<section className="col-2">
 							<p className="text-small text-secondary m-0">Min Amount</p>
-							<p className="mb-0">{coupon.minAmount}</p>
+							<p className="mb-0">{formatPrice(coupon.minAmount)}</p>
 						</section>
 						<section className="col-2">
 							<p className="text-small text-secondary m-0">Max Amount</p>
-							<p className="m-0">{coupon.maxAmount}</p>
+							<p className="m-0 text-nowrap overflow-ellipsis">
+								{formatPrice(coupon.maxAmount)}
+							</p>
 						</section>
-						<section className="d-flex align-items-center justify-content-end  col-1 gap-3 ">
+						<section className="d-flex align-items-center justify-content-end col-1 gap-3 ">
 							<Link to={`${coupon._id}`}>
 								<button className="btn btn-secondary text-white btn-sm">
 									{edit}

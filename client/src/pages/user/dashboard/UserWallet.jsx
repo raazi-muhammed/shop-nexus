@@ -151,14 +151,14 @@ const UserWallet = () => {
 					</button>
 				</form>
 			</div>
-			<section className="bg-light p-4 rounded-4">
+			<section className="m-0  bg-light p-4 rounded-4">
 				<p className="mb-1 text-secondary">Wallet Balance</p>
 				<p className="m-0 h3 text-primary">
 					{formatPrice(walletInfo?.balance || "0")}
 				</p>
 			</section>
-			<section>
-				<p className="m-2 mt-4 fw-bold text-secondary">Transactions</p>
+			<section className="m-2">
+				<p className="mt-4 fw-bold text-secondary">Transactions</p>
 				{walletInfo?.events?.map((event, i) => (
 					<div
 						key={i}

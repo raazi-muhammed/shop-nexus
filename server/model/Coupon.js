@@ -14,6 +14,13 @@ const couponSchema = new mongoose.Schema(
 			type: String,
 			default: "Valid",
 		},
+		type: {
+			type: String,
+			required: true,
+		},
+		category: {
+			type: String,
+		},
 		shopId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Shop",

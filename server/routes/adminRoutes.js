@@ -15,7 +15,10 @@ const {
 const express = require("express");
 router = express.Router();
 const { isAdminAuthenticated } = require("../middleware/adminAuth");
-const { getAllCoupons } = require("../controller/couponController");
+const {
+	getAllCoupons,
+	changeCouponState,
+} = require("../controller/couponController");
 
 router.get("/logout", (req, res) => adminLogOut(req, res));
 router.post("/login", async (req, res, next) => adminLogIn(req, res, next));
@@ -44,6 +47,10 @@ router.get(
 
 router.get("/get-all-coupons", isAdminAuthenticated, (req, res, next) =>
 	getAllCoupons(req, res, next)
+);
+
+router.patch("/change-coupon-state", isAdminAuthenticated, (req, res, next) =>
+	changeCouponState(req, res, next)
 );
 
 module.exports = router;

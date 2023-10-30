@@ -160,6 +160,7 @@ const CheckOutPage = () => {
 							<CouponComp
 								totalAmountWithOutDiscount={totalAmountWithOutDiscount}
 								setDiscountAmount={setDiscountAmount}
+								cartItems={userData.cart}
 							/>
 						</aside>
 					) : null}

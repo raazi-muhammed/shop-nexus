@@ -10,15 +10,20 @@ import {
 } from "../../utils/styleClasses";
 import { useNavigate, useParams } from "react-router-dom";
 import convertISOToDate from "../../utils/convertISOToDate";
+import { getCouponTypeByKey } from "../../constants/couponTypeConstants";
+import categoriesConstants from "../../constants/categoriesConstants";
+import couponStateConstants from "../../constants/couponStateConstants";
 
 const SellerEditCouponPage = () => {
 	const navigate = useNavigate();
 	const today = new Date().toISOString().slice(0, 10);
 	const [couponCodeErr, setCouponCodeErr] = useState("");
 	const { shopId, couponId } = useParams();
+	const [couponType, setCouponType] = useState("");
 	const [name, setName] = useState("");
+	const [category, setCategory] = useState("");
 	const [code, setCode] = useState("");
-	const [status, setStatus] = useState("Active");
+	const [status, setStatus] = useState("ACTIVE");
 	const [discountPercentage, setDiscountPercentage] = useState("");
 	const [expires, setExpires] = useState("");
 	const [minAmount, setMinAmount] = useState("");
@@ -40,9 +45,11 @@ const SellerEditCouponPage = () => {
 			.then((res) => {
 				console.log(res.data.couponData);
 				const _couponData = res.data.couponData;
+				setCouponType(_couponData.type);
 				setName(_couponData.name);
 				setCode(_couponData.code);
 				setStatus(_couponData.status);
+				setCategory(_couponData.category);
 				setDiscountPercentage(_couponData.discountPercentage);
 				setExpires(convertISOToDate(_couponData.expires, false, "input"));
 				setMinAmount(_couponData.minAmount);
@@ -67,6 +74,14 @@ const SellerEditCouponPage = () => {
 			minAmount,
 			maxAmount,
 		};
+
+		if (
+			couponType === "CATEGORY_BASED_SHOP" ||
+			couponType === "CATEGORY_BASED_ALL"
+		) {
+			formData.category = category;
+		}
+
 		axios
 			.post(`${server}/seller/edit-coupon`, formData, {
 				withCredentials: true,
@@ -90,6 +105,23 @@ const SellerEditCouponPage = () => {
 				onSubmit={handleSubmit}>
 				<div className="row">
 					<label htmlFor="product-name" className={formLabelClass}>
+						Type
+					</label>
+					<div className={inputDivClass}>
+						<input
+							disabled={true}
+							type="text"
+							className="form-control"
+							id="product-name"
+							value={getCouponTypeByKey(couponType)}
+							name="productName"
+							required
+						/>
+						<div className="invalid-feedback">Invalid</div>
+					</div>
+				</div>
+				<div className="row">
+					<label htmlFor="product-name" className={formLabelClass}>
 						Name
 					</label>
 					<div className={inputDivClass}>
@@ -111,6 +143,7 @@ const SellerEditCouponPage = () => {
 					</label>
 					<div className={inputDivClass}>
 						<input
+							disabled={true}
 							type="text"
 							className={`form-control ${couponCodeErr ? "is-invalid" : ""}`}
 							id="product-name"
@@ -137,16 +170,42 @@ const SellerEditCouponPage = () => {
 					<div className={inputDivClass}>
 						<select
 							type="text"
+							disabled={status === "WAITING_APPROVAL" ? true : false}
 							className="form-select"
 							id="product-name"
 							value={status}
 							onChange={(e) => setStatus(e.target.value)}>
-							<option value="Active">Active</option>
-							<option value="In Active">In Active</option>
+							{couponStateConstants.map((state) => (
+								<option key={state.key} value={state.key}>
+									{state.value}
+								</option>
+							))}
 						</select>
 						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
+				{couponType === "CATEGORY_BASED_ALL" ||
+				couponType === "CATEGORY_BASED_SHOP" ? (
+					<div className="row">
+						<label className={formLabelClass} htmlFor="categorySelect">
+							Category
+						</label>
+						<div className={inputDivClass}>
+							<select
+								value={category}
+								onChange={(e) => setCategory(e.target.value)}
+								className="form-select"
+								id="categorySelect">
+								<option value="">Select Category</option>
+								{categoriesConstants.map((e) => (
+									<option key={e.key} value={e.key}>
+										{e.value}
+									</option>
+								))}
+							</select>
+						</div>
+					</div>
+				) : null}
 				<div className="row">
 					<label htmlFor="product-name" className={formLabelClass}>
 						Discount Percentage

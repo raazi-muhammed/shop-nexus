@@ -65,7 +65,7 @@ const HomePage = () => {
 				<Route path="/shop-nexus-plus/success" element={<SuccessPlus />} />
 				<Route path="/product/:id/*" element={<SingleProductPage />} />
 				<Route path="/shop/:id/*" element={<UserSingleShopPage />} />
-				<Route path="/user/dashboard/:userId/*" element={<UserDashboard />} />
+				<Route path="/user/dashboard/*" element={<UserDashboard />} />
 				<Route path="/user/checkout/*" element={<CheckOutPage />} />
 				<Route path="/" element={<HomeContentPage />} />
 			</Routes>
