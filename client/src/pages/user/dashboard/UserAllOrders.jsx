@@ -7,10 +7,12 @@ import ClipLoader from "react-spinners/ClipLoader";
 import OrderCardMain from "../../../components/order/OrderCardMain";
 import Pagination from "../../../components/Pagination";
 import Sorting from "../../../components/Sorting";
+import RefreshButton from "../../../components/RefreshButton";
 
 const UserAllOrders = () => {
-	const [loading, setLoading] = useState(false);
 	const userData = useSelector((state) => state.userData.userData);
+	const [loading, setLoading] = useState(false);
+	const [refresh, setRefresh] = useState(true);
 	const [pagination, setPagination] = useState({});
 	const [sortOptions, setSortOptions] = useState({
 		sortBy: "createdAt",
@@ -44,11 +46,12 @@ const UserAllOrders = () => {
 			.finally(() => {
 				setLoading(false);
 			});
-	}, [pagination.page, sortOptions]);
+	}, [refresh, pagination.page, sortOptions]);
 
 	return (
 		<div className="w-100">
 			<section className="d-flex justify-content-end gap-3 ">
+				<RefreshButton refresh={refresh} setRefresh={setRefresh} />
 				<Sorting sortOptions={sortOptions} setSortOptions={setSortOptions} />
 				<Pagination pagination={pagination} setPagination={setPagination} />
 			</section>

@@ -10,6 +10,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const bcrypt = require("bcrypt");
 const { createWalletForUser } = require("./transactionController");
 const Transaction = require("../model/Transaction");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
 const userLogin = asyncErrorHandler(async (req, res, next) => {
 	let user = await User.findOne({ email: req.body.email });
@@ -277,11 +278,16 @@ const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 	const user = await User.findById(req.user.id);
 	if (!user.wallet) user = await createWalletForUser(req.user.id);
 
-	const transaction = await Transaction.find({ personId: req.user.id });
+	const [pagination, transaction] = await findWithPaginationAndSorting(
+		req,
+		Transaction,
+		{ personId: req.user.id }
+	);
 
 	res.status(200).json({
 		success: true,
 		balance: user.wallet.balance,
+		pagination,
 		transactions: transaction,
 	});
 });

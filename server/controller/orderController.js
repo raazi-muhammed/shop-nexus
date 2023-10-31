@@ -31,6 +31,8 @@ const refundedToUser = async (orderId) => {
 const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
+	console.log(orderData);
+
 	const data = await Order.create(orderData);
 
 	res.status(200).json({
