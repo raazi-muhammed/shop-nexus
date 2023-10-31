@@ -24,6 +24,21 @@ const UserAllAddress = () => {
 				toast.error(err.data?.data?.message || "An error occurred")
 			);
 	};
+	const setAsDefaultAddress = (addressId) => {
+		axios
+			.post(
+				`${server}/user/set-default-address`,
+				{ addressId },
+				{ withCredentials: true }
+			)
+			.then((res) => {
+				dispatch(setUserDataReducer(res.data.user));
+				toast.success(res.data?.message || "Address Removed");
+			})
+			.catch((err) =>
+				toast.error(err.data?.data?.message || "An error occurred")
+			);
+	};
 	return (
 		<div>
 			{userData?.addresses?.length === 0 && (
@@ -53,11 +68,26 @@ const UserAllAddress = () => {
 							<p>{address?.addressType}</p>
 						</div>
 					</div>
-					<button
-						onClick={() => handleRemoveAddress(address?._id)}
-						className="btn btn-sm btn-light text-danger">
-						Remove Address
-					</button>
+					<section className="d-flex justify-content-between">
+						<button
+							onClick={() => handleRemoveAddress(address?._id)}
+							className="btn btn-sm bg-danger-subtle  text-danger">
+							Remove Address
+						</button>
+						{address.default ? (
+							<button
+								disabled={true}
+								className="btn btn-sm bg-secondary-subtle  text-secondary">
+								Current Default
+							</button>
+						) : (
+							<button
+								onClick={() => setAsDefaultAddress(address?._id)}
+								className="btn btn-sm bg-secondary-subtle  text-secondary">
+								Set as Default
+							</button>
+						)}
+					</section>
 				</section>
 			))}
 		</div>

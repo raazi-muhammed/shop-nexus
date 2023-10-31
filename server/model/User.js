@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
 		},
 		addresses: [
 			{
+				default: {
+					type: Boolean,
+					default: false,
+				},
 				fullName: {
 					type: String,
 					required: true,

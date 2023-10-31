@@ -17,6 +17,7 @@ const {
 	becomePlusMember,
 	removePlusMembership,
 	changeWalletBalance,
+	setDefaultAddress,
 } = require("../controller/userController");
 
 const {
@@ -73,6 +74,10 @@ router.post("/add-address", isAuthenticated, (req, res, next) => {
 });
 router.post("/remove-address", isAuthenticated, (req, res, next) => {
 	removeAddress(req, res, next);
+});
+
+router.post("/set-default-address", isAuthenticated, (req, res, next) => {
+	setDefaultAddress(req, res, next);
 });
 
 router.get("/get-all-orders", isAuthenticated, (req, res, next) => {

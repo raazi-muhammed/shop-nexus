@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -47,6 +47,13 @@ const CheckOutShippingPage = () => {
 
 		setAllowSubmission(true);
 	};
+
+	useEffect(() => {
+		userData.addresses.map((address) => {
+			if (address.default) handleUseThisAddress(address);
+		});
+	}, []);
+
 	const handleShippingSubmit = (e) => {
 		e.preventDefault();
 		const shippingInfo = {
