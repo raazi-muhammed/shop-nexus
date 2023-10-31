@@ -8,6 +8,7 @@ const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const Transaction = require("../model/Transaction");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
+const { createTransaction } = require("./transactionController");
 
 const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 	let shop = await Shop.findOne(
@@ -204,11 +205,11 @@ const changeWalletBalanceSeller = asyncErrorHandler(async (req, res, next) => {
 		{ $inc: { "wallet.balance": amountToAdd } }
 	);
 
-	const transaction = await Transaction.create({
-		personId: req.seller._id,
-		amount: amountToAdd,
-		description,
-	});
+	const transaction = await createTransaction(
+		req.seller._id,
+		amountToAdd,
+		description
+	);
 
 	res.status(200).json({
 		success: true,

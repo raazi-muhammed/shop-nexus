@@ -114,8 +114,6 @@ const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
 	const couponDate = new Date(couponData.expires);
 	if (date > couponDate) return next(new ErrorHandler("Coupon expired", 400));
 
-	console.log(couponData.type);
-
 	switch (couponData.type) {
 		case "CATEGORY_BASED_ALL":
 			products.map((product) => {

@@ -1,3 +1,4 @@
+const Transaction = require("../model/Transaction");
 const User = require("../model/User");
 
 const createWalletForUser = async (userId) => {
@@ -11,4 +12,11 @@ const createWalletForUser = async (userId) => {
 	return user;
 };
 
-module.exports = { createWalletForUser };
+const createTransaction = async (personId, amount, description) => {
+	return await Transaction.create({
+		personId,
+		amount,
+		description,
+	});
+};
+module.exports = { createWalletForUser, createTransaction };

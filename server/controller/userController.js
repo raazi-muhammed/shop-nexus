@@ -245,18 +245,15 @@ const removeAddress = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 const setDefaultAddress = asyncErrorHandler(async (req, res, next) => {
-	console.log(req.user.id);
 	const { addressId } = req.body;
 
 	const user = await User.findOne({ _id: req.user.id });
 
 	const newAddress = user.addresses.map((address) => {
-		console.log(addressId, address._id);
 		if (address._id == addressId) address.default = true;
 		else address.default = false;
 		return address;
 	});
-	console.log(newAddress);
 
 	const updatedUser = await User.findOneAndUpdate(
 		{ _id: req.user.id },
@@ -265,8 +262,6 @@ const setDefaultAddress = asyncErrorHandler(async (req, res, next) => {
 		},
 		{ new: true }
 	);
-
-	console.log(updatedUser.addresses);
 
 	res.status(200).json({
 		success: true,

@@ -10,6 +10,8 @@ const User = require("../model/User");
 const { changeWalletBalance } = require("./userController");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 const { changeWalletBalanceSeller } = require("./sellerController");
+const Shop = require("../model/Shop");
+const { createTransaction } = require("./transactionController");
 
 const refundedToUser = async (orderId) => {
 	const orderData = await Order.findOne({ orderId });
@@ -26,6 +28,22 @@ const refundedToUser = async (orderId) => {
 			},
 			{ new: true, upsert: true }
 		);
+
+		// Remove money from Shop Wallet
+		if (orderData.paymentInfo.status === "Received") {
+			const description = `Added via Order ${orderData.orderId}`;
+
+			const seller = await Shop.findOneAndUpdate(
+				{ _id: orderData.orderItems[0].shop },
+				{ $inc: { "wallet.balance": orderData.totalPrice * -1 } }
+			);
+
+			const transaction = await createTransaction(
+				orderData.orderItems[0].shop,
+				orderData.totalPrice * -1,
+				description
+			);
+		}
 	}
 };
 
@@ -43,17 +61,23 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 			],
 			totalPrice: singleOrder.totalPrice,
 		};
-		await Order.create(newOrderData);
 
 		// Add money to Shop Wallet
 		if (newOrderData.paymentInfo.status === "Received") {
-			req.body = {
-				amountToAdd: singleOrder.totalPrice,
-				description: `Added via Order ${orderData.orderId}`,
-			};
-			req.seller = { _id: singleOrder.shop };
-			changeWalletBalanceSeller(req, res, next);
+			const description = `Added via Order ${orderData.orderId}`;
+
+			const seller = await Shop.findOneAndUpdate(
+				{ _id: singleOrder.shop },
+				{ $inc: { "wallet.balance": singleOrder.totalPrice } }
+			);
+
+			const transaction = await createTransaction(
+				singleOrder.shop,
+				singleOrder.totalPrice,
+				description
+			);
 		}
+		const OrderAdded = await Order.create(newOrderData);
 	});
 
 	res.status(200).json({
@@ -124,7 +148,6 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 		}
 	);
 
-	console.log(orderData);
 	orderData.orderItems.map((e) => {
 		req.stock = e.quantity * -1;
 		req.productId = e.product;
@@ -153,7 +176,6 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 		}
 	);
 
-	console.log(orderData);
 	orderData.orderItems.map((e) => {
 		req.stock = e.quantity * -1;
 		req.productId = e.product;

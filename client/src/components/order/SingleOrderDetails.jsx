@@ -186,7 +186,7 @@ const SingleOrderDetails = ({
 
 				<p className="text-primary mt-3 m-0">Order Id: {orderId}</p>
 				<p className="text-primary">
-					Date: {convertISOToDate(orderDetails.createdAt)}
+					Date: {convertISOToDate(orderDetails.createdAt, true)}
 				</p>
 				<section>
 					<p className="h4 fw-bold text-secondary">Payment</p>
