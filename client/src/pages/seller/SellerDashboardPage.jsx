@@ -21,6 +21,8 @@ import SellerConversationsPage from "./SellerConversationsPage";
 import SellerNewEvent from "./events/SellerNewEvent";
 import AllEventsSeller from "./events/AllEventsSeller";
 import EditSingleEventSeller from "./events/EditSingleEventSeller";
+import Icons from "../../assets/Icons";
+const { threeLine } = Icons;
 
 const SellerDashboardPage = () => {
 	const navigate = useNavigate();
@@ -88,10 +90,9 @@ const SellerDashboardPage = () => {
 			<SellerNavbar shopName={shopName} />
 			<div className="w-100 container container-xxl  ">
 				<section className="row py-5">
-					<section className="col-12 col-md-4 col-lg-3 mb-3">
-						<AsideComp asideItems={asideItems} />
-					</section>
-					<section className="col-12 col-md-8 col-lg-9">
+					<AsideComp asideItems={asideItems} />
+
+					<section className="col">
 						<Routes>
 							<Route
 								path="/all-products"

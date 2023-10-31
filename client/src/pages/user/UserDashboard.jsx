@@ -32,39 +32,8 @@ const UserDashboard = () => {
 		<main className="vw-100 min-vh-100">
 			<div className="w-100 container container-xxl  ">
 				<div className="row py-5">
-					<section className="col-12 col-md-4 col-lg-3 mb-5">
-						<AsideComp asideItems={asideItems} />
-						<section className="bg-primary rounded-4 mt-2 text-white p-4">
-							{userData.plusMember?.active ? (
-								<Link to={"shop-nexus-plus"}>
-									<p className="m-0 text-white">Shop Nexus Plus</p>
-									<p className="text-small text-secondary m-0">
-										View Your Benifits
-									</p>
-								</Link>
-							) : (
-								<Link to={"/shop-nexus-plus"}>
-									<div>
-										<button
-											className={
-												"btn text-light fw-light text-start w-100 p-0"
-											}>
-											Become{" "}
-											<span className="fw-bold text-white"> Shop Nexus+</span>{" "}
-											Member
-										</button>
-										<p className="text-small text-secondary mb-1">
-											Get free shipping
-										</p>
-										<p className="text-small text-secondary mb-1">
-											Message seller directly
-										</p>
-									</div>
-								</Link>
-							)}
-						</section>
-					</section>
-					<section className="col-12 col-md-8 col-lg-9">
+					<AsideComp asideItems={asideItems} />
+					<section className="col">
 						<Routes>
 							<Route path="/add-address" element={<UserAddAddress />} />
 							<Route path="/address" element={<UserAllAddress />} />
