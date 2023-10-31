@@ -9,7 +9,7 @@ const UserSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(true);
 
-	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
+	const [orderDetails, setOrderDetails] = useState([{ orderItems: [] }]);
 
 	const { orderId } = useParams();
 
@@ -20,6 +20,7 @@ const UserSingleOrderDetails = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
+				console.log(res?.data?.orderData);
 				setOrderDetails(res?.data?.orderData);
 			})
 			.finally(() => [setLoading(false)]);
@@ -41,7 +42,7 @@ const UserSingleOrderDetails = () => {
 			) : (
 				<SingleOrderDetails
 					orderDetails={orderDetails}
-					orderId={orderId}
+					orderId={orderDetails[0]?.orderId}
 					setRefresh={setRefresh}
 					refresh={refresh}
 				/>

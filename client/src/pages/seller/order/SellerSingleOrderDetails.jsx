@@ -13,7 +13,7 @@ const SellerSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(true);
 
-	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
+	const [orderDetails, setOrderDetails] = useState([{ orderItems: [] }]);
 	const { shopId, orderId } = useParams();
 	const [orderState, setOrderState] = useState();
 	useEffect(() => {
@@ -35,6 +35,7 @@ const SellerSingleOrderDetails = () => {
 				`${server}/seller/change-order-status/${orderId}`,
 				{
 					orderStatus: orderState,
+					productOrderId: orderDetails[0]?._id,
 				},
 				{ withCredentials: true }
 			)
@@ -82,7 +83,7 @@ const SellerSingleOrderDetails = () => {
 
 					<SingleOrderDetails
 						orderDetails={orderDetails}
-						orderId={orderId}
+						orderId={orderDetails[0]?.orderId}
 						setRefresh={setRefresh}
 						refresh={refresh}
 						showEvents={true}

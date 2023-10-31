@@ -13,37 +13,32 @@ const { changeWalletBalanceSeller } = require("./sellerController");
 const Shop = require("../model/Shop");
 const { createTransaction } = require("./transactionController");
 
-const refundedToUser = async (orderId) => {
-	const orderData = await Order.findOne({ orderId });
+const refundedToUser = async (orderId, productOrderId) => {
+	const orderData = await Order.findOne({ orderId, _id: productOrderId });
 	if (orderData.paymentInfo.status === "Received") {
-		const eventToAdd = {
-			amount: orderData.totalPrice,
-			description: "Refunded from an Order",
-		};
+		// Add money to user Wallet
 		const user = await User.findOneAndUpdate(
 			{ _id: orderData.user },
 			{
-				$inc: { "wallet.balance": eventToAdd.amount },
-				$addToSet: { "wallet.events": eventToAdd },
-			},
-			{ new: true, upsert: true }
+				$inc: { "wallet.balance": orderData.totalPrice },
+			}
 		);
+		let description = "Refunded from an Order";
+		await createTransaction(orderData.user, orderData.totalPrice, description);
 
 		// Remove money from Shop Wallet
-		if (orderData.paymentInfo.status === "Received") {
-			const description = `Added via Order ${orderData.orderId}`;
+		description = `Added via Order ${orderData.orderId}`;
 
-			const seller = await Shop.findOneAndUpdate(
-				{ _id: orderData.orderItems[0].shop },
-				{ $inc: { "wallet.balance": orderData.totalPrice * -1 } }
-			);
+		const seller = await Shop.findOneAndUpdate(
+			{ _id: orderData.orderItems[0].shop },
+			{ $inc: { "wallet.balance": orderData.totalPrice * -1 } }
+		);
 
-			const transaction = await createTransaction(
-				orderData.orderItems[0].shop,
-				orderData.totalPrice * -1,
-				description
-			);
-		}
+		await createTransaction(
+			orderData.orderItems[0].shop,
+			orderData.totalPrice * -1,
+			description
+		);
 	}
 };
 
@@ -120,7 +115,7 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 
-	const orderData = await Order.findOne({ orderId }).populate(
+	const orderData = await Order.find({ orderId }).populate(
 		"orderItems.product"
 	);
 
@@ -133,7 +128,8 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
 
-	await refundedToUser(orderId);
+	console.log(req.body.productOrderId);
+	await refundedToUser(orderId, req.body.productOrderId);
 
 	const eventToAdd = {
 		name: "Canceled",
@@ -141,7 +137,7 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	};
 
 	const orderData = await Order.findOneAndUpdate(
-		{ orderId },
+		{ orderId, _id: req.body.productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
 			status: "Canceled",
@@ -169,7 +165,7 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 	};
 
 	const orderData = await Order.findOneAndUpdate(
-		{ orderId },
+		{ _id: req.body.productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
 			status: "Processing Return",
@@ -231,36 +227,31 @@ const getSingleOrderDetailsForShop = asyncErrorHandler(
 	async (req, res, next) => {
 		const { orderId, shopId } = req.params;
 
-		const orderData = await Order.findOne({ orderId }).populate(
-			"orderItems.product"
-		);
-
-		//filtering products that are only from the seller
-		const newProducts = orderData.orderItems.filter((e) => e.shop == shopId);
-		const newOrderData = {
-			...orderData._doc,
-			orderItems: newProducts,
-		};
+		const orderData = await Order.find({
+			orderId,
+			"orderItems.shop": shopId,
+		}).populate("orderItems.product");
 
 		res.status(200).json({
 			success: true,
-			orderData: newOrderData,
+			orderData,
 		});
 	}
 );
 
 const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
-	const { orderStatus } = req.body;
+	const { orderStatus, productOrderId } = req.body;
 
-	if (orderStatus === "Return Approved") await refundedToUser(orderId);
+	if (orderStatus === "Return Approved")
+		await refundedToUser(orderId, productOrderId);
 
 	const eventToAdd = {
 		name: orderStatus,
 	};
 
 	const orderData = await Order.findOneAndUpdate(
-		{ orderId },
+		{ orderId, _id: productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
 			status: orderStatus,
