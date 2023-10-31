@@ -64,7 +64,9 @@ const UserEditPage = () => {
 
 	return (
 		<>
-			<section className="bg-primary rounded-4 mt-2 text-white p-4">
+			<section
+				style={{ maxWidth: "20rem" }}
+				className="mx-auto bg-primary rounded-4 mt-2 text-white p-4">
 				{userData.plusMember?.active ? (
 					<Link to={"shop-nexus-plus"}>
 						<p className="m-0 text-white">Shop Nexus Plus</p>

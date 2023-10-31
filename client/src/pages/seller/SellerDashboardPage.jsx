@@ -33,43 +33,43 @@ const SellerDashboardPage = () => {
 	const asideItems = [
 		{
 			name: "All Products",
-			link: `/seller/dashboard/${shopId}/all-products`,
+			link: `all-products`,
 		},
 		{
 			name: "New Product",
-			link: `/seller/dashboard/${shopId}/new-product`,
+			link: `new-product`,
 		},
 		{
 			name: "Stock Management",
-			link: `/seller/dashboard/${shopId}/stock-management`,
+			link: `stock-management`,
 		},
 		{
 			name: "Edit Shop",
-			link: `/seller/dashboard/${shopId}/edit-shop`,
+			link: `edit-shop`,
 		},
 		{
 			name: "All Orders",
-			link: `/seller/dashboard/${shopId}/orders`,
+			link: `orders`,
 		},
 		{
 			name: "New Coupon",
-			link: `/seller/dashboard/${shopId}/new-coupon`,
+			link: `new-coupon`,
 		},
 		{
 			name: "All Coupons",
-			link: `/seller/dashboard/${shopId}/coupons`,
+			link: `coupons`,
 		},
 		{
 			name: "Messages",
-			link: `/seller/dashboard/${shopId}/messages`,
+			link: `messages`,
 		},
 		{
 			name: "New Event",
-			link: `/seller/dashboard/${shopId}/new-event`,
+			link: `new-event`,
 		},
 		{
 			name: "All Event",
-			link: `/seller/dashboard/${shopId}/events`,
+			link: `events`,
 		},
 	];
 
@@ -91,7 +91,6 @@ const SellerDashboardPage = () => {
 			<div className="w-100 container container-xxl  ">
 				<section className="row py-5">
 					<AsideComp asideItems={asideItems} />
-
 					<section className="col">
 						<Routes>
 							<Route

@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from "react";
-
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
 import UserEditPage from "./dashboard/UserEditPage";
 import UserAddAddress from "./dashboard/userAddAddress";
 import UserAllAddress from "./dashboard/UserAllAddress";
 import UserAllOrders from "./dashboard/UserAllOrders";
 import UserSingleOrderDetails from "./dashboard/UserSingleOrderDetails";
-import ChattingComp from "../../components/ChattingComp";
 import UserConversationsPage from "./dashboard/UserConversationsPage";
-
 import AsideComp from "../../components/layout/AsideComp";
-
 import UserWallet from "./dashboard/UserWallet";
 import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
 import { useSelector } from "react-redux";

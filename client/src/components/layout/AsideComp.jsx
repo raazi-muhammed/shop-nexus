@@ -1,10 +1,17 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Icons from "../../assets/Icons";
 const { threeLine } = Icons;
 
 const AsideComp = ({ asideItems }) => {
+	const location = useLocation();
 	const [currentNav, setCurrentNav] = useState(0);
+
+	useEffect(() => {
+		asideItems.map((e, i) => {
+			if (location.pathname.includes(`/${e.link}`)) setCurrentNav(i);
+		});
+	}, [location.pathname]);
 
 	return (
 		<>
