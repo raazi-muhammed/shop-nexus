@@ -117,7 +117,8 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 							value={category}
 							onChange={(e) => setCategory(e.target.value)}
 							className="form-select"
-							id="categorySelect">
+							id="categorySelect"
+							required>
 							<option value="">Select Category</option>
 							{categoriesConstants.map((e) => (
 								<option key={e.key} value={e.key}>
@@ -125,6 +126,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 								</option>
 							))}
 						</select>
+						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
 				<div className="row">

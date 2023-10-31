@@ -208,7 +208,8 @@ const SellerAddCouponPage = () => {
 								value={category}
 								onChange={(e) => setCategory(e.target.value)}
 								className="form-select"
-								id="categorySelect">
+								id="categorySelect"
+								required>
 								<option value="">Select Category</option>
 								{categoriesConstants.map((e) => (
 									<option key={e.key} value={e.key}>
@@ -216,6 +217,7 @@ const SellerAddCouponPage = () => {
 									</option>
 								))}
 							</select>
+							<div className="invalid-feedback">Invalid</div>
 						</div>
 					</div>
 				) : null}

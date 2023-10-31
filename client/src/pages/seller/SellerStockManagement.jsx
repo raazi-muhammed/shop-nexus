@@ -6,9 +6,11 @@ import { useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import Pagination from "../../components/Pagination";
 import Sorting from "../../components/Sorting";
+import RefreshButton from "../../components/RefreshButton";
 
 const SellerStockManagement = () => {
 	const [loading, setLoading] = useState(false);
+	const [refresh, setRefresh] = useState(true);
 	const [pagination, setPagination] = useState({});
 	const [sortOptions, setSortOptions] = useState({
 		sortBy: "createdAt",
@@ -24,8 +26,6 @@ const SellerStockManagement = () => {
 	const { shopId } = useParams();
 	const [data, setData] = useState([{ images: [{ url: "" }] }]);
 	const [updatedStock, setUpdatedStock] = useState(0);
-	const [refresh, setRefresh] = useState(true);
-
 	const [allowSubmission, setAllowSubmission] = useState(false);
 	useEffect(() => {
 		try {
@@ -86,16 +86,7 @@ const SellerStockManagement = () => {
 
 	return (
 		<div className="d-flex flex-column gap-2">
-			<section className="d-flex justify-content-end gap-3 ">
-				<Sorting sortOptions={sortOptions} setSortOptions={setSortOptions} />
-				<Pagination pagination={pagination} setPagination={setPagination} />
-			</section>
-			<section className="row py-0 mb-0 p-5 text-secondary fw-bold">
-				<p className="col-6 m-0 ">Product Details</p>
-				<p className="col-3 m-0">Info</p>
-				<p className="col-2 m-0">Price</p>
-			</section>
-			{!data[0]?.name ? (
+			{loading ? (
 				<ClipLoader
 					className="m-0 p-0 text-primary mx-auto mt-5 "
 					loading={loading}
@@ -106,6 +97,19 @@ const SellerStockManagement = () => {
 				/>
 			) : (
 				<>
+					<section className="d-flex justify-content-end gap-3 ">
+						<RefreshButton refresh={refresh} setRefresh={setRefresh} />
+						<Sorting
+							sortOptions={sortOptions}
+							setSortOptions={setSortOptions}
+						/>
+						<Pagination pagination={pagination} setPagination={setPagination} />
+					</section>
+					<section className="row py-0 mb-0 p-5 text-secondary fw-bold">
+						<p className="col-6 m-0 ">Product Details</p>
+						<p className="col-3 m-0">Info</p>
+						<p className="col-2 m-0">Price</p>
+					</section>
 					{data.map((product, i) => (
 						<div
 							key={i}

@@ -160,7 +160,6 @@ const CheckOutPage = () => {
 									</div>
 								</div>
 							</section>
-							<p>{JSON.stringify(orderState)}</p>
 							<CouponComp
 								totalAmountWithOutDiscount={totalAmountWithOutDiscount}
 								setDiscountAmount={setDiscountAmount}
