@@ -6,9 +6,11 @@ import convertISOToDate from "../../../utils/convertISOToDate";
 import toast from "react-hot-toast";
 
 const UserWallet = () => {
-	const [walletInfo, setWalletInfo] = useState();
+	const [transactions, setTransactions] = useState();
+	const [balanceAmount, setBalanceAmount] = useState();
 	const [amountToAdd, setAmountToAdd] = useState(0);
 	const [allowSubmission, setAllowSubmission] = useState(false);
+	const [refresh, setRefresh] = useState(true);
 
 	useEffect(() => {
 		try {
@@ -69,7 +71,7 @@ const UserWallet = () => {
 								{ withCredentials: true }
 							)
 							.then((res) => {
-								setWalletInfo(res.data.walletInfo);
+								setRefresh(!refresh);
 							});
 					},
 				};
@@ -86,10 +88,11 @@ const UserWallet = () => {
 		axios
 			.get(`${server}/user/get-wallet-details`, { withCredentials: true })
 			.then((res) => {
-				setWalletInfo(res.data.walletInfo);
+				setTransactions(res.data.transactions);
+				setBalanceAmount(res.data.balance);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [refresh]);
 
 	return (
 		<div>
@@ -154,18 +157,18 @@ const UserWallet = () => {
 			<section className="m-0  bg-light p-4 rounded-4">
 				<p className="mb-1 text-secondary">Wallet Balance</p>
 				<p className="m-0 h3 text-primary">
-					{formatPrice(walletInfo?.balance || "0")}
+					{formatPrice(balanceAmount || "0")}
 				</p>
 			</section>
 			<section className="m-2">
 				<p className="mt-4 fw-bold text-secondary">Transactions</p>
-				{walletInfo?.events?.map((event, i) => (
+				{transactions?.map((event, i) => (
 					<div
 						key={i}
 						className="p-3 bg-white my-3 row rounded-4 align-items-center ">
 						<section className="col">
 							<p className="text-small text-secondary m-0">Details</p>
-							<p className="mb-0">{convertISOToDate(event.date, true)}</p>
+							<p className="mb-0">{convertISOToDate(event.createdAt, true)}</p>
 							<p className="mb-0 text-small">{event.description}</p>
 						</section>
 						<section className="col text-end">

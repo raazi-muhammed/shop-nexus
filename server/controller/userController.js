@@ -8,6 +8,8 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
 
 const bcrypt = require("bcrypt");
+const { createWalletForUser } = require("./transactionController");
+const Transaction = require("../model/Transaction");
 
 const userLogin = asyncErrorHandler(async (req, res, next) => {
 	let user = await User.findOne({ email: req.body.email });
@@ -70,6 +72,9 @@ const providerSignIn = asyncErrorHandler(async (req, res, next) => {
 			"avatar.url": avatarUrl,
 		});
 	}
+
+	user = await createWalletForUser(user._id);
+
 	if (user.isBlocked) {
 		return next(new ErrorHandler("You are Blocked", 200));
 	}
@@ -131,13 +136,15 @@ const activateUser = asyncErrorHandler(async (req, res, next) => {
 	const userExits = await User.findOne({ email });
 	if (userExits) return;
 
-	const dataUser = await User.create({
+	let dataUser;
+	dataUser = await User.create({
 		fullName: fullName,
 		email: email,
 		age: age,
 		password: password,
 		"avatar.url": profilePic,
 	});
+	dataUser = await createWalletForUser(dataUser._id);
 
 	sendToken(dataUser, 201, res);
 });
@@ -268,44 +275,16 @@ const changePassword = asyncErrorHandler(async (req, res, next) => {
 
 const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 	const user = await User.findById(req.user.id);
+	if (!user.wallet) user = await createWalletForUser(req.user.id);
 
-	/* const user = await User.aggregate([
-		{ $match: { _id: new mongoose.Types.ObjectId(req.user.id) } },
-		{
-			$project: {
-				_id: 0,
-				wallet: 1,
-			},
-		},
-		{
-			$unwind: "$wallet.events",
-		},
-		{
-			$sort: { "wallet.events.price": -1 }, // Sort events by date in descending order
-		},
-		{
-			$group: {
-				_id: null, // Group all documents into a single group
-				balance: { $first: "$wallet.balance" }, // Take the 'wallet' field from the first document
-				events: { $push: "$wallet.events" }, // Push all unwound events into an 'events' array
-			},
-		},
-	]); */
-
-	const sortedEvents = [...user.wallet.events];
-	sortedEvents.reverse();
-
-	const walletInfo = {
-		balance: user.wallet.balance,
-		events: sortedEvents,
-	};
+	const transaction = await Transaction.find({ personId: req.user.id });
 
 	res.status(200).json({
 		success: true,
-		walletInfo,
+		balance: user.wallet.balance,
+		transactions: transaction,
 	});
 });
-
 const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
 	const { amountToAdd, description } = req.body;
 
@@ -316,24 +295,21 @@ const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
 			return next(new ErrorHandler("Not enough Balance on Wallet", 401));
 	}
 
-	const eventToAdd = {
-		amount: amountToAdd,
-		description,
-	};
-
 	const user = await User.findOneAndUpdate(
 		{ _id: req.user.id },
-		{
-			$inc: { "wallet.balance": amountToAdd },
-			$addToSet: { "wallet.events": eventToAdd },
-		},
-		{ new: true, upsert: true }
+		{ $inc: { "wallet.balance": amountToAdd } }
 	);
 
-	const walletInfo = user.wallet;
+	const transaction = await Transaction.create({
+		personId: req.user.id,
+		amount: amountToAdd,
+		description,
+	});
+
 	res.status(200).json({
 		success: true,
-		walletInfo,
+		balance: user.wallet.balance,
+		transactions: transaction,
 	});
 });
 
@@ -388,7 +364,7 @@ module.exports = {
 	userAuthentication,
 	providerSignIn,
 	getWalletDetails,
-	changeWalletBalance,
 	becomePlusMember,
 	removePlusMembership,
+	changeWalletBalance,
 };

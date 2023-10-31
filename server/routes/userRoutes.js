@@ -13,9 +13,10 @@ const {
 	userAuthentication,
 	providerSignIn,
 	getWalletDetails,
-	changeWalletBalance,
+
 	becomePlusMember,
 	removePlusMembership,
+	changeWalletBalance,
 } = require("../controller/userController");
 
 const {

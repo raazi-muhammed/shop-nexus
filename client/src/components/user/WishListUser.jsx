@@ -17,7 +17,7 @@ const WishListUser = () => {
 		(state) => state.wishList.isWishListVisible
 	);
 	const dispatch = useDispatch();
-	const wishListItems = userData.wishList;
+	const wishListItems = userData?.wishList;
 	const navigate = useNavigate();
 
 	const handleRemoveFromWishList = (product_id) => {

@@ -25,13 +25,40 @@ const addToCart = asyncErrorHandler(async (req, res, next) => {
 		price,
 	};
 
-	const updatedUser = await User.findOneAndUpdate(
-		{ _id: userId },
-		{
-			$addToSet: { cart: cartItem },
-		},
-		{ new: true }
-	).populate("cart.product");
+	const currentUserState = await User.findOne({ _id: userId });
+
+	let isChanged = false;
+	let updatedUser;
+
+	currentUserState.cart.map(async (items, i) => {
+		if (items.product == cartItem.product) {
+			console.log("if true");
+			isChanged = true;
+
+			let updateObj = {};
+			updateObj[`cart.${i}`] = cartItem;
+
+			updatedUser = await User.findOneAndUpdate(
+				{ _id: userId },
+				{
+					$set: updateObj,
+				},
+				{ new: true }
+			).populate("cart.product");
+		}
+	});
+
+	console.log("isChanged", isChanged);
+	if (!isChanged) {
+		console.log("add to set");
+		updatedUser = await User.findOneAndUpdate(
+			{ _id: userId },
+			{
+				$addToSet: { cart: cartItem },
+			},
+			{ new: true }
+		).populate("cart.product");
+	}
 
 	res.status(200).json({
 		success: true,
