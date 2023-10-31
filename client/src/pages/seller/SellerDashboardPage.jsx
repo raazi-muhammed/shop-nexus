@@ -3,25 +3,24 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import server from "../../server";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
-import SellerAllProducts from "./SellerAllProducts";
-
-import SellerAddProductPage from "./SellerAddProductPage";
-import SellerDetailsEditPage from "./SellerDetailsEditPage";
-import SellerEditSingleProductPage from "./SellerEditSingleProductPage";
-import toast from "react-hot-toast";
-import SellerAllOrders from "./SellerAllOrders";
-import SellerSingleOrderDetails from "./SellerSingleOrderDetails";
-import SellerStockManagement from "./SellerStockManagement";
-import SellerAddCouponPage from "./SellerAddCouponPage";
-import SellerAllCouponsPage from "./SellerAllCouponsPage";
-import SellerEditCouponPage from "./SellerEditCouponPage";
+import SellerAllProducts from "./product/SellerAllProducts";
+import SellerAddProductPage from "./product/SellerAddProductPage";
+import SellerDetailsEditPage from "./info/SellerDetailsEditPage";
+import SellerEditSingleProductPage from "./product/SellerEditSingleProductPage";
+import SellerAllOrders from "./order/SellerAllOrders";
+import SellerSingleOrderDetails from "./order/SellerSingleOrderDetails";
+import SellerStockManagement from "./product/SellerStockManagement";
+import SellerAddCouponPage from "./coupon/SellerAddCouponPage";
+import SellerAllCouponsPage from "./coupon/SellerAllCouponsPage";
+import SellerEditCouponPage from "./coupon/SellerEditCouponPage";
 import AsideComp from "../../components/layout/AsideComp";
 import SellerNavbar from "../../components/layout/SellerNavbar";
-import SellerConversationsPage from "./SellerConversationsPage";
+import SellerConversationsPage from "./message/SellerConversationsPage";
 import SellerNewEvent from "./events/SellerNewEvent";
 import AllEventsSeller from "./events/AllEventsSeller";
 import EditSingleEventSeller from "./events/EditSingleEventSeller";
 import Icons from "../../assets/Icons";
+import SellerWalletPage from "./wallet/SellerWalletPage";
 const { threeLine } = Icons;
 
 const SellerDashboardPage = () => {
@@ -70,6 +69,10 @@ const SellerDashboardPage = () => {
 		{
 			name: "All Event",
 			link: `events`,
+		},
+		{
+			name: "Wallet",
+			link: `wallet`,
 		},
 	];
 
@@ -130,6 +133,7 @@ const SellerDashboardPage = () => {
 								path="/edit-single-product/:productId"
 								element={<SellerEditSingleProductPage />}
 							/>
+							<Route path="/wallet" element={<SellerWalletPage />} />
 						</Routes>
 					</section>
 				</section>

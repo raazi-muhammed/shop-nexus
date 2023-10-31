@@ -9,6 +9,7 @@ const { changeStockBasedOnOrder } = require("./productController");
 const User = require("../model/User");
 const { changeWalletBalance } = require("./userController");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
+const { changeWalletBalanceSeller } = require("./sellerController");
 
 const refundedToUser = async (orderId) => {
 	const orderData = await Order.findOne({ orderId });
@@ -28,10 +29,11 @@ const refundedToUser = async (orderId) => {
 	}
 };
 
-const addToOrder = asyncErrorHandler(async (req, res, nex) => {
+const addToOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
 	orderData.orderItems.map(async (singleOrder) => {
+		// Created separate Orders based on Shop
 		const newOrderData = {
 			...orderData,
 			orderItems: [
@@ -41,8 +43,17 @@ const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 			],
 			totalPrice: singleOrder.totalPrice,
 		};
-		console.log(newOrderData);
 		await Order.create(newOrderData);
+
+		// Add money to Shop Wallet
+		if (newOrderData.paymentInfo.status === "Received") {
+			req.body = {
+				amountToAdd: singleOrder.totalPrice,
+				description: `Added via Order ${orderData.orderId}`,
+			};
+			req.seller = { _id: singleOrder.shop };
+			changeWalletBalanceSeller(req, res, next);
+		}
 	});
 
 	res.status(200).json({

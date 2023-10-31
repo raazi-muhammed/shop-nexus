@@ -6,6 +6,8 @@ const Products = require("../model/Products");
 const { upload } = require("../multer");
 const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
+const Transaction = require("../model/Transaction");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
 const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 	let shop = await Shop.findOne(
@@ -170,6 +172,51 @@ const editShopDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
+	const seller = await Shop.findById(req.seller._id);
+
+	const [pagination, transaction] = await findWithPaginationAndSorting(
+		req,
+		Transaction,
+		{ personId: req.seller._id }
+	);
+
+	res.status(200).json({
+		success: true,
+		balance: seller.wallet.balance,
+		pagination,
+		transactions: transaction,
+	});
+});
+
+const changeWalletBalanceSeller = asyncErrorHandler(async (req, res, next) => {
+	const { amountToAdd, description } = req.body;
+
+	if (amountToAdd < 0) {
+		const seller = await Shop.findOne({ _id: req.seller._id });
+
+		if (seller.wallet.balance < amountToAdd * -1)
+			return next(new ErrorHandler("Not enough Balance on Wallet", 401));
+	}
+
+	const seller = await Shop.findOneAndUpdate(
+		{ _id: req.seller._id },
+		{ $inc: { "wallet.balance": amountToAdd } }
+	);
+
+	const transaction = await Transaction.create({
+		personId: req.seller._id,
+		amount: amountToAdd,
+		description,
+	});
+
+	res.status(200).json({
+		success: true,
+		balance: seller.wallet.balance,
+		transactions: transaction,
+	});
+});
+
 const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 	res.status(200).clearCookie("sellerToken").json({
 		success: true,
@@ -184,4 +231,6 @@ module.exports = {
 	getShopDetails,
 	editShopDetails,
 	sellerLogOut,
+	getWalletDetails,
+	changeWalletBalanceSeller,
 };

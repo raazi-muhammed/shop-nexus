@@ -4,12 +4,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { useSelector } from "react-redux";
-import server from "../../server";
+import server from "../../../server";
 import ClipLoader from "react-spinners/ClipLoader";
-import Pagination from "../../components/Pagination";
-import OrderCardMain from "../../components/order/OrderCardMain";
-import Sorting from "../../components/Sorting";
-import RefreshButton from "../../components/RefreshButton";
+import Pagination from "../../../components/Pagination";
+import OrderCardMain from "../../../components/order/OrderCardMain";
+import Sorting from "../../../components/Sorting";
+import RefreshButton from "../../../components/RefreshButton";
 
 const SellerAllOrders = () => {
 	const [loading, setLoading] = useState(false);

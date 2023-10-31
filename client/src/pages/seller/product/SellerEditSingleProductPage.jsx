@@ -1,15 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
-import categoriesConstants from "../../constants/categoriesConstants";
+import categoriesConstants from "../../../constants/categoriesConstants";
 import {
 	formLabelClass,
 	inputDivClass,
 	formClass,
 	submitButtonClass,
-} from "../../utils/styleClasses";
+} from "../../../utils/styleClasses";
 
 const SellerEditSingleProductPage = () => {
 	const navigate = useNavigate();

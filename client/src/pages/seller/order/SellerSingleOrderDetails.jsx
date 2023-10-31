@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import toast from "react-hot-toast";
-import server from "../../server";
-import orderStateConstants from "../../constants/orderStateConstants";
+import server from "../../../server";
+import orderStateConstants from "../../../constants/orderStateConstants";
 
 import ClipLoader from "react-spinners/ClipLoader";
-import SingleOrderDetails from "../../components/order/SingleOrderDetails";
+import SingleOrderDetails from "../../../components/order/SingleOrderDetails";
 
 const SellerSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);

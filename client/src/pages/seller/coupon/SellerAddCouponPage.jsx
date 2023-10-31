@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
 import {
 	formLabelClass,
 	inputDivClass,
 	formClass,
 	submitButtonClass,
-} from "../../utils/styleClasses";
+} from "../../../utils/styleClasses";
 import { useNavigate, useParams } from "react-router-dom";
-import couponTypeConstants from "../../constants/couponTypeConstants";
-import categoriesConstants from "../../constants/categoriesConstants";
-import couponStateConstants from "../../constants/couponStateConstants";
+import couponTypeConstants from "../../../constants/couponTypeConstants";
+import categoriesConstants from "../../../constants/categoriesConstants";
+import couponStateConstants from "../../../constants/couponStateConstants";
 
 const SellerAddCouponPage = () => {
 	const navigate = useNavigate();

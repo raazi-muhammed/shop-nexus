@@ -1,6 +1,7 @@
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const jwt = require("jsonwebtoken");
 const User = require("../model/User");
+const Shop = require("../model/Shop");
 
 exports.isSellerAuthenticated = asyncErrorHandler(async (req, res, next) => {
 	let token;
@@ -17,5 +18,11 @@ exports.isSellerAuthenticated = asyncErrorHandler(async (req, res, next) => {
 	}
 
 	const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+	const sellerFound = await Shop.findById(decoded.id);
+	if (!sellerFound)
+		res.status(500).json({ success: false, message: "No User found" });
+	req.seller = sellerFound;
+
 	next();
 });

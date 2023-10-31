@@ -1,16 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import { Link, useParams } from "react-router-dom";
-import Icons from "../../assets/Icons";
-import convertISOToDate from "../../utils/convertISOToDate";
-import Pagination from "../../components/Pagination";
+import Icons from "../../../assets/Icons";
+import convertISOToDate from "../../../utils/convertISOToDate";
+import Pagination from "../../../components/Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
-import Sorting from "../../components/Sorting";
-import formatPrice from "../../utils/formatPrice";
-import { getCouponTypeByKey } from "../../constants/couponTypeConstants";
-import { getCouponStateByKey } from "../../constants/couponStateConstants";
-import RefreshButton from "../../components/RefreshButton";
+import Sorting from "../../../components/Sorting";
+import formatPrice from "../../../utils/formatPrice";
+import { getCouponTypeByKey } from "../../../constants/couponTypeConstants";
+import { getCouponStateByKey } from "../../../constants/couponStateConstants";
+import RefreshButton from "../../../components/RefreshButton";
 const { eye, edit } = Icons;
 
 const SellerAllCouponsPage = () => {

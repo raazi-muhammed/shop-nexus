@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
 import ClipLoader from "react-spinners/ClipLoader";
-import Pagination from "../../components/Pagination";
-import ProductCardRow from "../../components/product/ProductCardRow";
-import Sorting from "../../components/Sorting";
-import RefreshButton from "../../components/RefreshButton";
+import Pagination from "../../../components/Pagination";
+import ProductCardRow from "../../../components/product/ProductCardRow";
+import Sorting from "../../../components/Sorting";
+import RefreshButton from "../../../components/RefreshButton";
 
 const SellerAllProducts = ({ shopId }) => {
 	const [loading, setLoading] = useState(false);

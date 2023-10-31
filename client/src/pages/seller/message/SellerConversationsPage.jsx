@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import { useParams } from "react-router-dom";
-import ChattingComp from "../../components/ChattingComp";
+import ChattingComp from "../../../components/ChattingComp";
 
 const SellerConversationsPage = () => {
 	let { shopId } = useParams();

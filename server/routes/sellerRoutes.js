@@ -14,6 +14,8 @@ const {
 	getShopDetails,
 	editShopDetails,
 	sellerLogOut,
+	getWalletDetails,
+	changeWalletBalanceSeller,
 } = require("../controller/sellerController");
 
 const {
@@ -145,6 +147,18 @@ router.get(
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getCouponDetails(req, res, next);
+	}
+);
+
+router.get("/wallet-details", isSellerAuthenticated, async (req, res, next) => {
+	getWalletDetails(req, res, next);
+});
+
+router.patch(
+	"/change-wallet-balance",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		changeWalletBalanceSeller(req, res, next);
 	}
 );
 

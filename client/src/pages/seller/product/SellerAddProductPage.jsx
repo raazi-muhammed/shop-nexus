@@ -1,14 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
-import categoriesConstants from "../../constants/categoriesConstants";
+import categoriesConstants from "../../../constants/categoriesConstants";
 import {
 	formLabelClass,
 	inputDivClass,
 	formClass,
 	submitButtonClass,
-} from "../../utils/styleClasses";
+} from "../../../utils/styleClasses";
 import { useNavigate } from "react-router-dom";
 
 const SellerAddProductPage = ({ shopId, shopName }) => {

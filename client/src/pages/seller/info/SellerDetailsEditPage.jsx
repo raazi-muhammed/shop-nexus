@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import {
@@ -8,7 +8,7 @@ import {
 	inputDivClass,
 	formClass,
 	submitButtonClass,
-} from "../../utils/styleClasses";
+} from "../../../utils/styleClasses";
 
 const SellerDetailsEditPage = () => {
 	const [data, setData] = useState({});
