@@ -108,11 +108,14 @@ const CheckOutPage = () => {
 							<section className="bg-white rounded-4 p-4">
 								<p className="text-light text-small m-0">Items</p>
 								{userData?.cart?.map((cartItem) => (
-									<div>
-										<p className="text-primary fw-bold mb-1">
+									<div className="mb-2">
+										<p className="text-primary fw-bold mb-0 ">
 											{cartItem?.product.name}{" "}
-											<span className="text-small text-secondary bg-light rounded px-2">
-												×{cartItem?.quantity}
+										</p>
+										<p className="text-small d-inline text-secondary bg-light rounded px-2 text-nowrap">
+											{`${cartItem?.quantity}×${cartItem?.price} = `}
+											<span className="fw-bold">
+												{cartItem?.price * cartItem?.quantity}
 											</span>
 										</p>
 									</div>
@@ -157,6 +160,7 @@ const CheckOutPage = () => {
 									</div>
 								</div>
 							</section>
+							<p>{JSON.stringify(orderState)}</p>
 							<CouponComp
 								totalAmountWithOutDiscount={totalAmountWithOutDiscount}
 								setDiscountAmount={setDiscountAmount}

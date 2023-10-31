@@ -71,6 +71,7 @@ const CheckOutShippingPage = () => {
 				product: cartItem.product._id,
 				shop: cartItem.product.shop.id,
 				quantity: cartItem.quantity,
+				totalPrice: cartItem.price * cartItem.quantity,
 			};
 			return data;
 		});

@@ -31,13 +31,22 @@ const refundedToUser = async (orderId) => {
 const addToOrder = asyncErrorHandler(async (req, res, nex) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
-	console.log(orderData);
-
-	const data = await Order.create(orderData);
+	orderData.orderItems.map(async (singleOrder) => {
+		const newOrderData = {
+			...orderData,
+			orderItems: [
+				{
+					...singleOrder,
+				},
+			],
+			totalPrice: singleOrder.totalPrice,
+		};
+		console.log(newOrderData);
+		await Order.create(newOrderData);
+	});
 
 	res.status(200).json({
 		success: true,
-		data,
 	});
 });
 

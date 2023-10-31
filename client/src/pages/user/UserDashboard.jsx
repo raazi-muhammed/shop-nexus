@@ -73,7 +73,7 @@ const UserDashboard = () => {
 							<Route
 								path="/messages"
 								element={
-									userData.plusMember.active ? (
+									userData?.plusMember?.active ? (
 										<UserConversationsPage />
 									) : (
 										<UserShopNexusPlus />
