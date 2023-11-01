@@ -41,7 +41,7 @@ const SingleProductPage = () => {
 				receiverId: shopData?._id,
 			})
 			.then((res) => {
-				navigate(`/user/dashboard/${userData._id}/messages`);
+				navigate(`/user/dashboard/messages`);
 			});
 	};
 

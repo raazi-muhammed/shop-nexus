@@ -42,6 +42,8 @@ const SellerConversationsPage = () => {
 				)}
 				{data.conversations?.map((e) => (
 					<div
+						data-bs-toggle="modal"
+						data-bs-target="#exampleModal"
 						onClick={() => handleStartMessage(e.user, e.shop)}
 						className="bg-white rounded-4 my-3 p-2">
 						<div className="d-flex">

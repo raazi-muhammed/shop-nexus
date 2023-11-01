@@ -6,6 +6,7 @@ const sessions = require("express-session");
 const bodyParser = require("body-parser");
 const cookies = require("cookie-parser");
 app.use(cookies());
+const PORT = process.env.PORT;
 
 /* Socket */
 const { createServer } = require("http");
@@ -16,6 +17,7 @@ const io = new Server(http, {
 		origin: ["http://localhost:5173"],
 	},
 });
+const sockets = require("./socket/sockets");
 
 /* Routes */
 const adminRoutes = require("./routes/adminRoutes");
@@ -50,20 +52,11 @@ app.use(
 	})
 );
 
-/* Passport */
-require("./utils/passport");
-const passport = require("passport");
-app.use(passport.initialize());
-app.use(passport.session());
-
-const PORT = process.env.PORT;
-
 app.use(
 	express.json({
 		limit: "50mb",
 	})
 );
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Static file
@@ -81,68 +74,19 @@ app.use("/api/v1/message/", messageRoutes);
 app.use("/api/v1/conversation/", conversationRoutes);
 app.use("/api/v1/payment/", paymentRoutes);
 app.use("/api/v1/event/", eventRoutes);
-//app.use("/api/v1/chat/", socketController);
 
 app.get("*", (req, res) => {
-	console.log("No matching url");
+	console.log("NOT FOUND");
 });
 
 /* Error handler */
 app.use(errorHandling);
 
-http.listen(PORT, () => {
-	console.log(`Server is running on ${PORT}`);
-	connectDatabase();
+io.on("connection", (socket) => {
+	sockets(socket, io);
 });
 
-/* ------------------------------------------------------------------  */
-
-let users = [];
-
-const addUser = (userId, socketId) => {
-	users.map((user) =>
-		user.userId === userId ? (user.socketId = socketId) : null
-	);
-
-	!users.some((user) => user.userId === userId) &&
-		users.push({ userId, socketId });
-};
-
-const removeUser = (userId, socketId) => {
-	users = users.filter((user) => user.socketId !== socketId);
-};
-
-const getUser = (userId) => {
-	return users.find((user) => user.userId == userId);
-};
-
-io.on("connection", (socket) => {
-	socket.removeAllListeners();
-	console.log(socket.id, "connected");
-
-	socket.on("add-user", (userId) => {
-		console.log(userId, socket.id);
-		addUser(userId, socket.id);
-		console.log(users);
-	});
-
-	socket.on("send-message", ({ senderId, receiverId, message }) => {
-		try {
-			const receiver = getUser(receiverId);
-			console.log(receiver, "receiver");
-
-			io.to(receiver.socketId).emit("receive-message", {
-				senderId,
-				receiver,
-				message,
-			});
-		} catch (err) {
-			console.log(err);
-		}
-	});
-
-	socket.on("disconnect", () => {
-		console.log(socket.id, "removed");
-		removeUser(socket.id);
-	});
+http.listen(PORT, () => {
+	console.log(`SERVER STARTED ON ${PORT}`);
+	connectDatabase();
 });

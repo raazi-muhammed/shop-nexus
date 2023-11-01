@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import server from "../server";
 import { socket } from "../socket";
+import convertISOToDate from "../utils/convertISOToDate";
 
 const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 	const { senderId, receiverId } = chatInfo;
@@ -50,6 +51,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 			receiverId,
 			message,
 		});
+		return () => socket.off("send-message");
 	};
 
 	useEffect(() => {
@@ -65,6 +67,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 				{ sender: res.senderId, text: res.message },
 			]);
 		});
+		return () => socket.off("receive-message");
 	}, [socket]);
 
 	useEffect(() => {
@@ -78,55 +81,81 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 
 	return (
 		<main className="w-100" style={{ height: "85vh" }}>
-			<div className="d-flex align-content-center">
-				<div>
-					<img
-						className="rounded-circle"
-						src={toPersonInfo?.imageUrl}
-						alt=""
-						style={{ width: "2rem" }}
-					/>
-				</div>
-				<p className="m-0 fw-bold text-secondary ms-2 mt-1  ">
-					{toPersonInfo?.name}
-				</p>
-			</div>
-			<section className="overflow-auto h-75">
-				{messagesToShow?.map((msg) => (
-					<div
-						className={`p-2 px-3  m-1 my-2 rounded-4 ${
-							senderId === msg.sender
-								? "ms-auto bg-secondary text-white"
-								: receiverId === msg.sender
-								? "me-auto bg-white text-primary"
-								: "visually-hidden"
-						}`}
-						style={{ width: "fit-content" }}>
-						<p className="m-0">{msg.text}</p>
-						<p className="m-0 text-small text-light">{msg.sender}</p>
+			<div
+				class="modal fade"
+				id="exampleModal"
+				tabindex="-1"
+				aria-labelledby="exampleModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog modal-xl modal-dialog-scrollable">
+					<div class="modal-content">
+						<div class="modal-header">
+							<div className="d-flex align-content-center">
+								<div>
+									<img
+										className="rounded-circle"
+										src={toPersonInfo?.imageUrl}
+										alt=""
+										style={{ width: "2rem" }}
+									/>
+								</div>
+								<p className="m-0 fw-bold text-secondary ms-2 mt-1  ">
+									{toPersonInfo?.name}
+								</p>
+							</div>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<section className="overflow-auto h-75">
+								{messagesToShow?.map((msg) => (
+									<div
+										className={`p-2 px-3   m-1 my-2 rounded-4 ${
+											senderId === msg.sender
+												? "ms-auto bg-secondary text-white"
+												: receiverId === msg.sender
+												? "me-auto bg-secondary-subtle text-primary"
+												: "visually-hidden"
+										}`}
+										style={{ width: "fit-content" }}>
+										<p className="m-0">{msg.text}</p>
+										<p className="m-0 text-small opacity-50">
+											{msg.createdAt
+												? convertISOToDate(msg.createdAt, true)
+												: "Now"}
+										</p>
+									</div>
+								))}
+								<hr className="text-light" id="messages-chat" />
+							</section>
+						</div>
+						<div class="modal-footer p-1 bg-light">
+							<section className="w-100">
+								<form onSubmit={handleSendMessage} class="input-group">
+									<input
+										type="text"
+										class="form-control rounded-pill"
+										value={message}
+										onChange={(e) => setMessage(e.target.value)}
+										placeholder="message..."
+										aria-label="chat-input"
+										aria-describedby="button-addon2"
+									/>
+									<button
+										class="btn px-4 btn-secondary text-white rounded-pill ms-2"
+										type="submit"
+										id="send-button">
+										Send
+									</button>
+								</form>
+							</section>
+						</div>
 					</div>
-				))}
-				<hr className="text-light" id="messages-chat" />
-			</section>
-			<section className="w-100">
-				<form onSubmit={handleSendMessage} class="input-group mb-3">
-					<input
-						type="text"
-						class="form-control rounded-start-pill"
-						value={message}
-						onChange={(e) => setMessage(e.target.value)}
-						placeholder="message..."
-						aria-label="chat-input"
-						aria-describedby="button-addon2"
-					/>
-					<button
-						class="btn px-3 btn-secondary text-white rounded-end-pill"
-						type="submit"
-						id="send-button">
-						Send
-					</button>
-				</form>
-			</section>
+				</div>
+			</div>
 		</main>
 	);
 };

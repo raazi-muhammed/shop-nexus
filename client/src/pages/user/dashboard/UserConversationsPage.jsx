@@ -34,12 +34,14 @@ const UserConversationsPage = () => {
 
 	return (
 		<section className="row">
-			<div className="col-3">
+			<div className="col">
 				{data.conversations?.length === 0 && (
 					<p className="text-secondary text-center mt-5 pt-5">No Messages</p>
 				)}
 				{data.conversations?.map((e) => (
 					<div
+						data-bs-toggle="modal"
+						data-bs-target="#exampleModal"
 						onClick={() => handleStartMessage(e.shop, e.user)}
 						className="bg-white rounded-4 my-3 p-2">
 						<div className="d-flex">
@@ -56,15 +58,7 @@ const UserConversationsPage = () => {
 					</div>
 				))}
 			</div>
-			<div className="col-8">
-				{chatInfo?.senderId == "" ? (
-					<p className="text-secondary text-center mt-5 pt-5">
-						Please select a conversation
-					</p>
-				) : (
-					<ChattingComp chatInfo={chatInfo} toPersonInfo={toPersonInfo} />
-				)}
-			</div>
+			<ChattingComp chatInfo={chatInfo} toPersonInfo={toPersonInfo} />
 		</section>
 	);
 };
