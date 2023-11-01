@@ -14,7 +14,6 @@ import formatPrice from "../../utils/formatPrice";
 const CartUser = () => {
 	const userData = useSelector((state) => state.userData.userData);
 	const isCartVisible = useSelector((state) => state.cart.isCartVisible);
-	console.log(isCartVisible);
 	const dispatch = useDispatch();
 	const cartItems = userData?.cart;
 

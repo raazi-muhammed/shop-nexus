@@ -5,15 +5,13 @@ router.post("/get-conversation", async (req, res) => {
 	try {
 		const { senderId, receiverId } = req.body;
 		let conversationId;
-		console.log(req.body);
+
 		const conversationAlready = await Conversation.findOne({
 			$or: [
 				{ user: senderId, shop: receiverId },
 				{ user: receiverId, shop: senderId },
 			],
 		});
-
-		console.log(conversationAlready);
 
 		if (conversationAlready) {
 			conversationId = conversationAlready._id;
@@ -46,7 +44,6 @@ router.get("/get-all-conversation/:userId", async (req, res) => {
 			.populate("shop")
 			.populate("user");
 
-		console.log(conversations);
 		res.status(200).json({
 			success: true,
 			conversations,
