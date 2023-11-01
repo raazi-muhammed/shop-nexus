@@ -9,12 +9,6 @@ const router = require("express").Router();
 
 router.post("/add-to-order", isAuthenticated, (req, res, next) => {
 	addToOrder(req, res, next);
-
-	req.body.orderState.orderItems.map((e) => {
-		req.stock = e.quantity;
-		req.productId = e.product;
-		changeStockBasedOnOrder(req, res, next);
-	});
 });
 
 router.get("/get-invoice/:orderId", isAuthenticated, (req, res, next) => {

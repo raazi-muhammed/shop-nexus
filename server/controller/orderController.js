@@ -7,37 +7,27 @@ const fs = require("fs");
 const convertISOToDate = require("../utils/convertISOToDate");
 const { changeStockBasedOnOrder } = require("./productController");
 const User = require("../model/User");
-const { changeWalletBalance } = require("./userController");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
-const { changeWalletBalanceSeller } = require("./sellerController");
 const Shop = require("../model/Shop");
-const { createTransaction } = require("./transactionController");
+const {
+	createTransaction,
+	changerUserWalletBalanceWithTransaction,
+	changerSellerWalletBalanceWithTransaction,
+} = require("./transactionController");
+const Products = require("../model/Products");
 
 const refundedToUser = async (orderId, productOrderId) => {
 	const orderData = await Order.findOne({ orderId, _id: productOrderId });
 	if (orderData.paymentInfo.status === "Received") {
-		// Add money to user Wallet
-		const user = await User.findOneAndUpdate(
-			{ _id: orderData.user },
-			{
-				$inc: { "wallet.balance": orderData.totalPrice },
-			}
+		changerUserWalletBalanceWithTransaction(
+			orderData.user,
+			orderData.totalPrice,
+			"Refunded from an Order"
 		);
-		let description = "Refunded from an Order";
-		await createTransaction(orderData.user, orderData.totalPrice, description);
-
-		// Remove money from Shop Wallet
-		description = `Added via Order ${orderData.orderId}`;
-
-		const seller = await Shop.findOneAndUpdate(
-			{ _id: orderData.orderItems[0].shop },
-			{ $inc: { "wallet.balance": orderData.totalPrice * -1 } }
-		);
-
-		await createTransaction(
+		changerSellerWalletBalanceWithTransaction(
 			orderData.orderItems[0].shop,
 			orderData.totalPrice * -1,
-			description
+			`Added via Order ${orderData.orderId}`
 		);
 	}
 };
@@ -45,38 +35,60 @@ const refundedToUser = async (orderId, productOrderId) => {
 const addToOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
-	orderData.orderItems.map(async (singleOrder) => {
-		// Created separate Orders based on Shop
-		const newOrderData = {
-			...orderData,
-			orderItems: [
-				{
-					...singleOrder,
-				},
-			],
-			totalPrice: singleOrder.totalPrice,
-		};
+	const detailsOfOrderPromises = orderData.orderItems.map(
+		async (singleOrder) => {
+			// Checks for Stock
+			const productDetails = await Products.findOne({
+				_id: singleOrder.product,
+			});
 
-		// Add money to Shop Wallet
-		if (newOrderData.paymentInfo.status === "Received") {
-			const description = `Added via Order ${orderData.orderId}`;
+			if (productDetails.stock > singleOrder.quantity) {
+				await changeStockBasedOnOrder(
+					singleOrder.product,
+					singleOrder.quantity
+				);
 
-			const seller = await Shop.findOneAndUpdate(
-				{ _id: singleOrder.shop },
-				{ $inc: { "wallet.balance": singleOrder.totalPrice } }
-			);
+				// Created separate Orders based on Shop
+				const newOrderData = {
+					...orderData,
+					orderItems: [
+						{
+							...singleOrder,
+						},
+					],
+					totalPrice: singleOrder.totalPrice,
+				};
 
-			const transaction = await createTransaction(
-				singleOrder.shop,
-				singleOrder.totalPrice,
-				description
-			);
+				// Add money to Shop Wallet
+				if (newOrderData.paymentInfo.status === "Received") {
+					changerSellerWalletBalanceWithTransaction(
+						singleOrder.shop,
+						singleOrder.totalPrice,
+						`Added via Order ${orderData.orderId}`
+					);
+				}
+				await Order.create(newOrderData);
+
+				return {
+					name: productDetails.name,
+					success: true,
+					status: "Order Placed",
+				};
+			} else {
+				return {
+					name: productDetails.name,
+					success: false,
+					status: "Order Not Placed (Out of Stock)",
+				};
+			}
 		}
-		const OrderAdded = await Order.create(newOrderData);
-	});
+	);
+	const detailsOfOrder = await Promise.all(detailsOfOrderPromises);
 
 	res.status(200).json({
 		success: true,
+		message: "Order Placed",
+		details: detailsOfOrder,
 	});
 });
 
@@ -145,9 +157,7 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	);
 
 	orderData.orderItems.map((e) => {
-		req.stock = e.quantity * -1;
-		req.productId = e.product;
-		changeStockBasedOnOrder(req, res, next);
+		changeStockBasedOnOrder(e.product, e.quantity * -1);
 	});
 
 	res.status(200).json({
@@ -173,9 +183,7 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 	);
 
 	orderData.orderItems.map((e) => {
-		req.stock = e.quantity * -1;
-		req.productId = e.product;
-		changeStockBasedOnOrder(req, res, next);
+		changeStockBasedOnOrder(e.product, e.quantity * -1);
 	});
 
 	res.status(200).json({

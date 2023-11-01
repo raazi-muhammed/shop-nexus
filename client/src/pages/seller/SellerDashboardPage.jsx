@@ -21,6 +21,7 @@ import AllEventsSeller from "./events/AllEventsSeller";
 import EditSingleEventSeller from "./events/EditSingleEventSeller";
 import Icons from "../../assets/Icons";
 import SellerWalletPage from "./wallet/SellerWalletPage";
+import DashBoard from "./dashboard/DashBoard";
 const { threeLine } = Icons;
 
 const SellerDashboardPage = () => {
@@ -30,6 +31,10 @@ const SellerDashboardPage = () => {
 	const [shopName, setShopName] = useState("Loading...");
 
 	const asideItems = [
+		{
+			name: "Dashboard",
+			link: ``,
+		},
 		{
 			name: "All Products",
 			link: `all-products`,
@@ -134,6 +139,7 @@ const SellerDashboardPage = () => {
 								element={<SellerEditSingleProductPage />}
 							/>
 							<Route path="/wallet" element={<SellerWalletPage />} />
+							<Route path="/" element={<DashBoard />} />
 						</Routes>
 					</section>
 				</section>

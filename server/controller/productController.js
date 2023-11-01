@@ -310,20 +310,13 @@ const setNewStockAmount = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-const changeStockBasedOnOrder = asyncErrorHandler(async (req, res, next) => {
-	const { stock, productId } = req;
-
+const changeStockBasedOnOrder = async (productId, stock) => {
 	const shopDetails = await Products.findOneAndUpdate(
 		{ _id: productId },
-		{ $inc: { stock: -stock } },
+		{ $inc: { stock: -stock, total_sell: stock } },
 		{ new: true }
 	);
-
-	res.status(200).json({
-		success: true,
-		data: shopDetails,
-	});
-});
+};
 
 module.exports = {
 	getBestSellingProducts,

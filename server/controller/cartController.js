@@ -32,7 +32,6 @@ const addToCart = asyncErrorHandler(async (req, res, next) => {
 
 	currentUserState.cart.map(async (items, i) => {
 		if (items.product == cartItem.product) {
-			console.log("if true");
 			isChanged = true;
 
 			let updateObj = {};
@@ -48,9 +47,7 @@ const addToCart = asyncErrorHandler(async (req, res, next) => {
 		}
 	});
 
-	console.log("isChanged", isChanged);
 	if (!isChanged) {
-		console.log("add to set");
 		updatedUser = await User.findOneAndUpdate(
 			{ _id: userId },
 			{
@@ -94,8 +91,6 @@ const clearAllCartItems = asyncErrorHandler(async (req, res, next) => {
 		{ $set: { cart: [] } },
 		{ new: true }
 	).populate("cart.product");
-
-	console.log(userId, updatedUser);
 
 	res.status(200).json({
 		success: true,

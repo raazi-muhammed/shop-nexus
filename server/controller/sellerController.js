@@ -224,6 +224,26 @@ const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 		message: "User is Logged out",
 	});
 });
+const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
+	const shopName = req.seller.shopName;
+	const products = await Products.aggregate([
+		{
+			$match: { "shop.name": shopName, isDeleted: false },
+		},
+		{
+			$project: {
+				_id: 1,
+				name: 1,
+				total_sell: 1,
+			},
+		},
+	]);
+
+	res.status(200).json({
+		success: true,
+		chartData: products,
+	});
+});
 
 module.exports = {
 	sellerLogin,
@@ -234,4 +254,5 @@ module.exports = {
 	sellerLogOut,
 	getWalletDetails,
 	changeWalletBalanceSeller,
+	getProductsSoldChartData,
 };

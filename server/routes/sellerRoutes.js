@@ -16,6 +16,7 @@ const {
 	sellerLogOut,
 	getWalletDetails,
 	changeWalletBalanceSeller,
+	getProductsSoldChartData,
 } = require("../controller/sellerController");
 
 const {
@@ -159,6 +160,14 @@ router.patch(
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		changeWalletBalanceSeller(req, res, next);
+	}
+);
+
+router.get(
+	"/chart/products-sold",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getProductsSoldChartData(req, res, next);
 	}
 );
 
