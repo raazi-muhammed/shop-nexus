@@ -11986,7 +11986,8 @@ textarea.form-control-lg {
 }
 
 .btn-sm, .btn-group-sm > .btn,
-.form-sm {
+.form-sm,
+.form-control-sm {
   height: 2rem;
 }
 

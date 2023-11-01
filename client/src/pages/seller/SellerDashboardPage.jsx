@@ -21,7 +21,7 @@ import AllEventsSeller from "./events/AllEventsSeller";
 import EditSingleEventSeller from "./events/EditSingleEventSeller";
 import Icons from "../../assets/Icons";
 import SellerWalletPage from "./wallet/SellerWalletPage";
-import DashBoard from "./dashboard/DashBoard";
+import ChartSales from "./dashboard/ChartSales";
 const { threeLine } = Icons;
 
 const SellerDashboardPage = () => {
@@ -32,8 +32,28 @@ const SellerDashboardPage = () => {
 
 	const asideItems = [
 		{
+			name: "Analytics",
+			heading: true,
+		},
+		{
 			name: "Dashboard",
 			link: ``,
+		},
+		{
+			name: "Sales",
+			link: `sales`,
+		},
+		{
+			name: "Products",
+			link: `chart-products`,
+		},
+		{
+			name: "Revenue",
+			link: `revenue`,
+		},
+		{
+			name: "Products & Orders",
+			heading: true,
 		},
 		{
 			name: "All Products",
@@ -47,13 +67,14 @@ const SellerDashboardPage = () => {
 			name: "Stock Management",
 			link: `stock-management`,
 		},
-		{
-			name: "Edit Shop",
-			link: `edit-shop`,
-		},
+
 		{
 			name: "All Orders",
 			link: `orders`,
+		},
+		{
+			name: "Coupon & Events",
+			heading: true,
 		},
 		{
 			name: "New Coupon",
@@ -63,10 +84,7 @@ const SellerDashboardPage = () => {
 			name: "All Coupons",
 			link: `coupons`,
 		},
-		{
-			name: "Messages",
-			link: `messages`,
-		},
+
 		{
 			name: "New Event",
 			link: `new-event`,
@@ -76,8 +94,20 @@ const SellerDashboardPage = () => {
 			link: `events`,
 		},
 		{
+			name: "Others",
+			heading: true,
+		},
+		{
+			name: "Messages",
+			link: `messages`,
+		},
+		{
 			name: "Wallet",
 			link: `wallet`,
+		},
+		{
+			name: "Edit Shop",
+			link: `edit-shop`,
 		},
 	];
 
@@ -139,7 +169,7 @@ const SellerDashboardPage = () => {
 								element={<SellerEditSingleProductPage />}
 							/>
 							<Route path="/wallet" element={<SellerWalletPage />} />
-							<Route path="/" element={<DashBoard />} />
+							<Route path="/sales" element={<ChartSales />} />
 						</Routes>
 					</section>
 				</section>

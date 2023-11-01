@@ -40,14 +40,25 @@ const AsideComp = ({ asideItems }) => {
 
 					<nav className="d-flex bg-white flex-column p-4 rounded-4 w-100 gap-1 justify-content-center">
 						{asideItems.map((e, i) => (
-							<Link key={i} to={e.link}>
-								<button
-									onClick={(e) => setCurrentNav(i)}
-									className={`btn btn-sm text-start w-100 
+							<>
+								{e.heading ? (
+									<div>
+										<p className="text-small mt-2 mx-2 m-0 fw-bold text-secondary">
+											{e.name}
+										</p>
+										<hr className="m-0 mx-2 text-secondary" />
+									</div>
+								) : (
+									<Link key={i} to={e.link}>
+										<button
+											onClick={(e) => setCurrentNav(i)}
+											className={`btn btn-sm text-start w-100 
 						${currentNav === i ? "text-white bg-secondary" : "text-secondary"}`}>
-									{e.name}
-								</button>
-							</Link>
+											{e.name}
+										</button>
+									</Link>
+								)}
+							</>
 						))}
 					</nav>
 				</section>

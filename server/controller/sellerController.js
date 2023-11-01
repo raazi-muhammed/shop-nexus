@@ -9,6 +9,7 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const Transaction = require("../model/Transaction");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 const { createTransaction } = require("./transactionController");
+const Order = require("../model/Order");
 
 const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 	let shop = await Shop.findOne(
@@ -224,7 +225,7 @@ const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 		message: "User is Logged out",
 	});
 });
-const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
+/* const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 	const shopName = req.seller.shopName;
 	const products = await Products.aggregate([
 		{
@@ -238,6 +239,61 @@ const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 			},
 		},
 	]);
+
+	res.status(200).json({
+		success: true,
+		chartData: products,
+	});
+}); */
+const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
+	const shopId = req.seller._id;
+	const { categorizeBy, startDate, endDate } = req.query;
+
+	const matchOptions = { "orderItems.0.shop": shopId };
+
+	const groupOptions = {
+		_id: {
+			year: { $year: "$createdAt" },
+		},
+		count: { $sum: 1 },
+	};
+
+	const _startDate = new Date(startDate);
+	const _endDate = new Date(endDate);
+
+	if (!isNaN(_startDate)) {
+		matchOptions.createdAt = { $gt: _startDate };
+	}
+	if (!isNaN(_endDate)) {
+		matchOptions.createdAt = { $lt: _endDate };
+	}
+
+	if (!isNaN(_endDate) && !isNaN(_startDate)) {
+		matchOptions.createdAt = { $lt: _endDate, $gt: _startDate };
+	}
+
+	console.log(categorizeBy);
+
+	if (categorizeBy === "MONTH" || categorizeBy === "DAY") {
+		groupOptions._id.month = { $month: "$createdAt" };
+	}
+	if (categorizeBy === "DAY") {
+		groupOptions._id.day = { $dayOfMonth: "$createdAt" };
+	}
+
+	const products = await Order.aggregate([
+		{
+			$match: matchOptions,
+		},
+		{
+			$group: groupOptions,
+		},
+		{
+			$sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 },
+		},
+	]);
+
+	console.log(products);
 
 	res.status(200).json({
 		success: true,

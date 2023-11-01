@@ -86,7 +86,7 @@ io.on("connection", (socket) => {
 	sockets(socket, io);
 });
 
+connectDatabase();
 http.listen(PORT, () => {
 	console.log(`SERVER STARTED ON ${PORT}`);
-	connectDatabase();
 });

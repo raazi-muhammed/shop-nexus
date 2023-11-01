@@ -4,7 +4,7 @@ import { Chart } from "chart.js/auto";
 
 const BarChart = ({ chartData }) => {
 	return (
-		<div>
+		<div className="w-100 h-100">
 			<Bar data={chartData} />
 		</div>
 	);
