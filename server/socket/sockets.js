@@ -17,18 +17,14 @@ const getUser = (userId) => users.find((user) => user.userId == userId);
 
 const sockets = (socket, io) => {
 	socket.removeAllListeners();
-	console.log(socket.id, "connected");
 
 	socket.on("add-user", (userId) => {
-		console.log(userId, socket.id);
 		addUser(userId, socket.id);
-		console.log(users);
 	});
 
 	socket.on("send-message", ({ senderId, receiverId, message }) => {
 		try {
 			const receiver = getUser(receiverId);
-			console.log(receiver, "receiver");
 
 			io.to(receiver.socketId).emit("receive-message", {
 				senderId,
@@ -41,7 +37,6 @@ const sockets = (socket, io) => {
 	});
 
 	socket.on("disconnect", () => {
-		console.log(socket.id, "removed");
 		removeUser(socket.id);
 	});
 };

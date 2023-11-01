@@ -15,6 +15,7 @@ import formatPrice from "../../utils/formatPrice";
 import NavComponent from "../../components/layout/NavComponent";
 import RatingStar from "../../components/product/RatingStar";
 import { getCategoryByKey } from "../../constants/categoriesConstants";
+import ChattingComp from "../../components/ChattingComp";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);
@@ -33,6 +34,12 @@ const SingleProductPage = () => {
 		{ name: "About Seller", link: "about-seller" },
 	];
 
+	const [toPersonInfo, setToPersonInfo] = useState({});
+	const [chatInfo, setChatInfo] = useState({
+		senderId: "",
+		receiverId: "",
+	});
+
 	const handleMessageShop = () => {
 		if (!userData.plusMember?.active) return navigate("/shop-nexus-plus");
 		axios
@@ -41,7 +48,14 @@ const SingleProductPage = () => {
 				receiverId: shopData?._id,
 			})
 			.then((res) => {
-				navigate(`/user/dashboard/messages`);
+				setChatInfo({
+					senderId: userData._id,
+					receiverId: shopData?._id,
+				});
+				setToPersonInfo({
+					name: shopData?.shopName,
+					imageUrl: shopData?.image?.url,
+				});
 			});
 	};
 
@@ -261,6 +275,10 @@ const SingleProductPage = () => {
 												</button>
 											</Link>
 											<button
+												data-bs-toggle="modal"
+												data-bs-target={
+													userData?.plusMember?.active && "#exampleModal"
+												}
 												onClick={handleMessageShop}
 												className="btn-sm btn btn-secondary text-white ms-2">
 												Message Shop
@@ -320,6 +338,7 @@ const SingleProductPage = () => {
 					</section>
 				</>
 			)}
+			<ChattingComp chatInfo={chatInfo} toPersonInfo={toPersonInfo} />
 		</main>
 	);
 };

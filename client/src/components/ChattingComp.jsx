@@ -89,17 +89,17 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 				aria-hidden="true">
 				<div class="modal-dialog modal-xl modal-dialog-scrollable">
 					<div class="modal-content">
-						<div class="modal-header">
+						<div class="modal-header p-3 px-4 border-0 ">
 							<div className="d-flex align-content-center">
 								<div>
 									<img
 										className="rounded-circle"
 										src={toPersonInfo?.imageUrl}
 										alt=""
-										style={{ width: "2rem" }}
+										style={{ width: "2.5rem" }}
 									/>
 								</div>
-								<p className="m-0 fw-bold text-secondary ms-2 mt-1  ">
+								<p className="m-0 fw-bold text-secondary ms-2 my-auto">
 									{toPersonInfo?.name}
 								</p>
 							</div>

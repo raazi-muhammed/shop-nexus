@@ -20,7 +20,6 @@ const SellerConversationsPage = () => {
 			receiverId: receiver._id,
 		});
 
-		console.log(chatInfo);
 		setToPersonInfo({
 			name: receiver?.fullName,
 			imageUrl: receiver?.avatar?.url,
@@ -36,7 +35,7 @@ const SellerConversationsPage = () => {
 
 	return (
 		<section className="row">
-			<div className="col-3">
+			<div className="col">
 				{data.conversations?.length === 0 && (
 					<p className="text-secondary text-center mt-5 pt-5">No Messages</p>
 				)}
@@ -60,15 +59,7 @@ const SellerConversationsPage = () => {
 					</div>
 				))}
 			</div>
-			<div className="col-8">
-				{chatInfo?.senderId == "" ? (
-					<p className="text-secondary text-center mt-5 pt-5">
-						Please select a conversation
-					</p>
-				) : (
-					<ChattingComp chatInfo={chatInfo} toPersonInfo={toPersonInfo} />
-				)}
-			</div>
+			<ChattingComp chatInfo={chatInfo} toPersonInfo={toPersonInfo} />
 		</section>
 	);
 };
