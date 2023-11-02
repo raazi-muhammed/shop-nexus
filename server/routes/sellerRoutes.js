@@ -17,6 +17,8 @@ const {
 	getWalletDetails,
 	changeWalletBalanceSeller,
 	getProductsSoldChartData,
+	getSalesChartData,
+	getOrdersSoldChartData,
 } = require("../controller/sellerController");
 
 const {
@@ -170,5 +172,12 @@ router.get(
 		getProductsSoldChartData(req, res, next);
 	}
 );
+
+router.get("/chart/sales", isSellerAuthenticated, async (req, res, next) => {
+	getSalesChartData(req, res, next);
+});
+router.get("/chart/orders", isSellerAuthenticated, async (req, res, next) => {
+	getOrdersSoldChartData(req, res, next);
+});
 
 module.exports = router;

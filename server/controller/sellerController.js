@@ -245,7 +245,8 @@ const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 		chartData: products,
 	});
 }); */
-const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
+
+const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.seller._id;
 	const { categorizeBy, startDate, endDate } = req.query;
 
@@ -256,6 +257,7 @@ const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 			year: { $year: "$createdAt" },
 		},
 		count: { $sum: 1 },
+		totalPrice: { $sum: "$totalPrice" },
 	};
 
 	const _startDate = new Date(startDate);
@@ -301,6 +303,111 @@ const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
+	const shopId = req.seller._id;
+	const { startDate, endDate } = req.query;
+
+	const matchOptions = { "orderItems.0.shop": shopId };
+
+	const groupOptions = {
+		_id: "$orderItems.product",
+		count: { $sum: 1 },
+		totalPrice: { $sum: "$totalPrice" },
+	};
+
+	const _startDate = new Date(startDate);
+	const _endDate = new Date(endDate);
+
+	if (!isNaN(_startDate)) {
+		matchOptions.createdAt = { $gt: _startDate };
+	}
+	if (!isNaN(_endDate)) {
+		matchOptions.createdAt = { $lt: _endDate };
+	}
+
+	if (!isNaN(_endDate) && !isNaN(_startDate)) {
+		matchOptions.createdAt = { $lt: _endDate, $gt: _startDate };
+	}
+
+	const products = await Order.aggregate([
+		{
+			$match: matchOptions,
+		},
+		{
+			$group: groupOptions,
+		},
+		{
+			$sort: { _id: 1 },
+		},
+	]);
+
+	// Changing the Product ID to Product NAME
+	await Promise.all(
+		products.map(async (sales) => {
+			const productName = await Products.findOne(
+				{ _id: sales._id[0] },
+				{ name: 1 }
+			);
+
+			sales._id = productName.name;
+			return sales;
+		})
+	);
+
+	console.log(products);
+
+	res.status(200).json({
+		success: true,
+		chartData: products,
+	});
+});
+
+const getOrdersSoldChartData = asyncErrorHandler(async (req, res, next) => {
+	const shopId = req.seller._id;
+	const { startDate, endDate } = req.query;
+
+	const matchOptions = { "orderItems.0.shop": shopId };
+
+	const groupOptions = {
+		_id: "$status",
+		count: { $sum: 1 },
+		totalPrice: { $sum: "$totalPrice" },
+	};
+
+	const _startDate = new Date(startDate);
+	const _endDate = new Date(endDate);
+
+	if (!isNaN(_startDate)) {
+		matchOptions.createdAt = { $gt: _startDate };
+	}
+	if (!isNaN(_endDate)) {
+		matchOptions.createdAt = { $lt: _endDate };
+	}
+
+	if (!isNaN(_endDate) && !isNaN(_startDate)) {
+		matchOptions.createdAt = { $lt: _endDate, $gt: _startDate };
+	}
+
+	const products = await Order.aggregate([
+		{
+			$match: matchOptions,
+		},
+		{
+			$group: groupOptions,
+		},
+		{
+			$sort: { _id: 1 },
+		},
+	]);
+
+	console.log(products);
+
+	res.status(200).json({
+		success: true,
+		chartData: products,
+	});
+});
+
 module.exports = {
 	sellerLogin,
 	sellerCreateShop,
@@ -311,4 +418,6 @@ module.exports = {
 	getWalletDetails,
 	changeWalletBalanceSeller,
 	getProductsSoldChartData,
+	getSalesChartData,
+	getOrdersSoldChartData,
 };

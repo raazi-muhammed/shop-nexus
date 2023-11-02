@@ -22,6 +22,9 @@ import EditSingleEventSeller from "./events/EditSingleEventSeller";
 import Icons from "../../assets/Icons";
 import SellerWalletPage from "./wallet/SellerWalletPage";
 import ChartSales from "./dashboard/ChartSales";
+import ChartProducts from "./dashboard/ChartProducts";
+import ChartOrders from "./dashboard/ChartOrders";
+import MainDashBoard from "./dashboard/MainDashBoard";
 const { threeLine } = Icons;
 
 const SellerDashboardPage = () => {
@@ -48,8 +51,8 @@ const SellerDashboardPage = () => {
 			link: `chart-products`,
 		},
 		{
-			name: "Revenue",
-			link: `revenue`,
+			name: "Orders",
+			link: `char-orders`,
 		},
 		{
 			name: "Products & Orders",
@@ -170,6 +173,9 @@ const SellerDashboardPage = () => {
 							/>
 							<Route path="/wallet" element={<SellerWalletPage />} />
 							<Route path="/sales" element={<ChartSales />} />
+							<Route path="/char-orders" element={<ChartOrders />} />
+							<Route path="/chart-products" element={<ChartProducts />} />
+							<Route path="/" element={<MainDashBoard />} />
 						</Routes>
 					</section>
 				</section>

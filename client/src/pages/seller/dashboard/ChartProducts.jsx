@@ -11,25 +11,10 @@ import CategorySelector from "../../../components/charts/CategorySelector";
 import toast from "react-hot-toast";
 import DataTypeSelector from "../../../components/charts/DataTypeSelector";
 
-const ChartSales = () => {
+const ChartProducts = () => {
 	const [chartData, setChartData] = useState();
 	const [refresh, setRefresh] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const [categorizeBy, setCategorizeBy] = useState("MONTH");
-	const categoryOptions = [
-		{
-			key: "DAY",
-			value: "Day",
-		},
-		{
-			key: "MONTH",
-			value: "Month",
-		},
-		{
-			key: "YEAR",
-			value: "Year",
-		},
-	];
 	const [dataType, setDataType] = useState("SALES");
 	const dataTypeOptions = [
 		{
@@ -41,7 +26,6 @@ const ChartSales = () => {
 			value: "Revenue",
 		},
 	];
-
 	const [startDate, setStartDate] = useState(null);
 	const [endDate, setEndDate] = useState(new Date());
 
@@ -49,7 +33,7 @@ const ChartSales = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/seller/chart/sales?categorizeBy=${categorizeBy}&startDate=${startDate}&endDate=${endDate}`,
+				`${server}/seller/chart/products-sold?startDate=${startDate}&endDate=${endDate}`,
 				{
 					withCredentials: true,
 				}
@@ -57,12 +41,10 @@ const ChartSales = () => {
 			.then((res) => {
 				const data = res.data.chartData;
 				setChartData({
-					labels: data.map((row) =>
-						normalDateFormatter(row._id?.year, row._id?.month, row._id?.day)
-					),
+					labels: data.map((row) => row._id),
 					datasets: [
 						{
-							label: "Total Sales",
+							label: "Product Sales",
 							data: data.map((row) =>
 								dataType === "SALES" ? row.count : row.totalPrice
 							),
@@ -77,7 +59,7 @@ const ChartSales = () => {
 				toast.error(err.response?.data?.message || "An error occurred")
 			)
 			.finally(() => setLoading(false));
-	}, [categorizeBy, refresh, dataType]);
+	}, [dataType, refresh]);
 
 	return (
 		<div>
@@ -103,11 +85,6 @@ const ChartSales = () => {
 							endDate={endDate}
 							setEndDate={setEndDate}
 						/>
-						<CategorySelector
-							categorizeBy={categorizeBy}
-							setCategorizeBy={setCategorizeBy}
-							categoryOptions={categoryOptions}
-						/>
 						<DataTypeSelector
 							dataType={dataType}
 							setDataType={setDataType}
@@ -123,4 +100,4 @@ const ChartSales = () => {
 	);
 };
 
-export default ChartSales;
+export default ChartProducts;

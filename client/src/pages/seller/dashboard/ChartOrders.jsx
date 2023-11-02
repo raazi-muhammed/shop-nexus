@@ -9,9 +9,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 import DateRangerDropDown from "../../../components/charts/DateRangerDropDown";
 import CategorySelector from "../../../components/charts/CategorySelector";
 import toast from "react-hot-toast";
-import DataTypeSelector from "../../../components/charts/DataTypeSelector";
 
-const ChartSales = () => {
+const ChartOrders = () => {
 	const [chartData, setChartData] = useState();
 	const [refresh, setRefresh] = useState(true);
 	const [loading, setLoading] = useState(false);
@@ -30,18 +29,6 @@ const ChartSales = () => {
 			value: "Year",
 		},
 	];
-	const [dataType, setDataType] = useState("SALES");
-	const dataTypeOptions = [
-		{
-			key: "SALES",
-			value: "Sales",
-		},
-		{
-			key: "PRICE",
-			value: "Revenue",
-		},
-	];
-
 	const [startDate, setStartDate] = useState(null);
 	const [endDate, setEndDate] = useState(new Date());
 
@@ -49,7 +36,7 @@ const ChartSales = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/seller/chart/sales?categorizeBy=${categorizeBy}&startDate=${startDate}&endDate=${endDate}`,
+				`${server}/seller/chart/orders?categorizeBy=${categorizeBy}&startDate=${startDate}&endDate=${endDate}`,
 				{
 					withCredentials: true,
 				}
@@ -57,15 +44,11 @@ const ChartSales = () => {
 			.then((res) => {
 				const data = res.data.chartData;
 				setChartData({
-					labels: data.map((row) =>
-						normalDateFormatter(row._id?.year, row._id?.month, row._id?.day)
-					),
+					labels: data.map((row) => row._id),
 					datasets: [
 						{
-							label: "Total Sales",
-							data: data.map((row) =>
-								dataType === "SALES" ? row.count : row.totalPrice
-							),
+							label: "Total Revenue",
+							data: data.map((row) => row.totalPrice),
 							backgroundColor: "#7a76e2",
 							hoverBackgroundColor: "#342475",
 							borderRadius: 10,
@@ -77,7 +60,7 @@ const ChartSales = () => {
 				toast.error(err.response?.data?.message || "An error occurred")
 			)
 			.finally(() => setLoading(false));
-	}, [categorizeBy, refresh, dataType]);
+	}, [categorizeBy, refresh]);
 
 	return (
 		<div>
@@ -108,11 +91,6 @@ const ChartSales = () => {
 							setCategorizeBy={setCategorizeBy}
 							categoryOptions={categoryOptions}
 						/>
-						<DataTypeSelector
-							dataType={dataType}
-							setDataType={setDataType}
-							dataTypeOptions={dataTypeOptions}
-						/>
 					</section>
 					<div className="h-100">
 						{chartData && <BarChart chartData={chartData} />}
@@ -123,4 +101,4 @@ const ChartSales = () => {
 	);
 };
 
-export default ChartSales;
+export default ChartOrders;
