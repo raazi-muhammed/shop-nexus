@@ -1,5 +1,6 @@
 import React from "react";
 import Icons from "../../assets/Icons";
+
 const { cartFill, message, calender } = Icons;
 
 const PlusBenifits = () => {
@@ -20,6 +21,7 @@ const PlusBenifits = () => {
 			icon: message,
 		},
 	];
+
 	return (
 		<section className="row gap-4">
 			{benefits.map((benefit) => (

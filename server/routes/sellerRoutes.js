@@ -19,6 +19,7 @@ const {
 	getProductsSoldChartData,
 	getSalesChartData,
 	getOrdersSoldChartData,
+	getDashBoardContent,
 } = require("../controller/sellerController");
 
 const {
@@ -178,6 +179,9 @@ router.get("/chart/sales", isSellerAuthenticated, async (req, res, next) => {
 });
 router.get("/chart/orders", isSellerAuthenticated, async (req, res, next) => {
 	getOrdersSoldChartData(req, res, next);
+});
+router.get("/dashboard", isSellerAuthenticated, async (req, res, next) => {
+	getDashBoardContent(req, res, next);
 });
 
 module.exports = router;

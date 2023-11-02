@@ -225,26 +225,6 @@ const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 		message: "User is Logged out",
 	});
 });
-/* const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
-	const shopName = req.seller.shopName;
-	const products = await Products.aggregate([
-		{
-			$match: { "shop.name": shopName, isDeleted: false },
-		},
-		{
-			$project: {
-				_id: 1,
-				name: 1,
-				total_sell: 1,
-			},
-		},
-	]);
-
-	res.status(200).json({
-		success: true,
-		chartData: products,
-	});
-}); */
 
 const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.seller._id;
@@ -408,6 +388,92 @@ const getOrdersSoldChartData = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getContentForDashBoardBetweenDates = async (
+	shopId,
+	startDate,
+	endDate
+) => {
+	return await Order.aggregate([
+		{
+			$match: {
+				"orderItems.0.shop": shopId,
+				createdAt: { $lt: startDate, $gt: endDate },
+			},
+		},
+		{
+			$group: {
+				_id: "Seven Days",
+				orders: { $sum: 1 },
+				revenue: { $sum: "$totalPrice" },
+				delivered: {
+					$sum: {
+						$cond: { if: { $eq: ["$status", "Delivered"] }, then: 1, else: 0 },
+					},
+				},
+			},
+		},
+		{
+			$sort: { _id: 1 },
+		},
+		{
+			$project: {
+				_id: 0,
+			},
+		},
+	]);
+};
+
+const getDashBoardContent = asyncErrorHandler(async (req, res, next) => {
+	const shopId = req.seller._id;
+
+	const today = new Date();
+	const before7days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+	const before14days = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+	const before30days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+	const before60days = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+
+	const sevenDaysPromise = getContentForDashBoardBetweenDates(
+		shopId,
+		today,
+		before7days
+	);
+	const previousSevenDaysPromise = getContentForDashBoardBetweenDates(
+		shopId,
+		before7days,
+		before14days
+	);
+
+	const thirtyDaysPromise = getContentForDashBoardBetweenDates(
+		shopId,
+		today,
+		before30days
+	);
+	const previousThirtyDaysPromise = getContentForDashBoardBetweenDates(
+		shopId,
+		before30days,
+		before60days
+	);
+	const [sevenDays, previousSevenDays, thirtyDays, previousThirtyDays] =
+		await Promise.all([
+			sevenDaysPromise,
+			previousSevenDaysPromise,
+			thirtyDaysPromise,
+			previousThirtyDaysPromise,
+		]);
+
+	const data = {
+		sevenDays: sevenDays[0],
+		previousSevenDays: previousSevenDays[0],
+		thirtyDays: thirtyDays[0],
+		previousThirtyDays: previousThirtyDays[0],
+	};
+
+	res.status(200).json({
+		success: true,
+		data,
+	});
+});
+
 module.exports = {
 	sellerLogin,
 	sellerCreateShop,
@@ -420,4 +486,5 @@ module.exports = {
 	getProductsSoldChartData,
 	getSalesChartData,
 	getOrdersSoldChartData,
+	getDashBoardContent,
 };
