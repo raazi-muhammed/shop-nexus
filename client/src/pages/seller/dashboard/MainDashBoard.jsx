@@ -19,7 +19,6 @@ const MainDashBoard = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
-				console.log(res);
 				const data = res.data.data;
 				setData(data);
 			})

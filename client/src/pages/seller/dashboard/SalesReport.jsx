@@ -8,13 +8,12 @@ import jsPDF from "jspdf";
 import ClipLoader from "react-spinners/ClipLoader";
 import convertISOToDate from "../../../utils/convertISOToDate";
 import tableToJson from "../../../utils/tableToJson";
-import csvDownload from "json-to-csv-export";
-import xlsx from "json-as-xlsx";
 import exportFromJSON from "export-from-json";
 
 const SalesReport = () => {
 	const { shopId } = useParams();
 	const [loading, setLoading] = useState(false);
+	const [pdfDownloading, setPdfDownloading] = useState(false);
 	const [fileDownloading, setFileDownloading] = useState(false);
 	const [salesReportData, setSalesReportData] = useState([]);
 	const reportHTML = useRef();
@@ -43,7 +42,6 @@ const SalesReport = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
-				console.log(res);
 				setSalesReportData(res.data.salesReport);
 				setDataFromDisplay(res.data.dataFromDisplay);
 			})
@@ -58,7 +56,6 @@ const SalesReport = () => {
 	const handleDownloadReportPDF = async () => {
 		setFileDownloading(true);
 		const salesReportContentElement = reportHTML.current;
-		console.log(salesReportContentElement);
 		const canvas = await html2canvas(salesReportContentElement, {
 			scrollY: -window.scrollY,
 		});
@@ -70,6 +67,7 @@ const SalesReport = () => {
 		setFileDownloading(false);
 	};
 	const handleDownloadReportExcel = async () => {
+		setFileDownloading(true);
 		const salesReportData = tableToJson(reportTable.current);
 
 		const fileName = "Sales-Report";
@@ -81,18 +79,23 @@ const SalesReport = () => {
 			exportType,
 			extension: "xls",
 		});
+		setFileDownloading(false);
 	};
 	const handleDownloadReportJson = async () => {
+		setFileDownloading(true);
 		const salesReportData = tableToJson(reportTable.current);
 		const fileName = "Sales-Report";
 		const exportType = exportFromJSON.types.json;
 		exportFromJSON({ data: salesReportData, fileName, exportType });
+		setFileDownloading(false);
 	};
 	const handleDownloadReportCSV = async () => {
+		setFileDownloading(true);
 		const salesReportData = tableToJson(reportTable.current);
 		const fileName = "Sales-Report";
 		const exportType = exportFromJSON.types.csv;
 		exportFromJSON({ data: salesReportData, fileName, exportType });
+		setFileDownloading(false);
 	};
 
 	return (
@@ -119,50 +122,76 @@ const SalesReport = () => {
 							aria-label="Loading Spinner"
 							data-testid="loader"
 						/>
-						<button
-							disabled={fileDownloading}
-							className="btn btn-light btn-sm px-3"
-							onClick={handleDownloadReportPDF}>
-							Download as PDF
-						</button>
-						<button
-							disabled={fileDownloading}
-							className="btn btn-light btn-sm px-3"
-							onClick={handleDownloadReportExcel}>
-							Download as EXCEL
-						</button>
-						<button
-							disabled={fileDownloading}
-							className="btn btn-light btn-sm px-3"
-							onClick={handleDownloadReportCSV}>
-							Download as CSV
-						</button>
-						<button
-							disabled={fileDownloading}
-							className="btn btn-light btn-sm px-3"
-							onClick={handleDownloadReportJson}>
-							Download as JSON
-						</button>
+						<div class="btn-group" role="group">
+							<button
+								type="button"
+								onClick={() => setPdfDownloading(true)}
+								class="btn btn-light btn-sm dropdown-toggle px-3"
+								data-bs-toggle="dropdown"
+								aria-expanded="false">
+								Download
+							</button>
+							<ul
+								onClick={() => setPdfDownloading(false)}
+								class="dropdown-menu p-2">
+								<li>
+									<button
+										disabled={fileDownloading}
+										className="btn btn-light btn-sm text-start w-100 mb-2 text-nowrap"
+										onClick={() => {
+											handleDownloadReportPDF();
+										}}>
+										as PDF
+									</button>
+								</li>
+								<li>
+									<button
+										disabled={fileDownloading}
+										className="btn btn-light btn-sm text-start w-100 mb-2 text-nowrap"
+										onClick={handleDownloadReportExcel}>
+										as EXCEL
+									</button>
+								</li>
+								<li>
+									<button
+										disabled={fileDownloading}
+										className="btn btn-light btn-sm text-start w-100 mb-2 text-nowrap"
+										onClick={handleDownloadReportCSV}>
+										as CSV
+									</button>
+								</li>
+								<li>
+									<button
+										disabled={fileDownloading}
+										className="btn btn-light btn-sm text-start w-100 mb-2 text-nowrap"
+										onClick={handleDownloadReportJson}>
+										as JSON
+									</button>
+								</li>
+							</ul>
+						</div>
+
 						<select
-							style={{ maxWidth: "15rem" }}
+							style={{ maxWidth: "12rem" }}
 							value={dataFrom}
 							onChange={(e) => setDataFrom(e.target.value)}
 							class="form-select form-control-sm form-select-sm"
 							aria-label="Default select example">
 							{dataFromOptions.map((opt) => (
 								<option key={opt.key} value={opt.key}>
-									Categorize By: {opt.value}
+									Data From: {opt.value}
 								</option>
 							))}
 						</select>
 					</section>
-					<section ref={reportHTML}>
+
+					<section>
 						<p className="mb-2 p-1 h3">Sales Report: {dataFromDisplay}</p>
 						<div className="table-responsive">
 							<table
 								ref={reportTable}
 								id="sales-report"
-								class="table text-nowrap">
+								class="table  text-nowrap">
 								<thead>
 									<tr>
 										<th scope="col">Order Date</th>
@@ -194,6 +223,52 @@ const SalesReport = () => {
 							</table>
 						</div>
 					</section>
+
+					{/* ADDING THIS FULL SCREEN SO PDF CAN BE DOWNLOADED */}
+					<div
+						className={
+							pdfDownloading ? "position-fixed top-0 opacity-0" : "d-none"
+						}
+						style={{ zIndex: -100 }}>
+						<section ref={reportHTML}>
+							<p className="mb-2 p-1 h3">Sales Report: {dataFromDisplay}</p>
+							<div>
+								<table
+									ref={reportTable}
+									id="sales-report"
+									class="table text-responsive text-nowrap">
+									<thead>
+										<tr>
+											<th scope="col">Order Date</th>
+											<th scope="col">Order ID</th>
+											<th scope="col">Customer Name</th>
+											<th scope="col">Product Name</th>
+											<th scope="col">Product ID</th>
+											<th scope="col">Quantity</th>
+											<th scope="col">Unit Price</th>
+											<th scope="col">Total Price</th>
+										</tr>
+									</thead>
+									<tbody>
+										{salesReportData.map((sale) => (
+											<tr>
+												<td>{convertISOToDate(sale?.createdAt, true)}</td>
+												<td>{sale?.orderId}</td>
+												<td>{sale?.user?.fullName}</td>
+												<td>{sale?.orderItems[0]?.product.name}</td>
+												<td>{sale?.orderItems[0]?.product._id}</td>
+												<td>{sale?.orderItems[0]?.quantity}</td>
+												<td>
+													{sale?.totalPrice / sale?.orderItems[0]?.quantity}
+												</td>
+												<td>{sale?.totalPrice}</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
 				</>
 			)}
 		</div>
