@@ -13,7 +13,11 @@ const {
 	userAuthentication,
 	providerSignIn,
 	getWalletDetails,
+
+	becomePlusMember,
+	removePlusMembership,
 	changeWalletBalance,
+	setDefaultAddress,
 } = require("../controller/userController");
 
 const {
@@ -29,6 +33,7 @@ const {
 	applyCouponCode,
 	getApplicableCoupons,
 } = require("../controller/couponController");
+const { addReview } = require("../controller/reviewController");
 
 router.post("/login-user", (req, res, next) => {
 	userLogin(req, res, next);
@@ -72,6 +77,10 @@ router.post("/remove-address", isAuthenticated, (req, res, next) => {
 	removeAddress(req, res, next);
 });
 
+router.post("/set-default-address", isAuthenticated, (req, res, next) => {
+	setDefaultAddress(req, res, next);
+});
+
 router.get("/get-all-orders", isAuthenticated, (req, res, next) => {
 	getUsersAllOrders(req, res, next);
 });
@@ -106,6 +115,18 @@ router.get("/get-wallet-details", isAuthenticated, (req, res, next) => {
 
 router.patch("/change-wallet-balance", isAuthenticated, (req, res, next) => {
 	changeWalletBalance(req, res, next);
+});
+
+router.put("/become-plus-member", isAuthenticated, (req, res, next) => {
+	becomePlusMember(req, res, next);
+});
+
+router.put("/unsubscribe-plus-member", isAuthenticated, (req, res, next) => {
+	removePlusMembership(req, res, next);
+});
+
+router.post("/add-review", isAuthenticated, (req, res, next) => {
+	addReview(req, res, next);
 });
 
 module.exports = router;

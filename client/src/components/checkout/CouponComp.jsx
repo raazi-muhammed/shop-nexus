@@ -4,7 +4,11 @@ import server from "../../server";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-const CouponComp = ({ totalAmountWithOutDiscount, setDiscountAmount }) => {
+const CouponComp = ({
+	totalAmountWithOutDiscount,
+	setDiscountAmount,
+	cartItems,
+}) => {
 	const userData = useSelector((state) => state.userData.userData);
 	const [couponCode, setCouponCode] = useState();
 	const [couponData, setCouponData] = useState([]);
@@ -35,9 +39,11 @@ const CouponComp = ({ totalAmountWithOutDiscount, setDiscountAmount }) => {
 	const handleApplyCoupon = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
+		console.log(cartItems);
 		const formData = {
 			totalAmount: totalAmountWithOutDiscount,
 			couponCode,
+			products: cartItems,
 		};
 		axios
 			.put(`${server}/user/apply-coupon`, formData, { withCredentials: true })

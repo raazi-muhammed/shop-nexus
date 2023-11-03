@@ -21,6 +21,10 @@ import CartUser from "../../components/user/CartUser";
 import WishListUser from "../../components/user/WishListUser";
 import FooterComp from "../../components/layout/FooterComp";
 import SearchResults from "./homepage/SearchResults";
+import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
+import SuccessPlus from "./nexusPlus/SuccessPlus";
+import EventsPage from "./homepage/Eventspage";
+import SingleEvent from "./homepage/SingleEvent";
 
 const HomePage = () => {
 	const cartState = useSelector((state) => state.cart.isCartVisible);
@@ -53,27 +57,22 @@ const HomePage = () => {
 			<Routes>
 				<Route path="/new-products" element={<ProductsPage />} />
 				<Route path="/best-selling" element={<BestSellingPage />} />
+				<Route path="/events" element={<EventsPage />} />
+				<Route path="/events/:eventId" element={<SingleEvent />} />
 				<Route path="/faqs" element={<FAQsPage />} />
 				<Route path="/search" element={<SearchResults />} />
+				<Route path="/shop-nexus-plus" element={<UserShopNexusPlus />} />
+				<Route path="/shop-nexus-plus/success" element={<SuccessPlus />} />
 				<Route path="/product/:id/*" element={<SingleProductPage />} />
 				<Route path="/shop/:id/*" element={<UserSingleShopPage />} />
-				<Route path="/user/dashboard/:userId/*" element={<UserDashboard />} />
+				<Route path="/user/dashboard/*" element={<UserDashboard />} />
 				<Route path="/user/checkout/*" element={<CheckOutPage />} />
 				<Route path="/" element={<HomeContentPage />} />
 			</Routes>
-
-			{cartState ? (
-				<aside className="bg-white aside-card overflow-auto ">
-					<CartUser />
-				</aside>
-			) : null}
-
-			{wishListState ? (
-				<aside className="bg-white aside-card overflow-auto ">
-					<WishListUser />
-				</aside>
-			) : null}
-
+			<aside>
+				<CartUser />
+				<WishListUser />
+			</aside>
 			<FooterComp />
 		</div>
 	);

@@ -19,7 +19,6 @@ const addToWishList = asyncErrorHandler(async (req, res, next) => {
 
 	const cartItem = {
 		product: product_id,
-		price,
 	};
 
 	const updatedUser = await User.findOneAndUpdate(

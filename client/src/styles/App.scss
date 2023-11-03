@@ -25,6 +25,12 @@ $table-border-color: #f1f0ff;
 
 /* Pagination */
 $pagination-border-radius-sm: 1rem;
+$pagination-color: $primary;
+$pagination-bg: $light;
+$pagination-hover-bg: #c3c1f5;
+
+/* Carosole */
+$carousel-control-color: $secondary;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
@@ -34,7 +40,8 @@ $pagination-border-radius-sm: 1rem;
 }
 
 .btn-sm,
-.form-sm {
+.form-sm,
+.form-control-sm {
 	height: 2rem;
 }
 
@@ -87,4 +94,9 @@ body {
 .overflow-ellipsis {
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.placeholder-color::placeholder {
+	/* Most modern browsers support this now. */
+	color: $light;
 }

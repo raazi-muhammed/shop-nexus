@@ -27,6 +27,7 @@ const OrderCardMain = ({
 				)}
 				<p className="text-small text-secondary m-0">Date</p>
 				<p className="fw-bold m-0">{`${convertISOToDate(createdAt)}`}</p>
+				<p className="text-small text-light m-0">{orderId}</p>
 			</section>
 			<section className="col-4">
 				<p className="text-small text-secondary m-0">Items</p>

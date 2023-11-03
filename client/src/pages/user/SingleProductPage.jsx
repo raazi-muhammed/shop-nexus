@@ -1,11 +1,18 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
-import { Link, Route, Routes, useParams } from "react-router-dom";
+import {
+	Link,
+	Route,
+	Routes,
+	useLocation,
+	useNavigate,
+	useParams,
+} from "react-router-dom";
 import Icons from "../../assets/Icons";
+const { heart, cart, plus, minus } = Icons;
 
 import toast from "react-hot-toast";
-const { heart, cart } = Icons;
 import ReactImageMagnify from "react-image-magnify";
 import ProductSuggestion from "./ProductSuggestion";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
@@ -15,15 +22,18 @@ import formatPrice from "../../utils/formatPrice";
 import NavComponent from "../../components/layout/NavComponent";
 import RatingStar from "../../components/product/RatingStar";
 import { getCategoryByKey } from "../../constants/categoriesConstants";
+import ChattingComp from "../../components/ChattingComp";
+import ReviewsSection from "./product/ReviewsSection";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
 
 	const [imgSelect, setImgSelect] = useState(0);
 	const [productData, setProductData] = useState({ images: [{ url: "" }] });
-
+	const [quantity, setQuantity] = useState(1);
 	const { id } = useParams();
 	const [shopData, setShopData] = useState({});
 	const navItems = [
@@ -31,6 +41,31 @@ const SingleProductPage = () => {
 		{ name: "Reviews", link: "reviews" },
 		{ name: "About Seller", link: "about-seller" },
 	];
+
+	const [toPersonInfo, setToPersonInfo] = useState({});
+	const [chatInfo, setChatInfo] = useState({
+		senderId: "",
+		receiverId: "",
+	});
+
+	const handleMessageShop = () => {
+		if (!userData.plusMember?.active) return navigate("/shop-nexus-plus");
+		axios
+			.post(`${server}/conversation/get-conversation`, {
+				senderId: userData._id,
+				receiverId: shopData?._id,
+			})
+			.then((res) => {
+				setChatInfo({
+					senderId: userData._id,
+					receiverId: shopData?._id,
+				});
+				setToPersonInfo({
+					name: shopData?.shopName,
+					imageUrl: shopData?.image?.url,
+				});
+			});
+	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -50,12 +85,13 @@ const SingleProductPage = () => {
 			})
 			.catch((err) => toast.error("Loading failed" + err))
 			.finally(() => setLoading(false));
-	}, []);
+	}, [id]);
 
 	const handleAddToCart = () => {
 		const itemData = {
 			product_id: id,
 			name: productData.name,
+			quantity,
 			price: productData.discount_price,
 			imageUrl: productData?.images[0]?.url,
 		};
@@ -101,10 +137,11 @@ const SingleProductPage = () => {
 				</div>
 			) : (
 				<>
-					<div className="container container-lg ">
-						<section className="row p-4 mx-auto w-100">
+					<div className="container container-lg">
+						<section className="row p-4 mx-auto w-100 ">
 							<section className="col-12 col-sm-6 justify-content-center">
 								<ReactImageMagnify
+									className="rounded-4 z-3 "
 									{...{
 										imageClassName: "rounded-4",
 										smallImage: {
@@ -156,7 +193,51 @@ const SingleProductPage = () => {
 										{formatPrice(productData.discount_price)}
 									</p>
 								</div>
-
+								<section className="mt-3">
+									<div
+										class="btn-group"
+										role="group"
+										aria-label="Button group with nested dropdown">
+										<button
+											type="button"
+											disabled={quantity <= 1}
+											onClick={() =>
+												setQuantity((currentQuantity) => currentQuantity - 1)
+											}
+											class="btn btn-sm text-primary btn-light p-0">
+											{minus}
+										</button>
+										<div class="btn-group" role="group">
+											<button
+												type="button"
+												class="btn btn-light btn-sm text-primary dropdown-toggle px-3"
+												data-bs-toggle="dropdown"
+												aria-expanded="false">
+												{quantity}
+											</button>
+											<ul class="dropdown-menu">
+												<li onClick={() => setQuantity(5)}>
+													<a class="dropdown-item" href="#">
+														5
+													</a>
+												</li>
+												<li onClick={() => setQuantity(10)}>
+													<a class="dropdown-item" href="#">
+														10
+													</a>
+												</li>
+											</ul>
+										</div>
+										<button
+											onClick={() =>
+												setQuantity((currentQuantity) => currentQuantity + 1)
+											}
+											type="button"
+											class="btn btn-sm text-primary btn-light p-0">
+											{plus}
+										</button>
+									</div>
+								</section>
 								<section className="my-3 d-flex gap-2">
 									{productData.stock <= 0 ? (
 										<section>
@@ -201,12 +282,15 @@ const SingleProductPage = () => {
 													View Shop
 												</button>
 											</Link>
-											<Link
-												to={`/user/message/${userData._id}/${shopData?._id}`}>
-												<button className="btn-sm btn btn-light">
-													Message Shop
-												</button>
-											</Link>
+											<button
+												data-bs-toggle="modal"
+												data-bs-target={
+													userData?.plusMember?.active && "#exampleModal"
+												}
+												onClick={handleMessageShop}
+												className="btn-sm btn btn-secondary text-white ms-2">
+												Message Shop
+											</button>
 										</section>
 									</section>
 								</section>
@@ -231,17 +315,7 @@ const SingleProductPage = () => {
 								/>
 								<Route
 									path="/reviews"
-									element={
-										<section className="p-4">
-											{productData.reviews?.length == 0 ? (
-												<p className="mt-3 mb-1 text-small text-center">
-													No reviews yet
-												</p>
-											) : (
-												<p className="text-small">{productData.reviews}</p>
-											)}
-										</section>
-									}
+									element={<ReviewsSection productData={productData} />}
 								/>
 								<Route
 									path="/about-seller"
@@ -262,6 +336,7 @@ const SingleProductPage = () => {
 					</section>
 				</>
 			)}
+			<ChattingComp chatInfo={chatInfo} toPersonInfo={toPersonInfo} />
 		</main>
 	);
 };

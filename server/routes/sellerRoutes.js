@@ -2,6 +2,7 @@ const {
 	getSellerAllOrders,
 	getSingleOrderDetailsForShop,
 	changeOrderStatus,
+	getSalesReport,
 } = require("../controller/orderController");
 const {
 	setNewStockAmount,
@@ -14,6 +15,12 @@ const {
 	getShopDetails,
 	editShopDetails,
 	sellerLogOut,
+	getWalletDetails,
+	changeWalletBalanceSeller,
+	getProductsSoldChartData,
+	getSalesChartData,
+	getOrdersSoldChartData,
+	getDashBoardContent,
 } = require("../controller/sellerController");
 
 const {
@@ -25,6 +32,11 @@ const {
 
 const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 const { upload } = require("../multer");
+const {
+	getAllEventsFromSeller,
+	getEventDetails,
+	editEventSeller,
+} = require("../controller/eventController");
 
 const router = require("express").Router();
 
@@ -64,6 +76,14 @@ router.get(
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getSellerAllOrders(req, res, next);
+	}
+);
+
+router.get(
+	"/get-sales-report/:shopId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getSalesReport(req, res, next);
 	}
 );
 
@@ -110,6 +130,31 @@ router.get(
 		getCouponFromSeller(req, res, next);
 	}
 );
+
+router.get(
+	"/get-all-events/:shopId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getAllEventsFromSeller(req, res, next);
+	}
+);
+
+router.get(
+	"/get-event-details/:eventId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getEventDetails(req, res, next);
+	}
+);
+
+router.put(
+	"/edit-event/:eventId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		editEventSeller(req, res, next);
+	}
+);
+
 router.get(
 	"/get-coupon-details/:couponId",
 	isSellerAuthenticated,
@@ -117,5 +162,35 @@ router.get(
 		getCouponDetails(req, res, next);
 	}
 );
+
+router.get("/wallet-details", isSellerAuthenticated, async (req, res, next) => {
+	getWalletDetails(req, res, next);
+});
+
+router.patch(
+	"/change-wallet-balance",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		changeWalletBalanceSeller(req, res, next);
+	}
+);
+
+router.get(
+	"/chart/products-sold",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getProductsSoldChartData(req, res, next);
+	}
+);
+
+router.get("/chart/sales", isSellerAuthenticated, async (req, res, next) => {
+	getSalesChartData(req, res, next);
+});
+router.get("/chart/orders", isSellerAuthenticated, async (req, res, next) => {
+	getOrdersSoldChartData(req, res, next);
+});
+router.get("/dashboard", isSellerAuthenticated, async (req, res, next) => {
+	getDashBoardContent(req, res, next);
+});
 
 module.exports = router;

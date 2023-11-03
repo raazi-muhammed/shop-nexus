@@ -2,39 +2,92 @@ const express = require("express");
 const Order = require("../model/Order");
 const { v4: uuidv4 } = require("uuid");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
-const easyinvoice = require("easyinvoice");
 const fs = require("fs");
 const convertISOToDate = require("../utils/convertISOToDate");
 const { changeStockBasedOnOrder } = require("./productController");
 const User = require("../model/User");
-const { changeWalletBalance } = require("./userController");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
+const Shop = require("../model/Shop");
+const {
+	createTransaction,
+	changerUserWalletBalanceWithTransaction,
+	changerSellerWalletBalanceWithTransaction,
+} = require("./transactionController");
+const Products = require("../model/Products");
 
-const refundedToUser = async (orderId) => {
-	const orderData = await Order.findOne({ orderId });
+const refundedToUser = async (orderId, productOrderId) => {
+	const orderData = await Order.findOne({ orderId, _id: productOrderId });
 	if (orderData.paymentInfo.status === "Received") {
-		const eventToAdd = {
-			amount: orderData.totalPrice,
-			description: "Refunded from an Order",
-		};
-		const user = await User.findOneAndUpdate(
-			{ _id: orderData.user },
-			{
-				$inc: { "wallet.balance": eventToAdd.amount },
-				$addToSet: { "wallet.events": eventToAdd },
-			},
-			{ new: true, upsert: true }
+		changerUserWalletBalanceWithTransaction(
+			orderData.user,
+			orderData.totalPrice,
+			"Refunded from an Order"
+		);
+		changerSellerWalletBalanceWithTransaction(
+			orderData.orderItems[0].shop,
+			orderData.totalPrice * -1,
+			`Added via Order ${orderData.orderId}`
 		);
 	}
 };
 
-const addToOrder = asyncErrorHandler(async (req, res, nex) => {
+const addToOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
-	const data = await Order.create(orderData);
+	const detailsOfOrderPromises = orderData.orderItems.map(
+		async (singleOrder) => {
+			// Checks for Stock
+			const productDetails = await Products.findOne({
+				_id: singleOrder.product,
+			});
+
+			if (productDetails.stock > singleOrder.quantity) {
+				await changeStockBasedOnOrder(
+					singleOrder.product,
+					singleOrder.quantity
+				);
+
+				// Created separate Orders based on Shop
+				const newOrderData = {
+					...orderData,
+					orderItems: [
+						{
+							...singleOrder,
+						},
+					],
+					totalPrice: singleOrder.totalPrice,
+				};
+
+				// Add money to Shop Wallet
+				if (newOrderData.paymentInfo.status === "Received") {
+					changerSellerWalletBalanceWithTransaction(
+						singleOrder.shop,
+						singleOrder.totalPrice,
+						`Added via Order ${orderData.orderId}`
+					);
+				}
+				await Order.create(newOrderData);
+
+				return {
+					name: productDetails.name,
+					success: true,
+					status: "Order Placed",
+				};
+			} else {
+				return {
+					name: productDetails.name,
+					success: false,
+					status: "Order Not Placed (Out of Stock)",
+				};
+			}
+		}
+	);
+	const detailsOfOrder = await Promise.all(detailsOfOrderPromises);
 
 	res.status(200).json({
 		success: true,
-		data,
+		message: "Order Placed",
+		details: detailsOfOrder,
 	});
 });
 
@@ -73,7 +126,7 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 
-	const orderData = await Order.findOne({ orderId }).populate(
+	const orderData = await Order.find({ orderId }).populate(
 		"orderItems.product"
 	);
 
@@ -86,7 +139,8 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
 
-	await refundedToUser(orderId);
+	console.log(req.body.productOrderId);
+	await refundedToUser(orderId, req.body.productOrderId);
 
 	const eventToAdd = {
 		name: "Canceled",
@@ -94,18 +148,15 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	};
 
 	const orderData = await Order.findOneAndUpdate(
-		{ orderId },
+		{ orderId, _id: req.body.productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
 			status: "Canceled",
 		}
 	);
 
-	console.log(orderData);
 	orderData.orderItems.map((e) => {
-		req.stock = e.quantity * -1;
-		req.productId = e.product;
-		changeStockBasedOnOrder(req, res, next);
+		changeStockBasedOnOrder(e.product, e.quantity * -1);
 	});
 
 	res.status(200).json({
@@ -123,18 +174,15 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 	};
 
 	const orderData = await Order.findOneAndUpdate(
-		{ orderId },
+		{ _id: req.body.productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
 			status: "Processing Return",
 		}
 	);
 
-	console.log(orderData);
 	orderData.orderItems.map((e) => {
-		req.stock = e.quantity * -1;
-		req.productId = e.product;
-		changeStockBasedOnOrder(req, res, next);
+		changeStockBasedOnOrder(e.product, e.quantity * -1);
 	});
 
 	res.status(200).json({
@@ -146,48 +194,86 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 
 const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
-	const orderData = await Order.find({ user: userId })
-		.populate("orderItems.product")
-		.sort({ createdAt: -1 });
+
+	const [pagination, orderData] = await findWithPaginationAndSorting(
+		req,
+		Order,
+		{
+			user: userId,
+		},
+		"orderItems.product"
+	);
 
 	res.status(200).json({
 		success: true,
+		pagination,
 		orderData,
 	});
 });
 
 const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.params.shopId;
-	const ITEMS_PER_PAGE = 10;
-	const { page } = req.query;
-	const skip = (page - 1) * ITEMS_PER_PAGE;
-	const countPromise = Order.estimatedDocumentCount({});
 
-	const orderDataPromise = Order.find({
-		"orderItems.shop": shopId,
-	})
-		.populate("orderItems.product")
-		.sort({ createdAt: -1 })
-		.limit(ITEMS_PER_PAGE)
-		.skip(skip);
-
-	const [count, orderData] = await Promise.all([
-		countPromise,
-		orderDataPromise,
-	]);
-
-	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
-	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+	const [pagination, orderData] = await findWithPaginationAndSorting(
+		req,
+		Order,
+		{
+			"orderItems.shop": shopId,
+		},
+		"orderItems.product"
+	);
 
 	res.status(200).json({
 		success: true,
-		pagination: {
-			count,
-			page,
-			pageCount,
-			startIndex,
-		},
+		pagination,
 		orderData,
+	});
+});
+
+const getSalesReport = asyncErrorHandler(async (req, res, next) => {
+	const { shopId } = req.params;
+	const { dataFrom } = req.query;
+
+	const today = new Date();
+	let filterDate = new Date(2020, 0, 0);
+	let dataFromDisplay = "All Time";
+
+	if (dataFrom === "THIS_MONTH") {
+		filterDate = new Date(today.getFullYear(), today.getMonth(), 1);
+		const month = [
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December",
+		];
+		dataFromDisplay = `${month[today.getMonth()]}, ${today.getFullYear()}`;
+	}
+
+	if (dataFrom === "THIS_YEAR") {
+		filterDate = new Date(today.getFullYear(), 1, 1);
+		dataFromDisplay = `${today.getFullYear()}`;
+	}
+
+	const salesReport = await Order.find({
+		"orderItems.shop": shopId,
+		createdAt: { $gt: filterDate },
+	})
+		.sort({ createdAt: -1 })
+		.populate("orderItems.product")
+		.populate("user");
+
+	res.status(200).json({
+		success: true,
+		salesReport,
+		dataFromDisplay,
 	});
 });
 
@@ -195,35 +281,32 @@ const getSingleOrderDetailsForShop = asyncErrorHandler(
 	async (req, res, next) => {
 		const { orderId, shopId } = req.params;
 
-		const orderData = await Order.findOne({ orderId }).populate(
-			"orderItems.product"
-		);
-
-		//filtering products that are only from the seller
-		const newProducts = orderData.orderItems.filter((e) => e.shop == shopId);
-		const newOrderData = {
-			...orderData._doc,
-			orderItems: newProducts,
-		};
+		const orderData = await Order.find({
+			orderId,
+			"orderItems.shop": shopId,
+		})
+			.populate("orderItems.product")
+			.populate("orderItems.shop");
 
 		res.status(200).json({
 			success: true,
-			orderData: newOrderData,
+			orderData,
 		});
 	}
 );
 
 const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
-	const { orderStatus } = req.body;
+	const { orderStatus, productOrderId } = req.body;
 
-	if (orderStatus === "Return Approved") await refundedToUser(orderId);
+	if (orderStatus === "Return Approved")
+		await refundedToUser(orderId, productOrderId);
 
 	const eventToAdd = {
 		name: orderStatus,
 	};
 
-	const orderData = await Order.findOneAndUpdate(
+	const orderData = await Order.updateMany(
 		{ orderId },
 		{
 			$addToSet: { events: eventToAdd },
@@ -239,71 +322,6 @@ const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-const invoiceGenerator = asyncErrorHandler(async (req, res, next) => {
-	const orderId = req.params.orderId;
-
-	const orderData = await Order.findOne({ orderId }).populate(
-		"orderItems.product"
-	);
-
-	const productsDetails = orderData.orderItems.map((e) => {
-		return {
-			quantity: e.quantity,
-			description: e.product.name,
-			"tax-rate": 0,
-			price: e.product.discount_price,
-		};
-	});
-
-	var data = {
-		customize: {},
-		images: {
-			//logo: "https://res.cloudinary.com/dklhubdqw/image/upload/f_auto,q_auto/v1/Icons/segkwc2zh2bn9hajlutb",
-		},
-		// Your own data
-		sender: {
-			company: "Shop Nexus",
-			address: "123 Main Address",
-			zip: "6793823",
-			city: "Calicut",
-			country: "Kerala",
-		},
-		// Your recipient
-		client: {
-			company: orderData.shippingAddress.fullName,
-			address: orderData.shippingAddress.address1,
-			zip: orderData.shippingAddress.pinCode,
-			city: orderData.shippingAddress.address2,
-			country: orderData.shippingAddress.city,
-		},
-		information: {
-			// Invoice number
-			number: orderData.orderId.slice(0, 8),
-			// Invoice data
-			date: convertISOToDate(new Date()),
-			// Invoice due date
-			"due-date": convertISOToDate(new Date()),
-		},
-
-		products: productsDetails,
-
-		//"bottom-notice": "Kindly pay your invoice within 15 days.",
-
-		settings: { currency: "INR" },
-
-		translate: {
-			vat: "Discount", // Defaults to 'vat'
-		},
-	};
-
-	const result = await easyinvoice.createInvoice(data);
-
-	res.status(200).json({
-		success: true,
-		result,
-	});
-});
-
 module.exports = {
 	addToOrder,
 	getAllOrders,
@@ -313,6 +331,6 @@ module.exports = {
 	getSellerAllOrders,
 	getSingleOrderDetailsForShop,
 	changeOrderStatus,
-	invoiceGenerator,
 	returnOrder,
+	getSalesReport,
 };

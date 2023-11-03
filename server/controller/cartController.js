@@ -16,21 +16,46 @@ const getCart = asyncErrorHandler(async (req, res, next) => {
 });
 
 const addToCart = asyncErrorHandler(async (req, res, next) => {
-	const { product_id, price, name, imageUrl } = req.body;
+	const { product_id, price, name, imageUrl, quantity } = req.body;
 	const userId = req.user._id;
 
 	const cartItem = {
 		product: product_id,
+		quantity,
 		price,
 	};
 
-	const updatedUser = await User.findOneAndUpdate(
-		{ _id: userId },
-		{
-			$addToSet: { cart: cartItem },
-		},
-		{ new: true }
-	).populate("cart.product");
+	const currentUserState = await User.findOne({ _id: userId });
+
+	let isChanged = false;
+	let updatedUser;
+
+	currentUserState.cart.map(async (items, i) => {
+		if (items.product == cartItem.product) {
+			isChanged = true;
+
+			let updateObj = {};
+			updateObj[`cart.${i}`] = cartItem;
+
+			updatedUser = await User.findOneAndUpdate(
+				{ _id: userId },
+				{
+					$set: updateObj,
+				},
+				{ new: true }
+			).populate("cart.product");
+		}
+	});
+
+	if (!isChanged) {
+		updatedUser = await User.findOneAndUpdate(
+			{ _id: userId },
+			{
+				$addToSet: { cart: cartItem },
+			},
+			{ new: true }
+		).populate("cart.product");
+	}
 
 	res.status(200).json({
 		success: true,
@@ -66,8 +91,6 @@ const clearAllCartItems = asyncErrorHandler(async (req, res, next) => {
 		{ $set: { cart: [] } },
 		{ new: true }
 	).populate("cart.product");
-
-	console.log(userId, updatedUser);
 
 	res.status(200).json({
 		success: true,

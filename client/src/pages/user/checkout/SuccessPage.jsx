@@ -11,6 +11,7 @@ const SuccessPage = () => {
 	const userData = useSelector((state) => state.userData.userData);
 	const dispatch = useDispatch();
 	const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+	const [message, setMessage] = useState("");
 
 	useEffect(
 		debounce(() => {
@@ -22,13 +23,15 @@ const SuccessPage = () => {
 				)
 				.then((res) => {
 					setIsOrderPlaced(true);
+					console.log(res);
+					setMessage(res.data.details);
 					axios
 						.delete(`${server}/cart/clear-all-cart-items`, {
 							withCredentials: true,
 						})
-						.then((response) =>
-							dispatch(setUserDataReducer(response.data.user))
-						)
+						.then((res) => {
+							dispatch(setUserDataReducer(res.data.user));
+						})
 						.catch((err) => {
 							console.log(err);
 							toast.error(err?.response?.data?.message || "Some Error ocurred");
@@ -42,23 +45,35 @@ const SuccessPage = () => {
 		[]
 	);
 	return (
-		<div className="text-center">
+		<div className="text-start col-12 col-md-6 mx-auto">
 			{isOrderPlaced ? (
 				<div>
 					<p className="display-1 fw-bold text-primary mt-5 pt-5">
-						Order Placed
+						Order Status
 					</p>
+					<section className="text-start">
+						{message.map((msg) => (
+							<div>
+								<p className="text-secondary h5 fw-bold mb-1">{msg.name}</p>
+								<div className="d-flex">
+									{msg.success ? (
+										<p className="text-success bg-success-subtle p-2 px-3 rounded-4">
+											{msg.status}
+										</p>
+									) : (
+										<p className="text-danger bg-danger-subtle p-2 px-3 rounded-4">
+											{msg.status}
+										</p>
+									)}
+								</div>
+							</div>
+						))}
+					</section>
 					<Link to={"/"}>
 						<button className="btn btn-secondary px-3 btn-sm rounded-pill text-white mb-2 ">
 							Browse Other Products
 						</button>
 					</Link>
-
-					{/* <Link to={`/user/dashboard/${userData._id}/orders`}>
-				<p className=" mt-5 px-3  bg-light d-inline p-1 rounded-2 fw-bold text-secondary ">
-					View Order
-				</p>
-			</Link> */}
 				</div>
 			) : (
 				<p className="text-secondary mt-5">Order is being placed...</p>

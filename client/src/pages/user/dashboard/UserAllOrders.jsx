@@ -1,29 +1,44 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import server from "../../../server";
-import formatPrice from "../../../utils/formatPrice";
 import { useSelector } from "react-redux";
-import convertISOToDate from "../../../utils/convertISOToDate";
 import ClipLoader from "react-spinners/ClipLoader";
 import OrderCardMain from "../../../components/order/OrderCardMain";
+import Pagination from "../../../components/Pagination";
+import Sorting from "../../../components/Sorting";
+import RefreshButton from "../../../components/RefreshButton";
 
 const UserAllOrders = () => {
-	const [loading, setLoading] = useState(false);
 	const userData = useSelector((state) => state.userData.userData);
+	const [loading, setLoading] = useState(false);
+	const [refresh, setRefresh] = useState(true);
+	const [pagination, setPagination] = useState({});
+	const [sortOptions, setSortOptions] = useState({
+		sortBy: "createdAt",
+		sortItems: [
+			{ value: "totalPrice", title: "Price" },
+			{ value: "createdAt", title: "Date" },
+			{ value: "status", title: "Status" },
+		],
+	});
 
-	const navigate = useNavigate();
 	const [orderData, setOrderData] = useState(null);
 
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/user/get-all-orders`, {
-				withCredentials: true,
-			})
+			.get(
+				`${server}/user/get-all-orders?page=${pagination?.page || 1}&sort=${
+					sortOptions.sortBy
+				}`,
+				{
+					withCredentials: true,
+				}
+			)
 			.then((res) => {
 				setOrderData(res.data.orderData);
+				setPagination(res.data.pagination);
 			})
 			.catch((err) => {
 				toast.error(err.response?.data?.message);
@@ -31,10 +46,15 @@ const UserAllOrders = () => {
 			.finally(() => {
 				setLoading(false);
 			});
-	}, []);
+	}, [refresh, pagination.page, sortOptions]);
 
 	return (
 		<div className="w-100">
+			<section className="d-flex justify-content-end gap-3 ">
+				<RefreshButton refresh={refresh} setRefresh={setRefresh} />
+				<Sorting sortOptions={sortOptions} setSortOptions={setSortOptions} />
+				<Pagination pagination={pagination} setPagination={setPagination} />
+			</section>
 			{loading && (
 				<div className="min-vh-100 w-100 d-flex justify-content-center ">
 					<ClipLoader
@@ -53,6 +73,7 @@ const UserAllOrders = () => {
 				<section>
 					{orderData?.map((order, i) => (
 						<OrderCardMain
+							key={i}
 							status={order.status}
 							createdAt={order.createdAt}
 							orderItems={order.orderItems}

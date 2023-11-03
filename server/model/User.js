@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
 		},
 		addresses: [
 			{
+				default: {
+					type: Boolean,
+					default: false,
+				},
 				fullName: {
 					type: String,
 					required: true,
@@ -83,6 +87,9 @@ const userSchema = new mongoose.Schema(
 					type: Number,
 					required: true,
 				},
+				type: {
+					type: Object,
+				},
 			},
 		],
 		wishList: [
@@ -93,9 +100,8 @@ const userSchema = new mongoose.Schema(
 					ref: "Product",
 					required: true,
 				},
-				price: {
-					type: Number,
-					required: true,
+				type: {
+					type: Object,
 				},
 			},
 		],
@@ -103,29 +109,20 @@ const userSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		plusMember: {
+			active: {
+				type: Boolean,
+				default: false,
+			},
+			details: {
+				type: Object,
+			},
+		},
 		wallet: {
 			balance: {
 				type: Number,
 				default: 0,
 			},
-			events: [
-				{
-					amount: {
-						type: Number,
-						required: true,
-					},
-					description: {
-						type: String,
-					},
-					details: {
-						type: Object,
-					},
-					date: {
-						type: Date,
-						default: Date.now(),
-					},
-				},
-			],
 		},
 	},
 	{ timestamps: true }

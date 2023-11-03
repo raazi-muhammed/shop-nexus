@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import { useDispatch } from "react-redux";
 import formatPrice from "../../utils/formatPrice";
+import RatingStar from "./RatingStar";
 
 const { heart, cart } = Icons;
 
@@ -61,10 +62,10 @@ const ProductCartMain = ({
 					<Link className="text-secondary text-small text-decoration-none">
 						{shopName}
 					</Link>
-					<p>{name}</p>
+					<p className="mb-1">{name}</p>
 					<section className="d-flex gap-2">
-						<p className="text-small">Rating: {rating}</p>
-						<p className="text-small">{sold} Sold</p>
+						<RatingStar rating={rating} />
+						<p className="text-small mt-1">{sold} Sold</p>
 					</section>
 					<section className="d-flex gap-1 ">
 						<p className="h4 mb-0">{formatPrice(discount_price)}</p>

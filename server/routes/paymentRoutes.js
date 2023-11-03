@@ -1,37 +1,28 @@
 const router = require("express").Router();
+const {
+	getSubscriptionDetails,
+	subscribeToNexusPlus,
+	cancelSubscription,
+	createRazorPayOrder,
+} = require("../controller/paymentController");
 
-const Razorpay = require("razorpay");
-const ErrorHandler = require("../utils/errorHandler");
-
-var instance = new Razorpay({
-	key_id: process.env.RAZORPAY_API_KEY,
-	key_secret: process.env.RAZORPAY_API_SECRET,
+router.post("/shop-nexus-plus", async (req, res, next) => {
+	subscribeToNexusPlus(req, res, next);
 });
 
-router.post("/create-razorpay-order", async (req, res) => {
-	try {
-		console.log(req.body);
-
-		const options = {
-			amount: req.body.amount * 100,
-			currency: "INR",
-			receipt: "receipt#1",
-		};
-
-		const order = await instance.orders.create(options);
-		if (!order) return next(new ErrorHandler("Some error occurred", 500));
-
-		res.status(200).json({
-			success: true,
-			order,
-		});
-	} catch (err) {
-		console.log(err);
-		next(new ErrorHandler("Razorpay failed", 500));
-	}
+router.get("/subscription-details/:subscriptionId", async (req, res, next) => {
+	getSubscriptionDetails(req, res, next);
 });
 
-router.get("/get-razorpay-key", (req, res) => {
+router.put("/cancel-subscription", async (req, res, next) => {
+	cancelSubscription(req, res, next);
+});
+
+router.post("/create-razorpay-order", async (req, res, next) => {
+	createRazorPayOrder(req, res, next);
+});
+
+router.get("/get-razorpay-key", (req, res, next) => {
 	res.send({ key: process.env.RAZORPAY_API_KEY });
 });
 

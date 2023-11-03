@@ -25,8 +25,8 @@ const Pagination = ({ pagination, setPagination }) => {
 	};
 
 	return (
-		<nav aria-label="Page navigation ms-auto">
-			<ul class="pagination justify-content-end pagination-sm">
+		<nav aria-label="Page navigation ms-auto ">
+			<ul class="pagination justify-content-end pagination-sm ">
 				<li class="page-item">
 					<a
 						onClick={handlePreviousClick}
@@ -36,7 +36,7 @@ const Pagination = ({ pagination, setPagination }) => {
 					</a>
 				</li>
 				{[...Array(pagination.pageCount)].map((e, i) => (
-					<li class="page-item">
+					<li key={i} class="page-item ">
 						<a
 							onClick={(e) => handleSinglePageClick(i + 1)}
 							class={`page-link ${

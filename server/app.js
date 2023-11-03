@@ -4,10 +4,20 @@ const app = express();
 require("dotenv").config({ path: "./config/.env" });
 const sessions = require("express-session");
 const bodyParser = require("body-parser");
-var cookies = require("cookie-parser");
+const cookies = require("cookie-parser");
 app.use(cookies());
+const PORT = process.env.PORT;
 
-//require("./socket/connectSocket");
+/* Socket */
+const { createServer } = require("http");
+const { Server, socket } = require("socket.io");
+const http = createServer(app);
+const io = new Server(http, {
+	cors: {
+		origin: ["http://localhost:5173"],
+	},
+});
+const sockets = require("./socket/sockets");
 
 /* Routes */
 const adminRoutes = require("./routes/adminRoutes");
@@ -21,7 +31,7 @@ const conversationRoutes = require("./routes/conversationRoutes");
 const errorHandling = require("./middleware/errorHandling");
 const messageRoutes = require("./routes/messageRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
-//const socketController = require("./controller/socketController");
+const eventRoutes = require("./routes/eventRoutes");
 
 /* Cors */
 const cors = require("cors");
@@ -42,20 +52,11 @@ app.use(
 	})
 );
 
-/* Passport */
-require("./utils/passport");
-const passport = require("passport");
-app.use(passport.initialize());
-app.use(passport.session());
-
-const PORT = process.env.PORT;
-
 app.use(
 	express.json({
 		limit: "50mb",
 	})
 );
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Static file
@@ -72,16 +73,20 @@ app.use("/api/v1/seller/", sellerRoutes);
 app.use("/api/v1/message/", messageRoutes);
 app.use("/api/v1/conversation/", conversationRoutes);
 app.use("/api/v1/payment/", paymentRoutes);
-//app.use("/api/v1/chat/", socketController);
+app.use("/api/v1/event/", eventRoutes);
 
 app.get("*", (req, res) => {
-	console.log("No matching url");
+	console.log("NOT FOUND");
 });
 
 /* Error handler */
 app.use(errorHandling);
 
-app.listen(PORT, () => {
-	console.log(`Server is running on ${PORT}`);
-	connectDatabase();
+io.on("connection", (socket) => {
+	sockets(socket, io);
+});
+
+connectDatabase();
+http.listen(PORT, () => {
+	console.log(`SERVER STARTED ON ${PORT}`);
 });

@@ -1,6 +1,7 @@
 const Coupon = require("../model/Coupon");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
 const addCoupon = asyncErrorHandler(async (req, res, next) => {
 	const couponDataForm = { ...req.body, events: [{ name: "Coupon Created" }] };
@@ -51,32 +52,16 @@ const getAllCoupons = asyncErrorHandler(async (req, res, next) => {
 
 const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
 	const { shopId } = req.params;
-	const ITEMS_PER_PAGE = 10;
-	const { page } = req.query;
-	const skip = (page - 1) * ITEMS_PER_PAGE;
-	const countPromise = Coupon.estimatedDocumentCount({});
 
-	const couponDataPromise = Coupon.find({ shopId })
-		.sort({ createdAt: -1 })
-		.limit(ITEMS_PER_PAGE)
-		.skip(skip);
-
-	const [couponData, count] = await Promise.all([
-		couponDataPromise,
-		countPromise,
-	]);
-
-	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
-	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+	const [pagination, couponData] = await findWithPaginationAndSorting(
+		req,
+		Coupon,
+		{ shopId }
+	);
 
 	res.status(200).json({
 		success: true,
-		pagination: {
-			count,
-			page,
-			pageCount,
-			startIndex,
-		},
+		pagination,
 		message: "Got Coupon",
 		couponData,
 	});
@@ -86,7 +71,7 @@ const getApplicableCoupons = asyncErrorHandler(async (req, res, next) => {
 	const { totalAmount } = req.query;
 
 	const couponData = await Coupon.find({
-		status: "Active",
+		status: "ACTIVE",
 		minAmount: { $lt: totalAmount },
 		maxAmount: { $gt: totalAmount },
 	})
@@ -110,27 +95,64 @@ const getApplicableCoupons = asyncErrorHandler(async (req, res, next) => {
 });
 
 const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
-	const { couponCode, totalAmount } = req.body;
+	const { couponCode, totalAmount, products } = req.body;
 
-	const couponData = await Coupon.find({ code: couponCode });
+	const couponData = await Coupon.findOne({ code: couponCode });
 
-	if (couponData.length === 0)
-		return next(new ErrorHandler("No coupon found", 400));
+	if (!couponData) return next(new ErrorHandler("No coupon found", 400));
 
-	if (couponData[0].status !== "Active")
+	if (couponData.status !== "ACTIVE")
 		return next(new ErrorHandler("Coupon not Valid", 400));
 
-	if (couponData[0].minAmount >= totalAmount)
+	if (couponData.minAmount >= totalAmount)
 		return next(new ErrorHandler("Minimum amount not reached", 400));
 
-	if (couponData[0].maxAmount <= totalAmount)
+	if (couponData.maxAmount <= totalAmount)
 		return next(new ErrorHandler("Maximum amount reached", 400));
 
 	const date = new Date();
-	const couponDate = new Date(couponData[0].expires);
+	const couponDate = new Date(couponData.expires);
 	if (date > couponDate) return next(new ErrorHandler("Coupon expired", 400));
 
-	const discountAmount = totalAmount * couponData[0].discountPercentage;
+	switch (couponData.type) {
+		case "CATEGORY_BASED_ALL":
+			products.map((product) => {
+				if (couponData.category != product.product.category)
+					return next(
+						new ErrorHandler(`All products must be in the Category`, 400)
+					);
+			});
+			break;
+
+		case "SHOP_BASED":
+			products.map((product) => {
+				if (couponData.shopId != product.product.shop.id)
+					return next(
+						new ErrorHandler(`All products must be from the same Shop`, 400)
+					);
+			});
+			break;
+
+		case "CATEGORY_BASED_SHOP":
+			products.map((product) => {
+				if (
+					couponData.category != product.product.category ||
+					couponData.shopId != product.product.shop.id
+				)
+					return next(
+						new ErrorHandler(
+							`All products must be in the Category and from same Shop`,
+							400
+						)
+					);
+			});
+			break;
+
+		default:
+			break;
+	}
+
+	const discountAmount = totalAmount * couponData.discountPercentage;
 
 	res.status(200).json({
 		success: true,
@@ -149,6 +171,7 @@ const editCoupon = asyncErrorHandler(async (req, res, next) => {
 		expires,
 		minAmount,
 		maxAmount,
+		category,
 	} = req.body;
 
 	const couponAlready = await Coupon.find({ code });
@@ -157,13 +180,40 @@ const editCoupon = asyncErrorHandler(async (req, res, next) => {
 
 	const couponData = await Coupon.findOneAndUpdate(
 		{ _id: couponId },
-		{ code, name, status, minAmount, maxAmount, discountPercentage, expires },
+		{
+			code,
+			name,
+			status,
+			minAmount,
+			maxAmount,
+			discountPercentage,
+			expires,
+			category,
+		},
 		{ new: true }
 	);
 
 	res.status(200).json({
 		success: true,
 		message: "Coupon Updated",
+		couponData,
+	});
+});
+
+const changeCouponState = asyncErrorHandler(async (req, res, next) => {
+	const { couponId, status } = req.body;
+
+	const couponData = await Coupon.findOneAndUpdate(
+		{ _id: couponId },
+		{
+			status,
+		},
+		{ new: true }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: "Coupon Approved",
 		couponData,
 	});
 });
@@ -186,5 +236,6 @@ module.exports = {
 	getCouponDetails,
 	editCoupon,
 	getAllCoupons,
+	changeCouponState,
 	getApplicableCoupons,
 };

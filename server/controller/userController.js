@@ -6,9 +6,11 @@ const sendToken = require("../utils/jwtToken");
 const { upload } = require("../multer");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
-const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
+const { createWalletForUser } = require("./transactionController");
+const Transaction = require("../model/Transaction");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
 const userLogin = asyncErrorHandler(async (req, res, next) => {
 	let user = await User.findOne({ email: req.body.email });
@@ -58,7 +60,6 @@ const loadUser = asyncErrorHandler(async (req, res, next) => {
 });
 
 const providerSignIn = asyncErrorHandler(async (req, res, next) => {
-	//console.log(req.body);
 	const { email, fullName, avatarUrl } = req.body;
 
 	let user;
@@ -72,11 +73,13 @@ const providerSignIn = asyncErrorHandler(async (req, res, next) => {
 			"avatar.url": avatarUrl,
 		});
 	}
+
+	user = await createWalletForUser(user._id);
+
 	if (user.isBlocked) {
 		return next(new ErrorHandler("You are Blocked", 200));
 	}
 
-	console.log(user);
 	sendToken(user, 201, res, "userToken");
 });
 
@@ -134,13 +137,15 @@ const activateUser = asyncErrorHandler(async (req, res, next) => {
 	const userExits = await User.findOne({ email });
 	if (userExits) return;
 
-	const dataUser = await User.create({
+	let dataUser;
+	dataUser = await User.create({
 		fullName: fullName,
 		email: email,
 		age: age,
 		password: password,
 		"avatar.url": profilePic,
 	});
+	dataUser = await createWalletForUser(dataUser._id);
 
 	sendToken(dataUser, 201, res);
 });
@@ -239,6 +244,31 @@ const removeAddress = asyncErrorHandler(async (req, res, next) => {
 		user,
 	});
 });
+const setDefaultAddress = asyncErrorHandler(async (req, res, next) => {
+	const { addressId } = req.body;
+
+	const user = await User.findOne({ _id: req.user.id });
+
+	const newAddress = user.addresses.map((address) => {
+		if (address._id == addressId) address.default = true;
+		else address.default = false;
+		return address;
+	});
+
+	const updatedUser = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{
+			addresses: newAddress,
+		},
+		{ new: true }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: "Default Address Changed",
+		user: updatedUser,
+	});
+});
 
 const changePassword = asyncErrorHandler(async (req, res, next) => {
 	const { userId, currentPassword, newPassword } = req.body;
@@ -271,74 +301,83 @@ const changePassword = asyncErrorHandler(async (req, res, next) => {
 
 const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 	const user = await User.findById(req.user.id);
+	if (!user.wallet) user = await createWalletForUser(req.user.id);
 
-	/* const user = await User.aggregate([
-		{ $match: { _id: new mongoose.Types.ObjectId(req.user.id) } },
-		{
-			$project: {
-				_id: 0,
-				wallet: 1,
-			},
-		},
-		{
-			$unwind: "$wallet.events",
-		},
-		{
-			$sort: { "wallet.events.price": -1 }, // Sort events by date in descending order
-		},
-		{
-			$group: {
-				_id: null, // Group all documents into a single group
-				balance: { $first: "$wallet.balance" }, // Take the 'wallet' field from the first document
-				events: { $push: "$wallet.events" }, // Push all unwound events into an 'events' array
-			},
-		},
-	]); */
-
-	const sortedEvents = [...user.wallet.events];
-	sortedEvents.reverse();
-
-	const walletInfo = {
-		balance: user.wallet.balance,
-		events: sortedEvents,
-	};
-	console.log(walletInfo);
+	const [pagination, transaction] = await findWithPaginationAndSorting(
+		req,
+		Transaction,
+		{ personId: req.user.id }
+	);
 
 	res.status(200).json({
 		success: true,
-		walletInfo,
+		balance: user.wallet.balance,
+		pagination,
+		transactions: transaction,
 	});
 });
-
 const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
-	console.log("wallet changed balance");
 	const { amountToAdd, description } = req.body;
 
 	if (amountToAdd < 0) {
 		const user = await User.findOne({ _id: req.user.id });
-		console.log(user.wallet.balance, amountToAdd * -1);
+
 		if (user.wallet.balance < amountToAdd * -1)
 			return next(new ErrorHandler("Not enough Balance on Wallet", 401));
 	}
 
-	const eventToAdd = {
+	const user = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{ $inc: { "wallet.balance": amountToAdd } }
+	);
+
+	const transaction = await Transaction.create({
+		personId: req.user.id,
 		amount: amountToAdd,
 		description,
-	};
+	});
 
+	res.status(200).json({
+		success: true,
+		balance: user.wallet.balance,
+		transactions: transaction,
+	});
+});
+
+const becomePlusMember = asyncErrorHandler(async (req, res, next) => {
+	const plusMember = {
+		active: true,
+		details: req.body.details,
+	};
 	const user = await User.findOneAndUpdate(
 		{ _id: req.user.id },
 		{
-			$inc: { "wallet.balance": amountToAdd },
-			$addToSet: { "wallet.events": eventToAdd },
+			plusMember,
 		},
 		{ new: true, upsert: true }
 	);
 
-	const walletInfo = user.wallet;
 	res.status(200).json({
 		success: true,
-		walletInfo,
+		message: "Plus membership activated",
+	});
+});
+
+const removePlusMembership = asyncErrorHandler(async (req, res, next) => {
+	const plusMember = {
+		active: false,
+		details: { info: "Unsubscribed from Nexus Plus", date: new Date() },
+	};
+	const user = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{
+			plusMember,
+		},
+		{ new: true, upsert: true }
+	);
+	res.status(200).json({
+		success: true,
+		message: "Plus membership deactivated",
 	});
 });
 
@@ -356,5 +395,8 @@ module.exports = {
 	userAuthentication,
 	providerSignIn,
 	getWalletDetails,
+	becomePlusMember,
+	removePlusMembership,
 	changeWalletBalance,
+	setDefaultAddress,
 };

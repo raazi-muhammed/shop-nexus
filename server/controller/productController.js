@@ -3,6 +3,8 @@ const Products = require("../model/Products");
 const cloudinaryUpload = require("../utils/cloudinaryUpload");
 const Shop = require("../model/Shop");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
+const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
+const Order = require("../model/Order");
 
 const getBestSellingProducts = asyncErrorHandler(async (req, res, next) => {
 	let products = await Products.find({ isDeleted: { $ne: true } }).sort({
@@ -33,13 +35,10 @@ const getProductByCategory = asyncErrorHandler(async (req, res, next) => {
 });
 
 const searchProducts = asyncErrorHandler(async (req, res, next) => {
-	console.log(req.query, "hihi");
 	const { category, searchTerm, minPrice, maxPrice, rating } = req.query;
-
 	let filter = {
 		isDeleted: { $ne: true },
 	};
-
 	if (searchTerm) {
 		filter.$or = [
 			{
@@ -50,7 +49,6 @@ const searchProducts = asyncErrorHandler(async (req, res, next) => {
 			},
 		];
 	}
-
 	if (category) filter.category = category;
 	if (rating) filter.rating = { $gte: rating };
 	if (maxPrice) filter.discount_price = { $lt: maxPrice };
@@ -58,11 +56,15 @@ const searchProducts = asyncErrorHandler(async (req, res, next) => {
 	if (minPrice && maxPrice)
 		filter.discount_price = { $gt: minPrice, $lt: maxPrice };
 
-	console.log(filter);
+	const [pagination, products] = await findWithPaginationAndSorting(
+		req,
+		Products,
+		filter
+	);
 
-	let products = await Products.find(filter);
 	res.status(200).json({
 		success: true,
+		pagination,
 		products,
 	});
 });
@@ -280,31 +282,17 @@ const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
 	const ShopDetails = await Shop.find({ _id: req.params.shopId });
 	const shopName = ShopDetails[0].shopName;
 
-	const ITEMS_PER_PAGE = 10;
-	const { page } = req.query;
-	const skip = (page - 1) * ITEMS_PER_PAGE;
-	const countPromise = Products.estimatedDocumentCount();
-
-	const shopProductsPromise = Products.find({ "shop.name": shopName })
-		.limit(ITEMS_PER_PAGE)
-		.skip(skip);
-
-	const [shopProducts, count] = await Promise.all([
-		shopProductsPromise,
-		countPromise,
-	]);
-
-	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
-	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+	const [pagination, shopProducts] = await findWithPaginationAndSorting(
+		req,
+		Products,
+		{
+			"shop.name": shopName,
+		}
+	);
 
 	res.status(200).json({
 		success: true,
-		pagination: {
-			count,
-			page,
-			pageCount,
-			startIndex,
-		},
+		pagination,
 		data: shopProducts,
 	});
 });
@@ -323,20 +311,40 @@ const setNewStockAmount = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-const changeStockBasedOnOrder = asyncErrorHandler(async (req, res, next) => {
-	const { stock, productId } = req;
-
+const changeStockBasedOnOrder = async (productId, stock) => {
 	const shopDetails = await Products.findOneAndUpdate(
 		{ _id: productId },
-		{ $inc: { stock: -stock } },
+		{ $inc: { stock: -stock, total_sell: stock } },
 		{ new: true }
 	);
+};
 
-	res.status(200).json({
-		success: true,
-		data: shopDetails,
-	});
-});
+const changeUserPlaceReviewOnProduct = asyncErrorHandler(
+	async (req, res, next) => {
+		const userId = req.user.id;
+		const productId = req.params.productId;
+
+		const review = await Order.findOne({
+			user: userId,
+			orderItems: { $elemMatch: { product: productId } },
+			$or: [{ status: "Delivered" }, { status: "Return Approved" }],
+		});
+
+		if (review) {
+			res.status(200).json({
+				success: true,
+				canPostReview: true,
+				message: "Please post a review",
+			});
+		} else {
+			res.status(200).json({
+				success: true,
+				canPostReview: false,
+				message: "Buy the product to post a review",
+			});
+		}
+	}
+);
 
 module.exports = {
 	getBestSellingProducts,
@@ -354,4 +362,5 @@ module.exports = {
 	changeStockBasedOnOrder,
 	setNewStockAmount,
 	searchProducts,
+	changeUserPlaceReviewOnProduct,
 };

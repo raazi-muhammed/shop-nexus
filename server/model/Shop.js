@@ -83,9 +83,11 @@ const shopSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
-		createdAt: {
-			type: Date,
-			default: Date.now(),
+		wallet: {
+			balance: {
+				type: Number,
+				default: 0,
+			},
 		},
 	},
 	{ timestamps: true }

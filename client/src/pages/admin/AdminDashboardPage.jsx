@@ -55,21 +55,21 @@ const AdminDashboardPage = () => {
 	return (
 		<div className="vw-100">
 			<div className="container container-xxl">
-				<nav style={{ height: "2rem" }}>
+				<nav
+					style={{ height: "2rem" }}
+					className="d-flex justify-content-between">
 					<p className="h3 mb-1 m-4 ">Admin Page</p>
+					<button
+						className="btn btn-sm bg-danger-subtle text-danger mt-4"
+						onClick={handleLogOut}>
+						Log out
+					</button>
 				</nav>
 			</div>
 			<div className="container container-xxl">
 				<main className="row py-5">
-					<section className="col-12 col-md-4 col-lg-3 mb-3">
-						<AsideComp asideItems={asideItems} />
-						<button
-							className="btn btn-sm btn-danger w-100 mt-3"
-							onClick={handleLogOut}>
-							Log out
-						</button>
-					</section>
-					<section className="col-12 col-md-8 col-lg-9">
+					<AsideComp asideItems={asideItems} />
+					<section className="col">
 						<Routes>
 							<Route path="/users" element={<AdminUserPage />} />
 							<Route path="/sellers" element={<AdminSellerPage />} />
