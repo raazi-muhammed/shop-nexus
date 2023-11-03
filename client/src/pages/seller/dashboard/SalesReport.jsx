@@ -7,6 +7,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import ClipLoader from "react-spinners/ClipLoader";
 import convertISOToDate from "../../../utils/convertISOToDate";
+import csvDownload from "json-to-csv-export";
+import tableToJson from "../../../utils/tableToJson";
 
 const SalesReport = () => {
 	const { shopId } = useParams();
@@ -14,6 +16,7 @@ const SalesReport = () => {
 	const [fileDownloading, setFileDownloading] = useState(false);
 	const [salesReportData, setSalesReportData] = useState([]);
 	const reportHTML = useRef();
+	const reportTable = useRef();
 	const [dataFromDisplay, setDataFromDisplay] = useState("");
 	const [dataFrom, setDataFrom] = useState("THIS_YEAR");
 	const dataFromOptions = [
@@ -64,6 +67,28 @@ const SalesReport = () => {
 		pdf.save("sales-report.pdf");
 		setFileDownloading(false);
 	};
+	const handleDownloadReportCSV = async () => {
+		console.log(reportTable.current);
+
+		const salesReportData = tableToJson(reportTable.current);
+		const dataToConvert = {
+			data: salesReportData,
+			filename: "Sales Report",
+			delimiter: ",",
+			headers: [
+				"Order Date",
+				"Order ID",
+				"Customer Name",
+				"Product Name",
+				"Product ID",
+				"Quantity",
+				"Unit Price",
+				"Total Price",
+			],
+		};
+		csvDownload(dataToConvert);
+	};
+
 	return (
 		<div className="w-100">
 			{loading ? (
@@ -94,6 +119,12 @@ const SalesReport = () => {
 							onClick={handleDownloadReportPDF}>
 							Download as PDF
 						</button>
+						<button
+							disabled={fileDownloading}
+							className="btn btn-light btn-sm px-3"
+							onClick={handleDownloadReportCSV}>
+							Download as CSV
+						</button>
 						<select
 							style={{ maxWidth: "15rem" }}
 							value={dataFrom}
@@ -110,7 +141,10 @@ const SalesReport = () => {
 					<section ref={reportHTML}>
 						<p className="mb-2 p-1 h3">Sales Report: {dataFromDisplay}</p>
 						<div className="table-responsive">
-							<table id="sales-report" class="table text-nowrap">
+							<table
+								ref={reportTable}
+								id="sales-report"
+								class="table text-nowrap">
 								<thead>
 									<tr>
 										<th scope="col">Order Date</th>
