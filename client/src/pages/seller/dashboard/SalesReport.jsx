@@ -7,8 +7,10 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import ClipLoader from "react-spinners/ClipLoader";
 import convertISOToDate from "../../../utils/convertISOToDate";
-import csvDownload from "json-to-csv-export";
 import tableToJson from "../../../utils/tableToJson";
+import csvDownload from "json-to-csv-export";
+import xlsx from "json-as-xlsx";
+import exportFromJSON from "export-from-json";
 
 const SalesReport = () => {
 	const { shopId } = useParams();
@@ -67,26 +69,30 @@ const SalesReport = () => {
 		pdf.save("sales-report.pdf");
 		setFileDownloading(false);
 	};
-	const handleDownloadReportCSV = async () => {
-		console.log(reportTable.current);
-
+	const handleDownloadReportExcel = async () => {
 		const salesReportData = tableToJson(reportTable.current);
-		const dataToConvert = {
+
+		const fileName = "Sales-Report";
+		const exportType = exportFromJSON.types.csv;
+
+		exportFromJSON({
 			data: salesReportData,
-			filename: "Sales Report",
-			delimiter: ",",
-			headers: [
-				"Order Date",
-				"Order ID",
-				"Customer Name",
-				"Product Name",
-				"Product ID",
-				"Quantity",
-				"Unit Price",
-				"Total Price",
-			],
-		};
-		csvDownload(dataToConvert);
+			fileName,
+			exportType,
+			extension: "xls",
+		});
+	};
+	const handleDownloadReportJson = async () => {
+		const salesReportData = tableToJson(reportTable.current);
+		const fileName = "Sales-Report";
+		const exportType = exportFromJSON.types.json;
+		exportFromJSON({ data: salesReportData, fileName, exportType });
+	};
+	const handleDownloadReportCSV = async () => {
+		const salesReportData = tableToJson(reportTable.current);
+		const fileName = "Sales-Report";
+		const exportType = exportFromJSON.types.csv;
+		exportFromJSON({ data: salesReportData, fileName, exportType });
 	};
 
 	return (
@@ -122,8 +128,20 @@ const SalesReport = () => {
 						<button
 							disabled={fileDownloading}
 							className="btn btn-light btn-sm px-3"
+							onClick={handleDownloadReportExcel}>
+							Download as EXCEL
+						</button>
+						<button
+							disabled={fileDownloading}
+							className="btn btn-light btn-sm px-3"
 							onClick={handleDownloadReportCSV}>
 							Download as CSV
+						</button>
+						<button
+							disabled={fileDownloading}
+							className="btn btn-light btn-sm px-3"
+							onClick={handleDownloadReportJson}>
+							Download as JSON
 						</button>
 						<select
 							style={{ maxWidth: "15rem" }}
