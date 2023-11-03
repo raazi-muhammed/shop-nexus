@@ -9,6 +9,7 @@ import { addDays } from "date-fns";
 import OrderItemsInOrder from "./OrderItemsInOrder";
 import ReturnButton from "./ReturnButton";
 import CancelOrderButton from "./CancelOrderButton";
+import InvoiceDownloadButton from "./InvoiceDownloadButton";
 
 const SingleOrderDetails = ({
 	orderDetails,
@@ -17,8 +18,7 @@ const SingleOrderDetails = ({
 	setRefresh,
 	showEvents,
 }) => {
-	const [invoiceLoading, setInvoiceLoading] = useState(false);
-	const [reason, setReason] = useState("");
+	console.log(orderDetails);
 
 	const isReturnableFunc = () => {
 		const returnMaxDate = addDays(new Date(orderDetails[0].createdAt), 7);
@@ -26,21 +26,6 @@ const SingleOrderDetails = ({
 		return returnMaxDate > today ? true : false;
 	};
 	const [isReturnable, setIsReturnable] = useState(isReturnableFunc);
-
-	const handleInvoiceDownload = () => {
-		setInvoiceLoading(true);
-		axios
-			.get(`${server}/order/get-invoice/${orderId}`, {
-				withCredentials: true,
-			})
-			.then((res) => {
-				easyinvoice.download("myInvoice.pdf", res.data.result.pdf);
-			})
-			.catch((err) => toast.error("An Error Occurred"))
-			.finally(() => {
-				setInvoiceLoading(false);
-			});
-	};
 
 	return (
 		<>
@@ -113,23 +98,7 @@ const SingleOrderDetails = ({
 													setRefresh={setRefresh}
 												/>
 											)}
-
-											<section>
-												<button
-													disabled={invoiceLoading}
-													onClick={handleInvoiceDownload}
-													className="btn w-100 bg-primary-subtle text-primary btn-sm d-flex justify-content-center">
-													<ClipLoader
-														className="m-0 p-0 text-primary mx-auto my-auto me-1"
-														loading={invoiceLoading}
-														size={15}
-														color="white"
-														aria-label="Loading Spinner"
-														data-testid="loader"
-													/>
-													<p>Download Invoice</p>
-												</button>
-											</section>
+											<InvoiceDownloadButton orderDetails={orderDetails} />
 										</section>
 									</section>
 									<hr className="text-secondary" />

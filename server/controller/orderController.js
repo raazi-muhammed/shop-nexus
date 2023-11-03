@@ -285,7 +285,9 @@ const getSingleOrderDetailsForShop = asyncErrorHandler(
 		const orderData = await Order.find({
 			orderId,
 			"orderItems.shop": shopId,
-		}).populate("orderItems.product");
+		})
+			.populate("orderItems.product")
+			.populate("orderItems.shop");
 
 		res.status(200).json({
 			success: true,
@@ -318,71 +320,6 @@ const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 		success: true,
 		message: "Status Changed",
 		orderData,
-	});
-});
-
-const invoiceGenerator = asyncErrorHandler(async (req, res, next) => {
-	const orderId = req.params.orderId;
-
-	const orderData = await Order.findOne({ orderId }).populate(
-		"orderItems.product"
-	);
-
-	const productsDetails = orderData.orderItems.map((e) => {
-		return {
-			quantity: e.quantity,
-			description: e.product.name,
-			"tax-rate": 0,
-			price: e.product.discount_price,
-		};
-	});
-
-	var data = {
-		customize: {},
-		images: {
-			//logo: "https://res.cloudinary.com/dklhubdqw/image/upload/f_auto,q_auto/v1/Icons/segkwc2zh2bn9hajlutb",
-		},
-		// Your own data
-		sender: {
-			company: "Shop Nexus",
-			address: "123 Main Address",
-			zip: "6793823",
-			city: "Calicut",
-			country: "Kerala",
-		},
-		// Your recipient
-		client: {
-			company: orderData.shippingAddress.fullName,
-			address: orderData.shippingAddress.address1,
-			zip: orderData.shippingAddress.pinCode,
-			city: orderData.shippingAddress.address2,
-			country: orderData.shippingAddress.city,
-		},
-		information: {
-			// Invoice number
-			number: orderData.orderId.slice(0, 8),
-			// Invoice data
-			date: convertISOToDate(new Date()),
-			// Invoice due date
-			"due-date": convertISOToDate(new Date()),
-		},
-
-		products: productsDetails,
-
-		//"bottom-notice": "Kindly pay your invoice within 15 days.",
-
-		settings: { currency: "INR" },
-
-		translate: {
-			vat: "Discount", // Defaults to 'vat'
-		},
-	};
-
-	const result = await easyinvoice.createInvoice(data);
-
-	res.status(200).json({
-		success: true,
-		result,
 	});
 });
 
