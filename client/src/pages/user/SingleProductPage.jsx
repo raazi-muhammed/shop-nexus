@@ -137,7 +137,7 @@ const SingleProductPage = () => {
 				</div>
 			) : (
 				<>
-					<div className="container container-lg ">
+					<div className="container container-lg">
 						<section className="row p-4 mx-auto w-100 ">
 							<section className="col-12 col-sm-6 justify-content-center">
 								<ReactImageMagnify

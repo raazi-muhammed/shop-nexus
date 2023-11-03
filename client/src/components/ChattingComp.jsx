@@ -80,7 +80,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 	}, [messagesToShow]);
 
 	return (
-		<main className="w-100" style={{ height: "85vh" }}>
+		<main className="w-100">
 			<div
 				class="modal fade"
 				id="exampleModal"
@@ -109,8 +109,8 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 								data-bs-dismiss="modal"
 								aria-label="Close"></button>
 						</div>
-						<div class="modal-body">
-							<section className="overflow-auto h-75">
+						<div class="modal-body vh-100">
+							<section className="overflow-auto">
 								{messagesToShow?.map((msg) => (
 									<div
 										className={`p-2 px-3   m-1 my-2 rounded-4 ${

@@ -4,12 +4,13 @@ import server from "../../server";
 import { useNavigate } from "react-router-dom";
 
 import Icons from "../../assets/Icons";
-const { trash, close } = Icons;
+const { trash, close, cart } = Icons;
 
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { hideWishList } from "../../app/feature/wishList/wishListSlice";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
+import formatPrice from "../../utils/formatPrice";
 
 const WishListUser = () => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -19,6 +20,19 @@ const WishListUser = () => {
 	const dispatch = useDispatch();
 	const wishListItems = userData?.wishList;
 	const navigate = useNavigate();
+
+	const handleAddToCart = (productId, discount_price) => {
+		const itemData = {
+			product_id: productId,
+			price: discount_price,
+		};
+		axios
+			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
+			.then((res) => {
+				toast.success(res.data?.message || "Success");
+			})
+			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
+	};
 
 	const handleRemoveFromWishList = (product_id) => {
 		axios
@@ -92,7 +106,9 @@ const WishListUser = () => {
 								onClick={() => handelProductClick(wishListItem.product?._id)}
 								className="col-7 my-auto">
 								<p className="text-small mb-0">{wishListItem.product?.name}</p>
-								<p className="text-secondary fw-bold">{wishListItem?.price}</p>
+								<p className="text-secondary fw-bold">
+									{formatPrice(wishListItem?.product?.discount_price)}
+								</p>
 							</section>
 
 							<div className="col-2 my-auto">
@@ -102,6 +118,16 @@ const WishListUser = () => {
 									}
 									className="btn btn-light text-secondary btn-sm m-0">
 									{trash}
+								</button>
+								<button
+									onClick={(e) =>
+										handleAddToCart(
+											wishListItem.product?._id,
+											wishListItem?.product?.discount_price
+										)
+									}
+									className="btn btn-secondary text-white btn-sm m-0 my-2 ">
+									{cart}
 								</button>
 							</div>
 							<hr className="text-secondary" />
