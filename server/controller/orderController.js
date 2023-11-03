@@ -277,6 +277,51 @@ const getSalesReport = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getSalesReportAdmin = asyncErrorHandler(async (req, res, next) => {
+	const { dataFrom } = req.query;
+
+	const today = new Date();
+	let filterDate = new Date(2020, 0, 0);
+	let dataFromDisplay = "All Time";
+
+	if (dataFrom === "THIS_MONTH") {
+		filterDate = new Date(today.getFullYear(), today.getMonth(), 1);
+		const month = [
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December",
+		];
+		dataFromDisplay = `${month[today.getMonth()]}, ${today.getFullYear()}`;
+	}
+
+	if (dataFrom === "THIS_YEAR") {
+		filterDate = new Date(today.getFullYear(), 1, 1);
+		dataFromDisplay = `${today.getFullYear()}`;
+	}
+
+	const salesReport = await Order.find({
+		createdAt: { $gt: filterDate },
+	})
+		.sort({ createdAt: -1 })
+		.populate("orderItems.product")
+		.populate("user");
+
+	res.status(200).json({
+		success: true,
+		salesReport,
+		dataFromDisplay,
+	});
+});
+
 const getSingleOrderDetailsForShop = asyncErrorHandler(
 	async (req, res, next) => {
 		const { orderId, shopId } = req.params;
@@ -333,4 +378,5 @@ module.exports = {
 	changeOrderStatus,
 	returnOrder,
 	getSalesReport,
+	getSalesReportAdmin,
 };

@@ -182,7 +182,6 @@ router.get(
 		getProductsSoldChartData(req, res, next);
 	}
 );
-
 router.get("/chart/sales", isSellerAuthenticated, async (req, res, next) => {
 	getSalesChartData(req, res, next);
 });

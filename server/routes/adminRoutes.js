@@ -5,11 +5,15 @@ const {
 	adminBlockAndUnBlockUser,
 	getAllSellers,
 	adminBlockAndUnBlockSeller,
+	getDashBoardContentAdmin,
+	getSalesChartDataAdmin,
+	getOrdersSoldChartDataAdmin,
 } = require("../controller/adminController");
 
 const {
 	getAllOrders,
 	getSingleOrders,
+	getSalesReportAdmin,
 } = require("../controller/orderController");
 
 const express = require("express");
@@ -53,4 +57,21 @@ router.patch("/change-coupon-state", isAdminAuthenticated, (req, res, next) =>
 	changeCouponState(req, res, next)
 );
 
+router.get("/chart/orders", isAdminAuthenticated, async (req, res, next) => {
+	getOrdersSoldChartDataAdmin(req, res, next);
+});
+router.get("/chart/sales", isAdminAuthenticated, async (req, res, next) => {
+	getSalesChartDataAdmin(req, res, next);
+});
+router.get("/dashboard", isAdminAuthenticated, async (req, res, next) => {
+	getDashBoardContentAdmin(req, res, next);
+});
+
+router.get(
+	"/get-sales-report",
+	isAdminAuthenticated,
+	async (req, res, next) => {
+		getSalesReportAdmin(req, res, next);
+	}
+);
 module.exports = router;
