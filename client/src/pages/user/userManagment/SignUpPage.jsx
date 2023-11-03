@@ -2,15 +2,15 @@ import React from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
-import { useUserAuth } from "../../context/userAuthContext";
+import { useUserAuth } from "../../../context/userAuthContext";
 import {
 	formLabelClass,
 	inputDivClass,
 	formClass,
 	submitButtonClass,
-} from "../../utils/styleClasses";
+} from "../../../utils/styleClasses";
 
 const SignUpPage = () => {
 	const { signUp } = useUserAuth();

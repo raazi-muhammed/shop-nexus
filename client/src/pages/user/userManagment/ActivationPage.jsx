@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
 import { debounce } from "lodash";
 

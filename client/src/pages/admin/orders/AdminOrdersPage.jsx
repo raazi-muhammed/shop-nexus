@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import convertISOToDate from "../../utils/convertISOToDate";
-import Pagination from "../../components/Pagination";
+import convertISOToDate from "../../../utils/convertISOToDate";
+import Pagination from "../../../components/Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
 
 const AdminOrdersPage = () => {

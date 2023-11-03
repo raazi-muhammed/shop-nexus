@@ -1,29 +1,27 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
-import toast from "react-hot-toast";
+import server from "../../../server";
+import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 
-const AdminUserPage = () => {
+const AdminSellerPage = () => {
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(true);
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/admin/get-all-users`, { withCredentials: true })
-			.then((res) => setData(res.data.userDetails))
+			.get(`${server}/admin/get-all-sellers`, { withCredentials: true })
+			.then((res) => setData(res.data.shopDetails))
 			.catch((err) => toast.error(err.response.data.message))
 			.finally(() => setLoading(false));
 	}, [refresh]);
 
-	const handleDelete = (id, action) => {
+	const handBlockAndUnBlock = (id, action) => {
 		console.log(id);
 		setRefresh(!refresh);
-
 		axios
 			.post(
-				`${server}/admin/block-user`,
+				`${server}/admin/block-seller`,
 				{ id, action },
 				{ withCredentials: true }
 			)
@@ -42,22 +40,22 @@ const AdminUserPage = () => {
 							className="rounded-circle"
 							style={{ width: "4rem", height: "4rem" }}
 							src={
-								e.avatar?.url ||
+								e.image?.url ||
 								"http://localhost:3000/images/profile-pic-1697175479482_300657077.png"
 							}
 							alt=""
 						/>
-						<p className="text-primary h4 fw-bold m-0">{e.fullName}</p>
+						<p className="text-primary h4 fw-bold m-0">{e.shopName}</p>
 						<p className="text-small">{e.email}</p>
 						{e.isBlocked ? (
 							<button
-								onClick={(event) => handleDelete(e._id, false)}
+								onClick={(event) => handBlockAndUnBlock(e._id, false)}
 								className="btn btn-success ">
 								Unblock User
 							</button>
 						) : (
 							<button
-								onClick={(event) => handleDelete(e._id, true)}
+								onClick={(event) => handBlockAndUnBlock(e._id, true)}
 								className="btn btn-danger ">
 								Block User
 							</button>
@@ -77,4 +75,4 @@ const AdminUserPage = () => {
 	);
 };
 
-export default AdminUserPage;
+export default AdminSellerPage;
