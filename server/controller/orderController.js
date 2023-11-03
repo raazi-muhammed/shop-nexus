@@ -2,7 +2,6 @@ const express = require("express");
 const Order = require("../model/Order");
 const { v4: uuidv4 } = require("uuid");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
-const easyinvoice = require("easyinvoice");
 const fs = require("fs");
 const convertISOToDate = require("../utils/convertISOToDate");
 const { changeStockBasedOnOrder } = require("./productController");
@@ -307,8 +306,8 @@ const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 		name: orderStatus,
 	};
 
-	const orderData = await Order.findOneAndUpdate(
-		{ orderId, _id: productOrderId },
+	const orderData = await Order.updateMany(
+		{ orderId },
 		{
 			$addToSet: { events: eventToAdd },
 			status: orderStatus,
@@ -332,7 +331,6 @@ module.exports = {
 	getSellerAllOrders,
 	getSingleOrderDetailsForShop,
 	changeOrderStatus,
-	invoiceGenerator,
 	returnOrder,
 	getSalesReport,
 };

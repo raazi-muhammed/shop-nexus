@@ -30,16 +30,19 @@ const SingleOrderDetails = ({
 	return (
 		<>
 			<section className="bg-white rounded-4  p-4">
-				<p className="text-primary mt-3 m-0">Order Id: {orderId}</p>
+				<p className="text-primary mt-3 m-0 text-small">
+					<span className=" fw-bold"> Order Id: </span> {orderId}
+				</p>
 				<p className="text-primary">
-					Date: {convertISOToDate(orderDetails[0]?.createdAt, true)}
+					<span className=" fw-bold"> Date & Time: </span>
+					{convertISOToDate(orderDetails[0]?.createdAt, true)}
 				</p>
 				<section>
 					<p className="h4 fw-bold text-secondary">Payment</p>
 					<div>
-						<p className="text-small text-secondary m-0">Total Price</p>
-						<p className="text-primary h5 fw-bold">
-							{formatPrice(orderDetails.totalPrice)}
+						<p className="text-small text-secondary mb-0">Total Price</p>
+						<p className="text-primary h5 fw-bold mb-3">
+							{formatPrice(orderDetails[0]?.totalPrice)}
 						</p>
 
 						<p className="text-small text-secondary my-2">Payment Status</p>
@@ -83,7 +86,7 @@ const SingleOrderDetails = ({
 											</section>
 											<OrderItemsInOrder orderItems={order.orderItems} />
 										</section>
-										<section className="col-3 d-flex flex-column my-auto gap-3">
+										<section className="col-3 d-flex flex-column mb-4 mt-auto gap-3 justify-content-center h-100">
 											{order.status === "Processing" && (
 												<CancelOrderButton
 													orderId={orderId}
@@ -130,7 +133,7 @@ const SingleOrderDetails = ({
 				{showEvents && (
 					<section>
 						<p className="mt-3 h4 fw-bold text-secondary">Events</p>
-						{orderDetails?.events?.map((e, i) => (
+						{orderDetails[0]?.events?.map((e, i) => (
 							<div key={i} className="row">
 								<p className="m-0 col-4 fw-bold ">{e.name}</p>
 								<p className="m-0 col-4">{convertISOToDate(e.date, true)}</p>

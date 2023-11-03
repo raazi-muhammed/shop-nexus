@@ -23,10 +23,7 @@ const SellerAllOrders = () => {
 			{ value: "status", title: "Status" },
 		],
 	});
-
-	const userData = useSelector((state) => state.userData.userData);
 	const { shopId } = useParams();
-	const navigate = useNavigate();
 	const [orderData, setOrderData] = useState();
 
 	useEffect(() => {
@@ -54,7 +51,7 @@ const SellerAllOrders = () => {
 
 	return (
 		<div className="w-100">
-			{loading && (
+			{loading ? (
 				<div className="min-vh-100 w-100 d-flex justify-content-center ">
 					<ClipLoader
 						className="m-0 p-0 text-primary mx-auto mt-5 "
@@ -65,30 +62,36 @@ const SellerAllOrders = () => {
 						data-testid="loader"
 					/>
 				</div>
-			)}
-			{orderData?.length === 0 ? (
-				<p className="text-secondary">There aren't any orders</p>
 			) : (
 				<>
-					<section className="d-flex justify-content-end gap-3 ">
-						<RefreshButton refresh={refresh} setRefresh={setRefresh} />
-						<Sorting
-							sortOptions={sortOptions}
-							setSortOptions={setSortOptions}
-						/>
-						<Pagination pagination={pagination} setPagination={setPagination} />
-					</section>
-					{orderData?.map((order, i) => (
-						<OrderCardMain
-							key={i}
-							status={order.status}
-							createdAt={order.createdAt}
-							orderItems={order.orderItems}
-							totalPrice={order.totalPrice}
-							shippingAddress={order.shippingAddress}
-							orderId={order.orderId}
-						/>
-					))}
+					{orderData?.length === 0 ? (
+						<p className="text-secondary">There aren't any orders</p>
+					) : (
+						<>
+							<section className="d-flex justify-content-end gap-3 ">
+								<RefreshButton refresh={refresh} setRefresh={setRefresh} />
+								<Sorting
+									sortOptions={sortOptions}
+									setSortOptions={setSortOptions}
+								/>
+								<Pagination
+									pagination={pagination}
+									setPagination={setPagination}
+								/>
+							</section>
+							{orderData?.map((order, i) => (
+								<OrderCardMain
+									key={i}
+									status={order.status}
+									createdAt={order.createdAt}
+									orderItems={order.orderItems}
+									totalPrice={order.totalPrice}
+									shippingAddress={order.shippingAddress}
+									orderId={order.orderId}
+								/>
+							))}
+						</>
+					)}
 				</>
 			)}
 		</div>

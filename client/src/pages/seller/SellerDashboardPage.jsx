@@ -188,11 +188,6 @@ const SellerDashboardPage = () => {
 					</section>
 				</div>
 			</main>
-			{/* <div className="bg-danger p-2">
-				<Routes>
-					<Route path="/sales-report" element={<SalesReport />} />
-				</Routes>
-			</div> */}
 		</>
 	);
 };
