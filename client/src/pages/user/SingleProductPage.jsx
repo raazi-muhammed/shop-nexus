@@ -1,7 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
-import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import {
+	Link,
+	Route,
+	Routes,
+	useLocation,
+	useNavigate,
+	useParams,
+} from "react-router-dom";
 import Icons from "../../assets/Icons";
 const { heart, cart, plus, minus } = Icons;
 
@@ -16,6 +23,7 @@ import NavComponent from "../../components/layout/NavComponent";
 import RatingStar from "../../components/product/RatingStar";
 import { getCategoryByKey } from "../../constants/categoriesConstants";
 import ChattingComp from "../../components/ChattingComp";
+import ReviewsSection from "./product/ReviewsSection";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);
@@ -77,7 +85,7 @@ const SingleProductPage = () => {
 			})
 			.catch((err) => toast.error("Loading failed" + err))
 			.finally(() => setLoading(false));
-	}, []);
+	}, [id]);
 
 	const handleAddToCart = () => {
 		const itemData = {
@@ -307,17 +315,7 @@ const SingleProductPage = () => {
 								/>
 								<Route
 									path="/reviews"
-									element={
-										<section className="p-4">
-											{productData.reviews?.length == 0 ? (
-												<p className="mt-3 mb-1 text-small text-center">
-													No reviews yet
-												</p>
-											) : (
-												<p className="text-small">{productData.reviews}</p>
-											)}
-										</section>
-									}
+									element={<ReviewsSection productData={productData} />}
 								/>
 								<Route
 									path="/about-seller"

@@ -33,6 +33,7 @@ const {
 	applyCouponCode,
 	getApplicableCoupons,
 } = require("../controller/couponController");
+const { addReview } = require("../controller/reviewController");
 
 router.post("/login-user", (req, res, next) => {
 	userLogin(req, res, next);
@@ -122,6 +123,10 @@ router.put("/become-plus-member", isAuthenticated, (req, res, next) => {
 
 router.put("/unsubscribe-plus-member", isAuthenticated, (req, res, next) => {
 	removePlusMembership(req, res, next);
+});
+
+router.post("/add-review", isAuthenticated, (req, res, next) => {
+	addReview(req, res, next);
 });
 
 module.exports = router;

@@ -13,9 +13,12 @@ const {
 	addProduct,
 	getProductsFromShop,
 	searchProducts,
+	changeUserPlaceReviewOnProduct,
 } = require("../controller/productController");
+const { getReviewFromProduct } = require("../controller/reviewController");
 
 const { isAdminAuthenticated } = require("../middleware/adminAuth");
+const { isAuthenticated } = require("../middleware/auth");
 const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 
 router.get("/best-selling", (req, res, next) => {
@@ -60,6 +63,9 @@ router.post("/add-product", isSellerAuthenticated, async (req, res, next) => {
 router.get("/get-products-from-shop/:shopId", async (req, res, next) => {
 	getProductsFromShop(req, res, next);
 });
+router.get("/get-reviews/:productId", async (req, res, next) => {
+	getReviewFromProduct(req, res, next);
+});
 
 /* Admin */
 router.put(
@@ -74,6 +80,14 @@ router.put(
 	isSellerAuthenticated,
 	(req, res, next) => {
 		deleteProductImage(req, res, next);
+	}
+);
+
+router.get(
+	"/can-user-place-review/:productId",
+	isAuthenticated,
+	(req, res, next) => {
+		changeUserPlaceReviewOnProduct(req, res, next);
 	}
 );
 

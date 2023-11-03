@@ -4,6 +4,7 @@ const cloudinaryUpload = require("../utils/cloudinaryUpload");
 const Shop = require("../model/Shop");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
+const Order = require("../model/Order");
 
 const getBestSellingProducts = asyncErrorHandler(async (req, res, next) => {
 	let products = await Products.find({ isDeleted: { $ne: true } }).sort({
@@ -318,6 +319,33 @@ const changeStockBasedOnOrder = async (productId, stock) => {
 	);
 };
 
+const changeUserPlaceReviewOnProduct = asyncErrorHandler(
+	async (req, res, next) => {
+		const userId = req.user.id;
+		const productId = req.params.productId;
+
+		const review = await Order.findOne({
+			user: userId,
+			orderItems: { $elemMatch: { product: productId } },
+			$or: [{ status: "Delivered" }, { status: "Return Approved" }],
+		});
+
+		if (review) {
+			res.status(200).json({
+				success: true,
+				canPostReview: true,
+				message: "Please post a review",
+			});
+		} else {
+			res.status(200).json({
+				success: true,
+				canPostReview: false,
+				message: "Buy the product to post a review",
+			});
+		}
+	}
+);
+
 module.exports = {
 	getBestSellingProducts,
 	getProducts,
@@ -334,4 +362,5 @@ module.exports = {
 	changeStockBasedOnOrder,
 	setNewStockAmount,
 	searchProducts,
+	changeUserPlaceReviewOnProduct,
 };
