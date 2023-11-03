@@ -2,6 +2,7 @@ const {
 	getSellerAllOrders,
 	getSingleOrderDetailsForShop,
 	changeOrderStatus,
+	getSalesReport,
 } = require("../controller/orderController");
 const {
 	setNewStockAmount,
@@ -75,6 +76,14 @@ router.get(
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getSellerAllOrders(req, res, next);
+	}
+);
+
+router.get(
+	"/get-sales-report/:shopId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getSalesReport(req, res, next);
 	}
 );
 

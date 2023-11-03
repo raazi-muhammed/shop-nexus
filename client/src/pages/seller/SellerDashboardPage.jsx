@@ -25,6 +25,7 @@ import ChartSales from "./dashboard/ChartSales";
 import ChartProducts from "./dashboard/ChartProducts";
 import ChartOrders from "./dashboard/ChartOrders";
 import MainDashBoard from "./dashboard/MainDashBoard";
+import SalesReport from "./dashboard/SalesReport";
 const { threeLine } = Icons;
 
 const SellerDashboardPage = () => {
@@ -112,6 +113,10 @@ const SellerDashboardPage = () => {
 			name: "Edit Shop",
 			link: `edit-shop`,
 		},
+		{
+			name: "Sales Report",
+			link: `sales-report`,
+		},
 	];
 
 	useEffect(() => {
@@ -129,7 +134,7 @@ const SellerDashboardPage = () => {
 	return (
 		<main className="vw-100">
 			<SellerNavbar shopName={shopName} />
-			<div className="w-100 container container-xxl  ">
+			<div className="w-100 container container-xxl">
 				<section className="row py-5">
 					<AsideComp asideItems={asideItems} />
 					<section className="col">
@@ -175,6 +180,7 @@ const SellerDashboardPage = () => {
 							<Route path="/sales" element={<ChartSales />} />
 							<Route path="/char-orders" element={<ChartOrders />} />
 							<Route path="/chart-products" element={<ChartProducts />} />
+							<Route path="/sales-report" element={<SalesReport />} />
 							<Route path="/" element={<MainDashBoard />} />
 						</Routes>
 					</section>

@@ -231,6 +231,21 @@ const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getSalesReport = asyncErrorHandler(async (req, res, next) => {
+	const shopId = req.params.shopId;
+
+	const salesReport = await Order.find({
+		"orderItems.shop": shopId,
+	})
+		.populate("orderItems.product")
+		.populate("user");
+
+	res.status(200).json({
+		success: true,
+		salesReport,
+	});
+});
+
 const getSingleOrderDetailsForShop = asyncErrorHandler(
 	async (req, res, next) => {
 		const { orderId, shopId } = req.params;
@@ -350,4 +365,5 @@ module.exports = {
 	changeOrderStatus,
 	invoiceGenerator,
 	returnOrder,
+	getSalesReport,
 };
