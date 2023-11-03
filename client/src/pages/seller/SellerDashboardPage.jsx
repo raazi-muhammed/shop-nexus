@@ -132,61 +132,68 @@ const SellerDashboardPage = () => {
 	}, []);
 
 	return (
-		<main className="vw-100">
-			<SellerNavbar shopName={shopName} />
-			<div className="w-100 container container-xxl">
-				<section className="row py-5">
-					<AsideComp asideItems={asideItems} />
-					<section className="col">
-						<Routes>
-							<Route
-								path="/all-products"
-								element={<SellerAllProducts shopId={shopId} />}
-							/>
-							<Route
-								path="/new-product"
-								element={
-									<SellerAddProductPage shopId={shopId} shopName={shopName} />
-								}
-							/>
-							<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
-							<Route
-								path="/stock-management"
-								element={<SellerStockManagement />}
-							/>
-							<Route path="/orders" element={<SellerAllOrders />} />
-							<Route
-								path="/orders/:orderId"
-								element={<SellerSingleOrderDetails />}
-							/>
-							<Route path="/new-coupon" element={<SellerAddCouponPage />} />
-							<Route path="/coupons" element={<SellerAllCouponsPage />} />
-							<Route
-								path="/coupons/:couponId"
-								element={<SellerEditCouponPage />}
-							/>
-							<Route path="/messages" element={<SellerConversationsPage />} />
-							<Route path="/new-event" element={<SellerNewEvent />} />
-							<Route path="/events" element={<AllEventsSeller />} />
-							<Route
-								path="/events/:eventId"
-								element={<EditSingleEventSeller />}
-							/>
-							<Route
-								path="/edit-single-product/:productId"
-								element={<SellerEditSingleProductPage />}
-							/>
-							<Route path="/wallet" element={<SellerWalletPage />} />
-							<Route path="/sales" element={<ChartSales />} />
-							<Route path="/char-orders" element={<ChartOrders />} />
-							<Route path="/chart-products" element={<ChartProducts />} />
-							<Route path="/sales-report" element={<SalesReport />} />
-							<Route path="/" element={<MainDashBoard />} />
-						</Routes>
+		<>
+			<main className="vw-100">
+				<SellerNavbar shopName={shopName} />
+				<div className="w-100 container container-xxl">
+					<section className="row py-5">
+						<AsideComp asideItems={asideItems} />
+						<section className="col col-lg-9">
+							<Routes>
+								<Route
+									path="/all-products"
+									element={<SellerAllProducts shopId={shopId} />}
+								/>
+								<Route
+									path="/new-product"
+									element={
+										<SellerAddProductPage shopId={shopId} shopName={shopName} />
+									}
+								/>
+								<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
+								<Route
+									path="/stock-management"
+									element={<SellerStockManagement />}
+								/>
+								<Route path="/orders" element={<SellerAllOrders />} />
+								<Route
+									path="/orders/:orderId"
+									element={<SellerSingleOrderDetails />}
+								/>
+								<Route path="/new-coupon" element={<SellerAddCouponPage />} />
+								<Route path="/coupons" element={<SellerAllCouponsPage />} />
+								<Route
+									path="/coupons/:couponId"
+									element={<SellerEditCouponPage />}
+								/>
+								<Route path="/messages" element={<SellerConversationsPage />} />
+								<Route path="/new-event" element={<SellerNewEvent />} />
+								<Route path="/events" element={<AllEventsSeller />} />
+								<Route
+									path="/events/:eventId"
+									element={<EditSingleEventSeller />}
+								/>
+								<Route
+									path="/edit-single-product/:productId"
+									element={<SellerEditSingleProductPage />}
+								/>
+								<Route path="/wallet" element={<SellerWalletPage />} />
+								<Route path="/sales" element={<ChartSales />} />
+								<Route path="/char-orders" element={<ChartOrders />} />
+								<Route path="/chart-products" element={<ChartProducts />} />
+								<Route path="/sales-report" element={<SalesReport />} />
+								<Route path="/" element={<MainDashBoard />} />
+							</Routes>
+						</section>
 					</section>
-				</section>
-			</div>
-		</main>
+				</div>
+			</main>
+			{/* <div className="bg-danger p-2">
+				<Routes>
+					<Route path="/sales-report" element={<SalesReport />} />
+				</Routes>
+			</div> */}
+		</>
 	);
 };
 
