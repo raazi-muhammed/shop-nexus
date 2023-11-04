@@ -63,7 +63,7 @@ const SingleOrderDetails = ({
 					<p className="h4 fw-bold text-secondary">Products</p>
 					<section>
 						<>
-							{orderDetails?.map((order) => (
+							{orderDetails?.map((order, i) => (
 								<>
 									<section className="d-flex">
 										<section>
@@ -101,7 +101,7 @@ const SingleOrderDetails = ({
 													setRefresh={setRefresh}
 												/>
 											)}
-											<InvoiceDownloadButton orderDetails={orderDetails} />
+											<InvoiceDownloadButton orderDetails={orderDetails[i]} />
 										</section>
 									</section>
 									<hr className="text-secondary" />

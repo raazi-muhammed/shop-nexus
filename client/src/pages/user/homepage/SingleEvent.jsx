@@ -9,11 +9,13 @@ import { useDispatch } from "react-redux";
 import Icons from "../../../assets/Icons";
 import formatPrice from "../../../utils/formatPrice";
 import ClipLoader from "react-spinners/ClipLoader";
+import QuantityPicker from "../../../components/product/QuantityPicker";
 const { cart, heart } = Icons;
 
 const SingleEvent = () => {
 	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(false);
+	const [quantity, setQuantity] = useState(1);
 	const { eventId } = useParams();
 	const [eventData, setEventData] = useState([]);
 	useEffect(() => {
@@ -32,10 +34,14 @@ const SingleEvent = () => {
 	const handleAddToCart = (productId, discount_price) => {
 		const itemData = {
 			product_id: productId,
-			price: discount_price,
-			type: {
-				name: "Offer",
-				details: "Event Id",
+			quantity,
+			offer: {
+				applied: true,
+				offer_price: discount_price,
+				type: "EVENT",
+				details: {
+					id: eventId,
+				},
 			},
 		};
 		axios
@@ -142,6 +148,10 @@ const SingleEvent = () => {
 									</div>
 								</Link>
 								<section className="m-2 d-flex gap-2">
+									<QuantityPicker
+										quantity={quantity}
+										setQuantity={setQuantity}
+									/>
 									{product?.stock <= 0 ? (
 										<section className="w-100 m-0 mt-auto text-nowrap overflow-eclipses">
 											<p className="text-small p-1 m-0 rounded-4 text-danger">

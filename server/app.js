@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const cookies = require("cookie-parser");
 app.use(cookies());
 const PORT = process.env.PORT;
+connectDatabase();
 
 /* Socket */
 const { createServer } = require("http");
@@ -86,7 +87,6 @@ io.on("connection", (socket) => {
 	sockets(socket, io);
 });
 
-connectDatabase();
 http.listen(PORT, () => {
-	console.log(`SERVER STARTED ON ${PORT}`);
+	console.log(`Local:   http://localhost:${PORT}`);
 });

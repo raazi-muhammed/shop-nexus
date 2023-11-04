@@ -3,7 +3,11 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 import CheckOutShippingPage from "./checkout/CheckOutShippingPage";
 import CheckOutPaymentPage from "./checkout/CheckOutPaymentPage";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, setTotalPrice } from "../../app/feature/order/orderSlice";
+import {
+	setUser,
+	setTotalPrice,
+	setOrderItems,
+} from "../../app/feature/order/orderSlice";
 import SuccessPage from "./checkout/SuccessPage";
 import server from "../../server";
 import axios from "axios";
@@ -22,7 +26,7 @@ const CheckOutPage = () => {
 	const [totalAmountWithOutDiscount, setTotalAmountWithOutDiscount] =
 		useState("-");
 	const [shippingCharge, setShippingCharge] = useState(100);
-	const [discountAmount, setDiscountAmount] = useState("-");
+	const [discountPercentage, setDiscountPercentage] = useState(0);
 	const [totalAmount, setTotalAmount] = useState("-");
 
 	useEffect(() => {
@@ -39,32 +43,55 @@ const CheckOutPage = () => {
 
 	useEffect(() => {
 		try {
-			const _totalAmountWithOutDiscount = userData.cart.reduce((a, e) => {
-				return (a += e.price * e.quantity);
-			}, 0);
+			const _totalAmountWithOutDiscount = userData.cart.reduce(
+				(a, cartItem) => {
+					return (a +=
+						(cartItem?.offer?.offer_price || cartItem?.product.discount_price) *
+						cartItem?.quantity);
+				},
+				0
+			);
 
-			let _discountAmount;
-			if (discountAmount == "-") _discountAmount = 0;
-			else _discountAmount = discountAmount;
+			let _discountPercentage;
+			if (discountPercentage == "-") _discountPercentage = 1;
+			else _discountPercentage = discountPercentage;
 
 			if (userData.plusMember.active) setShippingCharge(0);
-			//setDiscountAmount(_discountAmount);
+			//setDiscountPercentage(_discountPercentage);
 			setTotalAmountWithOutDiscount(_totalAmountWithOutDiscount);
 			setTotalAmount(
-				_totalAmountWithOutDiscount + shippingCharge - _discountAmount
+				(_totalAmountWithOutDiscount + shippingCharge) *
+					(1 - _discountPercentage)
 			);
 
 			/* NEED TO REMOVE OR CHANGE */
 			/* ------------------------------------------------------------------  */
 			dispatch(setUser(userData._id));
-			dispatch(setTotalPrice(_totalAmountWithOutDiscount - _discountAmount));
+			dispatch(
+				setTotalPrice(_totalAmountWithOutDiscount * 1 - _discountPercentage)
+			);
+
+			const orderItems = userData.cart.map((cartItem) => {
+				const data = {
+					product: cartItem.product._id,
+					shop: cartItem.product.shop.id,
+					quantity: cartItem.quantity,
+					price: Math.floor(
+						(cartItem?.offer?.offer_price || cartItem?.product.discount_price) *
+							cartItem?.quantity *
+							(1 - _discountPercentage)
+					),
+				};
+				return data;
+			});
+			dispatch(setOrderItems(orderItems));
 		} catch (error) {
 			console.log(error);
-			setDiscountAmount("-");
+			setDiscountPercentage("-");
 			setTotalAmountWithOutDiscount("-");
 			setTotalAmount("-");
 		}
-	}, [discountAmount, userData]);
+	}, [discountPercentage, userData]);
 
 	const navItems = [
 		{ name: "Shipping", link: "" },
@@ -110,20 +137,43 @@ const CheckOutPage = () => {
 								{userData?.cart?.map((cartItem) => (
 									<div className="mb-2">
 										<p className="text-primary fw-bold mb-0 ">
-											{cartItem?.product.name}{" "}
+											{cartItem?.product.name}
 										</p>
-										<p className="text-small d-inline text-secondary bg-light rounded px-2 text-nowrap">
-											{`${cartItem?.quantity}×${cartItem?.price} = `}
-											<span className="fw-bold">
-												{cartItem?.price * cartItem?.quantity}
-											</span>
-										</p>
+										<div className="d-flex justify-content-between text-secondary mt-2 mb-0">
+											<p className="text-small mb-0">Gross Price</p>
+											<p className="mb-0 text-decoration-line-through">
+												<span className="text-small fw-normal">
+													{`${cartItem?.quantity}×${
+														cartItem?.product.price
+													} = ${formatPrice(
+														cartItem?.quantity * cartItem?.product.price
+													)}`}
+												</span>
+											</p>
+										</div>
+										<div className="d-flex justify-content-between text-secondary fw-bold">
+											<p className="text-small mb-0 mt-1">Discount Price</p>
+											<p className="mb-0">
+												<span className="text-small fw-normal">
+													{`${cartItem?.quantity}×${
+														cartItem?.offer?.offer_price ||
+														cartItem?.product.discount_price
+													} = `}
+												</span>
+												{formatPrice(
+													cartItem?.quantity *
+														(cartItem?.offer?.offer_price ||
+															cartItem?.product.discount_price) *
+														(1 - discountPercentage)
+												)}
+											</p>
+										</div>
 									</div>
 								))}
 								<p className="text-light text-small mt-4 mb-1">Price Details</p>
 								<div className="row">
 									<div className="col-12 d-flex">
-										<p className="col text-secondary">Price</p>
+										<p className="col text-secondary">Gross Price</p>
 										<p className="col-3 mt-auto text-end text-secondary">
 											{formatPrice(totalAmountWithOutDiscount)}
 										</p>
@@ -143,10 +193,8 @@ const CheckOutPage = () => {
 									</Link>
 									<div className="col-12 d-flex">
 										<p className="col text-secondary">Discount</p>
-										<p className="col-3 mt-auto text-end text-secondary">
-											{discountAmount !== "-"
-												? formatPrice(discountAmount)
-												: "-"}
+										<p className="col-3 mt-auto text-end text-secondary text-nowrap">
+											-{formatPrice(totalAmountWithOutDiscount - totalAmount)}
 										</p>
 									</div>
 									<hr className="text-secondary" />
@@ -162,11 +210,12 @@ const CheckOutPage = () => {
 							</section>
 							<CouponComp
 								totalAmountWithOutDiscount={totalAmountWithOutDiscount}
-								setDiscountAmount={setDiscountAmount}
+								setDiscountPercentage={setDiscountPercentage}
 								cartItems={userData.cart}
 							/>
 						</aside>
 					) : null}
+
 					<main className="col">
 						<div>
 							<Routes>

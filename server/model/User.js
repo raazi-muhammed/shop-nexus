@@ -87,6 +87,20 @@ const userSchema = new mongoose.Schema(
 					type: Number,
 					required: true,
 				},
+				offer: {
+					applied: {
+						type: Boolean,
+					},
+					offer_price: {
+						type: Number,
+					},
+					type: {
+						type: String,
+					},
+					details: {
+						type: Object,
+					},
+				},
 				type: {
 					type: Object,
 				},

@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const CouponComp = ({
 	totalAmountWithOutDiscount,
-	setDiscountAmount,
+	setDiscountPercentage,
 	cartItems,
 }) => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -49,7 +49,7 @@ const CouponComp = ({
 			.put(`${server}/user/apply-coupon`, formData, { withCredentials: true })
 			.then((res) => {
 				toast.success(res.data?.message || "Success");
-				setDiscountAmount(Math.floor(res.data?.discountAmount));
+				setDiscountPercentage(res.data?.discountPercentage);
 			})
 			.catch((err) =>
 				err.response?.data?.message

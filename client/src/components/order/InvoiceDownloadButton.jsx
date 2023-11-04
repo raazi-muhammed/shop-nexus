@@ -40,7 +40,7 @@ const InvoiceDownloadButton = ({ orderDetails }) => {
 			</button>
 
 			<div
-				style={{ zIndex: -100, width: "45rem" }}
+				style={{ zIndex: 100, width: "55rem", left: "-100rem" }}
 				className="bg-white position-fixed top-0 opacity-0">
 				<section ref={invoicePdf} className="p-5">
 					<section>
@@ -49,38 +49,38 @@ const InvoiceDownloadButton = ({ orderDetails }) => {
 					<hr className="text-secondary" />
 					<section className="mb-5">
 						<p className="fw-bold m-0">From</p>
-						<p>{orderDetails[0]?.orderItems[0]?.shop?.shopName}</p>
+						<p>{orderDetails?.orderItems[0]?.shop?.shopName}</p>
 
 						<p>
 							<span className="fw-bold">GSTIN Number: </span>
-							{orderDetails[0]?.orderItems[0]?.shop?.GSTIN_Number}
+							{orderDetails?.orderItems[0]?.shop?.GSTIN_Number}
 						</p>
 						<p className="fw-bold m-0">Address</p>
-						<p className="m-0">{`${orderDetails[0]?.orderItems[0]?.shop?.address2}`}</p>
-						<p className="m-0">{`${orderDetails[0]?.orderItems[0]?.shop?.address1}, ${orderDetails[0]?.orderItems[0]?.shop?.zipCode}`}</p>
+						<p className="m-0">{`${orderDetails?.orderItems[0]?.shop?.address2}`}</p>
+						<p className="m-0">{`${orderDetails?.orderItems[0]?.shop?.address1}, ${orderDetails?.orderItems[0]?.shop?.zipCode}`}</p>
 					</section>
 					<hr className="text-secondary" />
 					<section className="row">
 						<section className="col-4">
 							<p className="fw-bold m-0">Order Id</p>
-							<p>{orderDetails[0]?.orderId}</p>
+							<p>{orderDetails?.orderId}</p>
 							<p className="fw-bold m-0">Order Date</p>
-							<p>{convertISOToDate(orderDetails[0]?.createdAt)}</p>
+							<p>{convertISOToDate(orderDetails?.createdAt)}</p>
 							<p className="fw-bold m-0">Invoice Date</p>
 							<p>{convertISOToDate(new Date())}</p>
 						</section>
 						<section className="col-5">
 							<p className="fw-bold m-0">Bill To</p>
-							<p className="mb-0">{orderDetails[0]?.shop?.fullName}</p>
+							<p className="mb-0">{orderDetails?.shippingAddress?.fullName}</p>
 							<p className="mb-0">
-								{orderDetails[0]?.shippingAddress?.phoneNumber}
+								{orderDetails?.shippingAddress?.phoneNumber}
 							</p>
 							<p className="fw-bold mt-3 m-0">Address</p>
-							<p className="m-0">{`${orderDetails[0]?.shippingAddress?.address2}, ${orderDetails[0]?.shippingAddress?.address1}, ${orderDetails[0]?.shippingAddress?.pinCode}, ${orderDetails[0]?.shippingAddress?.city}, ${orderDetails[0]?.shippingAddress?.state}`}</p>
+							<p className="m-0">{`${orderDetails?.shippingAddress?.address2}, ${orderDetails?.shippingAddress?.address1}, ${orderDetails?.shippingAddress?.pinCode}, ${orderDetails?.shippingAddress?.city}, ${orderDetails?.shippingAddress?.state}`}</p>
 
 							<p className="fw-bold mt-3 m-0">Type</p>
 							<p className="mb-2">
-								{orderDetails[0]?.shippingAddress?.addressType}
+								{orderDetails?.shippingAddress?.addressType}
 							</p>
 						</section>
 						<section className="col-3">
@@ -92,48 +92,51 @@ const InvoiceDownloadButton = ({ orderDetails }) => {
 					<hr className="text-secondary" />
 					<section>
 						<table className="table">
-							<thead className="text-nowrap">
+							<thead>
 								<tr>
-									<th>Products</th>
-
+									<th className="text-nowrap">
+										Products <span className="text-white">------------</span>
+									</th>
+									<th>Gross Unit About</th>
 									<th>Qty</th>
-									<th>Unit About</th>
+									<th>Gross Total About</th>
+									<th>Discount About</th>
 									<th>Total Amount</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>{orderDetails[0]?.orderItems[0]?.product.name}</td>
-									<td>{orderDetails[0]?.orderItems[0]?.quantity}</td>
+									<td>{orderDetails?.orderItems[0]?.product.name}</td>
+									<td>
+										{formatPrice(orderDetails?.orderItems[0]?.product.price)}
+									</td>
+									<td>{orderDetails?.orderItems[0]?.quantity}</td>
 									<td>
 										{formatPrice(
-											orderDetails[0]?.orderItems[0]?.product.discount_price /
-												orderDetails[0]?.orderItems[0]?.quantity
+											orderDetails?.orderItems[0]?.product.price *
+												orderDetails?.orderItems[0]?.quantity
 										)}
 									</td>
 									<td>
+										-
 										{formatPrice(
-											orderDetails[0]?.orderItems[0]?.product.discount_price
+											orderDetails?.orderItems[0]?.product.price *
+												orderDetails?.orderItems[0]?.quantity -
+												orderDetails?.orderItems[0]?.price *
+													orderDetails?.orderItems[0]?.quantity
 										)}
 									</td>
+									<td>{formatPrice(orderDetails?.orderItems[0]?.price)}</td>
 								</tr>
 							</tbody>
 							<tfoot className="border-top border-bottom p border-black fw-bold text-nowrap">
 								<tr>
 									<td>Total</td>
-
-									<td>{orderDetails[0]?.orderItems[0]?.quantity}</td>
-									<td>
-										{formatPrice(
-											orderDetails[0]?.orderItems[0]?.product.discount_price /
-												orderDetails[0]?.orderItems[0]?.quantity
-										)}
-									</td>
-									<td>
-										{formatPrice(
-											orderDetails[0]?.orderItems[0]?.product.discount_price
-										)}
-									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td>{formatPrice(orderDetails?.orderItems[0]?.price)}</td>
 								</tr>
 							</tfoot>
 						</table>
@@ -141,9 +144,7 @@ const InvoiceDownloadButton = ({ orderDetails }) => {
 					<section className="mb-5 pb-5">
 						<p className="h5 fw-bold text-end pe-4">
 							<span className="fw-normal">Grand Total: </span>
-							{formatPrice(
-								orderDetails[0]?.orderItems[0]?.product.discount_price
-							)}
+							{formatPrice(orderDetails?.orderItems[0]?.price)}
 						</p>
 					</section>
 					<section className="mt-5">

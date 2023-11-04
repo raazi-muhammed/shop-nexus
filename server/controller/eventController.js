@@ -135,10 +135,24 @@ const getEventDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const isEventValid = async (eventId) => {
+	const today = new Date();
+	const event = await OfferEvent.findOne({
+		_id: eventId,
+		isDeleted: false,
+		start_date: { $lte: today },
+		end_date: { $gte: today },
+	});
+	if (!event) return false;
+
+	return true;
+};
+
 module.exports = {
 	newEvent,
 	getAllEvents,
 	getEventDetails,
 	getAllEventsFromSeller,
 	editEventSeller,
+	isEventValid,
 };

@@ -55,14 +55,14 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 							...singleOrder,
 						},
 					],
-					totalPrice: singleOrder.totalPrice,
+					totalPrice: singleOrder.price,
 				};
 
 				// Add money to Shop Wallet
 				if (newOrderData.paymentInfo.status === "Received") {
 					changerSellerWalletBalanceWithTransaction(
 						singleOrder.shop,
-						singleOrder.totalPrice,
+
 						`Added via Order ${orderData.orderId}`
 					);
 				}
@@ -126,9 +126,9 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 
-	const orderData = await Order.find({ orderId }).populate(
-		"orderItems.product"
-	);
+	const orderData = await Order.find({ orderId })
+		.populate("orderItems.product")
+		.populate("orderItems.shop");
 
 	res.status(200).json({
 		success: true,

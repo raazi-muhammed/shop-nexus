@@ -10,7 +10,7 @@ import {
 	useParams,
 } from "react-router-dom";
 import Icons from "../../assets/Icons";
-const { heart, cart, plus, minus } = Icons;
+const { heart, cart } = Icons;
 
 import toast from "react-hot-toast";
 import ReactImageMagnify from "react-image-magnify";
@@ -24,6 +24,7 @@ import RatingStar from "../../components/product/RatingStar";
 import { getCategoryByKey } from "../../constants/categoriesConstants";
 import ChattingComp from "../../components/ChattingComp";
 import ReviewsSection from "./product/ReviewsSection";
+import QuantityPicker from "../../components/product/QuantityPicker";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);
@@ -194,49 +195,10 @@ const SingleProductPage = () => {
 									</p>
 								</div>
 								<section className="mt-3">
-									<div
-										class="btn-group"
-										role="group"
-										aria-label="Button group with nested dropdown">
-										<button
-											type="button"
-											disabled={quantity <= 1}
-											onClick={() =>
-												setQuantity((currentQuantity) => currentQuantity - 1)
-											}
-											class="btn btn-sm text-primary btn-light p-0">
-											{minus}
-										</button>
-										<div class="btn-group" role="group">
-											<button
-												type="button"
-												class="btn btn-light btn-sm text-primary dropdown-toggle px-3"
-												data-bs-toggle="dropdown"
-												aria-expanded="false">
-												{quantity}
-											</button>
-											<ul class="dropdown-menu">
-												<li onClick={() => setQuantity(5)}>
-													<a class="dropdown-item" href="#">
-														5
-													</a>
-												</li>
-												<li onClick={() => setQuantity(10)}>
-													<a class="dropdown-item" href="#">
-														10
-													</a>
-												</li>
-											</ul>
-										</div>
-										<button
-											onClick={() =>
-												setQuantity((currentQuantity) => currentQuantity + 1)
-											}
-											type="button"
-											class="btn btn-sm text-primary btn-light p-0">
-											{plus}
-										</button>
-									</div>
+									<QuantityPicker
+										quantity={quantity}
+										setQuantity={setQuantity}
+									/>
 								</section>
 								<section className="my-3 d-flex gap-2">
 									{productData.stock <= 0 ? (
