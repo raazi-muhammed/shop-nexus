@@ -128,6 +128,14 @@ const getEventDetails = asyncErrorHandler(async (req, res, next) => {
 
 		eventsData.selected_products = products;
 	}
+	if (eventsData.type_of_event === "ALL_FROM_SHOP") {
+		let products = await Products.find({
+			isDeleted: { $ne: true },
+			"shop.id": eventsData.shop,
+		});
+
+		eventsData.selected_products = products;
+	}
 
 	res.status(200).json({
 		success: true,

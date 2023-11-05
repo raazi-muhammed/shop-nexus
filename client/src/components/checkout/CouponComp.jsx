@@ -4,11 +4,7 @@ import server from "../../server";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-const CouponComp = ({
-	totalAmountWithOutDiscount,
-	setDiscountPercentage,
-	cartItems,
-}) => {
+const CouponComp = ({ grossPrice, setDiscountPercentage, cartItems }) => {
 	const userData = useSelector((state) => state.userData.userData);
 	const [couponCode, setCouponCode] = useState();
 	const [couponData, setCouponData] = useState([]);
@@ -24,24 +20,21 @@ const CouponComp = ({
 
 	useEffect(() => {
 		axios
-			.get(
-				`${server}/user/get-coupons-to-display?totalAmount=${totalAmountWithOutDiscount}`,
-				{
-					withCredentials: true,
-				}
-			)
+			.get(`${server}/user/get-coupons-to-display?totalAmount=${grossPrice}`, {
+				withCredentials: true,
+			})
 			.then((res) => {
 				setCouponData(res.data?.couponData);
 			})
 			.catch((err) => console.log(err));
-	}, [totalAmountWithOutDiscount]);
+	}, [grossPrice]);
 
 	const handleApplyCoupon = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
 		console.log(cartItems);
 		const formData = {
-			totalAmount: totalAmountWithOutDiscount,
+			totalAmount: grossPrice,
 			couponCode,
 			products: cartItems,
 		};

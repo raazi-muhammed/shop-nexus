@@ -15,19 +15,19 @@ import toast from "react-hot-toast";
 import formatPrice from "../../utils/formatPrice";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import CouponComp from "../../components/checkout/couponComp";
+import CheckOutNavBar from "./checkout/CheckOutNavBar";
+import PriceDetails from "./checkout/PriceDetails";
 
 const CheckOutPage = () => {
-	const location = useLocation();
-
 	const userData = useSelector((state) => state.userData.userData);
+	const [currentNav, setCurrentNav] = useState(0);
 	const orderState = useSelector((state) => state.order);
 	const dispatch = useDispatch();
 
-	const [totalAmountWithOutDiscount, setTotalAmountWithOutDiscount] =
-		useState("-");
+	const [grossPrice, setGrossPrice] = useState(0);
 	const [shippingCharge, setShippingCharge] = useState(100);
 	const [discountPercentage, setDiscountPercentage] = useState(0);
-	const [totalAmount, setTotalAmount] = useState("-");
+	const [totalAmount, setTotalAmount] = useState(0);
 
 	useEffect(() => {
 		axios
@@ -43,34 +43,27 @@ const CheckOutPage = () => {
 
 	useEffect(() => {
 		try {
-			const _totalAmountWithOutDiscount = userData.cart.reduce(
-				(a, cartItem) => {
-					return (a +=
-						(cartItem?.offer?.offer_price || cartItem?.product.discount_price) *
-						cartItem?.quantity);
-				},
-				0
-			);
-
-			let _discountPercentage;
-			if (discountPercentage == "-") _discountPercentage = 1;
-			else _discountPercentage = discountPercentage;
+			/* Setting Gross Price  
+			----------------------
+			- if there is a offer price take that
+			- else take discount price from product data
+			- then multiply it by quantity
+			- loop thought this on every item on the cart */
+			const _grossPrice = userData.cart.reduce((a, cartItem) => {
+				return (a +=
+					(cartItem?.offer?.offer_price || cartItem?.product.discount_price) *
+					cartItem?.quantity);
+			}, 0);
 
 			if (userData.plusMember.active) setShippingCharge(0);
-			//setDiscountPercentage(_discountPercentage);
-			setTotalAmountWithOutDiscount(_totalAmountWithOutDiscount);
-			setTotalAmount(
-				(_totalAmountWithOutDiscount + shippingCharge) *
-					(1 - _discountPercentage)
-			);
 
-			/* NEED TO REMOVE OR CHANGE */
-			/* ------------------------------------------------------------------  */
+			setGrossPrice(_grossPrice);
+			setTotalAmount((_grossPrice + shippingCharge) * (1 - discountPercentage));
+
 			dispatch(setUser(userData._id));
-			dispatch(
-				setTotalPrice(_totalAmountWithOutDiscount * 1 - _discountPercentage)
-			);
+			dispatch(setTotalPrice(_grossPrice * 1 - discountPercentage));
 
+			/* Updating Order Items Changes to Redux */
 			const orderItems = userData.cart.map((cartItem) => {
 				const data = {
 					product: cartItem.product._id,
@@ -79,7 +72,7 @@ const CheckOutPage = () => {
 					price: Math.floor(
 						(cartItem?.offer?.offer_price || cartItem?.product.discount_price) *
 							cartItem?.quantity *
-							(1 - _discountPercentage)
+							(1 - discountPercentage)
 					),
 				};
 				return data;
@@ -87,48 +80,16 @@ const CheckOutPage = () => {
 			dispatch(setOrderItems(orderItems));
 		} catch (error) {
 			console.log(error);
-			setDiscountPercentage("-");
-			setTotalAmountWithOutDiscount("-");
-			setTotalAmount("-");
+			setDiscountPercentage(0);
+			setGrossPrice(0);
+			setTotalAmount(0);
 		}
 	}, [discountPercentage, userData]);
-
-	const navItems = [
-		{ name: "Shipping", link: "" },
-		{ name: "Payment", link: "payment" },
-		{ name: "Success", link: "success" },
-	];
-
-	const [currentNav, setCurrentNav] = useState(0);
-	useEffect(() => {
-		navItems.map((e, i) => {
-			if (location.pathname.endsWith(e.link)) setCurrentNav(i);
-		});
-	}, [location.pathname]);
 
 	return (
 		<div className="container container-xxl min-vh-100">
 			<div className="py-5">
-				<nav className="d-flex justify-content-center mb-4">
-					{navItems.map((e, i) => (
-						<div className="d-flex align-items-center">
-							{i !== 0 && (
-								<div
-									className={currentNav >= i ? "bg-primary" : "bg-light"}
-									style={{ width: "3rem", height: "5px" }}></div>
-							)}
-							<button
-								className={
-									currentNav >= i
-										? "btn btn-sm px-3 text-white bg-primary"
-										: "btn btn-sm px-3 text-secondary bg-light"
-								}>
-								{e.name}
-							</button>
-						</div>
-					))}
-				</nav>
-
+				<CheckOutNavBar currentNav={currentNav} setCurrentNav={setCurrentNav} />
 				<div className="row flex-row-reverse">
 					{currentNav != 2 ? (
 						<aside className="col-4">
@@ -170,46 +131,14 @@ const CheckOutPage = () => {
 										</div>
 									</div>
 								))}
-								<p className="text-light text-small mt-4 mb-1">Price Details</p>
-								<div className="row">
-									<div className="col-12 d-flex">
-										<p className="col text-secondary">Gross Price</p>
-										<p className="col-3 mt-auto text-end text-secondary">
-											{formatPrice(totalAmountWithOutDiscount)}
-										</p>
-									</div>
-									<div className="col-12 d-flex">
-										<p className="mb-0 col text-secondary">Shipping Charge</p>
-										<p className="mb-0 col-3 mt-auto text-end text-secondary">
-											{shippingCharge === 0
-												? "FREE"
-												: formatPrice(shippingCharge)}
-										</p>
-									</div>
-									<Link
-										to={"/shop-nexus-plus"}
-										className="text-small text-light mb-2">
-										Get Free shipping
-									</Link>
-									<div className="col-12 d-flex">
-										<p className="col text-secondary">Discount</p>
-										<p className="col-3 mt-auto text-end text-secondary text-nowrap">
-											-{formatPrice(totalAmountWithOutDiscount - totalAmount)}
-										</p>
-									</div>
-									<hr className="text-secondary" />
-									<div className="col-12 d-flex">
-										<p className="col text-primary fw-bold m-0">
-											Discounted Amount
-										</p>
-										<p className="col-3 mt-auto text-end text-primary fw-bold m-0">
-											{formatPrice(totalAmount)}
-										</p>
-									</div>
-								</div>
+								<PriceDetails
+									grossPrice={grossPrice}
+									shippingCharge={shippingCharge}
+									totalAmount={totalAmount}
+								/>
 							</section>
 							<CouponComp
-								totalAmountWithOutDiscount={totalAmountWithOutDiscount}
+								grossPrice={grossPrice}
 								setDiscountPercentage={setDiscountPercentage}
 								cartItems={userData.cart}
 							/>

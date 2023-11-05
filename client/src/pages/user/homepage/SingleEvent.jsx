@@ -24,6 +24,10 @@ const SingleEvent = () => {
 			.get(`${server}/event/get-event-details/${eventId}`)
 			.then((res) => {
 				setEventData(res.data?.eventsData);
+				console.log(res.data?.eventsData);
+				if (res.data?.eventsData.type_of_event === "BYE_ONE_GET_ONE_FREE") {
+					setQuantity(2);
+				}
 			})
 			.catch((err) => console.log(err))
 			.finally(() => {
@@ -32,6 +36,10 @@ const SingleEvent = () => {
 	}, []);
 
 	const handleAddToCart = (productId, discount_price) => {
+		if (eventData.type_of_event === "BYE_ONE_GET_ONE_FREE" && quantity < 2) {
+			toast.error("You must buy min 2 items ");
+			return;
+		}
 		const itemData = {
 			product_id: productId,
 			quantity,

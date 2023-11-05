@@ -9,7 +9,7 @@ import {
 	formClass,
 	submitButtonClass,
 } from "../../../utils/styleClasses";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SellerEventCardProduct from "../../../components/events/SellerEventCardProduct";
 import typeOfEventsConstants from "../../../constants/typeOfEventConstants";
 
@@ -17,6 +17,7 @@ const SellerNewEvent = () => {
 	const { shopId } = useParams();
 	const today = new Date();
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [eventName, setEventName] = useState("");
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
@@ -104,7 +105,11 @@ const SellerNewEvent = () => {
 		setAllowSubmission(false);
 
 		let formData = [];
-		if (typeOfEvent === "PRODUCT_BASED" || typeOfEvent === "COMBO_OFFER") {
+		if (
+			typeOfEvent === "PRODUCT_BASED" ||
+			typeOfEvent === "COMBO_OFFER" ||
+			typeOfEvent === "BYE_ONE_GET_ONE_FREE"
+		) {
 			formData = {
 				typeOfEvent,
 				eventName: eventName.trim(),
@@ -116,14 +121,24 @@ const SellerNewEvent = () => {
 				shopId,
 				selectedProducts,
 			};
-		}
-		if (typeOfEvent === "CATEGORY_BASED") {
+		} else if (typeOfEvent === "CATEGORY_BASED") {
 			formData = {
 				typeOfEvent,
 				eventName: eventName.trim(),
 				startDate,
 				endDate,
 				category,
+				description: description.trim(),
+				discountPercentage,
+				image,
+				shopId,
+			};
+		} else {
+			formData = {
+				typeOfEvent,
+				eventName: eventName.trim(),
+				startDate,
+				endDate,
 				description: description.trim(),
 				discountPercentage,
 				image,
@@ -136,7 +151,8 @@ const SellerNewEvent = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
-				navigate(-1);
+				//changing the last part of url
+				navigate(location.pathname.replace(/[^/]*$/, "events"));
 				toast.success(res.data?.message || "Success");
 			})
 			.catch((err) => {
@@ -240,7 +256,9 @@ const SellerNewEvent = () => {
 					</div>
 				</div>
 
-				{typeOfEvent === "PRODUCT_BASED" || typeOfEvent === "COMBO_OFFER" ? (
+				{typeOfEvent === "PRODUCT_BASED" ||
+				typeOfEvent === "COMBO_OFFER" ||
+				typeOfEvent === "BYE_ONE_GET_ONE_FREE" ? (
 					<>
 						<div className="row">
 							<label
@@ -253,12 +271,12 @@ const SellerNewEvent = () => {
 									className="btn btn-light w-100"
 									data-bs-toggle="modal"
 									data-bs-target="#exampleModal">
-									Select Products
+									Select Products ({selectedProducts.length})
 								</button>
 							</div>
 						</div>
 					</>
-				) : (
+				) : typeOfEvent === "CATEGORY_BASED" ? (
 					<>
 						<div className="row">
 							<label className={formLabelClass} htmlFor="categorySelect">
@@ -280,7 +298,7 @@ const SellerNewEvent = () => {
 							</div>
 						</div>
 					</>
-				)}
+				) : null}
 				<div className="row">
 					<label htmlFor="product-name" className={formLabelClass}>
 						Discount Percentage
@@ -290,7 +308,11 @@ const SellerNewEvent = () => {
 							type="text"
 							className="form-control"
 							id="product-name"
-							value={discountPercentage}
+							value={
+								typeOfEvent === "BYE_ONE_GET_ONE_FREE"
+									? 0.5
+									: discountPercentage
+							}
 							name="discountPercentage"
 							onChange={(e) => setDiscountPercentage(e.target.value)}
 							pattern="^(0(\.\d*)?|1(\.0+)?)$"
