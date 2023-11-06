@@ -143,7 +143,7 @@ const getEventDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-const isEventValid = async (eventId) => {
+const isEventValid = async (eventId, cartItems) => {
 	const today = new Date();
 	const event = await OfferEvent.findOne({
 		_id: eventId,
@@ -151,6 +151,20 @@ const isEventValid = async (eventId) => {
 		start_date: { $lte: today },
 		end_date: { $gte: today },
 	});
+
+	// If the event type if COMBO making user both products are there in the cart
+	if (event.type_of_event == "COMBO_OFFER") {
+		const newValidation = event.selected_products.map((selectProducts) => {
+			for (let i = 0; i < cartItems.length; i++) {
+				if (cartItems[i].product._id.equals(selectProducts)) {
+					return true;
+				}
+			}
+			return false;
+		});
+		if (newValidation.includes(false)) return false;
+	}
+
 	if (!event) return false;
 
 	return true;

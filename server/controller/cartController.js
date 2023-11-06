@@ -12,10 +12,12 @@ const getCart = asyncErrorHandler(async (req, res, next) => {
 	updatedUser.cart.map(async (item, i) => {
 		if (item.offer.applied) {
 			if (item.offer.type === "EVENT") {
-				const eventValid = await isEventValid(item.offer.details.id);
-				console.log(eventValid);
+				const eventValid = await isEventValid(
+					item.offer.details.id,
+					updatedUser.cart
+				);
 
-				// if the event if invalid removing the offer feild from user
+				// if the event if invalid removing the offer felid from user
 				if (!eventValid) {
 					let cartItem = item;
 					cartItem.offer = {};
