@@ -100,8 +100,7 @@ const CartUser = () => {
 								className="col-7 my-auto">
 								<p className="text-small mb-0">{cartItem.product?.name}</p>
 								<p className="text-secondary fw-bold">{`${formatPrice(
-									cartItem?.offer?.offer_price ||
-										cartItem.product?.discount_price
+									cartItem?.offer?.offerPrice || cartItem.product?.discountPrice
 								)} × ${cartItem.quantity}`}</p>
 							</section>
 							<div className="col-2 my-auto">

@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema(
 		price: {
 			type: Number,
 		},
-		discount_price: {
+		discountPrice: {
 			type: Number,
 			required: [true, "Please enter your product price!"],
 		},
@@ -30,9 +30,6 @@ const productSchema = new mongoose.Schema(
 		},
 		images: [
 			{
-				public_id: {
-					type: String,
-				},
 				url: {
 					type: String,
 					required: true,
@@ -64,11 +61,11 @@ const productSchema = new mongoose.Schema(
 				required: true,
 			},
 		},
-		sold_out: {
+		soldOut: {
 			type: Boolean,
 			default: false,
 		},
-		total_sell: {
+		totalSell: {
 			type: Number,
 			default: 0,
 		},

@@ -18,10 +18,10 @@ const AllEventsSeller = () => {
 		sortBy: "createdAt",
 		sortItems: [
 			{ value: "createdAt", title: "Date" },
-			{ value: "type_of_event", title: "Event Type" },
-			{ value: "discount_percentage", title: "Discount Percentage" },
-			{ value: "start_date", title: "Start Date" },
-			{ value: "end_date", title: "End Date" },
+			{ value: "typeOfEvent", title: "Event Type" },
+			{ value: "discountPercentage", title: "Discount Percentage" },
+			{ value: "startDate", title: "Start Date" },
+			{ value: "endDate", title: "End Date" },
 		],
 	});
 
@@ -72,7 +72,7 @@ const AllEventsSeller = () => {
 					<section className="d-flex flex-column gap-2">
 						{eventsData.map((event) => (
 							<>
-								{new Date(event.end_date) >= new Date() &&
+								{new Date(event.endDate) >= new Date() &&
 									event.isDeleted === false && (
 										<EventCartMain key={event._id} event={event} />
 									)}
@@ -83,7 +83,7 @@ const AllEventsSeller = () => {
 						)}
 						{eventsData.map((event) => (
 							<>
-								{(new Date(event.end_date) < new Date() || event.isDeleted) && (
+								{(new Date(event.endDate) < new Date() || event.isDeleted) && (
 									<EventCartMain key={event._id} event={event} />
 								)}
 							</>

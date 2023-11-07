@@ -113,7 +113,7 @@ const sellerActivateShop = asyncErrorHandler(async (req, res, next) => {
 		address1,
 		address2,
 		password,
-		GSTIN_Number: gstinNumber,
+		gstinNumber,
 	});
 
 	sendToken(dataUser, 201, res);

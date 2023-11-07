@@ -51,7 +51,7 @@ const CheckOutPage = () => {
 			- loop thought this on every item on the cart */
 			const _grossPrice = userData.cart.reduce((a, cartItem) => {
 				return (a +=
-					(cartItem?.offer?.offer_price || cartItem?.product.discount_price) *
+					(cartItem?.offer?.offerPrice || cartItem?.product.discountPrice) *
 					cartItem?.quantity);
 			}, 0);
 
@@ -70,7 +70,7 @@ const CheckOutPage = () => {
 					shop: cartItem.product.shop.id,
 					quantity: cartItem.quantity,
 					price: Math.floor(
-						(cartItem?.offer?.offer_price || cartItem?.product.discount_price) *
+						(cartItem?.offer?.offerPrice || cartItem?.product.discountPrice) *
 							cartItem?.quantity *
 							(1 - discountPercentage)
 					),
@@ -117,14 +117,14 @@ const CheckOutPage = () => {
 											<p className="mb-0">
 												<span className="text-small fw-normal">
 													{`${cartItem?.quantity}×${
-														cartItem?.offer?.offer_price ||
-														cartItem?.product.discount_price
+														cartItem?.offer?.offerPrice ||
+														cartItem?.product.discountPrice
 													} = `}
 												</span>
 												{formatPrice(
 													cartItem?.quantity *
-														(cartItem?.offer?.offer_price ||
-															cartItem?.product.discount_price) *
+														(cartItem?.offer?.offerPrice ||
+															cartItem?.product.discountPrice) *
 														(1 - discountPercentage)
 												)}
 											</p>

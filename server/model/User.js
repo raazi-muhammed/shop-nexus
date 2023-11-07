@@ -61,14 +61,9 @@ const userSchema = new mongoose.Schema(
 				},
 			},
 		],
-		role: {
-			type: String,
-			default: "user",
-		},
 		avatar: {
 			url: {
 				type: String,
-				//required: true,
 			},
 		},
 		cart: [
@@ -91,7 +86,7 @@ const userSchema = new mongoose.Schema(
 					applied: {
 						type: Boolean,
 					},
-					offer_price: {
+					offerPrice: {
 						type: Number,
 					},
 					type: {

@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../model/User");
 const ErrorHandler = require("../utils/errorHandler");
 const Shop = require("../model/Shop");
+const bcrypt = require("bcrypt");
 
 exports.isUserAuthenticated = asyncErrorHandler(async (req, res, next) => {
 	let token;

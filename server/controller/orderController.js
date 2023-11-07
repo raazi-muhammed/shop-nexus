@@ -92,24 +92,12 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getAllOrders = asyncErrorHandler(async (req, res, next) => {
-	const ITEMS_PER_PAGE = 10;
-	const { page } = req.query;
-	const skip = (page - 1) * ITEMS_PER_PAGE;
-	const countPromise = Order.estimatedDocumentCount({});
-
-	const orderDataPromise = Order.find({})
-		.populate("orderItems.product")
-		.limit(ITEMS_PER_PAGE)
-		.skip(skip)
-		.sort({ createdAt: -1 });
-
-	const [count, orderData] = await Promise.all([
-		countPromise,
-		orderDataPromise,
-	]);
-
-	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
-	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+	const [pagination, orderData] = await findWithPaginationAndSorting(
+		req,
+		Order,
+		{},
+		"orderItems.product"
+	);
 
 	res.status(200).json({
 		success: true,
@@ -150,7 +138,7 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 		{ orderId, _id: req.body.productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
-			status: "Canceled",
+			status: "CANCELED",
 		}
 	);
 
@@ -176,7 +164,7 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 		{ _id: req.body.productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
-			status: "Processing Return",
+			status: "PROCESSING_RETURN",
 		}
 	);
 
@@ -344,7 +332,7 @@ const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 	const { orderStatus, productOrderId } = req.body;
 
-	if (orderStatus === "Return Approved")
+	if (orderStatus === "RETURN_APPROVED")
 		await refundedToUser(orderId, productOrderId);
 
 	const eventToAdd = {

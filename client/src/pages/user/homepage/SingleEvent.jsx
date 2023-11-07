@@ -25,7 +25,7 @@ const SingleEvent = () => {
 			.then((res) => {
 				setEventData(res.data?.eventsData);
 				console.log(res.data?.eventsData);
-				if (res.data?.eventsData.type_of_event === "BYE_ONE_GET_ONE_FREE") {
+				if (res.data?.eventsData.typeOfEvent === "BYE_ONE_GET_ONE_FREE") {
 					setQuantity(2);
 				}
 			})
@@ -35,8 +35,8 @@ const SingleEvent = () => {
 			});
 	}, []);
 
-	const handleAddToCart = (productId, discount_price) => {
-		if (eventData.type_of_event === "BYE_ONE_GET_ONE_FREE" && quantity < 2) {
+	const handleAddToCart = (productId, discountPrice) => {
+		if (eventData.typeOfEvent === "BYE_ONE_GET_ONE_FREE" && quantity < 2) {
 			toast.error("You must buy min 2 items ");
 			return;
 		}
@@ -45,7 +45,7 @@ const SingleEvent = () => {
 			quantity,
 			offer: {
 				applied: true,
-				offer_price: discount_price,
+				offerPrice: discountPrice,
 				type: "EVENT",
 				details: {
 					id: eventId,
@@ -63,7 +63,7 @@ const SingleEvent = () => {
 	const handleAddToWishList = () => {
 		const itemData = {
 			product_id: productId,
-			price: discount_price,
+			price: discountPrice,
 			type: {
 				name: "Offer",
 				details: "Event Id",
@@ -112,7 +112,7 @@ const SingleEvent = () => {
 				</section>
 				<hr className="text-secondary" />
 				<section>
-					{eventData?.selected_products?.map((product) => (
+					{eventData?.selectedProducts?.map((product) => (
 						<section
 							key={product._id}
 							className="row bg-white rounded-4  p-1 mb-3">
@@ -140,13 +140,12 @@ const SingleEvent = () => {
 											<p className="h4 mb-0 fw-bold">
 												{formatPrice(
 													Math.floor(
-														product?.price *
-															(1 - eventData?.discount_percentage)
+														product?.price * (1 - eventData?.discountPercentage)
 													)
 												)}
 											</p>
 											<p className="text-small text-decoration-line-through">
-												{formatPrice(product?.discount_price)}
+												{formatPrice(product?.discountPrice)}
 											</p>
 											<p className="text-small text-decoration-line-through">
 												{formatPrice(product?.price)}
@@ -173,8 +172,7 @@ const SingleEvent = () => {
 												handleAddToCart(
 													product?._id,
 													Math.floor(
-														product?.price *
-															(1 - eventData?.discount_percentage)
+														product?.price * (1 - eventData?.discountPercentage)
 													)
 												)
 											}>
@@ -186,7 +184,7 @@ const SingleEvent = () => {
 											handleAddToWishList(
 												product?._id,
 												Math.floor(
-													product?.price * (1 - eventData?.discount_percentage)
+													product?.price * (1 - eventData?.discountPercentage)
 												)
 											)
 										}

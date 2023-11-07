@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const offerEventsSchema = new mongoose.Schema(
 	{
-		type_of_event: {
+		typeOfEvent: {
 			type: String,
 			required: true,
 		},
@@ -17,18 +17,18 @@ const offerEventsSchema = new mongoose.Schema(
 		category: {
 			type: String,
 		},
-		start_date: {
+		startDate: {
 			type: Date,
 			require: true,
 		},
-		end_date: {
+		endDate: {
 			type: Date,
 			require: true,
 		},
-		discount_percentage: {
+		discountPercentage: {
 			type: Number,
 		},
-		selected_products: [
+		selectedProducts: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "Product",
@@ -41,9 +41,6 @@ const offerEventsSchema = new mongoose.Schema(
 		},
 		images: [
 			{
-				public_id: {
-					type: String,
-				},
 				url: {
 					type: String,
 					required: true,

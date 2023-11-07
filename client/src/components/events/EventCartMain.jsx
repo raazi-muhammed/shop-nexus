@@ -14,15 +14,15 @@ const EventCartMain = ({ event }) => {
 			</section>
 			<section className="col-3">
 				<p className="text-small text-secondary m-0">Start Date</p>
-				<p>{convertISOToDate(event.start_date)}</p>
+				<p>{convertISOToDate(event.startDate)}</p>
 				<p className="text-small text-secondary m-0">End Date</p>
-				<p className="m-0">{convertISOToDate(event.end_date)}</p>
+				<p className="m-0">{convertISOToDate(event.endDate)}</p>
 			</section>
 			<section className="col-3">
 				<p className="text-small text-secondary m-0">Type of event</p>
-				<p>{getTypeOfEventByKey(event.type_of_event)}</p>
+				<p>{getTypeOfEventByKey(event.typeOfEvent)}</p>
 				<p className="text-small text-secondary m-0">Discount Percentage</p>
-				<p className="mb-0">{event.discount_percentage * 100}%</p>
+				<p className="mb-0">{event.discountPercentage * 100}%</p>
 			</section>
 			<section className="d-flex align-items-center justify-content-end  col-1 gap-3 ">
 				<Link to={`${event._id}`}>

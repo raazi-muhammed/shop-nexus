@@ -54,10 +54,10 @@ const EditSingleEventSeller = () => {
 				setName(eventData?.name);
 				setDescription(eventData?.description);
 				setStartDate(
-					new Date(eventData?.start_date).toISOString().split("T")[0]
+					new Date(eventData?.startDate).toISOString().split("T")[0]
 				);
-				setEndDate(new Date(eventData?.end_date).toISOString().split("T")[0]);
-				setDiscountPercentage(eventData?.discount_percentage);
+				setEndDate(new Date(eventData?.endDate).toISOString().split("T")[0]);
+				setDiscountPercentage(eventData?.discountPercentage);
 				setImageUrl(eventData?.images[0]?.url);
 			})
 			.catch((err) => toast.error(err.data?.message || "An error occurred"));
@@ -110,12 +110,12 @@ const EditSingleEventSeller = () => {
 				const eventData = res.data.eventsData;
 				setName(eventData?.name);
 				setDescription(eventData?.description);
-				setTypeOfEvent(eventData?.type_of_event);
+				setTypeOfEvent(eventData?.typeOfEvent);
 				setStartDate(
-					new Date(eventData?.start_date).toISOString().split("T")[0]
+					new Date(eventData?.startDate).toISOString().split("T")[0]
 				);
-				setEndDate(new Date(eventData?.end_date).toISOString().split("T")[0]);
-				setDiscountPercentage(eventData?.discount_percentage);
+				setEndDate(new Date(eventData?.endDate).toISOString().split("T")[0]);
+				setDiscountPercentage(eventData?.discountPercentage);
 				setImageUrl(eventData?.images[0]?.url);
 			})
 			.catch((err) => console.log(err));

@@ -9,7 +9,7 @@ const AdminSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(true);
 
-	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
+	const [orderDetails, setOrderDetails] = useState([{ orderItems: [] }]);
 	const { orderId } = useParams();
 
 	useEffect(() => {
@@ -19,6 +19,7 @@ const AdminSingleOrderDetails = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
+				console.log(res?.data);
 				setOrderDetails(res?.data?.orderData);
 			})
 			.finally(() => setLoading(false));
@@ -40,7 +41,7 @@ const AdminSingleOrderDetails = () => {
 			) : (
 				<SingleOrderDetails
 					orderDetails={orderDetails}
-					orderId={orderId}
+					orderId={orderDetails[0]?.orderId}
 					setRefresh={setRefresh}
 					refresh={refresh}
 					showEvents={true}

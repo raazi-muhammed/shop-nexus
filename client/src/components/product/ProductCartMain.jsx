@@ -11,23 +11,13 @@ import RatingStar from "./RatingStar";
 
 const { heart, cart } = Icons;
 
-const ProductCartMain = ({
-	name,
-	sold,
-	price,
-	rating,
-	discount_price,
-	imgUrl,
-	shopName,
-	productId,
-	stock,
-}) => {
+const ProductCartMain = ({ product }) => {
 	const dispatch = useDispatch();
 
 	const handleAddToCart = () => {
 		const itemData = {
-			product_id: productId,
-			price: discount_price,
+			product_id: product._id,
+			price: product.discountPrice,
 		};
 		axios
 			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
@@ -39,8 +29,8 @@ const ProductCartMain = ({
 	};
 	const handleAddToWishList = () => {
 		const itemData = {
-			product_id: productId,
-			price: discount_price,
+			product_id: product._id,
+			price: product.discountPrice,
 		};
 		axios
 			.post(`${server}/wish-list/add-to-wish-list`, itemData, {
@@ -55,27 +45,31 @@ const ProductCartMain = ({
 	return (
 		<div className="col p-2">
 			<section className="h-100 bg-white d-flex flex-column rounded-4">
-				<Link to={`/product/${productId}`}>
-					<img className="rounded-4 w-100 " src={imgUrl} alt="" />
+				<Link to={`/product/${product._id}`}>
+					<img
+						className="rounded-4 w-100 "
+						src={product.images[0]?.url}
+						alt=""
+					/>
 				</Link>
 				<section className="d-flex flex-column p-4 pb-0 mt-auto">
 					<Link className="text-secondary text-small text-decoration-none">
-						{shopName}
+						{product.shop.name}
 					</Link>
-					<p className="mb-1">{name}</p>
+					<p className="mb-1">{product.name}</p>
 					<section className="d-flex gap-2">
-						<RatingStar rating={rating} />
-						<p className="text-small mt-1">{sold} Sold</p>
+						<RatingStar rating={product.rating} />
+						<p className="text-small mt-1">{product.totalSell} Sold</p>
 					</section>
 					<section className="d-flex gap-1 ">
-						<p className="h4 mb-0">{formatPrice(discount_price)}</p>
+						<p className="h4 mb-0">{formatPrice(product.discountPrice)}</p>
 						<p className="text-small text-decoration-line-through">
-							{formatPrice(price)}
+							{formatPrice(product.price)}
 						</p>
 					</section>
 				</section>
 				<section className="m-2 d-flex gap-2">
-					{stock <= 0 ? (
+					{product.stock <= 0 ? (
 						<section className="w-100 m-0 mt-auto text-nowrap overflow-eclipses">
 							<p className="text-small p-1 m-0 rounded-4 text-danger">
 								Currently Unavailable

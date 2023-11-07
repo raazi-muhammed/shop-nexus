@@ -15,7 +15,7 @@ const SellerAllProducts = ({ shopId }) => {
 	const [sortOptions, setSortOptions] = useState({
 		sortBy: "createdAt",
 		sortItems: [
-			{ value: "discount_price", title: "Price" },
+			{ value: "discountPrice", title: "Price" },
 			{ value: "createdAt", title: "Date" },
 			{ value: "rating", title: "Rating" },
 			{ value: "total_sell", title: "Total Sold" },
@@ -82,7 +82,7 @@ const SellerAllProducts = ({ shopId }) => {
 									name={product.name}
 									stock={product.stock}
 									category={product.category}
-									price={product.discount_price}
+									price={product.discountPrice}
 									imgUrl={product.images[0]?.url}
 									shopId={shopId}
 								/>
@@ -99,7 +99,7 @@ const SellerAllProducts = ({ shopId }) => {
 									name={product.name}
 									stock={product.stock}
 									category={product.category}
-									price={product.discount_price}
+									price={product.discountPrice}
 									imgUrl={product.images[0]?.url}
 									shopId={shopId}
 								/>

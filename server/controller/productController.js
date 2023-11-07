@@ -101,7 +101,10 @@ const getProductsIncludingDeleted = asyncErrorHandler(
 
 const getSingleProductDetails = asyncErrorHandler(async (req, res, next) => {
 	const productId = req.params.id;
-	let productDetails = await Products.find({ _id: productId });
+	let productDetails = await Products.find({ _id: productId }).populate(
+		"shop.id"
+	);
+
 	res.status(200).json({
 		success: true,
 		productDetails,
@@ -137,7 +140,7 @@ const editProduct = asyncErrorHandler(async (req, res, next) => {
 			category,
 			price,
 			stock,
-			discount_price: discountedPrice,
+			discountPrice: discountedPrice,
 			$addToSet: { images: { $each: imageUrls } },
 		},
 		{ new: true }
@@ -191,8 +194,8 @@ const editProductAdmin = asyncErrorHandler(async (req, res, next) => {
 		{
 			category: category,
 			rating: rating,
-			sold_out: soldOut,
-			total_sell: totalSales,
+			soldOut: soldOut,
+			totalSell: totalSales,
 		},
 		{ new: true }
 	);

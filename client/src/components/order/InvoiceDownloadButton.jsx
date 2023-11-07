@@ -53,7 +53,7 @@ const InvoiceDownloadButton = ({ orderDetails }) => {
 
 						<p>
 							<span className="fw-bold">GSTIN Number: </span>
-							{orderDetails?.orderItems[0]?.shop?.GSTIN_Number}
+							{orderDetails?.orderItems[0]?.shop?.gstinNumber}
 						</p>
 						<p className="fw-bold m-0">Address</p>
 						<p className="m-0">{`${orderDetails?.orderItems[0]?.shop?.address2}`}</p>

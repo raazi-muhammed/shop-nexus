@@ -75,14 +75,7 @@ const SingleProductPage = () => {
 			.get(`${server}/products/single-product/${id}`)
 			.then((res) => {
 				setProductData(res.data.productDetails[0]);
-
-				axios
-					.get(
-						`${server}/seller/get-shop-details/${res.data.productDetails[0].shop.id}`
-					)
-					.then((res) => {
-						setShopData(res.data.data);
-					});
+				setShopData(res.data.productDetails[0].shop.id);
 			})
 			.catch((err) => toast.error("Loading failed" + err))
 			.finally(() => setLoading(false));
@@ -93,7 +86,7 @@ const SingleProductPage = () => {
 			product_id: id,
 			name: productData.name,
 			quantity,
-			price: productData.discount_price,
+			price: productData.discountPrice,
 			imageUrl: productData?.images[0]?.url,
 		};
 		axios
@@ -109,7 +102,7 @@ const SingleProductPage = () => {
 		const itemData = {
 			product_id: id,
 			name: productData.name,
-			price: productData.discount_price,
+			price: productData.discountPrice,
 			imageUrl: productData?.images[0]?.url,
 		};
 		axios
@@ -182,7 +175,7 @@ const SingleProductPage = () => {
 								</p>
 								<div className="d-flex align-items-center  gap-2 mb-3">
 									<RatingStar rating={productData.rating} />
-									<p className="text-small mt-2 m-0">{`${productData.total_sell} Sold`}</p>
+									<p className="text-small mt-2 m-0">{`${productData.totalSell} Sold`}</p>
 								</div>
 								{productData.stock < 20 && productData.stock !== 0 && (
 									<p className="bg-danger-subtle p-1 px-2  rounded-4 d-inline text-danger">
@@ -191,7 +184,7 @@ const SingleProductPage = () => {
 								)}
 								<div className="mt-3">
 									<p className="h4 mb-0 fw-bold text-primary">
-										{formatPrice(productData.discount_price)}
+										{formatPrice(productData.discountPrice)}
 									</p>
 								</div>
 								<section className="mt-3">

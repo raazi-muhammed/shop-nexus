@@ -133,10 +133,10 @@ const SellerEditSingleProductPage = () => {
 					description,
 					category,
 					price,
-					discount_price,
+					discountPrice,
 					stock,
 					shop,
-					sold_out,
+					soldOut,
 					images,
 				} = res.data?.productDetails[0];
 				setData(res.data?.productDetails[0]);
@@ -144,7 +144,7 @@ const SellerEditSingleProductPage = () => {
 				setCategory(category);
 				setDescription(description);
 				setPrice(price);
-				setDiscountedPrice(discount_price);
+				setDiscountedPrice(discountPrice);
 				setStock(stock);
 				setImagesToDisplay(images);
 			})

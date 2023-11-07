@@ -32,53 +32,18 @@ const shopSchema = new mongoose.Schema(
 			type: Number,
 			required: true,
 		},
-		GSTIN_Number: {
+		gstinNumber: {
 			type: String,
-		},
-		role: {
-			type: String,
-			default: "Seller",
 		},
 		image: {
-			public_id: {
-				type: String,
-				//required: true,
-			},
 			url: {
 				type: String,
-				//required: true,
 			},
 		},
 		zipCode: {
 			type: Number,
 			required: true,
 		},
-		withdrawMethod: {
-			type: Object,
-		},
-		availableBalance: {
-			type: Number,
-			default: 0,
-		},
-		transactions: [
-			{
-				amount: {
-					type: Number,
-					required: true,
-				},
-				status: {
-					type: String,
-					default: "Processing",
-				},
-				createdAt: {
-					type: Date,
-					default: Date.now(),
-				},
-				updatedAt: {
-					type: Date,
-				},
-			},
-		],
 		isBlocked: {
 			type: Boolean,
 			default: false,
@@ -108,7 +73,7 @@ shopSchema.methods.getJwtToken = function () {
 	});
 };
 
-// comapre password
+// compare password
 shopSchema.methods.comparePassword = async function (enteredPassword) {
 	return await bcrypt.compare(enteredPassword, this.password);
 };

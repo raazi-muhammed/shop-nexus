@@ -32,12 +32,12 @@ const ProductSearchResult = ({ productDetails }) => {
 							{productDetails.description}
 						</p>
 						<section className="d-flex gap-2">
-							<RatingStar rating={productDetails.rating} />
-							<p className="text-small mt-2 m-0">{`${productDetails.total_sell} Sold`}</p>
+							<RatingStar rating={productDetails?.rating} />
+							<p className="text-small mt-2 m-0">{`${productDetails.totalSell} Sold`}</p>
 						</section>
 						<section className="d-flex gap-1 ">
 							<p className="h4 mb-0">
-								{formatPrice(productDetails.discount_price)}
+								{formatPrice(productDetails.discountPrice)}
 							</p>
 							<p className="text-small text-decoration-line-through">
 								{formatPrice(productDetails.price)}
