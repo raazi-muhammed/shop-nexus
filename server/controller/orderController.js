@@ -60,9 +60,9 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 
 				// Add money to Shop Wallet
 				if (newOrderData.paymentInfo.status === "Received") {
-					changerSellerWalletBalanceWithTransaction(
+					await changerSellerWalletBalanceWithTransaction(
 						singleOrder.shop,
-
+						singleOrder.price,
 						`Added via Order ${orderData.orderId}`
 					);
 				}
@@ -139,7 +139,6 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
 
-	console.log(req.body.productOrderId);
 	await refundedToUser(orderId, req.body.productOrderId);
 
 	const eventToAdd = {

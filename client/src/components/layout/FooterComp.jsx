@@ -41,7 +41,7 @@ const FooterComp = () => {
 		},
 	];
 	return (
-		<footer className="d-flex gap-5 justify-content-center bg-light p-5 mt-4">
+		<footer className="vw-100 d-flex flex-wrap gap-5 justify-content-center bg-light p-5 mt-4">
 			<section>
 				<p className="text-primary h3">Shop Nexus</p>
 				<p className="text-secondary">Shop Nexus © 2023</p>

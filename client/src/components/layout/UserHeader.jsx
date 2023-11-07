@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Icons from "../../assets/Icons";
 import { useDispatch } from "react-redux";
 import { setSearchTermOptions } from "../../app/feature/search/searchOptionsSlice";
-const { shopIcon } = Icons;
+const { shopIcon, threeLine } = Icons;
 
 const UserHeader = () => {
 	const navigate = useNavigate();
@@ -15,8 +15,8 @@ const UserHeader = () => {
 		navigate(`/search`);
 	};
 	return (
-		<div>
-			<header className="navbar navbar-expand-lg bg-body-primary  bg-primary">
+		<div className="vw-100">
+			<header className="navbar navbar-expand-lg bg-body-primary bg-primary">
 				<div className="container container-xxl ">
 					<Link
 						to={"/"}
@@ -25,19 +25,19 @@ const UserHeader = () => {
 					</Link>
 
 					<button
-						className="navbar-toggler"
+						className="navbar-toggler btn"
 						type="button"
 						data-bs-toggle="collapse"
 						data-bs-target="#navbarSupportedContent"
 						aria-controls="navbarSupportedContent"
 						aria-expanded="false"
 						aria-label="Toggle navigation">
-						<span className="navbar-toggler-icon"></span>
+						<span className="text-secondary">{threeLine}</span>
 					</button>
 					<div className="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul className="navbar-nav mx-auto my-3 my-lg-auto w-50">
+						<ul className="navbar-nav mx-auto my-3 my-lg-auto">
 							<li
-								style={{ maxWidth: "25rem" }}
+								style={{ maxWidth: "25rem", minWidth: "18rem" }}
 								className="nav-item w-100 mx-auto">
 								<form onSubmit={handleSearch} className="d-flex" role="search">
 									<input
@@ -56,7 +56,7 @@ const UserHeader = () => {
 							</li>
 						</ul>
 						<Link to={"/seller/login"}>
-							<button className="btn btn-secondary text-white my-3 my-lg-auto px-3">
+							<button className="w-100 btn btn-secondary text-white my-3 my-lg-auto px-3">
 								<span className="pb-3 mb-1">{shopIcon}</span>
 								<span className="ps-2 mb-0">Seller Login</span>
 							</button>

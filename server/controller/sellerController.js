@@ -177,10 +177,11 @@ const editShopDetails = asyncErrorHandler(async (req, res, next) => {
 const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 	const seller = await Shop.findById(req.seller._id);
 
+	const sellerId = req.seller._id.toString();
 	const [pagination, transaction] = await findWithPaginationAndSorting(
 		req,
 		Transaction,
-		{ personId: req.seller._id }
+		{ personId: sellerId }
 	);
 
 	res.status(200).json({
@@ -254,8 +255,6 @@ const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 		matchOptions.createdAt = { $lt: _endDate, $gt: _startDate };
 	}
 
-	console.log(categorizeBy);
-
 	if (categorizeBy === "MONTH" || categorizeBy === "DAY") {
 		groupOptions._id.month = { $month: "$createdAt" };
 	}
@@ -274,8 +273,6 @@ const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 			$sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 },
 		},
 	]);
-
-	console.log(products);
 
 	res.status(200).json({
 		success: true,
@@ -334,8 +331,6 @@ const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 		})
 	);
 
-	console.log(products);
-
 	res.status(200).json({
 		success: true,
 		chartData: products,
@@ -379,8 +374,6 @@ const getOrdersSoldChartData = asyncErrorHandler(async (req, res, next) => {
 			$sort: { _id: 1 },
 		},
 	]);
-
-	console.log(products);
 
 	res.status(200).json({
 		success: true,

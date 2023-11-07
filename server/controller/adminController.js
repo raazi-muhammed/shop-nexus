@@ -110,51 +110,50 @@ const getContentForDashBoardBetweenDates = async (startDate, endDate) => {
 	]);
 };
 
-const getOrdersSoldChartDataAdmin = asyncErrorHandler(async (req, res, next) => {
+const getOrdersSoldChartDataAdmin = asyncErrorHandler(
+	async (req, res, next) => {
+		const { startDate, endDate } = req.query;
 
-	const { startDate, endDate } = req.query;
+		const matchOptions = {};
 
-	const matchOptions = { };
+		const groupOptions = {
+			_id: "$status",
+			count: { $sum: 1 },
+			totalPrice: { $sum: "$totalPrice" },
+		};
 
-	const groupOptions = {
-		_id: "$status",
-		count: { $sum: 1 },
-		totalPrice: { $sum: "$totalPrice" },
-	};
+		const _startDate = new Date(startDate);
+		const _endDate = new Date(endDate);
 
-	const _startDate = new Date(startDate);
-	const _endDate = new Date(endDate);
+		if (!isNaN(_startDate)) {
+			matchOptions.createdAt = { $gt: _startDate };
+		}
+		if (!isNaN(_endDate)) {
+			matchOptions.createdAt = { $lt: _endDate };
+		}
 
-	if (!isNaN(_startDate)) {
-		matchOptions.createdAt = { $gt: _startDate };
+		if (!isNaN(_endDate) && !isNaN(_startDate)) {
+			matchOptions.createdAt = { $lt: _endDate, $gt: _startDate };
+		}
+
+		const products = await Order.aggregate([
+			{
+				$match: matchOptions,
+			},
+			{
+				$group: groupOptions,
+			},
+			{
+				$sort: { _id: 1 },
+			},
+		]);
+
+		res.status(200).json({
+			success: true,
+			chartData: products,
+		});
 	}
-	if (!isNaN(_endDate)) {
-		matchOptions.createdAt = { $lt: _endDate };
-	}
-
-	if (!isNaN(_endDate) && !isNaN(_startDate)) {
-		matchOptions.createdAt = { $lt: _endDate, $gt: _startDate };
-	}
-
-	const products = await Order.aggregate([
-		{
-			$match: matchOptions,
-		},
-		{
-			$group: groupOptions,
-		},
-		{
-			$sort: { _id: 1 },
-		},
-	]);
-
-	console.log(products);
-
-	res.status(200).json({
-		success: true,
-		chartData: products,
-	});
-});
+);
 
 const getSalesChartDataAdmin = asyncErrorHandler(async (req, res, next) => {
 	const { categorizeBy, startDate, endDate } = req.query;
@@ -183,8 +182,6 @@ const getSalesChartDataAdmin = asyncErrorHandler(async (req, res, next) => {
 		matchOptions.createdAt = { $lt: _endDate, $gt: _startDate };
 	}
 
-	console.log(categorizeBy);
-
 	if (categorizeBy === "MONTH" || categorizeBy === "DAY") {
 		groupOptions._id.month = { $month: "$createdAt" };
 	}
@@ -203,8 +200,6 @@ const getSalesChartDataAdmin = asyncErrorHandler(async (req, res, next) => {
 			$sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 },
 		},
 	]);
-
-	console.log(products);
 
 	res.status(200).json({
 		success: true,
