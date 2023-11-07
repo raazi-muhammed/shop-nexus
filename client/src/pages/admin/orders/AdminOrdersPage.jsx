@@ -18,7 +18,7 @@ const AdminOrdersPage = () => {
 		setLoading(true);
 
 		axios
-			.get(`${server}/admin/get-all-orders?page=${pagination.page || 1}`, {
+			.get(`${server}/order/get-all-orders?page=${pagination.page || 1}`, {
 				withCredentials: true,
 			})
 			.then((res) => {

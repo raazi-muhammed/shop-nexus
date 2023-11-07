@@ -1,3 +1,6 @@
+const express = require("express");
+router = express.Router();
+const { isAdminAuthenticated } = require("../middleware/auth");
 const {
 	adminLogOut,
 	adminLogIn,
@@ -10,20 +13,7 @@ const {
 	getOrdersSoldChartDataAdmin,
 } = require("../controller/adminController");
 
-const {
-	getAllOrders,
-	getSingleOrders,
-	getSalesReportAdmin,
-} = require("../controller/orderController");
-
-const express = require("express");
-router = express.Router();
-const { isAdminAuthenticated } = require("../middleware/adminAuth");
-const {
-	getAllCoupons,
-	changeCouponState,
-} = require("../controller/couponController");
-const { getAllEventsAdmin } = require("../controller/eventController");
+const { getSalesReportAdmin } = require("../controller/orderController");
 
 router.get("/logout", (req, res) => adminLogOut(req, res));
 router.post("/login", async (req, res, next) => adminLogIn(req, res, next));
@@ -40,28 +30,7 @@ router.post("/block-seller", isAdminAuthenticated, (req, res, next) => {
 	adminBlockAndUnBlockSeller(req, res, next);
 });
 
-router.get("/get-all-orders", isAdminAuthenticated, (req, res, next) =>
-	getAllOrders(req, res, next)
-);
-
-router.get(
-	"/get-order-details/:orderId",
-	isAdminAuthenticated,
-	(req, res, next) => getSingleOrders(req, res, next)
-);
-
-router.get("/get-all-coupons", isAdminAuthenticated, (req, res, next) =>
-	getAllCoupons(req, res, next)
-);
-
-router.get("/get-all-events", isAdminAuthenticated, (req, res, next) =>
-	getAllEventsAdmin(req, res, next)
-);
-
-router.patch("/change-coupon-state", isAdminAuthenticated, (req, res, next) =>
-	changeCouponState(req, res, next)
-);
-
+/* Charts */
 router.get("/chart/orders", isAdminAuthenticated, async (req, res, next) => {
 	getOrdersSoldChartDataAdmin(req, res, next);
 });

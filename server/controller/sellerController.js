@@ -1,15 +1,13 @@
-const Shop = require("../model/Shop");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const Products = require("../model/Products");
-const { upload } = require("../multer");
-const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const Transaction = require("../model/Transaction");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 const { createTransaction } = require("./transactionController");
 const Order = require("../model/Order");
+const Shop = require("../model/Shop");
 
 const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 	let shop = await Shop.findOne(
@@ -174,9 +172,8 @@ const editShopDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
+const getWalletDetailsSeller = asyncErrorHandler(async (req, res, next) => {
 	const seller = await Shop.findById(req.seller._id);
-
 	const sellerId = req.seller._id.toString();
 	const [pagination, transaction] = await findWithPaginationAndSorting(
 		req,
@@ -474,7 +471,7 @@ module.exports = {
 	getShopDetails,
 	editShopDetails,
 	sellerLogOut,
-	getWalletDetails,
+	getWalletDetailsSeller,
 	changeWalletBalanceSeller,
 	getProductsSoldChartData,
 	getSalesChartData,

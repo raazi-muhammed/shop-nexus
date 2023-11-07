@@ -67,7 +67,7 @@ const SellerNewEvent = () => {
 	const handleGetAllProducts = () => {
 		axios
 			.get(
-				`${server}/seller/get-products-from-shop/${shopId}?page=${
+				`${server}/event/get-products-from-shop/${shopId}?page=${
 					pagination?.page || 1
 				}`,
 				{

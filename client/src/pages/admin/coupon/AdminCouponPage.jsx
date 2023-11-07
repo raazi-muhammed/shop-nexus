@@ -21,7 +21,7 @@ const AdminCouponsPage = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/admin/get-all-coupons?page=${pagination.page || 1}`, {
+			.get(`${server}/coupon/get-all-coupons?page=${pagination.page || 1}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -40,7 +40,7 @@ const AdminCouponsPage = () => {
 			status: state,
 		};
 		axios
-			.patch(`${server}/admin/change-coupon-state`, formData, {
+			.patch(`${server}/coupon/change-coupon-state`, formData, {
 				withCredentials: true,
 			})
 			.then((res) => {

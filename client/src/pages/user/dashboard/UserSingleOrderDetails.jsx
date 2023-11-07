@@ -16,7 +16,7 @@ const UserSingleOrderDetails = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/user/get-order-details/${orderId}`, {
+			.get(`${server}/order/get-order-details/${orderId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {

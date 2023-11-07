@@ -45,7 +45,7 @@ const EditSingleEventSeller = () => {
 			image,
 		};
 		axios
-			.put(`${server}/seller/edit-event/${eventId}`, eventNewData, {
+			.put(`${server}/event/edit-event/${eventId}`, eventNewData, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -66,7 +66,7 @@ const EditSingleEventSeller = () => {
 		axios.defaults.withCredentials = true;
 
 		axios
-			.put(`${server}/seller/delete-event/${eventId}`, {
+			.put(`${server}/event/delete-event/${eventId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -103,7 +103,7 @@ const EditSingleEventSeller = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-event-details/${eventId}`, {
+			.get(`${server}/event/get-event-details/${eventId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {

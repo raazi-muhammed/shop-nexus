@@ -44,7 +44,7 @@ const SellerStockManagement = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/seller/get-products-from-shop/${shopId}?page=${
+				`${server}/products/get-products-from-shop/${shopId}?page=${
 					pagination?.page || 1
 				}&sort=${sortOptions.sortBy}`,
 				{
@@ -71,7 +71,7 @@ const SellerStockManagement = () => {
 		};
 
 		axios
-			.patch(`${server}/seller/change-stock-value`, data, {
+			.patch(`${server}/products/change-stock-value`, data, {
 				withCredentials: true,
 			})
 			.then((res) => {

@@ -30,7 +30,7 @@ const AdminEventsPage = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/admin/get-all-events?page=${pagination.page || 1}&sort=${
+				`${server}/event/get-all-events?page=${pagination.page || 1}&sort=${
 					sortOptions.sortBy
 				}`,
 				{

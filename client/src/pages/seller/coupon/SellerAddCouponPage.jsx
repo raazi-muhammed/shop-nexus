@@ -60,7 +60,7 @@ const SellerAddCouponPage = () => {
 		}
 
 		axios
-			.post(`${server}/seller/add-coupon`, formData, {
+			.post(`${server}/coupon/add-coupon`, formData, {
 				withCredentials: true,
 			})
 			.then((res) => {

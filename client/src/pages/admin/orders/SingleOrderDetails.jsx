@@ -15,7 +15,7 @@ const AdminSingleOrderDetails = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/admin/get-order-details/${orderId}`, {
+			.get(`${server}/order/get-order-details-admin/${orderId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {

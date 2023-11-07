@@ -39,7 +39,7 @@ const SellerEditCouponPage = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-coupon-details/${couponId}`, {
+			.get(`${server}/coupon/get-coupon-details/${couponId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -83,7 +83,7 @@ const SellerEditCouponPage = () => {
 		}
 
 		axios
-			.post(`${server}/seller/edit-coupon`, formData, {
+			.put(`${server}/coupon/edit-coupon`, formData, {
 				withCredentials: true,
 			})
 			.then((res) => {

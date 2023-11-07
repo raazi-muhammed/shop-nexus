@@ -29,7 +29,7 @@ const UserAllOrders = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/user/get-all-orders?page=${pagination?.page || 1}&sort=${
+				`${server}/order/get-all-orders?page=${pagination?.page || 1}&sort=${
 					sortOptions.sortBy
 				}`,
 				{

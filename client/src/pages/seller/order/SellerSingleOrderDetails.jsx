@@ -19,7 +19,7 @@ const SellerSingleOrderDetails = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/seller/get-order-details/${orderId}/${shopId}`, {
+			.get(`${server}/order/get-order-details/${orderId}/${shopId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -32,7 +32,7 @@ const SellerSingleOrderDetails = () => {
 	const handleOrderStatusChange = () => {
 		axios
 			.patch(
-				`${server}/seller/change-order-status/${orderId}`,
+				`${server}/order/change-order-status/${orderId}`,
 				{
 					orderStatus: orderState,
 					productOrderId: orderDetails[0]?._id,

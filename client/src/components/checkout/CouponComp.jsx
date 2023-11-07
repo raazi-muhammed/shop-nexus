@@ -20,9 +20,12 @@ const CouponComp = ({ grossPrice, setDiscountPercentage, cartItems }) => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/user/get-coupons-to-display?totalAmount=${grossPrice}`, {
-				withCredentials: true,
-			})
+			.get(
+				`${server}/coupon/get-coupons-to-display?totalAmount=${grossPrice}`,
+				{
+					withCredentials: true,
+				}
+			)
 			.then((res) => {
 				setCouponData(res.data?.couponData);
 			})
@@ -39,7 +42,7 @@ const CouponComp = ({ grossPrice, setDiscountPercentage, cartItems }) => {
 			products: cartItems,
 		};
 		axios
-			.put(`${server}/user/apply-coupon`, formData, { withCredentials: true })
+			.put(`${server}/coupon/apply-coupon`, formData, { withCredentials: true })
 			.then((res) => {
 				toast.success(res.data?.message || "Success");
 				setDiscountPercentage(res.data?.discountPercentage);
