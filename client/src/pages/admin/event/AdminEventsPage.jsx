@@ -7,8 +7,9 @@ import Pagination from "../../../components/Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
 import RefreshButton from "../../../components/RefreshButton";
 import EventCartMain from "../../../components/events/EventCartMain";
+import EventCartAdmin from "../../../components/events/EventCartAdmin";
 
-const AllEventsSeller = () => {
+const AdminEventsPage = () => {
 	const { shopId } = useParams();
 	const [eventsData, setEventsData] = useState([]);
 	const [refresh, setRefresh] = useState(true);
@@ -29,9 +30,9 @@ const AllEventsSeller = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/seller/get-all-events/${shopId}?page=${
-					pagination.page || 1
-				}&sort=${sortOptions.sortBy}`,
+				`${server}/admin/get-all-events?page=${pagination.page || 1}&sort=${
+					sortOptions.sortBy
+				}`,
 				{
 					withCredentials: true,
 				}
@@ -74,7 +75,7 @@ const AllEventsSeller = () => {
 							<>
 								{new Date(event.end_date) >= new Date() &&
 									event.isDeleted === false && (
-										<EventCartMain key={event._id} event={event} />
+										<EventCartAdmin key={event._id} event={event} />
 									)}
 							</>
 						))}
@@ -84,7 +85,7 @@ const AllEventsSeller = () => {
 						{eventsData.map((event) => (
 							<>
 								{(new Date(event.end_date) < new Date() || event.isDeleted) && (
-									<EventCartMain key={event._id} event={event} />
+									<EventCartAdmin key={event._id} event={event} />
 								)}
 							</>
 						))}
@@ -95,4 +96,4 @@ const AllEventsSeller = () => {
 	);
 };
 
-export default AllEventsSeller;
+export default AdminEventsPage;

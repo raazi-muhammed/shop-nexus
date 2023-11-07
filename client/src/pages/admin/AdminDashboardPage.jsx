@@ -17,6 +17,7 @@ import AdminChartSales from "./dashboard/AdminChartSales";
 import AdminChartOrders from "./dashboard/AdminChartOrders";
 import AdminSalesReport from "./dashboard/AdminSalesReport";
 import AdminCouponsPage from "./coupon/AdminCouponPage";
+import AdminEventsPage from "./event/AdminEventsPage";
 
 const AdminDashboardPage = () => {
 	const [data, setData] = useState([]);
@@ -74,6 +75,7 @@ const AdminDashboardPage = () => {
 		{ name: "Products", link: "products" },
 		{ name: "Orders", link: "orders" },
 		{ name: "Coupons", link: "coupons" },
+		{ name: "Events", link: "events" },
 	];
 
 	const handleLogOut = () => {
@@ -117,6 +119,7 @@ const AdminDashboardPage = () => {
 								element={<AdminProductEditPage />}
 							/>
 							<Route path="/coupons" element={<AdminCouponsPage />} />
+							<Route path="/events" element={<AdminEventsPage />} />
 							<Route path="/char-orders" element={<AdminChartOrders />} />
 							<Route path="/sales" element={<AdminChartSales />} />
 							<Route path="/sales-report" element={<AdminSalesReport />} />

@@ -133,6 +133,18 @@ const getAllEventsFromSeller = asyncErrorHandler(async (req, res, next) => {
 		eventsData,
 	});
 });
+const getAllEventsAdmin = asyncErrorHandler(async (req, res, next) => {
+	const [pagination, eventsData] = await findWithPaginationAndSorting(
+		req,
+		OfferEvent
+	);
+
+	res.status(200).json({
+		success: true,
+		pagination,
+		eventsData,
+	});
+});
 
 const getEventDetails = asyncErrorHandler(async (req, res, next) => {
 	const { eventId } = req.params;
@@ -199,4 +211,5 @@ module.exports = {
 	editEventSeller,
 	isEventValid,
 	deleteEventSeller,
+	getAllEventsAdmin,
 };

@@ -23,6 +23,7 @@ const {
 	getAllCoupons,
 	changeCouponState,
 } = require("../controller/couponController");
+const { getAllEventsAdmin } = require("../controller/eventController");
 
 router.get("/logout", (req, res) => adminLogOut(req, res));
 router.post("/login", async (req, res, next) => adminLogIn(req, res, next));
@@ -51,6 +52,10 @@ router.get(
 
 router.get("/get-all-coupons", isAdminAuthenticated, (req, res, next) =>
 	getAllCoupons(req, res, next)
+);
+
+router.get("/get-all-events", isAdminAuthenticated, (req, res, next) =>
+	getAllEventsAdmin(req, res, next)
 );
 
 router.patch("/change-coupon-state", isAdminAuthenticated, (req, res, next) =>
