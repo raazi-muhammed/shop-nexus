@@ -19,47 +19,6 @@ const CheckOutPaymentPage = ({ totalAmount }) => {
 
 	const [orderID, setOrderID] = useState(false);
 
-	const createOrder = (data, actions) => {
-		return actions.order
-			.create({
-				purchase_units: [
-					{
-						description: "Shop Nexus",
-						amount: {
-							currency_code: "USD",
-							value: totalAmount,
-						},
-					},
-				],
-				// not needed if a shipping address is actually needed
-				application_context: {
-					shipping_preference: "NO_SHIPPING",
-				},
-			})
-			.then((orderID) => {
-				console.log(orderID);
-				setOrderID(orderID);
-				return orderID;
-			});
-	};
-
-	// check Approval
-	const onApprove = (data, actions) => {
-		return actions.order.capture().then(function (details) {
-			console.log(details);
-			const { payer } = details;
-			//setSuccess(true);
-		});
-	};
-	//capture likely error
-	const onError = (data, actions) => {
-		setErrorMessage("An Error occured with your payment ");
-	};
-
-	const handlePaypal = () => {
-		console.log("paypal");
-	};
-
 	const handleRazorPay = () => {
 		const script = document.createElement("script");
 		script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -151,40 +110,6 @@ const CheckOutPaymentPage = ({ totalAmount }) => {
 
 	return (
 		<div className="row gap-3">
-			{/* <section className="bg-white p-3 rounded-4 ">
-				<div onClick={() => setExpanded("paypal")}>
-					<p className="m-0 d-flex align-content-center ">
-						{expanded === "paypal" ? (
-							<span className="d-block text-primary me-2">
-								{checkCircleFill}
-							</span>
-						) : (
-							<span className="d-block text-primary me-2">{hollowCircle}</span>
-						)}
-						Paypal
-					</p>
-				</div>
-				{expanded === "paypal" && (
-					<div>
-						<PayPalScriptProvider
-							options={{
-								"client-id":
-									"Afcswdy1ayhL8dExJ2vgcnjAALWkiR6E3Ar5rVlGVBB0ZkrzzO0YU-kZkszdIKMhGD4lCbp5EfXD4eoY",
-							}}>
-							<PayPalButtons
-								createOrder={createOrder}
-								onApprove={onApprove}
-								style={{ layout: "horizontal" }}
-							/>
-						</PayPalScriptProvider>
-						<button
-							onClick={handlePaypal}
-							className="mt-3 btn btn-primary btn-sm">
-							Confirm
-						</button>
-					</div>
-				)}
-			</section> */}
 			<section className="bg-white p-3 rounded-4 ">
 				<div onClick={() => setExpanded("razorpay")}>
 					<p className="m-0 d-flex align-content-center ">
