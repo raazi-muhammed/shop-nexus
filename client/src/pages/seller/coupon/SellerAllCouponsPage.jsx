@@ -33,7 +33,7 @@ const SellerAllCouponsPage = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/coupon/get-all-coupons/${shopId}?page=${
+				`${server}/coupon/get-all-coupons-shop?page=${
 					pagination.page || 1
 				}&sort=${sortOptions.sortBy}`,
 				{

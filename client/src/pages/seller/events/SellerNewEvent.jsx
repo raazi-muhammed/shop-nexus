@@ -9,12 +9,11 @@ import {
 	formClass,
 	submitButtonClass,
 } from "../../../utils/styleClasses";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SellerEventCardProduct from "../../../components/events/SellerEventCardProduct";
 import typeOfEventsConstants from "../../../constants/typeOfEventConstants";
 
-const SellerNewEvent = () => {
-	const { shopId } = useParams();
+const SellerNewEvent = ({ shopId }) => {
 	const today = new Date();
 	const navigate = useNavigate();
 	const location = useLocation();

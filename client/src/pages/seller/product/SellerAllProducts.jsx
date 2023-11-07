@@ -28,7 +28,7 @@ const SellerAllProducts = ({ shopId }) => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/products/get-products-from-shop/${shopId}?page=${
+				`${server}/products/get-products-from-shop?page=${
 					pagination?.page || 1
 				}&sort=${sortOptions.sortBy}`,
 				{

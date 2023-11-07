@@ -40,10 +40,10 @@ exports.isSellerAuthenticated = asyncErrorHandler(async (req, res, next) => {
 
 	const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-	const sellerFound = await Shop.findById(decoded.id);
-	if (!sellerFound)
+	const shopFound = await Shop.findById(decoded.id);
+	if (!shopFound)
 		res.status(500).json({ success: false, message: "No User found" });
-	req.seller = sellerFound;
+	req.shop = shopFound;
 	next();
 });
 

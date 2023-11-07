@@ -4,9 +4,7 @@ import server from "../../../server";
 import { useParams } from "react-router-dom";
 import ChattingComp from "../../../components/ChattingComp";
 
-const SellerConversationsPage = () => {
-	let { shopId } = useParams();
-
+const SellerConversationsPage = ({ shopId }) => {
 	const [data, setData] = useState([null]);
 	const [toPersonInfo, setToPersonInfo] = useState({});
 	const [chatInfo, setChatInfo] = useState({

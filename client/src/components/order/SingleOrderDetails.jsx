@@ -21,7 +21,7 @@ const SingleOrderDetails = ({
 	console.log(orderDetails);
 
 	const isReturnableFunc = () => {
-		const returnMaxDate = addDays(new Date(orderDetails[0].createdAt), 7);
+		const returnMaxDate = addDays(new Date(orderDetails[0]?.createdAt), 7);
 		const today = new Date();
 		return returnMaxDate > today ? true : false;
 	};

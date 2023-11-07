@@ -117,7 +117,7 @@ const getAllEvents = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getAllEventsFromSeller = asyncErrorHandler(async (req, res, next) => {
-	const { shopId } = req.params;
+	const shopId = req.shop._id;
 
 	const [pagination, eventsData] = await findWithPaginationAndSorting(
 		req,

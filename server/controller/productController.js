@@ -279,8 +279,9 @@ const addProduct = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
-	const ShopDetails = await Shop.find({ _id: req.params.shopId });
-	const shopName = ShopDetails[0].shopName;
+	const shopId = req.shop._id;
+	const ShopDetails = await Shop.findOne({ _id: shopId });
+	const shopName = ShopDetails.shopName;
 
 	const [pagination, shopProducts] = await findWithPaginationAndSorting(
 		req,

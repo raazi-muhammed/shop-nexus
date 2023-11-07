@@ -13,11 +13,11 @@ import couponTypeConstants from "../../../constants/couponTypeConstants";
 import categoriesConstants from "../../../constants/categoriesConstants";
 import couponStateConstants from "../../../constants/couponStateConstants";
 
-const SellerAddCouponPage = () => {
+const SellerAddCouponPage = ({ shopId }) => {
 	const navigate = useNavigate();
 	const today = new Date().toISOString().slice(0, 10);
 	const [couponCodeErr, setCouponCodeErr] = useState("");
-	const { shopId } = useParams();
+
 	const [name, setName] = useState("");
 	const [code, setCode] = useState("");
 	const [category, setCategory] = useState("");
@@ -65,7 +65,7 @@ const SellerAddCouponPage = () => {
 			})
 			.then((res) => {
 				toast.success(res.data?.message || "Success");
-				navigate(`/seller/dashboard/${shopId}/coupons`);
+				navigate(`/seller/dashboard/coupons`);
 			})
 			.catch((err) => {
 				const message = err.response?.data?.message;

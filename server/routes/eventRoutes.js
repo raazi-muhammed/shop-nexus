@@ -26,7 +26,7 @@ router.post("/new-event", isSellerAuthenticated, (req, res, next) => {
 });
 
 router.get(
-	"/get-all-events/:shopId",
+	"/get-all-events-shop",
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getAllEventsFromSeller(req, res, next);

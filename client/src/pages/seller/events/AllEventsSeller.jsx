@@ -29,7 +29,7 @@ const AllEventsSeller = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/event/get-all-events/${shopId}?page=${
+				`${server}/event/get-all-events-shop?page=${
 					pagination.page || 1
 				}&sort=${sortOptions.sortBy}`,
 				{

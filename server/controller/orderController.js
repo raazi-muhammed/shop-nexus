@@ -211,7 +211,7 @@ const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
-	const shopId = req.params.shopId;
+	const shopId = req.shop._id;
 
 	const [pagination, orderData] = await findWithPaginationAndSorting(
 		req,
@@ -230,7 +230,7 @@ const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getSalesReport = asyncErrorHandler(async (req, res, next) => {
-	const { shopId } = req.params;
+	const shopId = req.shop._id;
 	const { dataFrom } = req.query;
 
 	const today = new Date();
@@ -323,7 +323,8 @@ const getSalesReportAdmin = asyncErrorHandler(async (req, res, next) => {
 
 const getSingleOrderDetailsForShop = asyncErrorHandler(
 	async (req, res, next) => {
-		const { orderId, shopId } = req.params;
+		const { orderId } = req.params;
+		const shopId = req.shop._id;
 
 		const orderData = await Order.find({
 			orderId,

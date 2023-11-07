@@ -29,9 +29,7 @@ import SalesReport from "./dashboard/SalesReport";
 const { threeLine } = Icons;
 
 const SellerDashboardPage = () => {
-	const navigate = useNavigate();
 	const [data, setData] = useState("");
-	let { shopId } = useParams();
 	const [shopName, setShopName] = useState("Loading...");
 
 	const asideItems = [
@@ -121,11 +119,12 @@ const SellerDashboardPage = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-shop-details/${shopId}`, {
+			.get(`${server}/seller/get-shop-details`, {
 				withCredentials: true,
 			})
 			.then((res) => {
-				setData(res.data);
+				setData(res.data.data);
+				console.log(res.data.data);
 				setShopName(res.data.data.shopName);
 			})
 			.catch((err) => console.log(err));
@@ -142,12 +141,15 @@ const SellerDashboardPage = () => {
 							<Routes>
 								<Route
 									path="/all-products"
-									element={<SellerAllProducts shopId={shopId} />}
+									element={<SellerAllProducts shopId={data._id} />}
 								/>
 								<Route
 									path="/new-product"
 									element={
-										<SellerAddProductPage shopId={shopId} shopName={shopName} />
+										<SellerAddProductPage
+											shopId={data._id}
+											shopName={data.shopName}
+										/>
 									}
 								/>
 								<Route path="/edit-shop" element={<SellerDetailsEditPage />} />
@@ -160,14 +162,23 @@ const SellerDashboardPage = () => {
 									path="/orders/:orderId"
 									element={<SellerSingleOrderDetails />}
 								/>
-								<Route path="/new-coupon" element={<SellerAddCouponPage />} />
+								<Route
+									path="/new-coupon"
+									element={<SellerAddCouponPage shopId={data._id} />}
+								/>
 								<Route path="/coupons" element={<SellerAllCouponsPage />} />
 								<Route
 									path="/coupons/:couponId"
 									element={<SellerEditCouponPage />}
 								/>
-								<Route path="/messages" element={<SellerConversationsPage />} />
-								<Route path="/new-event" element={<SellerNewEvent />} />
+								<Route
+									path="/messages"
+									element={<SellerConversationsPage shopId={data._id} />}
+								/>
+								<Route
+									path="/new-event"
+									element={<SellerNewEvent shopId={data._id} />}
+								/>
 								<Route path="/events" element={<AllEventsSeller />} />
 								<Route
 									path="/events/:eventId"

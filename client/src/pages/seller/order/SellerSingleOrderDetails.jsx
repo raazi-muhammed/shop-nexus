@@ -14,12 +14,12 @@ const SellerSingleOrderDetails = () => {
 	const [refresh, setRefresh] = useState(true);
 
 	const [orderDetails, setOrderDetails] = useState([{ orderItems: [] }]);
-	const { shopId, orderId } = useParams();
+	const { orderId } = useParams();
 	const [orderState, setOrderState] = useState();
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/order/get-order-details/${orderId}/${shopId}`, {
+			.get(`${server}/order/get-order-details-shop/${orderId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {

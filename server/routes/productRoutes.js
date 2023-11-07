@@ -44,9 +44,13 @@ router.put("/edit-product/:id", isSellerAuthenticated, (req, res, next) => {
 	editProduct(req, res, next);
 });
 
-router.get("/get-products-from-shop/:shopId", async (req, res, next) => {
-	getProductsFromShop(req, res, next);
-});
+router.get(
+	"/get-products-from-shop",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getProductsFromShop(req, res, next);
+	}
+);
 
 router.get("/get-reviews/:productId", async (req, res, next) => {
 	getReviewFromProduct(req, res, next);

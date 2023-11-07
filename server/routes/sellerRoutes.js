@@ -27,9 +27,13 @@ router.post("/crate-shop", async (req, res, next) => {
 router.post("/activation", async (req, res, next) => {
 	sellerActivateShop(req, res, next);
 });
-router.get("/get-shop-details/:id", async (req, res, next) => {
-	getShopDetails(req, res, next);
-});
+router.get(
+	"/get-shop-details",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		getShopDetails(req, res, next);
+	}
+);
 
 router.put(
 	"/edit-shop-details",
@@ -78,7 +82,7 @@ router.get("/dashboard", isSellerAuthenticated, async (req, res, next) => {
 });
 
 router.get(
-	"/get-sales-report/:shopId",
+	"/get-sales-report",
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getSalesReport(req, res, next);

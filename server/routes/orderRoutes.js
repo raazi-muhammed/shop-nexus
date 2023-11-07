@@ -42,7 +42,7 @@ router.put("/return-order/:orderId", isUserAuthenticated, (req, res, next) => {
 
 /* Seller */
 router.get(
-	"/get-order-details/:orderId/:shopId",
+	"/get-order-details-shop/:orderId",
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getSingleOrderDetailsForShop(req, res, next);
@@ -58,7 +58,7 @@ router.patch(
 );
 
 router.get(
-	"/get-all-orders/:shopId",
+	"/get-all-orders-shop",
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getSellerAllOrders(req, res, next);

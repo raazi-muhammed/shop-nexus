@@ -51,7 +51,7 @@ const getAllCoupons = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
-	const { shopId } = req.params;
+	const shopId = req.shop._id;
 
 	const [pagination, couponData] = await findWithPaginationAndSorting(
 		req,

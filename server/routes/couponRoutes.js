@@ -24,7 +24,7 @@ router.get("/get-coupons-to-display", isUserAuthenticated, (req, res, next) => {
 
 /* Seller */
 router.get(
-	"/get-all-coupons/:shopId",
+	"/get-all-coupons-shop",
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		getCouponFromSeller(req, res, next);
