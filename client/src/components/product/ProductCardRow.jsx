@@ -39,7 +39,7 @@ const ProductCardRow = ({
 				<Link to={`/product/${id}`}>
 					<button className="btn btn-secondary text-white btn-sm">{eye}</button>
 				</Link>
-				<Link to={`/seller/dashboard/${shopId}/edit-single-product/${id}`}>
+				<Link to={`/seller/dashboard/edit-single-product/${id}`}>
 					<button className="btn btn-secondary text-white btn-sm">
 						{edit}
 					</button>

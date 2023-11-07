@@ -132,69 +132,72 @@ const UserWallet = () => {
 				</div>
 			) : (
 				<>
-					<div class="dropdown">
-						<button
-							type="button"
-							class="btn btn-sm btn-primary dropdown-toggle"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							data-bs-auto-close="outside">
-							Add Money
-						</button>
-						<form
-							noValidate
-							onChange={handleFormChange}
-							onSubmit={handleAddAmount}
-							id="stock-form"
-							className="dropdown-menu p-4 was-validated">
-							<div className="mb-3">
-								<label
-									htmlFor="exampleDropdownFormPassword2"
-									className="form-label">
-									Updated Stock
-								</label>
-								<input
-									value={amountToAdd}
-									type="text"
-									className="form-control"
-									id="exampleDropdownFormPassword2"
-									onChange={(e) => {
-										setAmountToAdd(e.target.value);
-									}}
-									pattern="^[0-9]\d*$"
-									required
-								/>
-								<div className="invalid-feedback">Invalid</div>
-							</div>
-							<section className="d-flex gap-1">
-								<button
-									type="button"
-									onClick={(e) => setAmountToAdd(Number(amountToAdd) + 100)}
-									className="btn btn-sm btn-secondary text-white">
-									+100
-								</button>
-								<button
-									type="button"
-									onClick={(e) => {
-										setAmountToAdd(Number(amountToAdd) + 1000);
-									}}
-									className="btn btn-sm btn-secondary text-white">
-									+1000
-								</button>
-							</section>
+					<section className="m-0  bg-light p-4 rounded-4 d-flex justify-content-between align-items-center">
+						<div>
+							<p className="mb-1 text-secondary">Wallet Balance</p>
+							<p className="m-0 h3 text-primary">
+								{formatPrice(balanceAmount || "0")}
+							</p>
+						</div>
+						<div class="dropdown">
 							<button
-								disabled={!allowSubmission}
-								type="submit"
-								className="mt-3 btn btn-primary btn-sm">
-								Add via Razorpay
+								type="button"
+								class="btn btn-sm btn-primary dropdown-toggle"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								data-bs-auto-close="outside">
+								Add Money
 							</button>
-						</form>
-					</div>
-					<section className="m-0  bg-light p-4 rounded-4">
-						<p className="mb-1 text-secondary">Wallet Balance</p>
-						<p className="m-0 h3 text-primary">
-							{formatPrice(balanceAmount || "0")}
-						</p>
+							<form
+								noValidate
+								onChange={handleFormChange}
+								onSubmit={handleAddAmount}
+								id="stock-form"
+								style={{ width: "15rem" }}
+								className="dropdown-menu p-4 was-validated">
+								<div className="mb-3">
+									<label
+										htmlFor="exampleDropdownFormPassword2"
+										className="form-label">
+										Updated Stock
+									</label>
+									<input
+										value={amountToAdd}
+										type="text"
+										className="form-control"
+										id="exampleDropdownFormPassword2"
+										onChange={(e) => {
+											setAmountToAdd(e.target.value);
+										}}
+										pattern="^[0-9]\d*$"
+										required
+									/>
+									<div className="invalid-feedback">Invalid</div>
+								</div>
+								<section className="d-flex gap-1">
+									<button
+										type="button"
+										onClick={(e) => setAmountToAdd(Number(amountToAdd) + 100)}
+										className="btn btn-sm btn-secondary text-white">
+										+100
+									</button>
+									<button
+										type="button"
+										onClick={(e) => {
+											setAmountToAdd(Number(amountToAdd) + 1000);
+										}}
+										className="btn btn-sm btn-secondary text-white">
+										+1000
+									</button>
+								</section>
+								<button
+									disabled={!allowSubmission}
+									type="submit"
+									className="mt-3 btn btn-primary btn-sm">
+									Add via Razorpay
+								</button>
+							</form>
+						</div>
 					</section>
 					<section className="ms-2">
 						<div className="d-flex justify-content-between">

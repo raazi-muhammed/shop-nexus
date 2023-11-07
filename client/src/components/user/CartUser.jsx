@@ -16,7 +16,7 @@ const CartUser = () => {
 	const isCartVisible = useSelector((state) => state.cart.isCartVisible);
 	const dispatch = useDispatch();
 	const cartItems = userData?.cart;
-
+	const [refresh, setRefresh] = useState(true);
 	const navigate = useNavigate();
 
 	const handleRemoveFromCart = (product_id) => {
@@ -29,6 +29,7 @@ const CartUser = () => {
 			.then((res) => {
 				dispatch(setUserDataReducer(res.data?.user));
 				toast.success(res.data?.message);
+				setRefresh(!refresh);
 			})
 			.catch((err) =>
 				toast.error(err?.response?.data?.message || "An Error occurred")
@@ -52,9 +53,9 @@ const CartUser = () => {
 				dispatch(setUserDataReducer(res.data?.user));
 			})
 			.catch((err) =>
-				toast.error(err?.response?.data?.message || "Error Loading Wishlist")
+				toast.error(err?.response?.data?.message || "Error Loading Cart")
 			);
-	}, [isCartVisible]);
+	}, [isCartVisible, refresh]);
 
 	return (
 		<>
@@ -99,7 +100,7 @@ const CartUser = () => {
 								className="col-7 my-auto">
 								<p className="text-small mb-0">{cartItem.product?.name}</p>
 								<p className="text-secondary fw-bold">{`${formatPrice(
-									cartItem.price
+									cartItem?.offer?.offerPrice || cartItem.product?.discountPrice
 								)} × ${cartItem.quantity}`}</p>
 							</section>
 							<div className="col-2 my-auto">

@@ -1,7 +1,7 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-import LoginPage from "./pages/user/LoginPage";
-import SignUpPage from "./pages/user/SignUpPage";
-import ActivationPage from "./pages/user/ActivationPage";
+import LoginPage from "./pages/user/userManagment/LoginPage";
+import SignUpPage from "./pages/user/userManagment/SignUpPage";
+import ActivationPage from "./pages/user/userManagment/ActivationPage";
 import SellerActivationPage from "./pages/seller/SellerActivationPage";
 import "./styles/App.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -35,10 +35,7 @@ function App() {
 					/>
 					<Route path="/seller/login" element={<SellerLoginPage />} />
 					<Route path="/seller/sign-up" element={<SellerSignUpPage />} />
-					<Route
-						path="/seller/dashboard/:shopId/*"
-						element={<SellerDashboardPage />}
-					/>
+					<Route path="/seller/dashboard/*" element={<SellerDashboardPage />} />
 
 					<Route
 						path="/user/change-password"

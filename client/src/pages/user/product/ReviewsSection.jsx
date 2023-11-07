@@ -91,8 +91,8 @@ const ReviewsSection = ({ productData, setProductData }) => {
 			</section>
 			<section>
 				{userProductBought ? (
-					<section>
-						<form onSubmit={handleReviewSubmit}>
+					<section className="row">
+						<form className="mx-auto col-md-8" onSubmit={handleReviewSubmit}>
 							<div className="d-flex justify-content-end ">
 								<p className="mb-0 pt-1 me-2">Your Rating:</p>
 								<RatingStarInput rating={rating} setRating={setRating} />
@@ -119,9 +119,7 @@ const ReviewsSection = ({ productData, setProductData }) => {
 							</div>
 						</form>
 					</section>
-				) : (
-					<p>Buy the Product to post Review</p>
-				)}
+				) : null}
 			</section>
 		</section>
 	);

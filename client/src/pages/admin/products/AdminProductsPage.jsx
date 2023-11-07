@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
-import Pagination from "../../components/Pagination";
+import server from "../../../server";
+import Pagination from "../../../components/Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
-import AdminProductCardRow from "../../components/product/AdminProductCardRow";
+import AdminProductCardRow from "../../../components/product/AdminProductCardRow";
 
 const AdminProductsPage = () => {
 	const [data, setData] = useState([]);

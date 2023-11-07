@@ -1,5 +1,6 @@
 const User = require("../model/User");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
+const { isEventValid } = require("./eventController");
 
 const getCart = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
@@ -7,6 +8,32 @@ const getCart = asyncErrorHandler(async (req, res, next) => {
 	const updatedUser = await User.findOne({ _id: userId }).populate(
 		"cart.product"
 	);
+
+	updatedUser.cart.map(async (item, i) => {
+		if (item.offer.applied) {
+			if (item.offer.type === "EVENT") {
+				const eventValid = await isEventValid(
+					item.offer.details.id,
+					updatedUser.cart
+				);
+
+				// if the event if invalid removing the offer felid from user
+				if (!eventValid) {
+					let cartItem = item;
+					cartItem.offer = {};
+					let updateObj = {};
+					updateObj[`cart.${i}`] = cartItem;
+					const newUser = await User.findOneAndUpdate(
+						{ _id: userId },
+						{
+							$set: updateObj,
+						},
+						{ new: true }
+					);
+				}
+			}
+		}
+	});
 
 	res.status(200).json({
 		success: true,
@@ -16,7 +43,7 @@ const getCart = asyncErrorHandler(async (req, res, next) => {
 });
 
 const addToCart = asyncErrorHandler(async (req, res, next) => {
-	const { product_id, price, name, imageUrl, quantity } = req.body;
+	const { product_id, price, quantity, offer } = req.body;
 	const userId = req.user._id;
 
 	const cartItem = {
@@ -24,19 +51,20 @@ const addToCart = asyncErrorHandler(async (req, res, next) => {
 		quantity,
 		price,
 	};
-
+	if (offer) {
+		cartItem.offer = offer;
+	}
 	const currentUserState = await User.findOne({ _id: userId });
 
+	// Checking if the items already in cart is changed and if then updating the values
 	let isChanged = false;
 	let updatedUser;
-
 	currentUserState.cart.map(async (items, i) => {
 		if (items.product == cartItem.product) {
 			isChanged = true;
 
 			let updateObj = {};
 			updateObj[`cart.${i}`] = cartItem;
-
 			updatedUser = await User.findOneAndUpdate(
 				{ _id: userId },
 				{

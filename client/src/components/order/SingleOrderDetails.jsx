@@ -10,6 +10,7 @@ import OrderItemsInOrder from "./OrderItemsInOrder";
 import ReturnButton from "./ReturnButton";
 import CancelOrderButton from "./CancelOrderButton";
 import InvoiceDownloadButton from "./InvoiceDownloadButton";
+import { getOrderStateByKey } from "../../constants/orderStateConstants";
 
 const SingleOrderDetails = ({
 	orderDetails,
@@ -21,7 +22,7 @@ const SingleOrderDetails = ({
 	console.log(orderDetails);
 
 	const isReturnableFunc = () => {
-		const returnMaxDate = addDays(new Date(orderDetails[0].createdAt), 7);
+		const returnMaxDate = addDays(new Date(orderDetails[0]?.createdAt), 7);
 		const today = new Date();
 		return returnMaxDate > today ? true : false;
 	};
@@ -63,45 +64,45 @@ const SingleOrderDetails = ({
 					<p className="h4 fw-bold text-secondary">Products</p>
 					<section>
 						<>
-							{orderDetails?.map((order) => (
+							{orderDetails?.map((order, i) => (
 								<>
 									<section className="d-flex">
 										<section>
 											<section>
 												<p className="text-small text-secondary my-2">Status</p>
-												{order.status === "Canceled" ? (
+												{order.status === "CANCELED" ? (
 													<p className="bg-danger-subtle text-danger fw-bold  p-1 px-3 rounded-pill d-inline">
-														{order.status}
+														{getOrderStateByKey(order.status)}
 													</p>
-												) : order.status === "Delivered" ||
-												  order.status === "Return Approved" ? (
+												) : order.status === "DELIVERED" ||
+												  order.status === "RETURN_APPROVED" ? (
 													<p className="bg-success-subtle text-success fw-bold  p-1 px-3 rounded-pill d-inline">
-														{order.status}
+														{getOrderStateByKey(order.status)}
 													</p>
 												) : (
 													<p className="bg-warning-subtle text-warning fw-bold  p-1 px-3 rounded-pill d-inline">
-														{order.status}
+														{getOrderStateByKey(order.status)}
 													</p>
 												)}
 											</section>
 											<OrderItemsInOrder orderItems={order.orderItems} />
 										</section>
 										<section className="col-3 d-flex flex-column mb-4 mt-auto gap-3 justify-content-center h-100">
-											{order.status === "Processing" && (
+											{order.status === "PROCESSING" && (
 												<CancelOrderButton
 													orderId={orderId}
 													productOrderId={order._id}
 													setRefresh={setRefresh}
 												/>
 											)}
-											{isReturnable && order.status === "Delivered" && (
+											{isReturnable && order.status === "DELIVERED" && (
 												<ReturnButton
 													orderId={order._id}
 													productOrderId={order._id}
 													setRefresh={setRefresh}
 												/>
 											)}
-											<InvoiceDownloadButton orderDetails={orderDetails} />
+											<InvoiceDownloadButton orderDetails={orderDetails[i]} />
 										</section>
 									</section>
 									<hr className="text-secondary" />

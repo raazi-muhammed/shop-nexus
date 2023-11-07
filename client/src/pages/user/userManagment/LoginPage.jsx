@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import loginCover from "../../assets/login-cover.jpg";
+import loginCover from "../../../assets/login-cover.jpg";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import server from "../../server";
+import server from "../../../server";
 import toast from "react-hot-toast";
-import { useUserAuth } from "../../context/userAuthContext";
+import { useUserAuth } from "../../../context/userAuthContext";
 
 const LoginPage = () => {
 	const navigate = useNavigate();

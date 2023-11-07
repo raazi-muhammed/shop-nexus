@@ -1,24 +1,25 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import server from "../../server";
+import server from "../../../server";
 import ClipLoader from "react-spinners/ClipLoader";
-import SingleOrderDetails from "../../components/order/SingleOrderDetails";
+import SingleOrderDetails from "../../../components/order/SingleOrderDetails";
 
 const AdminSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(true);
 
-	const [orderDetails, setOrderDetails] = useState({ orderItems: [] });
+	const [orderDetails, setOrderDetails] = useState([{ orderItems: [] }]);
 	const { orderId } = useParams();
 
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/admin/get-order-details/${orderId}`, {
+			.get(`${server}/order/get-order-details-admin/${orderId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
+				console.log(res?.data);
 				setOrderDetails(res?.data?.orderData);
 			})
 			.finally(() => setLoading(false));
@@ -40,7 +41,7 @@ const AdminSingleOrderDetails = () => {
 			) : (
 				<SingleOrderDetails
 					orderDetails={orderDetails}
-					orderId={orderId}
+					orderId={orderDetails[0]?.orderId}
 					setRefresh={setRefresh}
 					refresh={refresh}
 					showEvents={true}

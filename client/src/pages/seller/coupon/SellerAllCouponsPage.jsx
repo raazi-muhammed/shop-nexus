@@ -33,7 +33,7 @@ const SellerAllCouponsPage = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/seller/get-all-coupons/${shopId}?page=${
+				`${server}/coupon/get-all-coupons-shop?page=${
 					pagination.page || 1
 				}&sort=${sortOptions.sortBy}`,
 				{
@@ -49,6 +49,7 @@ const SellerAllCouponsPage = () => {
 				setLoading(false);
 			});
 	}, [refresh, pagination.page, sortOptions]);
+
 	return (
 		<div>
 			{loading ? (

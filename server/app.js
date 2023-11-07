@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const cookies = require("cookie-parser");
 app.use(cookies());
 const PORT = process.env.PORT;
+connectDatabase();
 
 /* Socket */
 const { createServer } = require("http");
@@ -32,6 +33,7 @@ const errorHandling = require("./middleware/errorHandling");
 const messageRoutes = require("./routes/messageRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const eventRoutes = require("./routes/eventRoutes");
+const couponRoutes = require("./routes/couponRoutes");
 
 /* Cors */
 const cors = require("cors");
@@ -74,9 +76,10 @@ app.use("/api/v1/message/", messageRoutes);
 app.use("/api/v1/conversation/", conversationRoutes);
 app.use("/api/v1/payment/", paymentRoutes);
 app.use("/api/v1/event/", eventRoutes);
+app.use("/api/v1/coupon/", couponRoutes);
 
 app.get("*", (req, res) => {
-	console.log("NOT FOUND");
+	console.error(`URL Not found: http://localhost:${req.url}`);
 });
 
 /* Error handler */
@@ -86,7 +89,6 @@ io.on("connection", (socket) => {
 	sockets(socket, io);
 });
 
-connectDatabase();
 http.listen(PORT, () => {
-	console.log(`SERVER STARTED ON ${PORT}`);
+	console.info(`Local:   http://localhost:${PORT}`);
 });

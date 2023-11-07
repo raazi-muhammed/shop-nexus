@@ -1,15 +1,13 @@
-const Shop = require("../model/Shop");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const Products = require("../model/Products");
-const { upload } = require("../multer");
-const { isSellerAuthenticated } = require("../middleware/sellerAuth");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const Transaction = require("../model/Transaction");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 const { createTransaction } = require("./transactionController");
 const Order = require("../model/Order");
+const Shop = require("../model/Shop");
 
 const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 	let shop = await Shop.findOne(
@@ -115,15 +113,14 @@ const sellerActivateShop = asyncErrorHandler(async (req, res, next) => {
 		address1,
 		address2,
 		password,
-		GSTIN_Number: gstinNumber,
+		gstinNumber,
 	});
 
 	sendToken(dataUser, 201, res);
 });
 
 const getShopDetails = asyncErrorHandler(async (req, res, next) => {
-	const shopId = req.params.id;
-
+	const shopId = req.shop._id;
 	const shopDetails = await Shop.findOne({ _id: shopId });
 	res.status(200).json({
 		success: true,
@@ -174,13 +171,13 @@ const editShopDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
-	const seller = await Shop.findById(req.seller._id);
-
+const getWalletDetailsSeller = asyncErrorHandler(async (req, res, next) => {
+	const seller = await Shop.findById(req.shop._id);
+	const sellerId = req.shop._id.toString();
 	const [pagination, transaction] = await findWithPaginationAndSorting(
 		req,
 		Transaction,
-		{ personId: req.seller._id }
+		{ personId: sellerId }
 	);
 
 	res.status(200).json({
@@ -195,19 +192,19 @@ const changeWalletBalanceSeller = asyncErrorHandler(async (req, res, next) => {
 	const { amountToAdd, description } = req.body;
 
 	if (amountToAdd < 0) {
-		const seller = await Shop.findOne({ _id: req.seller._id });
+		const seller = await Shop.findOne({ _id: req.shop._id });
 
 		if (seller.wallet.balance < amountToAdd * -1)
 			return next(new ErrorHandler("Not enough Balance on Wallet", 401));
 	}
 
 	const seller = await Shop.findOneAndUpdate(
-		{ _id: req.seller._id },
+		{ _id: req.shop._id },
 		{ $inc: { "wallet.balance": amountToAdd } }
 	);
 
 	const transaction = await createTransaction(
-		req.seller._id,
+		req.shop._id,
 		amountToAdd,
 		description
 	);
@@ -227,7 +224,7 @@ const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
-	const shopId = req.seller._id;
+	const shopId = req.shop._id;
 	const { categorizeBy, startDate, endDate } = req.query;
 
 	const matchOptions = { "orderItems.0.shop": shopId };
@@ -254,8 +251,6 @@ const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 		matchOptions.createdAt = { $lt: _endDate, $gt: _startDate };
 	}
 
-	console.log(categorizeBy);
-
 	if (categorizeBy === "MONTH" || categorizeBy === "DAY") {
 		groupOptions._id.month = { $month: "$createdAt" };
 	}
@@ -275,8 +270,6 @@ const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 		},
 	]);
 
-	console.log(products);
-
 	res.status(200).json({
 		success: true,
 		chartData: products,
@@ -284,7 +277,7 @@ const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
-	const shopId = req.seller._id;
+	const shopId = req.shop._id;
 	const { startDate, endDate } = req.query;
 
 	const matchOptions = { "orderItems.0.shop": shopId };
@@ -334,8 +327,6 @@ const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 		})
 	);
 
-	console.log(products);
-
 	res.status(200).json({
 		success: true,
 		chartData: products,
@@ -343,7 +334,7 @@ const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getOrdersSoldChartData = asyncErrorHandler(async (req, res, next) => {
-	const shopId = req.seller._id;
+	const shopId = req.shop._id;
 	const { startDate, endDate } = req.query;
 
 	const matchOptions = { "orderItems.0.shop": shopId };
@@ -379,8 +370,6 @@ const getOrdersSoldChartData = asyncErrorHandler(async (req, res, next) => {
 			$sort: { _id: 1 },
 		},
 	]);
-
-	console.log(products);
 
 	res.status(200).json({
 		success: true,
@@ -424,7 +413,7 @@ const getContentForDashBoardBetweenDates = async (
 };
 
 const getDashBoardContent = asyncErrorHandler(async (req, res, next) => {
-	const shopId = req.seller._id;
+	const shopId = req.shop._id;
 
 	const today = new Date();
 	const before7days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -481,7 +470,7 @@ module.exports = {
 	getShopDetails,
 	editShopDetails,
 	sellerLogOut,
-	getWalletDetails,
+	getWalletDetailsSeller,
 	changeWalletBalanceSeller,
 	getProductsSoldChartData,
 	getSalesChartData,

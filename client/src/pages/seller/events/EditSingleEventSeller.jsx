@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import server from "../../../server";
 import {
 	formLabelClass,
@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 const EditSingleEventSeller = () => {
 	const today = new Date();
-
+	const navigate = useNavigate();
 	const { eventId } = useParams();
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
@@ -45,7 +45,7 @@ const EditSingleEventSeller = () => {
 			image,
 		};
 		axios
-			.put(`${server}/seller/edit-event/${eventId}`, eventNewData, {
+			.put(`${server}/event/edit-event/${eventId}`, eventNewData, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -54,11 +54,24 @@ const EditSingleEventSeller = () => {
 				setName(eventData?.name);
 				setDescription(eventData?.description);
 				setStartDate(
-					new Date(eventData?.start_date).toISOString().split("T")[0]
+					new Date(eventData?.startDate).toISOString().split("T")[0]
 				);
-				setEndDate(new Date(eventData?.end_date).toISOString().split("T")[0]);
-				setDiscountPercentage(eventData?.discount_percentage);
+				setEndDate(new Date(eventData?.endDate).toISOString().split("T")[0]);
+				setDiscountPercentage(eventData?.discountPercentage);
 				setImageUrl(eventData?.images[0]?.url);
+			})
+			.catch((err) => toast.error(err.data?.message || "An error occurred"));
+	};
+	const handleDeleteEvent = () => {
+		axios.defaults.withCredentials = true;
+
+		axios
+			.put(`${server}/event/delete-event/${eventId}`, {
+				withCredentials: true,
+			})
+			.then((res) => {
+				navigate(-1);
+				toast.success(res.data?.message || "Success");
 			})
 			.catch((err) => toast.error(err.data?.message || "An error occurred"));
 	};
@@ -90,18 +103,19 @@ const EditSingleEventSeller = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-event-details/${eventId}`, {
+			.get(`${server}/event/get-event-details/${eventId}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
 				const eventData = res.data.eventsData;
 				setName(eventData?.name);
 				setDescription(eventData?.description);
+				setTypeOfEvent(eventData?.typeOfEvent);
 				setStartDate(
-					new Date(eventData?.start_date).toISOString().split("T")[0]
+					new Date(eventData?.startDate).toISOString().split("T")[0]
 				);
-				setEndDate(new Date(eventData?.end_date).toISOString().split("T")[0]);
-				setDiscountPercentage(eventData?.discount_percentage);
+				setEndDate(new Date(eventData?.endDate).toISOString().split("T")[0]);
+				setDiscountPercentage(eventData?.discountPercentage);
 				setImageUrl(eventData?.images[0]?.url);
 			})
 			.catch((err) => console.log(err));
@@ -241,12 +255,20 @@ const EditSingleEventSeller = () => {
 						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
-				<button
-					disabled={!allowSubmission}
-					type="submit"
-					className={submitButtonClass}>
-					Update Event Details
-				</button>
+				<div className="d-flex gap-3">
+					<button
+						disabled={!allowSubmission}
+						type="submit"
+						className={`w-100 btn btn-secondary text-white`}>
+						Update Event Details
+					</button>
+					<button
+						onClick={handleDeleteEvent}
+						type="button"
+						className={`btn-danger ${submitButtonClass}`}>
+						Delete
+					</button>
+				</div>
 			</form>
 		</div>
 	);

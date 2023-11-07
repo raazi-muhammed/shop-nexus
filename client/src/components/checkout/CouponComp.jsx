@@ -4,11 +4,7 @@ import server from "../../server";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-const CouponComp = ({
-	totalAmountWithOutDiscount,
-	setDiscountAmount,
-	cartItems,
-}) => {
+const CouponComp = ({ grossPrice, setDiscountPercentage, cartItems }) => {
 	const userData = useSelector((state) => state.userData.userData);
 	const [couponCode, setCouponCode] = useState();
 	const [couponData, setCouponData] = useState([]);
@@ -25,7 +21,7 @@ const CouponComp = ({
 	useEffect(() => {
 		axios
 			.get(
-				`${server}/user/get-coupons-to-display?totalAmount=${totalAmountWithOutDiscount}`,
+				`${server}/coupon/get-coupons-to-display?totalAmount=${grossPrice}`,
 				{
 					withCredentials: true,
 				}
@@ -34,22 +30,22 @@ const CouponComp = ({
 				setCouponData(res.data?.couponData);
 			})
 			.catch((err) => console.log(err));
-	}, [totalAmountWithOutDiscount]);
+	}, [grossPrice]);
 
 	const handleApplyCoupon = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
 		console.log(cartItems);
 		const formData = {
-			totalAmount: totalAmountWithOutDiscount,
+			totalAmount: grossPrice,
 			couponCode,
 			products: cartItems,
 		};
 		axios
-			.put(`${server}/user/apply-coupon`, formData, { withCredentials: true })
+			.put(`${server}/coupon/apply-coupon`, formData, { withCredentials: true })
 			.then((res) => {
 				toast.success(res.data?.message || "Success");
-				setDiscountAmount(Math.floor(res.data?.discountAmount));
+				setDiscountPercentage(res.data?.discountPercentage);
 			})
 			.catch((err) =>
 				err.response?.data?.message

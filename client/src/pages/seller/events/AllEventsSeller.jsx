@@ -1,16 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../../server";
-
-import Icons from "../../../assets/Icons";
-import { Link, useParams } from "react-router-dom";
-import convertISOToDate from "../../../utils/convertISOToDate";
-import { getTypeOfEventByKey } from "../../../constants/typeOfEventConstants";
+import { useParams } from "react-router-dom";
 import Sorting from "../../../components/Sorting";
 import Pagination from "../../../components/Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
 import RefreshButton from "../../../components/RefreshButton";
-const { eye, edit } = Icons;
+import EventCartMain from "../../../components/events/EventCartMain";
 
 const AllEventsSeller = () => {
 	const { shopId } = useParams();
@@ -22,10 +18,10 @@ const AllEventsSeller = () => {
 		sortBy: "createdAt",
 		sortItems: [
 			{ value: "createdAt", title: "Date" },
-			{ value: "type_of_event", title: "Event Type" },
-			{ value: "discount_percentage", title: "Discount Percentage" },
-			{ value: "start_date", title: "Start Date" },
-			{ value: "end_date", title: "End Date" },
+			{ value: "typeOfEvent", title: "Event Type" },
+			{ value: "discountPercentage", title: "Discount Percentage" },
+			{ value: "startDate", title: "Start Date" },
+			{ value: "endDate", title: "End Date" },
 		],
 	});
 
@@ -33,7 +29,7 @@ const AllEventsSeller = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/seller/get-all-events/${shopId}?page=${
+				`${server}/event/get-all-events-shop?page=${
 					pagination.page || 1
 				}&sort=${sortOptions.sortBy}`,
 				{
@@ -75,39 +71,22 @@ const AllEventsSeller = () => {
 					)}
 					<section className="d-flex flex-column gap-2">
 						{eventsData.map((event) => (
-							<div
-								key={event._id}
-								className="p-3 bg-white m-1 row rounded-4 align-items-center ">
-								<section className="col-5">
-									<img
-										className="w-50 rounded-3"
-										src={event.images[0].url}
-										alt=""
-									/>
-									<p className="mt-2 mb-0">{event.name}</p>
-								</section>
-								<section className="col-3">
-									<p className="text-small text-secondary m-0">Start Date</p>
-									<p>{convertISOToDate(event.start_date)}</p>
-									<p className="text-small text-secondary m-0">End Date</p>
-									<p className="m-0">{convertISOToDate(event.end_date)}</p>
-								</section>
-								<section className="col-3">
-									<p className="text-small text-secondary m-0">Type of event</p>
-									<p>{getTypeOfEventByKey(event.type_of_event)}</p>
-									<p className="text-small text-secondary m-0">
-										Discount Percentage
-									</p>
-									<p className="mb-0">{event.discount_percentage * 100}%</p>
-								</section>
-								<section className="d-flex align-items-center justify-content-end  col-1 gap-3 ">
-									<Link to={`${event._id}`}>
-										<button className="btn btn-secondary text-white btn-sm">
-											{edit}
-										</button>
-									</Link>
-								</section>
-							</div>
+							<>
+								{new Date(event.endDate) >= new Date() &&
+									event.isDeleted === false && (
+										<EventCartMain key={event._id} event={event} />
+									)}
+							</>
+						))}
+						{!loading && (
+							<p className="fw-bold m-3 text-danger">Expired or Deleted</p>
+						)}
+						{eventsData.map((event) => (
+							<>
+								{(new Date(event.endDate) < new Date() || event.isDeleted) && (
+									<EventCartMain key={event._id} event={event} />
+								)}
+							</>
 						))}
 					</section>
 				</>

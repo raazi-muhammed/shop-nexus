@@ -51,7 +51,7 @@ const getAllCoupons = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
-	const { shopId } = req.params;
+	const shopId = req.shop._id;
 
 	const [pagination, couponData] = await findWithPaginationAndSorting(
 		req,
@@ -152,12 +152,12 @@ const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
 			break;
 	}
 
-	const discountAmount = totalAmount * couponData.discountPercentage;
+	const discountPercentage = couponData.discountPercentage;
 
 	res.status(200).json({
 		success: true,
 		message: `Coupon Code Applied`,
-		discountAmount: discountAmount,
+		discountPercentage,
 		//couponData,
 	});
 });

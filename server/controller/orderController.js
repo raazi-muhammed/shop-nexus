@@ -55,14 +55,14 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 							...singleOrder,
 						},
 					],
-					totalPrice: singleOrder.totalPrice,
+					totalPrice: singleOrder.price,
 				};
 
 				// Add money to Shop Wallet
 				if (newOrderData.paymentInfo.status === "Received") {
-					changerSellerWalletBalanceWithTransaction(
+					await changerSellerWalletBalanceWithTransaction(
 						singleOrder.shop,
-						singleOrder.totalPrice,
+						singleOrder.price,
 						`Added via Order ${orderData.orderId}`
 					);
 				}
@@ -92,24 +92,12 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getAllOrders = asyncErrorHandler(async (req, res, next) => {
-	const ITEMS_PER_PAGE = 10;
-	const { page } = req.query;
-	const skip = (page - 1) * ITEMS_PER_PAGE;
-	const countPromise = Order.estimatedDocumentCount({});
-
-	const orderDataPromise = Order.find({})
-		.populate("orderItems.product")
-		.limit(ITEMS_PER_PAGE)
-		.skip(skip)
-		.sort({ createdAt: -1 });
-
-	const [count, orderData] = await Promise.all([
-		countPromise,
-		orderDataPromise,
-	]);
-
-	const pageCount = Math.ceil(count / ITEMS_PER_PAGE);
-	const startIndex = ITEMS_PER_PAGE * page - ITEMS_PER_PAGE;
+	const [pagination, orderData] = await findWithPaginationAndSorting(
+		req,
+		Order,
+		{},
+		"orderItems.product"
+	);
 
 	res.status(200).json({
 		success: true,
@@ -126,9 +114,9 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 
-	const orderData = await Order.find({ orderId }).populate(
-		"orderItems.product"
-	);
+	const orderData = await Order.find({ orderId })
+		.populate("orderItems.product")
+		.populate("orderItems.shop");
 
 	res.status(200).json({
 		success: true,
@@ -139,7 +127,6 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
 
-	console.log(req.body.productOrderId);
 	await refundedToUser(orderId, req.body.productOrderId);
 
 	const eventToAdd = {
@@ -151,7 +138,7 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 		{ orderId, _id: req.body.productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
-			status: "Canceled",
+			status: "CANCELED",
 		}
 	);
 
@@ -177,7 +164,7 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 		{ _id: req.body.productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
-			status: "Processing Return",
+			status: "PROCESSING_RETURN",
 		}
 	);
 
@@ -212,7 +199,7 @@ const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
-	const shopId = req.params.shopId;
+	const shopId = req.shop._id;
 
 	const [pagination, orderData] = await findWithPaginationAndSorting(
 		req,
@@ -231,7 +218,7 @@ const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getSalesReport = asyncErrorHandler(async (req, res, next) => {
-	const { shopId } = req.params;
+	const shopId = req.shop._id;
 	const { dataFrom } = req.query;
 
 	const today = new Date();
@@ -277,9 +264,55 @@ const getSalesReport = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const getSalesReportAdmin = asyncErrorHandler(async (req, res, next) => {
+	const { dataFrom } = req.query;
+
+	const today = new Date();
+	let filterDate = new Date(2020, 0, 0);
+	let dataFromDisplay = "All Time";
+
+	if (dataFrom === "THIS_MONTH") {
+		filterDate = new Date(today.getFullYear(), today.getMonth(), 1);
+		const month = [
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December",
+		];
+		dataFromDisplay = `${month[today.getMonth()]}, ${today.getFullYear()}`;
+	}
+
+	if (dataFrom === "THIS_YEAR") {
+		filterDate = new Date(today.getFullYear(), 1, 1);
+		dataFromDisplay = `${today.getFullYear()}`;
+	}
+
+	const salesReport = await Order.find({
+		createdAt: { $gt: filterDate },
+	})
+		.sort({ createdAt: -1 })
+		.populate("orderItems.product")
+		.populate("user");
+
+	res.status(200).json({
+		success: true,
+		salesReport,
+		dataFromDisplay,
+	});
+});
+
 const getSingleOrderDetailsForShop = asyncErrorHandler(
 	async (req, res, next) => {
-		const { orderId, shopId } = req.params;
+		const { orderId } = req.params;
+		const shopId = req.shop._id;
 
 		const orderData = await Order.find({
 			orderId,
@@ -299,7 +332,7 @@ const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 	const { orderStatus, productOrderId } = req.body;
 
-	if (orderStatus === "Return Approved")
+	if (orderStatus === "RETURN_APPROVED")
 		await refundedToUser(orderId, productOrderId);
 
 	const eventToAdd = {
@@ -333,4 +366,5 @@ module.exports = {
 	changeOrderStatus,
 	returnOrder,
 	getSalesReport,
+	getSalesReportAdmin,
 };

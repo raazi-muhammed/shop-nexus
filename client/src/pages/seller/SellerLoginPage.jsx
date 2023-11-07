@@ -32,8 +32,7 @@ const SellerLoginPage = () => {
 		axios
 			.post(`${server}/seller/login-shop`, newForm, { withCredentials: true })
 			.then((res) => {
-				if (res.data.success)
-					navigate(`/seller/dashboard/${res.data.user._id}`);
+				if (res.data.success) navigate(`/seller/dashboard`);
 			})
 			.catch((err) => {
 				const message = err.response.data.message;

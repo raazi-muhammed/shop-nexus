@@ -9,10 +9,11 @@ import {
 	formClass,
 	submitButtonClass,
 } from "../../../utils/styleClasses";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SellerAddProductPage = ({ shopId, shopName }) => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [productName, setProductName] = useState("");
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
@@ -77,7 +78,8 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 				withCredentials: true,
 			})
 			.then((res) => {
-				navigate(-1);
+				//changing the last part of url
+				navigate(location.pathname.replace(/[^/]*$/, "all-products"));
 				toast.success(res.data.message);
 			})
 			.catch((err) => {

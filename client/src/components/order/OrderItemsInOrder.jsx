@@ -16,7 +16,8 @@ const OrderItemsInOrder = ({ orderItems }) => {
 						<p className="text-primary fw-bold m-0">{product.product.name}</p>
 						<p className="text-small m-0">{product.product.shop.name}</p>
 						<p>
-							{product.product.discount_price} × <span>{product.quantity}</span>
+							{product.price / product.quantity} ×{" "}
+							<span>{product.quantity}</span>
 						</p>
 					</div>
 				</div>

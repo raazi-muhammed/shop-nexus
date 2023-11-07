@@ -1,24 +1,35 @@
 const orderStateConstants = [
 	{
-		key: "Processing",
+		key: "PROCESSING",
 		value: "Processing",
 	},
 	{
-		key: "Canceled",
+		key: "CANCELED",
 		value: "Canceled",
 	},
 	{
-		key: "Delivered",
+		key: "DELIVERED",
 		value: "Delivered",
 	},
 	{
-		key: "Processing Return",
+		key: "PROCESSING_RETURN",
 		value: "Processing Return",
 	},
 	{
-		key: "Return Approved",
+		key: "RETURN_APPROVED",
 		value: "Return Approved",
 	},
 ];
+
+export function getOrderStateByKey(key) {
+	const orderState = orderStateConstants.find(
+		(orderState) => orderState.key === key
+	);
+	if (orderState) {
+		return orderState.value;
+	} else {
+		return "Others";
+	}
+}
 
 export default orderStateConstants;

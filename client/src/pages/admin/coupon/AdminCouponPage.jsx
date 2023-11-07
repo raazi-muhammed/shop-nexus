@@ -1,15 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import server from "../../server";
+import server from "../../../server";
 import { Link, useParams } from "react-router-dom";
-import Icons from "../../assets/Icons";
-import convertISOToDate from "../../utils/convertISOToDate";
-import Pagination from "../../components/Pagination";
+import Icons from "../../../assets/Icons";
+import convertISOToDate from "../../../utils/convertISOToDate";
+import Pagination from "../../../components/Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
-import { getCouponTypeByKey } from "../../constants/couponTypeConstants";
-import formatPrice from "../../utils/formatPrice";
+import { getCouponTypeByKey } from "../../../constants/couponTypeConstants";
+import formatPrice from "../../../utils/formatPrice";
 import toast from "react-hot-toast";
-import { getCouponStateByKey } from "../../constants/couponStateConstants";
+import { getCouponStateByKey } from "../../../constants/couponStateConstants";
 const { eye, edit } = Icons;
 
 const AdminCouponsPage = () => {
@@ -21,7 +21,7 @@ const AdminCouponsPage = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/admin/get-all-coupons?page=${pagination.page || 1}`, {
+			.get(`${server}/coupon/get-all-coupons?page=${pagination.page || 1}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -40,7 +40,7 @@ const AdminCouponsPage = () => {
 			status: state,
 		};
 		axios
-			.patch(`${server}/admin/change-coupon-state`, formData, {
+			.patch(`${server}/coupon/change-coupon-state`, formData, {
 				withCredentials: true,
 			})
 			.then((res) => {

@@ -22,8 +22,8 @@ const SearchResults = () => {
 		sortItems: [
 			{ value: "createdAt", title: "Date" },
 			{ value: "rating", title: "Rating" },
-			{ value: "discount_price", title: "Price" },
-			{ value: "total_sell", title: "Total Sold" },
+			{ value: "discountPrice", title: "Price" },
+			{ value: "totalSell", title: "Total Sold" },
 		],
 	});
 	const searchOptions = useSelector(

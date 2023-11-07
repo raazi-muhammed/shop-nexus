@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../../server";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import Pagination from "../../../components/Pagination";
 import Sorting from "../../../components/Sorting";
@@ -23,7 +22,6 @@ const SellerStockManagement = () => {
 		],
 	});
 
-	const { shopId } = useParams();
 	const [data, setData] = useState([{ images: [{ url: "" }] }]);
 	const [updatedStock, setUpdatedStock] = useState(0);
 	const [allowSubmission, setAllowSubmission] = useState(false);
@@ -44,7 +42,7 @@ const SellerStockManagement = () => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/seller/get-products-from-shop/${shopId}?page=${
+				`${server}/products/get-products-from-shop?page=${
 					pagination?.page || 1
 				}&sort=${sortOptions.sortBy}`,
 				{
@@ -71,7 +69,7 @@ const SellerStockManagement = () => {
 		};
 
 		axios
-			.patch(`${server}/seller/change-stock-value`, data, {
+			.patch(`${server}/products/change-stock-value`, data, {
 				withCredentials: true,
 			})
 			.then((res) => {

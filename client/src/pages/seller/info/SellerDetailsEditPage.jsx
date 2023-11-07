@@ -33,7 +33,7 @@ const SellerDetailsEditPage = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-shop-details/${shopId}`, {
+			.get(`${server}/seller/get-shop-details`, {
 				withCredentials: true,
 			})
 			.then((res) => {

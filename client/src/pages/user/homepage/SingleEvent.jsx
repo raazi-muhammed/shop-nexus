@@ -9,11 +9,13 @@ import { useDispatch } from "react-redux";
 import Icons from "../../../assets/Icons";
 import formatPrice from "../../../utils/formatPrice";
 import ClipLoader from "react-spinners/ClipLoader";
+import QuantityPicker from "../../../components/product/QuantityPicker";
 const { cart, heart } = Icons;
 
 const SingleEvent = () => {
 	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(false);
+	const [quantity, setQuantity] = useState(1);
 	const { eventId } = useParams();
 	const [eventData, setEventData] = useState([]);
 	useEffect(() => {
@@ -22,6 +24,10 @@ const SingleEvent = () => {
 			.get(`${server}/event/get-event-details/${eventId}`)
 			.then((res) => {
 				setEventData(res.data?.eventsData);
+				console.log(res.data?.eventsData);
+				if (res.data?.eventsData.typeOfEvent === "BYE_ONE_GET_ONE_FREE") {
+					setQuantity(2);
+				}
 			})
 			.catch((err) => console.log(err))
 			.finally(() => {
@@ -29,13 +35,21 @@ const SingleEvent = () => {
 			});
 	}, []);
 
-	const handleAddToCart = (productId, discount_price) => {
+	const handleAddToCart = (productId, discountPrice) => {
+		if (eventData.typeOfEvent === "BYE_ONE_GET_ONE_FREE" && quantity < 2) {
+			toast.error("You must buy min 2 items ");
+			return;
+		}
 		const itemData = {
 			product_id: productId,
-			price: discount_price,
-			type: {
-				name: "Offer",
-				details: "Event Id",
+			quantity,
+			offer: {
+				applied: true,
+				offerPrice: discountPrice,
+				type: "EVENT",
+				details: {
+					id: eventId,
+				},
 			},
 		};
 		axios
@@ -49,7 +63,7 @@ const SingleEvent = () => {
 	const handleAddToWishList = () => {
 		const itemData = {
 			product_id: productId,
-			price: discount_price,
+			price: discountPrice,
 			type: {
 				name: "Offer",
 				details: "Event Id",
@@ -98,7 +112,7 @@ const SingleEvent = () => {
 				</section>
 				<hr className="text-secondary" />
 				<section>
-					{eventData?.selected_products?.map((product) => (
+					{eventData?.selectedProducts?.map((product) => (
 						<section
 							key={product._id}
 							className="row bg-white rounded-4  p-1 mb-3">
@@ -126,13 +140,12 @@ const SingleEvent = () => {
 											<p className="h4 mb-0 fw-bold">
 												{formatPrice(
 													Math.floor(
-														product?.price *
-															(1 - eventData?.discount_percentage)
+														product?.price * (1 - eventData?.discountPercentage)
 													)
 												)}
 											</p>
 											<p className="text-small text-decoration-line-through">
-												{formatPrice(product?.discount_price)}
+												{formatPrice(product?.discountPrice)}
 											</p>
 											<p className="text-small text-decoration-line-through">
 												{formatPrice(product?.price)}
@@ -142,6 +155,10 @@ const SingleEvent = () => {
 									</div>
 								</Link>
 								<section className="m-2 d-flex gap-2">
+									<QuantityPicker
+										quantity={quantity}
+										setQuantity={setQuantity}
+									/>
 									{product?.stock <= 0 ? (
 										<section className="w-100 m-0 mt-auto text-nowrap overflow-eclipses">
 											<p className="text-small p-1 m-0 rounded-4 text-danger">
@@ -155,8 +172,7 @@ const SingleEvent = () => {
 												handleAddToCart(
 													product?._id,
 													Math.floor(
-														product?.price *
-															(1 - eventData?.discount_percentage)
+														product?.price * (1 - eventData?.discountPercentage)
 													)
 												)
 											}>
@@ -168,7 +184,7 @@ const SingleEvent = () => {
 											handleAddToWishList(
 												product?._id,
 												Math.floor(
-													product?.price * (1 - eventData?.discount_percentage)
+													product?.price * (1 - eventData?.discountPercentage)
 												)
 											)
 										}

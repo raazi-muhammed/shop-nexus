@@ -61,14 +61,9 @@ const userSchema = new mongoose.Schema(
 				},
 			},
 		],
-		role: {
-			type: String,
-			default: "user",
-		},
 		avatar: {
 			url: {
 				type: String,
-				//required: true,
 			},
 		},
 		cart: [
@@ -86,6 +81,20 @@ const userSchema = new mongoose.Schema(
 				price: {
 					type: Number,
 					required: true,
+				},
+				offer: {
+					applied: {
+						type: Boolean,
+					},
+					offerPrice: {
+						type: Number,
+					},
+					type: {
+						type: String,
+					},
+					details: {
+						type: Object,
+					},
 				},
 				type: {
 					type: Object,

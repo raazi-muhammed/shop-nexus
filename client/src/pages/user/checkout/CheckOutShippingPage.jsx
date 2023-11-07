@@ -66,19 +66,7 @@ const CheckOutShippingPage = () => {
 			address2: addressLine2,
 			addressType,
 		};
-		const orderItems = userData.cart.map((cartItem) => {
-			const data = {
-				product: cartItem.product._id,
-				shop: cartItem.product.shop.id,
-				quantity: cartItem.quantity,
-				totalPrice: cartItem.price * cartItem.quantity,
-			};
-			return data;
-		});
-
 		dispatch(setShippingAddress(shippingInfo));
-		dispatch(setOrderItems(orderItems));
-
 		navigate("payment");
 	};
 

@@ -11,7 +11,6 @@ import tableToJson from "../../../utils/tableToJson";
 import exportFromJSON from "export-from-json";
 
 const SalesReport = () => {
-	const { shopId } = useParams();
 	const [loading, setLoading] = useState(false);
 	const [pdfDownloading, setPdfDownloading] = useState(false);
 	const [fileDownloading, setFileDownloading] = useState(false);
@@ -38,7 +37,7 @@ const SalesReport = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${server}/seller/get-sales-report/${shopId}?dataFrom=${dataFrom}`, {
+			.get(`${server}/seller/get-sales-report?dataFrom=${dataFrom}`, {
 				withCredentials: true,
 			})
 			.then((res) => {

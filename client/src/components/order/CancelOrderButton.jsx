@@ -13,7 +13,7 @@ const CancelOrderButton = ({ orderId, productOrderId, setRefresh }) => {
 		console.log(productOrderId, orderId);
 		axios
 			.put(
-				`${server}/user/cancel-order/${orderId}`,
+				`${server}/order/cancel-order/${orderId}`,
 				{ description: reason, productOrderId },
 				{
 					withCredentials: true,

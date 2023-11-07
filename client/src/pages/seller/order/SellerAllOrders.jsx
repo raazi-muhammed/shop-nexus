@@ -23,14 +23,13 @@ const SellerAllOrders = () => {
 			{ value: "status", title: "Status" },
 		],
 	});
-	const { shopId } = useParams();
 	const [orderData, setOrderData] = useState();
 
 	useEffect(() => {
 		setLoading(true);
 		axios
 			.get(
-				`${server}/seller/get-all-orders/${shopId}?page=${
+				`${server}/order/get-all-orders-shop?page=${
 					pagination.page || 1
 				}&sort=${sortOptions.sortBy}`,
 				{

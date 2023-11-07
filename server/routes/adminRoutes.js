@@ -1,3 +1,6 @@
+const express = require("express");
+router = express.Router();
+const { isAdminAuthenticated } = require("../middleware/auth");
 const {
 	adminLogOut,
 	adminLogIn,
@@ -5,20 +8,12 @@ const {
 	adminBlockAndUnBlockUser,
 	getAllSellers,
 	adminBlockAndUnBlockSeller,
+	getDashBoardContentAdmin,
+	getSalesChartDataAdmin,
+	getOrdersSoldChartDataAdmin,
 } = require("../controller/adminController");
 
-const {
-	getAllOrders,
-	getSingleOrders,
-} = require("../controller/orderController");
-
-const express = require("express");
-router = express.Router();
-const { isAdminAuthenticated } = require("../middleware/adminAuth");
-const {
-	getAllCoupons,
-	changeCouponState,
-} = require("../controller/couponController");
+const { getSalesReportAdmin } = require("../controller/orderController");
 
 router.get("/logout", (req, res) => adminLogOut(req, res));
 router.post("/login", async (req, res, next) => adminLogIn(req, res, next));
@@ -35,22 +30,22 @@ router.post("/block-seller", isAdminAuthenticated, (req, res, next) => {
 	adminBlockAndUnBlockSeller(req, res, next);
 });
 
-router.get("/get-all-orders", isAdminAuthenticated, (req, res, next) =>
-	getAllOrders(req, res, next)
-);
+/* Charts */
+router.get("/chart/orders", isAdminAuthenticated, async (req, res, next) => {
+	getOrdersSoldChartDataAdmin(req, res, next);
+});
+router.get("/chart/sales", isAdminAuthenticated, async (req, res, next) => {
+	getSalesChartDataAdmin(req, res, next);
+});
+router.get("/dashboard", isAdminAuthenticated, async (req, res, next) => {
+	getDashBoardContentAdmin(req, res, next);
+});
 
 router.get(
-	"/get-order-details/:orderId",
+	"/get-sales-report",
 	isAdminAuthenticated,
-	(req, res, next) => getSingleOrders(req, res, next)
+	async (req, res, next) => {
+		getSalesReportAdmin(req, res, next);
+	}
 );
-
-router.get("/get-all-coupons", isAdminAuthenticated, (req, res, next) =>
-	getAllCoupons(req, res, next)
-);
-
-router.patch("/change-coupon-state", isAdminAuthenticated, (req, res, next) =>
-	changeCouponState(req, res, next)
-);
-
 module.exports = router;

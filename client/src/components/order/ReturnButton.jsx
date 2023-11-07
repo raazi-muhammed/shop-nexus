@@ -12,7 +12,7 @@ const ReturnButton = ({ orderId, productOrderId, setRefresh }) => {
 
 		axios
 			.put(
-				`${server}/user/return-order/${orderId}`,
+				`${server}/order/return-order/${orderId}`,
 				{ productOrderId, description: reason },
 				{
 					withCredentials: true,

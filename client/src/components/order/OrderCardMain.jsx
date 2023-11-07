@@ -2,6 +2,7 @@ import React from "react";
 import formatPrice from "../../utils/formatPrice";
 import { useNavigate } from "react-router-dom";
 import convertISOToDate from "../../utils/convertISOToDate";
+import { getOrderStateByKey } from "../../constants/orderStateConstants";
 
 const OrderCardMain = ({
 	status,
@@ -18,15 +19,21 @@ const OrderCardMain = ({
 			className="p-3 bg-white mb-3 row rounded-4 align-items-center ">
 			<section className="col-4">
 				<p className="text-small text-secondary m-0">Status</p>
-				{status === "Canceled" ? (
-					<p className="rounded-end text-danger fw-bold ">{`${status}`}</p>
-				) : status === "Delivered" || status === "Return Approved" ? (
-					<p className="rounded-end text-success fw-bold">{`${status}`}</p>
+				{status === "CANCELED" ? (
+					<p className="rounded-end text-danger fw-bold ">
+						{getOrderStateByKey(status)}
+					</p>
+				) : status === "DELIVERED" || status === "RETURN_APPROVED" ? (
+					<p className="rounded-end text-success fw-bold">
+						{getOrderStateByKey(status)}
+					</p>
 				) : (
-					<p className="rounded-end text-warning fw-bold">{`${status}`}</p>
+					<p className="rounded-end text-warning fw-bold">
+						{getOrderStateByKey(status)}
+					</p>
 				)}
 				<p className="text-small text-secondary m-0">Date</p>
-				<p className="fw-bold m-0">{`${convertISOToDate(createdAt)}`}</p>
+				<p className="fw-bold m-0">{`${convertISOToDate(createdAt, true)}`}</p>
 				<p className="text-small text-light m-0">{orderId}</p>
 			</section>
 			<section className="col-4">

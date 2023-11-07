@@ -21,10 +21,10 @@ const WishListUser = () => {
 	const wishListItems = userData?.wishList;
 	const navigate = useNavigate();
 
-	const handleAddToCart = (productId, discount_price) => {
+	const handleAddToCart = (productId, discountPrice) => {
 		const itemData = {
 			product_id: productId,
-			price: discount_price,
+			price: discountPrice,
 		};
 		axios
 			.post(`${server}/cart/add-to-cart`, itemData, { withCredentials: true })
@@ -107,7 +107,7 @@ const WishListUser = () => {
 								className="col-7 my-auto">
 								<p className="text-small mb-0">{wishListItem.product?.name}</p>
 								<p className="text-secondary fw-bold">
-									{formatPrice(wishListItem?.product?.discount_price)}
+									{formatPrice(wishListItem?.product?.discountPrice)}
 								</p>
 							</section>
 
@@ -123,7 +123,7 @@ const WishListUser = () => {
 									onClick={(e) =>
 										handleAddToCart(
 											wishListItem.product?._id,
-											wishListItem?.product?.discount_price
+											wishListItem?.product?.discountPrice
 										)
 									}
 									className="btn btn-secondary text-white btn-sm m-0 my-2 ">

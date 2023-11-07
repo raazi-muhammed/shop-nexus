@@ -10,7 +10,7 @@ import {
 	useParams,
 } from "react-router-dom";
 import Icons from "../../assets/Icons";
-const { heart, cart, plus, minus } = Icons;
+const { heart, cart } = Icons;
 
 import toast from "react-hot-toast";
 import ReactImageMagnify from "react-image-magnify";
@@ -24,6 +24,7 @@ import RatingStar from "../../components/product/RatingStar";
 import { getCategoryByKey } from "../../constants/categoriesConstants";
 import ChattingComp from "../../components/ChattingComp";
 import ReviewsSection from "./product/ReviewsSection";
+import QuantityPicker from "../../components/product/QuantityPicker";
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);
@@ -74,14 +75,7 @@ const SingleProductPage = () => {
 			.get(`${server}/products/single-product/${id}`)
 			.then((res) => {
 				setProductData(res.data.productDetails[0]);
-
-				axios
-					.get(
-						`${server}/seller/get-shop-details/${res.data.productDetails[0].shop.id}`
-					)
-					.then((res) => {
-						setShopData(res.data.data);
-					});
+				setShopData(res.data.productDetails[0].shop.id);
 			})
 			.catch((err) => toast.error("Loading failed" + err))
 			.finally(() => setLoading(false));
@@ -92,7 +86,7 @@ const SingleProductPage = () => {
 			product_id: id,
 			name: productData.name,
 			quantity,
-			price: productData.discount_price,
+			price: productData.discountPrice,
 			imageUrl: productData?.images[0]?.url,
 		};
 		axios
@@ -108,7 +102,7 @@ const SingleProductPage = () => {
 		const itemData = {
 			product_id: id,
 			name: productData.name,
-			price: productData.discount_price,
+			price: productData.discountPrice,
 			imageUrl: productData?.images[0]?.url,
 		};
 		axios
@@ -181,7 +175,7 @@ const SingleProductPage = () => {
 								</p>
 								<div className="d-flex align-items-center  gap-2 mb-3">
 									<RatingStar rating={productData.rating} />
-									<p className="text-small mt-2 m-0">{`${productData.total_sell} Sold`}</p>
+									<p className="text-small mt-2 m-0">{`${productData.totalSell} Sold`}</p>
 								</div>
 								{productData.stock < 20 && productData.stock !== 0 && (
 									<p className="bg-danger-subtle p-1 px-2  rounded-4 d-inline text-danger">
@@ -190,53 +184,14 @@ const SingleProductPage = () => {
 								)}
 								<div className="mt-3">
 									<p className="h4 mb-0 fw-bold text-primary">
-										{formatPrice(productData.discount_price)}
+										{formatPrice(productData.discountPrice)}
 									</p>
 								</div>
 								<section className="mt-3">
-									<div
-										class="btn-group"
-										role="group"
-										aria-label="Button group with nested dropdown">
-										<button
-											type="button"
-											disabled={quantity <= 1}
-											onClick={() =>
-												setQuantity((currentQuantity) => currentQuantity - 1)
-											}
-											class="btn btn-sm text-primary btn-light p-0">
-											{minus}
-										</button>
-										<div class="btn-group" role="group">
-											<button
-												type="button"
-												class="btn btn-light btn-sm text-primary dropdown-toggle px-3"
-												data-bs-toggle="dropdown"
-												aria-expanded="false">
-												{quantity}
-											</button>
-											<ul class="dropdown-menu">
-												<li onClick={() => setQuantity(5)}>
-													<a class="dropdown-item" href="#">
-														5
-													</a>
-												</li>
-												<li onClick={() => setQuantity(10)}>
-													<a class="dropdown-item" href="#">
-														10
-													</a>
-												</li>
-											</ul>
-										</div>
-										<button
-											onClick={() =>
-												setQuantity((currentQuantity) => currentQuantity + 1)
-											}
-											type="button"
-											class="btn btn-sm text-primary btn-light p-0">
-											{plus}
-										</button>
-									</div>
+									<QuantityPicker
+										quantity={quantity}
+										setQuantity={setQuantity}
+									/>
 								</section>
 								<section className="my-3 d-flex gap-2">
 									{productData.stock <= 0 ? (

@@ -42,11 +42,6 @@ const couponSchema = new mongoose.Schema(
 			type: Number,
 			required: true,
 		},
-		createdAt: {
-			type: Date,
-			default: Date.now(),
-		},
-
 		events: [
 			{
 				name: {
