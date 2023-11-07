@@ -36,6 +36,7 @@ const {
 	getAllEventsFromSeller,
 	getEventDetails,
 	editEventSeller,
+	deleteEventSeller,
 } = require("../controller/eventController");
 
 const router = require("express").Router();
@@ -152,6 +153,14 @@ router.put(
 	isSellerAuthenticated,
 	async (req, res, next) => {
 		editEventSeller(req, res, next);
+	}
+);
+
+router.put(
+	"/delete-event/:eventId",
+	isSellerAuthenticated,
+	async (req, res, next) => {
+		deleteEventSeller(req, res, next);
 	}
 );
 

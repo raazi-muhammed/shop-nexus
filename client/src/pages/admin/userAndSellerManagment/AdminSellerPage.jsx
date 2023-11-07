@@ -17,8 +17,6 @@ const AdminSellerPage = () => {
 	}, [refresh]);
 
 	const handBlockAndUnBlock = (id, action) => {
-		console.log(id);
-		setRefresh(!refresh);
 		axios
 			.post(
 				`${server}/admin/block-seller`,
@@ -27,9 +25,9 @@ const AdminSellerPage = () => {
 			)
 			.then((res) => {
 				toast.success(res.data.message);
-				toast.error("Refresh if changes are not seen");
 			})
-			.catch((err) => toast.error(err.response.data.message));
+			.catch((err) => toast.error(err.response.data.message))
+			.finally(() => setRefresh(!refresh));
 	};
 	return (
 		<section className="w-100 row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 ">

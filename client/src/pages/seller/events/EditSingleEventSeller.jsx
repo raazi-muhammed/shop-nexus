@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import server from "../../../server";
 import {
 	formLabelClass,
@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 const EditSingleEventSeller = () => {
 	const today = new Date();
-
+	const navigate = useNavigate();
 	const { eventId } = useParams();
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
@@ -62,6 +62,19 @@ const EditSingleEventSeller = () => {
 			})
 			.catch((err) => toast.error(err.data?.message || "An error occurred"));
 	};
+	const handleDeleteEvent = () => {
+		axios.defaults.withCredentials = true;
+
+		axios
+			.put(`${server}/seller/delete-event/${eventId}`, {
+				withCredentials: true,
+			})
+			.then((res) => {
+				navigate(-1);
+				toast.success(res.data?.message || "Success");
+			})
+			.catch((err) => toast.error(err.data?.message || "An error occurred"));
+	};
 
 	const convertBase64 = (file) => {
 		return new Promise((res, rej) => {
@@ -97,6 +110,7 @@ const EditSingleEventSeller = () => {
 				const eventData = res.data.eventsData;
 				setName(eventData?.name);
 				setDescription(eventData?.description);
+				setTypeOfEvent(eventData?.type_of_event);
 				setStartDate(
 					new Date(eventData?.start_date).toISOString().split("T")[0]
 				);
@@ -241,12 +255,20 @@ const EditSingleEventSeller = () => {
 						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
-				<button
-					disabled={!allowSubmission}
-					type="submit"
-					className={submitButtonClass}>
-					Update Event Details
-				</button>
+				<div className="d-flex gap-3">
+					<button
+						disabled={!allowSubmission}
+						type="submit"
+						className={`w-100 btn btn-secondary text-white`}>
+						Update Event Details
+					</button>
+					<button
+						onClick={handleDeleteEvent}
+						type="button"
+						className={`btn-danger ${submitButtonClass}`}>
+						Delete
+					</button>
+				</div>
 			</form>
 		</div>
 	);

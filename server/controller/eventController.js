@@ -87,8 +87,29 @@ const editEventSeller = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+const deleteEventSeller = asyncErrorHandler(async (req, res, next) => {
+	const { eventId } = req.params;
+
+	const event = await OfferEvent.findOneAndUpdate(
+		{ _id: eventId },
+		{ isDeleted: true },
+		{ new: true }
+	);
+
+	res.status(200).json({
+		success: true,
+		message: "Event Deleted",
+		eventData: event,
+	});
+});
+
 const getAllEvents = asyncErrorHandler(async (req, res, next) => {
-	const eventsData = await OfferEvent.find({});
+	const today = new Date();
+	const eventsData = await OfferEvent.find({
+		isDeleted: false,
+		start_date: { $lte: today },
+		end_date: { $gte: today },
+	}).sort({ createdAt: -1 });
 	res.status(200).json({
 		success: true,
 		eventsData,
@@ -177,4 +198,5 @@ module.exports = {
 	getAllEventsFromSeller,
 	editEventSeller,
 	isEventValid,
+	deleteEventSeller,
 };
