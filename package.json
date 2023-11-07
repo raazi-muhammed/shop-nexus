@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "html-to-pdf": "^0.1.11",
-    "razorpay": "^2.9.2"
-  }
-}
