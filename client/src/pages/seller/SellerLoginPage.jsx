@@ -45,10 +45,10 @@ const SellerLoginPage = () => {
 
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-primary text-white rounded-4">
-			<section className="col-6 p-0 overflow-hidden ">
+			<section className="col-6 p-0 overflow-hidden d-none d-lg-flex">
 				<img src={loginCover} className="h-100 rounded-start-4 m-0" alt="" />
 			</section>
-			<section className="col-6 p-5 my-auto" style={{ height: "35rem" }}>
+			<section className="col p-5 my-auto" style={{ height: "35rem" }}>
 				<h3> Seller Log In </h3>
 				<p className="text-light">Welcome back! Log in</p>
 				<form

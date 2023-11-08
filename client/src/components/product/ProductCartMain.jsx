@@ -52,23 +52,25 @@ const ProductCartMain = ({ product }) => {
 						alt=""
 					/>
 				</Link>
-				<section className="d-flex flex-column p-4 pb-0 mt-auto">
+				<section className="d-flex flex-column p-4 pb-0 mt-auto mb-3">
 					<Link className="text-secondary text-small text-decoration-none">
 						{product.shop.name}
 					</Link>
 					<p className="mb-1">{product.name}</p>
-					<section className="d-flex gap-2">
+					<section className="d-flex gap-2 mb-sm-0 mb-3">
 						<RatingStar rating={product.rating} />
-						<p className="text-small mt-1">{product.totalSell} Sold</p>
+						<p className="text-small mt-1 d-sm-flex d-none">
+							{product.totalSell} Sold
+						</p>
 					</section>
-					<section className="d-flex gap-1 ">
+					<section className="d-flex gap-1">
 						<p className="h4 mb-0">{formatPrice(product.discountPrice)}</p>
-						<p className="text-small text-decoration-line-through">
+						<p className="text-small text-decoration-line-through d-sm-flex d-none">
 							{formatPrice(product.price)}
 						</p>
 					</section>
 				</section>
-				<section className="m-2 d-flex gap-2">
+				<section className="m-2 mt-0 gap-2 d-sm-flex d-none">
 					{product.stock <= 0 ? (
 						<section className="w-100 m-0 mt-auto text-nowrap overflow-eclipses">
 							<p className="text-small p-1 m-0 rounded-4 text-danger">

@@ -17,7 +17,7 @@ const ProductSuggestion = ({ productCategory }) => {
 		<div>
 			<h2 className="text-secondary mt-4 mb-0 ms-3">Related Products</h2>
 			<div
-				className={`row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 p-4`}>
+				className={`row mx-auto w-100 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2 px-4`}>
 				{productsData?.map((product) => (
 					<ProductCartMain key={product._id} product={product} />
 				))}

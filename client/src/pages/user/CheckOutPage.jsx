@@ -92,8 +92,8 @@ const CheckOutPage = () => {
 				<CheckOutNavBar currentNav={currentNav} setCurrentNav={setCurrentNav} />
 				<div className="row flex-row-reverse">
 					{currentNav != 2 ? (
-						<aside className="col-4">
-							<section className="bg-white rounded-4 p-4">
+						<aside className="col-12 col-lg-4">
+							<section className="bg-white rounded-4 p-4 ">
 								<p className="text-light text-small m-0">Items</p>
 								{userData?.cart?.map((cartItem) => (
 									<div className="mb-2">

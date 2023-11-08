@@ -134,7 +134,7 @@ const LoginPage = () => {
 	};
 	return (
 		<main className="my-auto mx-auto row container-max-width bg-white rounded-4">
-			<section className="col-6 p-0 overflow-hidden ">
+			<section className="col-6 p-0 overflow-hidden d-none d-lg-flex">
 				<img
 					src={loginCover}
 					className="rounded-start-4 m-0 h-100"
@@ -142,7 +142,7 @@ const LoginPage = () => {
 					srcSet=""
 				/>
 			</section>
-			<section className="col-6 p-5 my-auto" style={{ height: "40rem" }}>
+			<section className="col p-5 my-auto" style={{ height: "40rem" }}>
 				<h3>Log In</h3>
 				<p className="text-secondary">Welcome back! Log in</p>
 				<form
