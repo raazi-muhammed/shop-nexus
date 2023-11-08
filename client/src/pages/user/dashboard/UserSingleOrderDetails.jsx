@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../../server";
 import ClipLoader from "react-spinners/ClipLoader";
-import SingleOrderDetails from "../../../components/order/SingleOrderDetails";
+import SingleOrderDetailsComp from "../../../components/order/SingleOrderDetailsComp";
 
 const UserSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
@@ -20,7 +20,6 @@ const UserSingleOrderDetails = () => {
 				withCredentials: true,
 			})
 			.then((res) => {
-				console.log(res?.data?.orderData);
 				setOrderDetails(res?.data?.orderData);
 			})
 			.finally(() => [setLoading(false)]);
@@ -40,7 +39,7 @@ const UserSingleOrderDetails = () => {
 					/>
 				</div>
 			) : (
-				<SingleOrderDetails
+				<SingleOrderDetailsComp
 					orderDetails={orderDetails}
 					orderId={orderDetails[0]?.orderId}
 					setRefresh={setRefresh}

@@ -38,8 +38,9 @@ const UserConversationsPage = () => {
 				{data.conversations?.length === 0 && (
 					<p className="text-secondary text-center mt-5 pt-5">No Messages</p>
 				)}
-				{data.conversations?.map((e) => (
+				{data.conversations?.map((e, i) => (
 					<div
+						key={e.shop._id || i}
 						data-bs-toggle="modal"
 						data-bs-target="#exampleModal"
 						onClick={() => handleStartMessage(e.shop, e.user)}

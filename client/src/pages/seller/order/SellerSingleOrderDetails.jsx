@@ -7,7 +7,7 @@ import server from "../../../server";
 import orderStateConstants from "../../../constants/orderStateConstants";
 
 import ClipLoader from "react-spinners/ClipLoader";
-import SingleOrderDetails from "../../../components/order/SingleOrderDetails";
+import SingleOrderDetailsComp from "../../../components/order/SingleOrderDetailsComp";
 
 const SellerSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ const SellerSingleOrderDetails = () => {
 
 	const [orderDetails, setOrderDetails] = useState([{ orderItems: [] }]);
 	const { orderId } = useParams();
-	const [orderState, setOrderState] = useState();
+
 	useEffect(() => {
 		setLoading(true);
 		axios
@@ -29,23 +29,6 @@ const SellerSingleOrderDetails = () => {
 			.finally(() => setLoading(false));
 	}, [refresh]);
 
-	const handleOrderStatusChange = () => {
-		axios
-			.patch(
-				`${server}/order/change-order-status/${orderId}`,
-				{
-					orderStatus: orderState,
-					productOrderId: orderDetails[0]?._id,
-				},
-				{ withCredentials: true }
-			)
-			.then((res) => {
-				setRefresh(!refresh);
-				toast.success(res?.data?.message || "Success");
-			})
-			.catch((err) => console.log(err));
-		console.log("hi");
-	};
 	return (
 		<div>
 			{loading ? (
@@ -61,32 +44,13 @@ const SellerSingleOrderDetails = () => {
 				</div>
 			) : (
 				<>
-					<section className="my-4">
-						<p className="m-0 p-0">Change Order Status</p>
-						<div className="d-flex ">
-							<select
-								value={orderState}
-								onChange={(e) => setOrderState(e.target.value)}
-								className="form-select"
-								id="categorySelect">
-								{orderStateConstants.map((orderSt) => (
-									<option value={orderSt.key}>{orderSt.value}</option>
-								))}
-							</select>
-							<button
-								onClick={handleOrderStatusChange}
-								className="btn btn-secondary text-white text-nowrap ms-3 px-3">
-								Change Status
-							</button>
-						</div>
-					</section>
-
-					<SingleOrderDetails
+					<SingleOrderDetailsComp
 						orderDetails={orderDetails}
 						orderId={orderDetails[0]?.orderId}
 						setRefresh={setRefresh}
 						refresh={refresh}
 						showEvents={true}
+						showChangeStatus={true}
 					/>
 				</>
 			)}

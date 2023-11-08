@@ -14,6 +14,7 @@ const {
 	changerSellerWalletBalanceWithTransaction,
 } = require("./transactionController");
 const Products = require("../model/Products");
+const aggregateWithPaginationAndSorting = require("../utils/aggregateWithPaginationAndSorting");
 
 const refundedToUser = async (orderId, productOrderId) => {
 	const orderData = await Order.findOne({ orderId, _id: productOrderId });
@@ -94,23 +95,33 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 });
 
 // @METHOD GET
-// @PATH /order/get-all-orders
+// @PATH /order/get-all-orders-admin
 const getAllOrders = asyncErrorHandler(async (req, res, next) => {
-	const [pagination, orderData] = await findWithPaginationAndSorting(
+	const [pagination, orderData] = await aggregateWithPaginationAndSorting(
 		req,
 		Order,
-		{},
-		"orderItems.product"
+		[
+			{ $match: {} },
+			{
+				$lookup: {
+					from: "products",
+					localField: "orderItems.product",
+					foreignField: "_id",
+					as: "orderItems.product",
+				},
+			},
+			{
+				$group: {
+					_id: "$orderId",
+					items: { $push: "$$ROOT" },
+				},
+			},
+		]
 	);
 
 	res.status(200).json({
 		success: true,
-		pagination: {
-			count,
-			page,
-			pageCount,
-			startIndex,
-		},
+		pagination,
 		orderData,
 	});
 });
@@ -195,13 +206,26 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
 
-	const [pagination, orderData] = await findWithPaginationAndSorting(
+	const [pagination, orderData] = await aggregateWithPaginationAndSorting(
 		req,
 		Order,
-		{
-			user: userId,
-		},
-		"orderItems.product"
+		[
+			{ $match: { user: userId } },
+			{
+				$lookup: {
+					from: "products",
+					localField: "orderItems.product",
+					foreignField: "_id",
+					as: "orderItems.product",
+				},
+			},
+			{
+				$group: {
+					_id: "$orderId",
+					items: { $push: "$$ROOT" },
+				},
+			},
+		]
 	);
 
 	res.status(200).json({
@@ -216,13 +240,26 @@ const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 
-	const [pagination, orderData] = await findWithPaginationAndSorting(
+	const [pagination, orderData] = await aggregateWithPaginationAndSorting(
 		req,
 		Order,
-		{
-			"orderItems.shop": shopId,
-		},
-		"orderItems.product"
+		[
+			{ $match: { "orderItems.shop": shopId } },
+			{
+				$lookup: {
+					from: "products",
+					localField: "orderItems.product",
+					foreignField: "_id",
+					as: "orderItems.product",
+				},
+			},
+			{
+				$group: {
+					_id: "$orderId",
+					items: { $push: "$$ROOT" },
+				},
+			},
+		]
 	);
 
 	res.status(200).json({
@@ -362,8 +399,8 @@ const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 		name: orderStatus,
 	};
 
-	const orderData = await Order.updateMany(
-		{ orderId },
+	const orderData = await Order.updateOne(
+		{ orderId, _id: productOrderId },
 		{
 			$addToSet: { events: eventToAdd },
 			status: orderStatus,

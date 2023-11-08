@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import server from "../../../server";
 import ClipLoader from "react-spinners/ClipLoader";
-import SingleOrderDetails from "../../../components/order/SingleOrderDetails";
+import SingleOrderDetailsComp from "../../../components/order/SingleOrderDetailsComp";
 
 const AdminSingleOrderDetails = () => {
 	const [loading, setLoading] = useState(false);
@@ -39,7 +39,7 @@ const AdminSingleOrderDetails = () => {
 					/>
 				</div>
 			) : (
-				<SingleOrderDetails
+				<SingleOrderDetailsComp
 					orderDetails={orderDetails}
 					orderId={orderDetails[0]?.orderId}
 					setRefresh={setRefresh}

@@ -30,9 +30,9 @@ const AdminOrdersPage = () => {
 
 		axios
 			.get(
-				`${server}/order/get-all-orders?page=${pagination.page || 1}&sort=${
-					sortOptions.sortBy
-				}`,
+				`${server}/order/get-all-orders-admin?page=${
+					pagination.page || 1
+				}&sort=${sortOptions.sortBy}`,
 				{
 					withCredentials: true,
 				}
@@ -72,15 +72,22 @@ const AdminOrdersPage = () => {
 						<Pagination pagination={pagination} setPagination={setPagination} />
 					</section>
 					{orderData?.map((order, i) => (
-						<OrderCardMain
-							key={i}
-							status={order.status}
-							createdAt={order.createdAt}
-							orderItems={order.orderItems}
-							totalPrice={order.totalPrice}
-							shippingAddress={order.shippingAddress}
-							orderId={order.orderId}
-						/>
+						<section className="bg-white rounded-4 p-2 mb-3">
+							<p className="text-primary fw-bold mb-1 mt-3 ms-4">
+								Order Id: {order._id}
+							</p>
+							{order.items.map((orderItem) => (
+								<OrderCardMain
+									key={i}
+									status={orderItem?.status}
+									createdAt={orderItem?.createdAt}
+									orderItems={[orderItem?.orderItems]}
+									totalPrice={orderItem?.totalPrice}
+									shippingAddress={orderItem?.shippingAddress}
+									orderId={order._id}
+								/>
+							))}
+						</section>
 					))}
 				</>
 			)}

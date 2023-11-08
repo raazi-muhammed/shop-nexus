@@ -66,7 +66,7 @@ router.get(
 );
 
 /* Admin */
-router.get("/get-all-orders", isAdminAuthenticated, (req, res, next) =>
+router.get("/get-all-orders-admin", isAdminAuthenticated, (req, res, next) =>
 	getAllOrders(req, res, next)
 );
 router.get(

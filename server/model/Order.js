@@ -44,7 +44,7 @@ const orderSchema = new mongoose.Schema(
 		},
 		status: {
 			type: String,
-			default: "Processing",
+			default: "PROCESSING",
 		},
 		paymentInfo: {
 			id: {

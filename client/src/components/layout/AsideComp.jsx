@@ -40,7 +40,7 @@ const AsideComp = ({ asideItems }) => {
 
 					<nav className="d-flex bg-white flex-column p-4 rounded-4 w-100 gap-1 justify-content-center">
 						{asideItems.map((e, i) => (
-							<>
+							<div key={i}>
 								{e.heading ? (
 									<div>
 										<p className="text-small mt-2 mx-2 m-0 fw-bold text-secondary">
@@ -58,7 +58,7 @@ const AsideComp = ({ asideItems }) => {
 										</button>
 									</Link>
 								)}
-							</>
+							</div>
 						))}
 					</nav>
 				</section>

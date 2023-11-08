@@ -6,7 +6,7 @@ import EventsPage from "./EventsPage";
 const HomeContentPage = () => {
 	return (
 		<>
-			<EventsPage onHomePage={true} />
+			{/* <EventsPage onHomePage={true} /> */}
 			<BestSellingPage showHeading={true} />
 			<ProductsPage showHeading={true} />
 		</>

@@ -29,7 +29,7 @@ const InvoiceDownloadButton = ({ orderDetails }) => {
 				onClick={handleInvoiceDownload}
 				className="btn w-100 bg-primary-subtle text-primary btn-sm d-flex justify-content-center">
 				<ClipLoader
-					className="m-0 p-0 text-primary mx-auto my-auto me-1"
+					className="m-0 p-0 text-primary my-auto me-1"
 					loading={invoiceLoading}
 					size={15}
 					color="#342475"

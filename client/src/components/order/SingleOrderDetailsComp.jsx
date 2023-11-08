@@ -10,17 +10,19 @@ import OrderItemsInOrder from "./OrderItemsInOrder";
 import ReturnButton from "./ReturnButton";
 import CancelOrderButton from "./CancelOrderButton";
 import InvoiceDownloadButton from "./InvoiceDownloadButton";
-import { getOrderStateByKey } from "../../constants/orderStateConstants";
+import orderStateConstants, {
+	getOrderStateByKey,
+} from "../../constants/orderStateConstants";
+import ChangeStatusButton from "./ChangeStatusButton";
 
-const SingleOrderDetails = ({
+const SingleOrderDetailsComp = ({
 	orderDetails,
 	orderId,
 	refresh,
 	setRefresh,
 	showEvents,
+	showChangeStatus,
 }) => {
-	console.log(orderDetails);
-
 	const isReturnableFunc = () => {
 		const returnMaxDate = addDays(new Date(orderDetails[0]?.createdAt), 7);
 		const today = new Date();
@@ -65,7 +67,7 @@ const SingleOrderDetails = ({
 					<section>
 						<>
 							{orderDetails?.map((order, i) => (
-								<>
+								<div key={i}>
 									<section className="d-flex">
 										<section>
 											<section>
@@ -87,26 +89,38 @@ const SingleOrderDetails = ({
 											</section>
 											<OrderItemsInOrder orderItems={order.orderItems} />
 										</section>
+
 										<section className="col-3 d-flex flex-column mb-4 mt-auto gap-3 justify-content-center h-100">
-											{order.status === "PROCESSING" && (
-												<CancelOrderButton
+											{showChangeStatus ? (
+												<ChangeStatusButton
 													orderId={orderId}
 													productOrderId={order._id}
 													setRefresh={setRefresh}
+													currentOrderState={order.status}
 												/>
-											)}
-											{isReturnable && order.status === "DELIVERED" && (
-												<ReturnButton
-													orderId={order._id}
-													productOrderId={order._id}
-													setRefresh={setRefresh}
-												/>
+											) : (
+												<>
+													{order.status === "PROCESSING" && (
+														<CancelOrderButton
+															orderId={orderId}
+															productOrderId={order._id}
+															setRefresh={setRefresh}
+														/>
+													)}
+													{isReturnable && order.status === "DELIVERED" && (
+														<ReturnButton
+															orderId={order._id}
+															productOrderId={order._id}
+															setRefresh={setRefresh}
+														/>
+													)}
+												</>
 											)}
 											<InvoiceDownloadButton orderDetails={orderDetails[i]} />
 										</section>
 									</section>
 									<hr className="text-secondary" />
-								</>
+								</div>
 							))}
 						</>
 					</section>
@@ -148,8 +162,9 @@ const SingleOrderDetails = ({
 	);
 };
 
-SingleOrderDetails.defaultProps = {
+SingleOrderDetailsComp.defaultProps = {
 	showEvents: false,
+	showChangeStatus: false,
 };
 
-export default SingleOrderDetails;
+export default SingleOrderDetailsComp;
