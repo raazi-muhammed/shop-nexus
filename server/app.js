@@ -1,5 +1,5 @@
 const express = require("express");
-const connectDatabase = require("./db/database");
+const connectDatabase = require("./config/connectDatabase");
 const app = express();
 require("dotenv").config({ path: "./config/.env" });
 const sessions = require("express-session");
@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const cookies = require("cookie-parser");
 app.use(cookies());
 const PORT = process.env.PORT;
+
 connectDatabase();
 
 /* Socket */

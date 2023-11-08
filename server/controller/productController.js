@@ -6,6 +6,8 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 const Order = require("../model/Order");
 
+// @METHOD GET
+// @PATH /product/best-selling
 const getBestSellingProducts = asyncErrorHandler(async (req, res, next) => {
 	let products = await Products.find({ isDeleted: { $ne: true } }).sort({
 		total_sell: -1,
@@ -17,6 +19,8 @@ const getBestSellingProducts = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/all-products
 const getProducts = asyncErrorHandler(async (req, res, next) => {
 	let products = await Products.find({ isDeleted: { $ne: true } });
 	res.status(200).json({
@@ -25,6 +29,8 @@ const getProducts = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/filter-products/:category
 const getProductByCategory = asyncErrorHandler(async (req, res, next) => {
 	const { category } = req.params;
 	let products = await Products.find({ isDeleted: { $ne: true }, category });
@@ -34,6 +40,8 @@ const getProductByCategory = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/search-products
 const searchProducts = asyncErrorHandler(async (req, res, next) => {
 	const { category, searchTerm, minPrice, maxPrice, rating } = req.query;
 	let filter = {
@@ -69,6 +77,8 @@ const searchProducts = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/all-products-including-deleted
 const getProductsIncludingDeleted = asyncErrorHandler(
 	async (req, res, next) => {
 		const ITEMS_PER_PAGE = 10;
@@ -99,6 +109,8 @@ const getProductsIncludingDeleted = asyncErrorHandler(
 	}
 );
 
+// @METHOD GET
+// @PATH /product/single-product/:id
 const getSingleProductDetails = asyncErrorHandler(async (req, res, next) => {
 	const productId = req.params.id;
 	let productDetails = await Products.find({ _id: productId }).populate(
@@ -111,6 +123,8 @@ const getSingleProductDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /product/edit-product/:id
 const editProduct = asyncErrorHandler(async (req, res, next) => {
 	const productId = req.params.id;
 	const {
@@ -153,6 +167,8 @@ const editProduct = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /product/delete-product-image/:id
 const deleteProductImage = asyncErrorHandler(async (req, res, next) => {
 	const productId = req.params.id;
 	const imageUrl = req.body.imgUrl;
@@ -168,6 +184,8 @@ const deleteProductImage = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD DELETE
+// @PATH /product/delete-product/:id
 const deleteProductSeller = asyncErrorHandler(async (req, res, next) => {
 	const productId = req.params.id;
 
@@ -186,6 +204,8 @@ const deleteProductSeller = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /product/edit-product-admin/:id
 const editProductAdmin = asyncErrorHandler(async (req, res, next) => {
 	const productId = req.params.id;
 	const { category, rating, totalSales, soldOut } = req.body;
@@ -207,6 +227,8 @@ const editProductAdmin = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD DELETE
+// @PATH /product/recover-product/:id
 const recoverProduct = asyncErrorHandler(async (req, res, next) => {
 	const productId = req.params.id;
 
@@ -225,6 +247,8 @@ const recoverProduct = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /product/add-product
 const addProduct = asyncErrorHandler(async (req, res, next) => {
 	const {
 		productName,
@@ -281,6 +305,9 @@ const addProduct = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/get-products-from-shop
+// @PATH /product/get-products-from-shop/:shopId
 const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 	const ShopDetails = await Shop.findOne({ _id: shopId });
@@ -301,6 +328,8 @@ const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PATCH
+// @PATH /product/change-stock-value
 const setNewStockAmount = asyncErrorHandler(async (req, res, next) => {
 	const { stock, productId } = req.body;
 	const products = await Products.findOneAndUpdate(
@@ -323,6 +352,8 @@ const changeStockBasedOnOrder = async (productId, stock) => {
 	);
 };
 
+// @METHOD GET
+// @PATH /product/can-user-place-review/:productId
 const changeUserPlaceReviewOnProduct = asyncErrorHandler(
 	async (req, res, next) => {
 		const userId = req.user.id;
@@ -331,7 +362,7 @@ const changeUserPlaceReviewOnProduct = asyncErrorHandler(
 		const review = await Order.findOne({
 			user: userId,
 			orderItems: { $elemMatch: { product: productId } },
-			$or: [{ status: "Delivered" }, { status: "Return Approved" }],
+			$or: [{ status: "DELIVERED" }, { status: "RETURN_APPROVED" }],
 		});
 
 		if (review) {

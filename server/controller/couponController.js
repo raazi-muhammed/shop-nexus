@@ -3,6 +3,8 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
+// @METHOD POST
+// @PATH /coupon/add-coupon
 const addCoupon = asyncErrorHandler(async (req, res, next) => {
 	const couponDataForm = { ...req.body, events: [{ name: "Coupon Created" }] };
 
@@ -18,6 +20,8 @@ const addCoupon = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /coupon/get-all-coupons
 const getAllCoupons = asyncErrorHandler(async (req, res, next) => {
 	const ITEMS_PER_PAGE = 10;
 	const { page } = req.query;
@@ -50,6 +54,8 @@ const getAllCoupons = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /coupon/get-all-coupons-shop
 const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 
@@ -67,6 +73,8 @@ const getCouponFromSeller = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /coupon/get-coupons-to-display
 const getApplicableCoupons = asyncErrorHandler(async (req, res, next) => {
 	const { totalAmount } = req.query;
 
@@ -94,6 +102,8 @@ const getApplicableCoupons = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /coupon/apply-coupon
 const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
 	const { couponCode, totalAmount, products } = req.body;
 
@@ -161,6 +171,9 @@ const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
 		//couponData,
 	});
 });
+
+// @METHOD PUT
+// @PATH /coupon/edit-coupon
 const editCoupon = asyncErrorHandler(async (req, res, next) => {
 	const {
 		couponId,
@@ -200,6 +213,8 @@ const editCoupon = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PATCH
+// @PATH /coupon/change-coupon-state
 const changeCouponState = asyncErrorHandler(async (req, res, next) => {
 	const { couponId, status } = req.body;
 
@@ -218,6 +233,8 @@ const changeCouponState = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /coupon/get-coupon-details/:couponId
 const getCouponDetails = asyncErrorHandler(async (req, res, next) => {
 	const { couponId } = req.params;
 	const couponData = await Coupon.findOne({ _id: couponId });

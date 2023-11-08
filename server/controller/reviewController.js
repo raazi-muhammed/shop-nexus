@@ -4,6 +4,8 @@ const User = require("../model/User");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
 
+// @METHOD POST
+// @PATH /user/add-review
 const addReview = asyncErrorHandler(async (req, res, next) => {
 	const { rating, review, product } = req.body;
 	const userId = req.user.id;
@@ -44,6 +46,8 @@ const addReview = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/get-reviews/:productId
 const getReviewFromProduct = asyncErrorHandler(async (req, res, next) => {
 	const productId = req.params.productId;
 	console.log(productId);

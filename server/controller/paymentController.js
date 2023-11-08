@@ -9,6 +9,8 @@ const instance = new Razorpay({
 	key_secret: process.env.RAZORPAY_API_SECRET,
 });
 
+// @METHOD GET
+// @PATH /payment/subscription-details/:subscriptionId
 const getSubscriptionDetails = asyncErrorHandler(async (req, res, next) => {
 	const { subscriptionId } = req.params;
 	const subscriptionDetails = await instance.subscriptions.fetch(
@@ -23,6 +25,8 @@ const getSubscriptionDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /payment/shop-nexus-plus
 const subscribeToNexusPlus = asyncErrorHandler(async (req, res, next) => {
 	const options = {
 		plan_id: process.env.PLUS_RAZORPAY_PLAN_ID,
@@ -39,6 +43,8 @@ const subscribeToNexusPlus = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /payment/cancel-subscription
 const cancelSubscription = asyncErrorHandler(async (req, res, next) => {
 	const { subscriptionId, userId } = req.body;
 
@@ -71,6 +77,9 @@ const cancelSubscription = asyncErrorHandler(async (req, res, next) => {
 		message: "Deactivation Successful",
 	});
 });
+
+// @METHOD POST
+// @PATH /payment/create-razorpay-order
 const createRazorPayOrder = asyncErrorHandler(async (req, res, next) => {
 	const options = {
 		amount: req.body.amount * 100,

@@ -31,6 +31,8 @@ const refundedToUser = async (orderId, productOrderId) => {
 	}
 };
 
+// @METHOD POST
+// @PATH /order/add-to-order
 const addToOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderData = { orderId: uuidv4(), ...req.body.orderState };
 
@@ -91,6 +93,8 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /order/get-all-orders
 const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const [pagination, orderData] = await findWithPaginationAndSorting(
 		req,
@@ -111,6 +115,9 @@ const getAllOrders = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /order/get-order-details/:orderId
+// @PATH /order/get-order-details-admin/:orderId
 const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 
@@ -124,6 +131,8 @@ const getSingleOrders = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /order/cancel-order/:orderId
 const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
 
@@ -153,6 +162,8 @@ const cancelOrder = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /order/return-order/:orderId
 const returnOrder = asyncErrorHandler(async (req, res, next) => {
 	const orderId = req.params.orderId;
 	const eventToAdd = {
@@ -179,6 +190,8 @@ const returnOrder = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /order/get-all-orders
 const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
 
@@ -198,6 +211,8 @@ const getUsersAllOrders = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /order/get-all-orders-shop
 const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 
@@ -217,6 +232,8 @@ const getSellerAllOrders = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/get-sales-report
 const getSalesReport = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 	const { dataFrom } = req.query;
@@ -264,6 +281,8 @@ const getSalesReport = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /admin/get-sales-report
 const getSalesReportAdmin = asyncErrorHandler(async (req, res, next) => {
 	const { dataFrom } = req.query;
 
@@ -309,6 +328,8 @@ const getSalesReportAdmin = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /order/get-order-details-shop/:orderId
 const getSingleOrderDetailsForShop = asyncErrorHandler(
 	async (req, res, next) => {
 		const { orderId } = req.params;
@@ -328,6 +349,8 @@ const getSingleOrderDetailsForShop = asyncErrorHandler(
 	}
 );
 
+// @METHOD PATCH
+// @PATH /order/change-order-status/:orderId
 const changeOrderStatus = asyncErrorHandler(async (req, res, next) => {
 	const { orderId } = req.params;
 	const { orderStatus, productOrderId } = req.body;

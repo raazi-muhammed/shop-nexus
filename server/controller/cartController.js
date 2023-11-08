@@ -2,6 +2,8 @@ const User = require("../model/User");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const { isEventValid } = require("./eventController");
 
+// @METHOD GET
+// @PATH /cart/get-all-cart
 const getCart = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
 
@@ -42,6 +44,8 @@ const getCart = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /cart/add-to-cart
 const addToCart = asyncErrorHandler(async (req, res, next) => {
 	const { product_id, price, quantity, offer } = req.body;
 	const userId = req.user._id;
@@ -92,6 +96,8 @@ const addToCart = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /cart/remove-from-cart
 const removeFromCart = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
 	const { product_id } = req.body;
@@ -111,6 +117,8 @@ const removeFromCart = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD DELETE
+// @PATH /cart/clear-all-cart-items
 const clearAllCartItems = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
 

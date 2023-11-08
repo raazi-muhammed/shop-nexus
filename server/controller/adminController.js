@@ -7,6 +7,8 @@ const ErrorHandler = require("../utils/errorHandler");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const Order = require("../model/Order");
 
+// @METHOD POST
+// @PATH /admin/login
 const adminLogIn = asyncErrorHandler(async (req, res, next) => {
 	const { userName, password } = req.body;
 
@@ -27,6 +29,8 @@ const adminLogIn = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /admin/logout
 const adminLogOut = asyncErrorHandler(async (req, res, next) => {
 	res.status(200).clearCookie("adminDetails").json({
 		success: true,
@@ -34,6 +38,8 @@ const adminLogOut = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /admin/get-user
 const getAllUsers = asyncErrorHandler(async (req, res, next) => {
 	const userData = await User.find({});
 	res.status(200).json({
@@ -42,6 +48,8 @@ const getAllUsers = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /admin/get-sellers
 const getAllSellers = asyncErrorHandler(async (req, res, next) => {
 	const shopData = await Shop.find({});
 	res.status(200).json({
@@ -50,6 +58,8 @@ const getAllSellers = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /admin/block-seller
 const adminBlockAndUnBlockSeller = asyncErrorHandler(async (req, res) => {
 	const { id, action } = req.body;
 	const userData = await Shop.findOneAndUpdate(
@@ -65,6 +75,8 @@ const adminBlockAndUnBlockSeller = asyncErrorHandler(async (req, res) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /admin/block-user
 const adminBlockAndUnBlockUser = asyncErrorHandler(async (req, res) => {
 	const { id, action } = req.body;
 	const userData = await User.findOneAndUpdate(
@@ -110,6 +122,8 @@ const getContentForDashBoardBetweenDates = async (startDate, endDate) => {
 	]);
 };
 
+// @METHOD GET
+// @PATH /admin/chart/orders
 const getOrdersSoldChartDataAdmin = asyncErrorHandler(
 	async (req, res, next) => {
 		const { startDate, endDate } = req.query;
@@ -155,6 +169,8 @@ const getOrdersSoldChartDataAdmin = asyncErrorHandler(
 	}
 );
 
+// @METHOD GET
+// @PATH /admin/chart/sales
 const getSalesChartDataAdmin = asyncErrorHandler(async (req, res, next) => {
 	const { categorizeBy, startDate, endDate } = req.query;
 
@@ -207,6 +223,8 @@ const getSalesChartDataAdmin = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /admin/chart/dashboard
 const getDashBoardContentAdmin = asyncErrorHandler(async (req, res, next) => {
 	const today = new Date();
 	const before7days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);

@@ -27,6 +27,10 @@ router.post("/crate-shop", async (req, res, next) => {
 router.post("/activation", async (req, res, next) => {
 	sellerActivateShop(req, res, next);
 });
+router.get("/get-shop-details-public/:id", async (req, res, next) => {
+	req.shop = { _id: req.params.id };
+	getShopDetails(req, res, next);
+});
 router.get(
 	"/get-shop-details",
 	isSellerAuthenticated,

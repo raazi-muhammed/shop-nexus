@@ -12,12 +12,13 @@ const UserSingleShopPage = () => {
 
 	useEffect(() => {
 		axios
-			.get(`${server}/seller/get-shop-details/${id}`)
+			.get(`${server}/seller/get-shop-details-public/${id}`)
 			.then((res) => {
 				setData(res.data.data);
 				axios
-					.get(`${server}/products/get-products-from-shop/${res.data.data._id}`)
+					.get(`${server}/products/get-products-from-shop-public/${id}`)
 					.then((res) => {
+						console.log(res.data.data);
 						setProductData(res.data.data);
 					})
 					.catch((err) =>
@@ -45,19 +46,9 @@ const UserSingleShopPage = () => {
 					</section>
 
 					<hr className="m-3 text-secondary" />
-					<section className={`d-flex`}>
+					<section className={`row`}>
 						{productData.map((product) => (
-							<ProductCartMain
-								key={product._id}
-								productId={product._id}
-								price={product.price}
-								rating={product.rating}
-								name={product.name}
-								sold={product.total_sell}
-								shopName={product.shop.name}
-								imgUrl={product.images[0]?.url}
-								discount_price={product.discount_price}
-							/>
+							<ProductCartMain key={product._id} product={product} />
 						))}
 					</section>
 				</section>

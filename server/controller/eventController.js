@@ -4,6 +4,8 @@ const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const cloudinaryUpload = require("../utils/cloudinaryUpload");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
+// @METHOD POST
+// @PATH /event/new-event
 const newEvent = asyncErrorHandler(async (req, res, next) => {
 	const {
 		typeOfEvent,
@@ -47,6 +49,8 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /event/edit-event/:eventId
 const editEventSeller = asyncErrorHandler(async (req, res, next) => {
 	const { eventId } = req.params;
 
@@ -85,6 +89,8 @@ const editEventSeller = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /event/delete-event/:eventId
 const deleteEventSeller = asyncErrorHandler(async (req, res, next) => {
 	const { eventId } = req.params;
 
@@ -101,6 +107,8 @@ const deleteEventSeller = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /event/all-events
 const getAllEvents = asyncErrorHandler(async (req, res, next) => {
 	const today = new Date();
 	const eventsData = await OfferEvent.find({
@@ -114,6 +122,8 @@ const getAllEvents = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /event/get-all-events-shop
 const getAllEventsFromSeller = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 
@@ -131,6 +141,9 @@ const getAllEventsFromSeller = asyncErrorHandler(async (req, res, next) => {
 		eventsData,
 	});
 });
+
+// @METHOD GET
+// @PATH /event/get-all-events
 const getAllEventsAdmin = asyncErrorHandler(async (req, res, next) => {
 	const [pagination, eventsData] = await findWithPaginationAndSorting(
 		req,
@@ -144,6 +157,8 @@ const getAllEventsAdmin = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /event/get-event-details/:eventId
 const getEventDetails = asyncErrorHandler(async (req, res, next) => {
 	const { eventId } = req.params;
 

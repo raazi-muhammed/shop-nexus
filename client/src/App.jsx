@@ -52,7 +52,7 @@ function App() {
 					<Route path="/admin/login" element={<AdminLoginPage />} />
 					<Route path="/admin/dashboard/*" element={<AdminDashboardPage />} />
 
-					<Route path="*" element={<HomePage />} />
+					<Route path="/*" element={<HomePage />} />
 				</Routes>
 			</UserAuthContextProvider>
 			<Toaster position="top-right" reverseOrder={true} />

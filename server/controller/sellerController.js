@@ -9,6 +9,8 @@ const { createTransaction } = require("./transactionController");
 const Order = require("../model/Order");
 const Shop = require("../model/Shop");
 
+// @METHOD POST
+// @PATH /seller/login-shop
 const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 	let shop = await Shop.findOne(
 		{ email: req.body.email },
@@ -36,6 +38,8 @@ const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 	sendToken(shop, 201, res, "sellerToken");
 });
 
+// @METHOD POST
+// @PATH /seller/create-shop
 const sellerCreateShop = asyncErrorHandler(async (req, res, next) => {
 	const shopAlreadyExists = await Shop.findOne({
 		$or: [{ shopName: req.body.shopName }, { email: req.body.email }],
@@ -83,6 +87,8 @@ const sellerCreateShop = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /seller/activation
 const sellerActivateShop = asyncErrorHandler(async (req, res, next) => {
 	const { activation_token } = req.body;
 	const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
@@ -119,6 +125,8 @@ const sellerActivateShop = asyncErrorHandler(async (req, res, next) => {
 	sendToken(dataUser, 201, res);
 });
 
+// @METHOD GET
+// @PATH /seller/get-shop-details
 const getShopDetails = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 	const shopDetails = await Shop.findOne({ _id: shopId });
@@ -128,6 +136,8 @@ const getShopDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /seller/edit-shop-details
 const editShopDetails = asyncErrorHandler(async (req, res, next) => {
 	const {
 		shopId,
@@ -171,6 +181,8 @@ const editShopDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/wallet-details
 const getWalletDetailsSeller = asyncErrorHandler(async (req, res, next) => {
 	const seller = await Shop.findById(req.shop._id);
 	const sellerId = req.shop._id.toString();
@@ -188,6 +200,8 @@ const getWalletDetailsSeller = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PATCH
+// @PATH /product/change-wallet-balance
 const changeWalletBalanceSeller = asyncErrorHandler(async (req, res, next) => {
 	const { amountToAdd, description } = req.body;
 
@@ -216,6 +230,8 @@ const changeWalletBalanceSeller = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /seller/logout
 const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 	res.status(200).clearCookie("sellerToken").json({
 		success: true,
@@ -223,6 +239,8 @@ const sellerLogOut = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/chart/sales
 const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 	const { categorizeBy, startDate, endDate } = req.query;
@@ -276,6 +294,8 @@ const getSalesChartData = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/chart/products-sold
 const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 	const { startDate, endDate } = req.query;
@@ -333,6 +353,8 @@ const getProductsSoldChartData = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /product/chart/orders
 const getOrdersSoldChartData = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 	const { startDate, endDate } = req.query;
@@ -412,6 +434,8 @@ const getContentForDashBoardBetweenDates = async (
 	]);
 };
 
+// @METHOD GET
+// @PATH /product/dashboard
 const getDashBoardContent = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 

@@ -12,11 +12,15 @@ const { createWalletForUser } = require("./transactionController");
 const Transaction = require("../model/Transaction");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 
+// @METHOD POST
+// @PATH /user/login-user
 const userLogin = asyncErrorHandler(async (req, res, next) => {
 	let user = await User.findOne({ email: req.body.email });
 	sendToken(user, 201, res, "userToken");
 });
 
+// @METHOD POST
+// @PATH /user/auth-user
 const userAuthentication = asyncErrorHandler(async (req, res, next) => {
 	let user = await User.findOne(
 		{ email: req.body.email },
@@ -47,6 +51,8 @@ const userAuthentication = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GEt
+// @PATH /user/load-user
 const loadUser = asyncErrorHandler(async (req, res, next) => {
 	const user = await User.findById(req.user.id);
 	if (user.isBlocked) {
@@ -59,6 +65,8 @@ const loadUser = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /user/provider-sign-in
 const providerSignIn = asyncErrorHandler(async (req, res, next) => {
 	const { email, fullName, avatarUrl } = req.body;
 
@@ -83,6 +91,8 @@ const providerSignIn = asyncErrorHandler(async (req, res, next) => {
 	sendToken(user, 201, res, "userToken");
 });
 
+// @METHOD POST
+// @PATH /user/creates-user
 const createUser = asyncErrorHandler(async (req, res, next) => {
 	const { fullName, email, password, age } = req.body;
 
@@ -127,6 +137,8 @@ const createUser = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /user/activation
 const activateUser = asyncErrorHandler(async (req, res, next) => {
 	const { activation_token } = req.body;
 	const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
@@ -150,6 +162,8 @@ const activateUser = asyncErrorHandler(async (req, res, next) => {
 	sendToken(dataUser, 201, res);
 });
 
+// @METHOD GET
+// @PATH /user/logout
 const userLogOut = asyncErrorHandler(async (req, res, next) => {
 	res.status(200).clearCookie("userToken").json({
 		success: true,
@@ -157,6 +171,8 @@ const userLogOut = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GET
+// @PATH /user/user-details
 const getUserDetails = asyncErrorHandler(async (req, res, next) => {
 	const user = await User.findById(req.user.id);
 
@@ -166,6 +182,8 @@ const getUserDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /user/edit-user-details
 const editUserDetails = asyncErrorHandler(async (req, res, next) => {
 	const { email, fullName } = req.body;
 	let user;
@@ -192,6 +210,8 @@ const editUserDetails = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /user/add-address
 const addAddress = asyncErrorHandler(async (req, res, next) => {
 	const {
 		fullName,
@@ -230,6 +250,8 @@ const addAddress = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD POST
+// @PATH /user/remove-address
 const removeAddress = asyncErrorHandler(async (req, res, next) => {
 	const { addressId } = req.body;
 	const user = await User.findOneAndUpdate(
@@ -244,6 +266,9 @@ const removeAddress = asyncErrorHandler(async (req, res, next) => {
 		user,
 	});
 });
+
+// @METHOD POST
+// @PATH /user/set-default-address
 const setDefaultAddress = asyncErrorHandler(async (req, res, next) => {
 	const { addressId } = req.body;
 
@@ -299,6 +324,8 @@ const changePassword = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD GEt
+// @PATH /user/get-wallet-details
 const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 	const user = await User.findById(req.user.id);
 	if (!user.wallet) user = await createWalletForUser(req.user.id);
@@ -316,6 +343,9 @@ const getWalletDetails = asyncErrorHandler(async (req, res, next) => {
 		transactions: transaction,
 	});
 });
+
+// @METHOD PATCH
+// @PATH /user/change-wallet-balance
 const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
 	const { amountToAdd, description } = req.body;
 
@@ -344,6 +374,8 @@ const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /user/become-plus-member
 const becomePlusMember = asyncErrorHandler(async (req, res, next) => {
 	const plusMember = {
 		active: true,
@@ -363,6 +395,8 @@ const becomePlusMember = asyncErrorHandler(async (req, res, next) => {
 	});
 });
 
+// @METHOD PUT
+// @PATH /user/unsubscribe-plus-member
 const removePlusMembership = asyncErrorHandler(async (req, res, next) => {
 	const plusMember = {
 		active: false,

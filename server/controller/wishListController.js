@@ -1,6 +1,8 @@
 const User = require("../model/User");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 
+// @METHOD GET
+// @PATH /wish-list/get-all-wish-list
 const getWishList = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
 
@@ -13,6 +15,9 @@ const getWishList = asyncErrorHandler(async (req, res, next) => {
 		user: updatedUser,
 	});
 });
+
+// @METHOD POST
+// @PATH /wish-list/add-to-wish-list
 const addToWishList = asyncErrorHandler(async (req, res, next) => {
 	const { product_id, price, name, imageUrl } = req.body;
 	const userId = req.user._id;
@@ -37,6 +42,9 @@ const addToWishList = asyncErrorHandler(async (req, res, next) => {
 		user: updatedUser,
 	});
 });
+
+// @METHOD PUT
+// @PATH /wish-list/remove-from-wish-list
 const removeFromWishList = asyncErrorHandler(async (req, res, next) => {
 	const userId = req.user._id;
 	const { product_id } = req.body;

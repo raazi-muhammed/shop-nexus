@@ -44,6 +44,11 @@ router.put("/edit-product/:id", isSellerAuthenticated, (req, res, next) => {
 	editProduct(req, res, next);
 });
 
+router.get("/get-products-from-shop-public/:id", async (req, res, next) => {
+	req.shop = { _id: req.params.id };
+	getProductsFromShop(req, res, next);
+});
+
 router.get(
 	"/get-products-from-shop",
 	isSellerAuthenticated,

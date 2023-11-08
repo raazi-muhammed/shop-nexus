@@ -25,6 +25,7 @@ import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
 import SuccessPlus from "./nexusPlus/SuccessPlus";
 import EventsPage from "./homepage/Eventspage";
 import SingleEvent from "./homepage/SingleEvent";
+import ErrorComp from "../../components/error/ErrorComp";
 
 const HomePage = () => {
 	const cartState = useSelector((state) => state.cart.isCartVisible);
@@ -53,7 +54,6 @@ const HomePage = () => {
 		<div>
 			<UserHeader />
 			<UserNavbar />
-
 			<Routes>
 				<Route path="/new-products" element={<ProductsPage />} />
 				<Route path="/best-selling" element={<BestSellingPage />} />
@@ -68,6 +68,7 @@ const HomePage = () => {
 				<Route path="/user/dashboard/*" element={<UserDashboard />} />
 				<Route path="/user/checkout/*" element={<CheckOutPage />} />
 				<Route path="/" element={<HomeContentPage />} />
+				<Route path="*" element={<ErrorComp />} />
 			</Routes>
 			<aside>
 				<CartUser />
