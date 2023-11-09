@@ -5,16 +5,10 @@ import axios from "axios";
 import server from "../../../server";
 import toast from "react-hot-toast";
 import { useUserAuth } from "../../../context/userAuthContext";
-import {
-	formLabelClass,
-	inputDivClass,
-	formClass,
-	submitButtonClass,
-} from "../../../utils/styleClasses";
 
 const SignUpPage = () => {
-	const { signUp } = useUserAuth();
-
+	const navigate = useNavigate();
+	const { signUp, googleSignIn, gitHubSignIn } = useUserAuth();
 	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
 	const [age, setAge] = useState("");
@@ -57,6 +51,69 @@ const SignUpPage = () => {
 		} catch (error) {
 			console.log(error);
 			setEmailErr(error.message);
+		}
+	};
+
+	const handleGoogleSignIn = async (e) => {
+		e.preventDefault();
+		try {
+			const data = await googleSignIn();
+			if (!data.user.email) {
+				return toast.error(
+					"You email is set to private, Change it to Sign in with Github"
+				);
+			}
+			const formData = {
+				email: data.user.email,
+				fullName: data.user.displayName,
+				avatarUrl: data.user.photoURL,
+			};
+			console.log(formData);
+			axios
+				.post(`${server}/user/provider-sign-in`, formData, {
+					withCredentials: true,
+				})
+				.then((res) => {
+					console.log(res);
+					if (res.data.success) navigate("/");
+				})
+				.catch((err) => {
+					toast.error(err.message);
+				});
+		} catch (error) {
+			toast.error(error.message);
+		}
+	};
+
+	const handleGitHubSignIn = async (e) => {
+		e.preventDefault();
+		try {
+			const data = await gitHubSignIn();
+			console.log(data.user.providerData[0]);
+			const _userData = data.user.providerData[0];
+			if (!_userData.email) {
+				return toast.error(
+					"You email is set to private, Change it to Sign in with Github"
+				);
+			}
+			const formData = {
+				email: _userData.email,
+				fullName: _userData.displayName,
+				avatarUrl: _userData.photoURL,
+			};
+			axios
+				.post(`${server}/user/provider-sign-in`, formData, {
+					withCredentials: true,
+				})
+				.then((res) => {
+					console.log(res);
+					if (res.data.success) navigate("/");
+				})
+				.catch((err) => {
+					toast.error(err.message);
+				});
+		} catch (error) {
+			toast.error(error.message);
 		}
 	};
 
@@ -159,6 +216,26 @@ const SignUpPage = () => {
 						Sign Up
 					</button>
 				</form>
+				<button
+					className="btn btn-light mt-2 text-dark w-100"
+					onClick={handleGoogleSignIn}>
+					<img
+						style={{ width: "24px" }}
+						src="https://res.cloudinary.com/dklhubdqw/image/upload/f_auto,q_auto/v1/Icons/p8eeptctgl9oguvjzoro"
+						alt=""
+					/>
+					<span className="p-1"> Sign In with Google</span>
+				</button>
+				<button
+					className="btn bg-black mt-2 text-white w-100"
+					onClick={handleGitHubSignIn}>
+					<img
+						style={{ width: "28px" }}
+						src="https://res.cloudinary.com/dklhubdqw/image/upload/f_auto,q_auto/v1/Icons/vjj5hsfomnhzvlbdaf1b"
+						alt=""
+					/>
+					<span className="p-1">Sign In with Github</span>
+				</button>
 				<p className="text-center mt-2">
 					Alread Have an Account?{" "}
 					<Link className="text-secondary fw-bold" to="/login">

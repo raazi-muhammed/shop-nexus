@@ -19,6 +19,7 @@ const {
 	removePlusMembership,
 	changeWalletBalance,
 	setDefaultAddress,
+	startReferral,
 } = require("../controller/userController");
 const { addReview } = require("../controller/reviewController");
 
@@ -85,6 +86,11 @@ router.patch(
 		changeWalletBalance(req, res, next);
 	}
 );
+
+/* Referral */
+router.put("/start-referral", isUserAuthenticated, (req, res, next) => {
+	startReferral(req, res, next);
+});
 
 /* Shop Nexus Plus */
 router.put("/become-plus-member", isUserAuthenticated, (req, res, next) => {

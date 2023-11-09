@@ -11,6 +11,7 @@ const bcrypt = require("bcrypt");
 const { createWalletForUser } = require("./transactionController");
 const Transaction = require("../model/Transaction");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
+const generateRandomId = require("../utils/generateRandomId");
 
 // @METHOD POST
 // @PATH /user/login-user
@@ -375,6 +376,47 @@ const changeWalletBalance = asyncErrorHandler(async (req, res, next) => {
 });
 
 // @METHOD PUT
+// @PATH /user/start-referral
+const startReferral = asyncErrorHandler(async (req, res, next) => {
+	console.log("HIHI");
+
+	const myCode = generateRandomId(8);
+	const myReferrals = {
+		count: 0,
+		moneyViaReferral: 0,
+	};
+
+	const user = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{
+			referral: {
+				myCode,
+				myReferrals,
+			},
+		},
+		{ new: true, upsert: true }
+	);
+
+	/* const referal = {
+		active: true,
+		details: req.body.details,
+	};
+	const user = await User.findOneAndUpdate(
+		{ _id: req.user.id },
+		{
+			plusMember,
+		},
+		{ new: true, upsert: true }
+	); */
+
+	res.status(200).json({
+		success: true,
+		message: "Referral code generated",
+		user,
+	});
+});
+
+// @METHOD PUT
 // @PATH /user/become-plus-member
 const becomePlusMember = asyncErrorHandler(async (req, res, next) => {
 	const plusMember = {
@@ -433,4 +475,5 @@ module.exports = {
 	removePlusMembership,
 	changeWalletBalance,
 	setDefaultAddress,
+	startReferral,
 };

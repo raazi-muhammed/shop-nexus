@@ -133,6 +133,34 @@ const userSchema = new mongoose.Schema(
 				default: 0,
 			},
 		},
+		referral: {
+			myCode: {
+				type: String,
+			},
+			myReferrals: {
+				count: {
+					type: Number,
+					default: 0,
+				},
+				moneyViaReferral: {
+					type: Number,
+					default: 0,
+				},
+			},
+			viaReferral: {
+				type: Boolean,
+				default: false,
+			},
+			viaReferralDetails: {
+				code: {
+					type: String,
+				},
+				boughtFirstItem: {
+					type: Boolean,
+					default: false,
+				},
+			},
+		},
 	},
 	{ timestamps: true }
 );

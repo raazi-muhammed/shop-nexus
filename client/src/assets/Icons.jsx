@@ -250,6 +250,36 @@ const Icons = {
 			/>
 		</svg>
 	),
+	personHeart: (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="currentColor"
+			class="bi bi-person-heart"
+			viewBox="0 0 16 16">
+			<path d="M9 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4Zm13.5-8.09c1.387-1.425 4.855 1.07 0 4.277-4.854-3.207-1.387-5.702 0-4.276Z" />
+		</svg>
+	),
+	personHearts: (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="currentColor"
+			class="bi bi-person-hearts"
+			viewBox="0 0 16 16">
+			<path
+				fill-rule="evenodd"
+				d="M11.5 1.246c.832-.855 2.913.642 0 2.566-2.913-1.924-.832-3.421 0-2.566ZM9 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4Zm13.5-8.09c1.387-1.425 4.855 1.07 0 4.277-4.854-3.207-1.387-5.702 0-4.276ZM15 2.165c.555-.57 1.942.428 0 1.711-1.942-1.283-.555-2.281 0-1.71Z"
+			/>
+		</svg>
+	),
+	bagHeartFill: (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="currentColor"
+			class="bi bi-bag-heart-fill"
+			viewBox="0 0 16 16">
+			<path d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5ZM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1Zm0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132Z" />
+		</svg>
+	),
 };
 
 export default Icons;

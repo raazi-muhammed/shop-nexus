@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import UserEditPage from "./dashboard/UserEditPage";
 import UserAddAddress from "./dashboard/userAddAddress";
 import UserAllAddress from "./dashboard/UserAllAddress";
@@ -11,6 +11,7 @@ import UserWallet from "./dashboard/UserWallet";
 import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
 import { useSelector } from "react-redux";
 import PlusSubscriptionDetails from "./dashboard/PlusSubscriptionDetails";
+import UserReferral from "./referral/UserReferral";
 
 const UserDashboard = () => {
 	const userData = useSelector((state) => state.userData.userData);
@@ -22,6 +23,8 @@ const UserDashboard = () => {
 		{ name: "Orders", link: "orders" },
 		{ name: "Messages", link: "messages" },
 		{ name: "Wallet", link: "wallet" },
+		{ name: "Nexus Plus", link: "nexus-plus" },
+		{ name: "Referral", link: "referral" },
 	];
 
 	return (
@@ -45,12 +48,21 @@ const UserDashboard = () => {
 									)
 								}
 							/>
+							<Route
+								path="/nexus-plus"
+								element={
+									<section>
+										{userData.plusMember?.active ? (
+											<PlusSubscriptionDetails />
+										) : (
+											<UserShopNexusPlus />
+										)}
+									</section>
+								}
+							/>
 
 							<Route path="/wallet" element={<UserWallet />} />
-							<Route
-								path="/shop-nexus-plus"
-								element={<PlusSubscriptionDetails />}
-							/>
+							<Route path="/referral" element={<UserReferral />} />
 
 							<Route
 								path="/orders/:orderId"
