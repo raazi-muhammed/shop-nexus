@@ -12,10 +12,17 @@ const couponSchema = new mongoose.Schema(
 		},
 		status: {
 			type: String,
-			default: "Valid",
+			enum: ["ACTIVE", "IN_ACTIVE", "WAITING_APPROVAL", "NOT_APPROVED"],
+			default: "IN_ACTIVE",
 		},
 		type: {
 			type: String,
+			enum: [
+				"ALL_PRODUCTS",
+				"SHOP_BASED",
+				"CATEGORY_BASED_ALL",
+				"CATEGORY_BASED_SHOP",
+			],
 			required: true,
 		},
 		category: {

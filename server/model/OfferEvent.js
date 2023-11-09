@@ -4,6 +4,13 @@ const offerEventsSchema = new mongoose.Schema(
 	{
 		typeOfEvent: {
 			type: String,
+			enum: [
+				"PRODUCT_BASED",
+				"CATEGORY_BASED",
+				"COMBO_OFFER",
+				"BYE_ONE_GET_ONE_FREE",
+				"ALL_FROM_SHOP",
+			],
 			required: true,
 		},
 		name: {
@@ -16,6 +23,11 @@ const offerEventsSchema = new mongoose.Schema(
 		},
 		category: {
 			type: String,
+		},
+		eventAccess: {
+			type: String,
+			enum: ["ALL_USERS", "PLUS_MEMBERS_ONLY"],
+			default: "ALL_USERS",
 		},
 		startDate: {
 			type: Date,

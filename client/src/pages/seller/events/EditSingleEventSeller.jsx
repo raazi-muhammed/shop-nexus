@@ -10,16 +10,20 @@ import {
 } from "../../../utils/styleClasses";
 import typeOfEventsConstants from "../../../constants/typeOfEventConstants";
 import toast from "react-hot-toast";
+import eventAccessConstants from "../../../constants/eventAccessConstants";
+import BarLoader from "react-spinners/BarLoader";
 
 const EditSingleEventSeller = () => {
 	const today = new Date();
 	const navigate = useNavigate();
+	const [loadingCreate, setLoadingCreate] = useState(false);
 	const { eventId } = useParams();
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [startDate, setStartDate] = useState(today);
 	const [endDate, setEndDate] = useState(today);
 	const eventEndMaxDate = new Date(startDate);
+	const [eventAccess, setEventAccess] = useState("");
 	const [typeOfEvent, setTypeOfEvent] = useState("PRODUCT_BASED");
 	const [discountPercentage, setDiscountPercentage] = useState("");
 	const [image, setImage] = useState("");
@@ -35,7 +39,7 @@ const EditSingleEventSeller = () => {
 
 	const handleEditEvent = (e) => {
 		e.preventDefault();
-
+		setLoadingCreate(true);
 		const eventNewData = {
 			name: name.trim(),
 			description: description.trim(),
@@ -58,9 +62,11 @@ const EditSingleEventSeller = () => {
 				);
 				setEndDate(new Date(eventData?.endDate).toISOString().split("T")[0]);
 				setDiscountPercentage(eventData?.discountPercentage);
+				setEventAccess(eventData?.eventAccess);
 				setImageUrl(eventData?.images[0]?.url);
 			})
-			.catch((err) => toast.error(err.data?.message || "An error occurred"));
+			.catch((err) => toast.error(err.data?.message || "An error occurred"))
+			.finally(() => setLoadingCreate(false));
 	};
 	const handleDeleteEvent = () => {
 		axios.defaults.withCredentials = true;
@@ -116,6 +122,7 @@ const EditSingleEventSeller = () => {
 				);
 				setEndDate(new Date(eventData?.endDate).toISOString().split("T")[0]);
 				setDiscountPercentage(eventData?.discountPercentage);
+				setEventAccess(eventData?.eventAccess);
 				setImageUrl(eventData?.images[0]?.url);
 			})
 			.catch((err) => console.log(err));
@@ -240,6 +247,26 @@ const EditSingleEventSeller = () => {
 					</div>
 				</div>
 				<div className="row">
+					<label className={formLabelClass} htmlFor="categorySelect">
+						Event Access to
+					</label>
+					<div className={inputDivClass}>
+						<select
+							value={eventAccess}
+							onChange={(e) => setEventAccess(e.target.value)}
+							className="form-select"
+							required
+							id="categorySelect">
+							{eventAccessConstants.map((e) => (
+								<option key={e.key} value={e.key}>
+									{e.value}
+								</option>
+							))}
+						</select>
+					</div>
+					<div className="invalid-feedback">Invalid</div>
+				</div>
+				<div className="row">
 					<label htmlFor="image-url" className={formLabelClass}>
 						Add Images
 					</label>
@@ -255,19 +282,28 @@ const EditSingleEventSeller = () => {
 						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
-				<div className="d-flex gap-3">
-					<button
-						disabled={!allowSubmission}
-						type="submit"
-						className={`w-100 btn btn-secondary text-white`}>
-						Update Event Details
-					</button>
-					<button
-						onClick={handleDeleteEvent}
-						type="button"
-						className={`btn-danger ${submitButtonClass}`}>
-						Delete
-					</button>
+				<div className="row">
+					<div className="d-flex gap-3">
+						<button
+							disabled={!allowSubmission}
+							type="submit"
+							className={`w-100 btn btn-secondary text-white`}>
+							Update Event Details
+						</button>
+						<button
+							onClick={handleDeleteEvent}
+							type="button"
+							className={`btn-danger ${submitButtonClass}`}>
+							Delete
+						</button>
+					</div>
+					<BarLoader
+						className="m-0 p-0 text-primary mx-auto mt-1"
+						loading={loadingCreate}
+						color="#342475"
+						aria-label="Loading Spinner"
+						data-testid="loader"
+					/>
 				</div>
 			</form>
 		</div>

@@ -1,19 +1,25 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../../server";
-import Icons from "../../../assets/Icons";
-import { Link } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import UserEventMainCard from "../../../components/events/UserEventMainCard";
-const { heart, cart } = Icons;
+import { useSelector } from "react-redux";
 
 const EventsPage = ({ onHomePage }) => {
 	const [loading, setLoading] = useState(false);
 	const [events, setEvents] = useState([]);
+	const userData = useSelector((state) => state.userData.userData);
+
 	useEffect(() => {
 		setLoading(true);
+		let plusMember = false;
+		try {
+			if (userData.plusMember) plusMember = true;
+		} catch (err) {
+			plusMember = false;
+		}
 		axios
-			.get(`${server}/event/all-events`)
+			.get(`${server}/event/all-events?plusMember=${plusMember}`)
 			.then((res) => {
 				setEvents(res.data?.eventsData);
 			})

@@ -8,7 +8,6 @@ const aggregateWithPaginationAndSorting = async (req, Database, findQuery) => {
 	findQuery.push({ $sort: { [`items.${sort}`]: -1 } });
 	findQuery.push({ $skip: skip });
 	findQuery.push({ $limit: ITEMS_PER_PAGE });
-	console.log(findQuery);
 
 	const dataBaseData = await Database.aggregate(findQuery);
 

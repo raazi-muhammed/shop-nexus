@@ -17,6 +17,7 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		discountPercentage,
 		image,
 		selectedProducts,
+		eventAccess,
 		shopId,
 	} = req.body;
 
@@ -38,6 +39,7 @@ const newEvent = asyncErrorHandler(async (req, res, next) => {
 		images: imageUrls,
 		selectedProducts,
 		discountPercentage,
+		eventAccess,
 		shop: shopId,
 	};
 
@@ -111,11 +113,19 @@ const deleteEventSeller = asyncErrorHandler(async (req, res, next) => {
 // @PATH /event/all-events
 const getAllEvents = asyncErrorHandler(async (req, res, next) => {
 	const today = new Date();
+	const isPlusMember = req.query.plusMember;
+
+	let eventAccessArray = [{ eventAccess: "ALL_USERS" }];
+	if (isPlusMember == "true")
+		eventAccessArray.push({ eventAccess: "PLUS_MEMBERS_ONLY" });
+
 	const eventsData = await OfferEvent.find({
+		$or: eventAccessArray,
 		isDeleted: false,
 		startDate: { $lte: today },
 		endDate: { $gte: today },
 	}).sort({ createdAt: -1 });
+
 	res.status(200).json({
 		success: true,
 		eventsData,
