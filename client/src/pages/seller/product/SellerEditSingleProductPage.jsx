@@ -10,12 +10,13 @@ import {
 	formClass,
 	submitButtonClass,
 } from "../../../utils/styleClasses";
+import BarLoader from "react-spinners/BarLoader";
 
 const SellerEditSingleProductPage = () => {
 	const navigate = useNavigate();
 	const [refresh, setRefresh] = useState(true);
-
 	const [data, setData] = useState([]);
+	const [loadingCreate, setLoadingCreate] = useState(false);
 	const { productId } = useParams();
 	const [productName, setProductName] = useState("");
 	const [category, setCategory] = useState("");
@@ -63,6 +64,7 @@ const SellerEditSingleProductPage = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
+		setLoadingCreate(true);
 		const formData = {
 			productId,
 			productName,
@@ -82,7 +84,8 @@ const SellerEditSingleProductPage = () => {
 				toast.success(res.data?.message);
 				setRefresh(!refresh);
 			})
-			.catch((err) => console.log(err.response.data.message));
+			.catch((err) => console.log(err.response.data.message))
+			.finally(() => setLoadingCreate(false));
 	};
 
 	/* For Deleting(soft) Product */
@@ -303,23 +306,31 @@ const SellerEditSingleProductPage = () => {
 						/>
 					</div>
 				</div>
-
-				<div className="row gap-3 m-1">
-					<button
-						disabled={!allowSubmission}
-						type="submit"
-						className="col btn btn-primary">
-						Update Product
-					</button>
-					{!data?.isDeleted ? (
-						<button className="col btn btn-danger" onClick={handleDelete}>
-							Delete Product
+				<div className="row">
+					<div className="row gap-3 m-1">
+						<button
+							disabled={!allowSubmission}
+							type="submit"
+							className="col btn btn-primary">
+							Update Product
 						</button>
-					) : (
-						<button className="col btn btn-success" onClick={handleRecover}>
-							Recover Product
-						</button>
-					)}
+						{!data?.isDeleted ? (
+							<button className="col btn btn-danger" onClick={handleDelete}>
+								Delete Product
+							</button>
+						) : (
+							<button className="col btn btn-success" onClick={handleRecover}>
+								Recover Product
+							</button>
+						)}
+					</div>
+					<BarLoader
+						className="m-0 p-0 text-primary mx-auto mt-1"
+						loading={loadingCreate}
+						color="#342475"
+						aria-label="Loading Spinner"
+						data-testid="loader"
+					/>
 				</div>
 			</form>
 		</div>

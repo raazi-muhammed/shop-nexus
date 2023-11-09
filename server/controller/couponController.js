@@ -124,42 +124,39 @@ const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
 	const couponDate = new Date(couponData.expires);
 	if (date > couponDate) return next(new ErrorHandler("Coupon expired", 400));
 
-	switch (couponData.type) {
-		case "CATEGORY_BASED_ALL":
-			products.map((product) => {
-				if (couponData.category != product.product.category)
-					return next(
-						new ErrorHandler(`All products must be in the Category`, 400)
-					);
-			});
-			break;
+	const productErrors = [];
+	for (const product of products) {
+		switch (couponData.type) {
+			case "CATEGORY_BASED_ALL":
+				if (couponData.category !== product.product.category) {
+					productErrors.push("All products must be in the Category");
+				}
+				break;
 
-		case "SHOP_BASED":
-			products.map((product) => {
-				if (couponData.shopId != product.product.shop.id)
-					return next(
-						new ErrorHandler(`All products must be from the same Shop`, 400)
-					);
-			});
-			break;
+			case "SHOP_BASED":
+				if (couponData.shopId !== product.product.shop.id) {
+					productErrors.push("All products must be from the same Shop");
+				}
+				break;
 
-		case "CATEGORY_BASED_SHOP":
-			products.map((product) => {
+			case "CATEGORY_BASED_SHOP":
 				if (
-					couponData.category != product.product.category ||
-					couponData.shopId != product.product.shop.id
-				)
-					return next(
-						new ErrorHandler(
-							`All products must be in the Category and from same Shop`,
-							400
-						)
+					couponData.category !== product.product.category ||
+					couponData.shopId !== product.product.shop.id
+				) {
+					productErrors.push(
+						"All products must be in the Category and from the same Shop"
 					);
-			});
-			break;
+				}
+				break;
 
-		default:
-			break;
+			default:
+				break;
+		}
+	}
+
+	if (productErrors.length > 0) {
+		return next(new ErrorHandler(productErrors.join(", "), 400));
 	}
 
 	const discountPercentage = couponData.discountPercentage;
@@ -168,7 +165,6 @@ const applyCouponCode = asyncErrorHandler(async (req, res, next) => {
 		success: true,
 		message: `Coupon Code Applied`,
 		discountPercentage,
-		//couponData,
 	});
 });
 

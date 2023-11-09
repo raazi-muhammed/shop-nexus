@@ -10,11 +10,13 @@ import {
 	submitButtonClass,
 } from "../../../utils/styleClasses";
 import { useLocation, useNavigate } from "react-router-dom";
+import BarLoader from "react-spinners/BarLoader";
 
 const SellerAddProductPage = ({ shopId, shopName }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [productName, setProductName] = useState("");
+	const [loadingCreate, setLoadingCreate] = useState(false);
 	const [category, setCategory] = useState("");
 	const [description, setDescription] = useState("");
 	const [price, setPrice] = useState("");
@@ -60,6 +62,7 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
+		setLoadingCreate(true);
 		const formData = {
 			productName,
 			category,
@@ -84,7 +87,8 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 			})
 			.catch((err) => {
 				toast.error(err.response?.data?.message);
-			});
+			})
+			.finally(() => setLoadingCreate(false));
 	};
 	return (
 		<section>
@@ -221,12 +225,23 @@ const SellerAddProductPage = ({ shopId, shopName }) => {
 						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
-				<button
-					disabled={!allowSubmission}
-					type="submit"
-					className={submitButtonClass}>
-					Add Product
-				</button>
+				<div className="row">
+					<button
+						disabled={!allowSubmission}
+						type="submit"
+						className={submitButtonClass}>
+						Add Product
+					</button>
+					<div className="col-12">
+						<BarLoader
+							className="m-0 p-0 text-primary mx-auto mt-1"
+							loading={loadingCreate}
+							color="#342475"
+							aria-label="Loading Spinner"
+							data-testid="loader"
+						/>
+					</div>
+				</div>
 			</form>
 		</section>
 	);

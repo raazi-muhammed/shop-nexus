@@ -12,12 +12,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import couponTypeConstants from "../../../constants/couponTypeConstants";
 import categoriesConstants from "../../../constants/categoriesConstants";
 import couponStateConstants from "../../../constants/couponStateConstants";
+import BarLoader from "react-spinners/BarLoader";
 
 const SellerAddCouponPage = ({ shopId }) => {
 	const navigate = useNavigate();
 	const today = new Date().toISOString().slice(0, 10);
 	const [couponCodeErr, setCouponCodeErr] = useState("");
-
+	const [loadingCreate, setLoadingCreate] = useState(false);
 	const [name, setName] = useState("");
 	const [code, setCode] = useState("");
 	const [category, setCategory] = useState("");
@@ -39,6 +40,7 @@ const SellerAddCouponPage = ({ shopId }) => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
+		setLoadingCreate(true);
 
 		const formData = {
 			shopId,
@@ -70,7 +72,8 @@ const SellerAddCouponPage = ({ shopId }) => {
 			.catch((err) => {
 				const message = err.response?.data?.message;
 				message ? setCouponCodeErr(message) : toast.error("An error occurred");
-			});
+			})
+			.finally(() => setLoadingCreate(false));
 	};
 
 	useEffect(() => {
@@ -275,12 +278,23 @@ const SellerAddCouponPage = ({ shopId }) => {
 						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
-				<button
-					disabled={!allowSubmission}
-					type="submit"
-					className={submitButtonClass}>
-					Add Coupone
-				</button>
+				<div className="row">
+					<button
+						disabled={!allowSubmission}
+						type="submit"
+						className={submitButtonClass}>
+						Add Coupon
+					</button>
+					<div className="col-12">
+						<BarLoader
+							className="m-0 p-0 text-primary mx-auto mt-1"
+							loading={loadingCreate}
+							color="#342475"
+							aria-label="Loading Spinner"
+							data-testid="loader"
+						/>
+					</div>
+				</div>
 			</form>
 		</section>
 	);

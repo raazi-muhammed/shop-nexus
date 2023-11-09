@@ -13,11 +13,13 @@ import convertISOToDate from "../../../utils/convertISOToDate";
 import { getCouponTypeByKey } from "../../../constants/couponTypeConstants";
 import categoriesConstants from "../../../constants/categoriesConstants";
 import couponStateConstants from "../../../constants/couponStateConstants";
+import BarLoader from "react-spinners/BarLoader";
 
 const SellerEditCouponPage = () => {
 	const navigate = useNavigate();
 	const today = new Date().toISOString().slice(0, 10);
 	const [couponCodeErr, setCouponCodeErr] = useState("");
+	const [loadingCreate, setLoadingCreate] = useState(false);
 	const { shopId, couponId } = useParams();
 	const [couponType, setCouponType] = useState("");
 	const [name, setName] = useState("");
@@ -63,7 +65,7 @@ const SellerEditCouponPage = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setAllowSubmission(false);
-
+		setLoadingCreate(true);
 		const formData = {
 			couponId,
 			name,
@@ -93,7 +95,8 @@ const SellerEditCouponPage = () => {
 			.catch((err) => {
 				const message = err.response?.data?.message;
 				message ? setCouponCodeErr(message) : toast.error("An error occurred");
-			});
+			})
+			.finally(() => setLoadingCreate(false));
 	};
 
 	return (
@@ -280,12 +283,23 @@ const SellerEditCouponPage = () => {
 						<div className="invalid-feedback">Invalid</div>
 					</div>
 				</div>
-				<button
-					disabled={!allowSubmission}
-					type="submit"
-					className={submitButtonClass}>
-					Update Coupon
-				</button>
+				<div className="row">
+					<button
+						disabled={!allowSubmission}
+						type="submit"
+						className={submitButtonClass}>
+						Update Coupon
+					</button>
+					<div className="col-12">
+						<BarLoader
+							className="m-0 p-0 text-primary mx-auto mt-1"
+							loading={loadingCreate}
+							color="#342475"
+							aria-label="Loading Spinner"
+							data-testid="loader"
+						/>
+					</div>
+				</div>
 			</form>
 		</section>
 	);
