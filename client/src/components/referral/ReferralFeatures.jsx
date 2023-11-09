@@ -6,15 +6,15 @@ const { personHeart, bagHeartFill, personHearts } = Icons;
 const ReferralFeatures = () => {
 	const features = [
 		{
-			heading: "Earn $100 for Every Referral",
+			heading: "Earn ₹100 for Every Referral",
 			subtext:
-				"Receive a generous $100 reward every time you refer someone to our service or products. It's that simple!",
+				"Receive a generous ₹100 reward every time you refer someone to our service or products. It's that simple!",
 			icon: personHeart,
 		},
 		{
-			heading: "Double Up: $100 Bonus on Their First Purchase",
+			heading: "Double Up: ₹100 Bonus on Their First Purchase",
 			subtext:
-				"Not only do you get $100 for referring a friend, but your friends also receive an exclusive $100 bonus on their very first purchase.",
+				"Not only do you get ₹100 for referring a friend, but your friends also receive an exclusive ₹100 bonus on their very first purchase.",
 			icon: personHearts,
 		},
 		{

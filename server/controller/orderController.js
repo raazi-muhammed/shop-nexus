@@ -15,6 +15,7 @@ const {
 } = require("./transactionController");
 const Products = require("../model/Products");
 const aggregateWithPaginationAndSorting = require("../utils/aggregateWithPaginationAndSorting");
+const { firstOrderReferral } = require("./referralController");
 
 const refundedToUser = async (orderId, productOrderId) => {
 	const orderData = await Order.findOne({ orderId, _id: productOrderId });
@@ -87,6 +88,7 @@ const addToOrder = asyncErrorHandler(async (req, res, next) => {
 	);
 	const detailsOfOrder = await Promise.all(detailsOfOrderPromises);
 
+	await firstOrderReferral(req.user);
 	res.status(200).json({
 		success: true,
 		message: "Order Placed",

@@ -12,6 +12,7 @@ const { createWalletForUser } = require("./transactionController");
 const Transaction = require("../model/Transaction");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 const generateRandomId = require("../utils/generateRandomId");
+const { userCreatedViaReferral } = require("./referralController");
 
 // @METHOD POST
 // @PATH /user/login-user
@@ -69,18 +70,34 @@ const loadUser = asyncErrorHandler(async (req, res, next) => {
 // @METHOD POST
 // @PATH /user/provider-sign-in
 const providerSignIn = asyncErrorHandler(async (req, res, next) => {
-	const { email, fullName, avatarUrl } = req.body;
+	const { email, fullName, avatarUrl, referralCode } = req.body;
 
 	let user;
 	user = await User.findOne({ email: email });
 
 	if (!user) {
-		user = await User.create({
-			fullName,
-			email,
-			password: "password",
-			"avatar.url": avatarUrl,
-		});
+		if (referralCode) {
+			user = await User.create({
+				fullName,
+				email,
+				password: "password",
+				"avatar.url": avatarUrl,
+				referral: {
+					viaReferral: true,
+					viaReferralDetails: {
+						code: referralCode,
+					},
+				},
+			});
+			await userCreatedViaReferral(referralCode);
+		} else {
+			user = await User.create({
+				fullName,
+				email,
+				password: "password",
+				"avatar.url": avatarUrl,
+			});
+		}
 	}
 
 	user = await createWalletForUser(user._id);
@@ -95,7 +112,7 @@ const providerSignIn = asyncErrorHandler(async (req, res, next) => {
 // @METHOD POST
 // @PATH /user/creates-user
 const createUser = asyncErrorHandler(async (req, res, next) => {
-	const { fullName, email, password, age } = req.body;
+	const { fullName, email, password, age, referralCode } = req.body;
 
 	const userEmail = await User.findOne({ email });
 	if (userEmail) {
@@ -108,10 +125,11 @@ const createUser = asyncErrorHandler(async (req, res, next) => {
 	}
 
 	const user = {
-		fullName: fullName,
-		email: email,
-		age: age,
-		password: password,
+		fullName,
+		email,
+		age,
+		password,
+		referralCode,
 	};
 
 	const createActivationToken = (user) => {
@@ -145,19 +163,38 @@ const activateUser = asyncErrorHandler(async (req, res, next) => {
 	const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
 	if (!newUser) return next("Invalid Token");
 
-	const { fullName, email, password, age, profilePic } = newUser;
+	const { fullName, email, password, age, profilePic, referralCode } = newUser;
+	console.log(referralCode);
 
 	const userExits = await User.findOne({ email });
 	if (userExits) return;
 
 	let dataUser;
-	dataUser = await User.create({
-		fullName: fullName,
-		email: email,
-		age: age,
-		password: password,
-		"avatar.url": profilePic,
-	});
+
+	if (referralCode) {
+		dataUser = await User.create({
+			fullName: fullName,
+			email: email,
+			age: age,
+			password: password,
+			"avatar.url": profilePic,
+			referral: {
+				viaReferral: true,
+				viaReferralDetails: {
+					code: referralCode,
+				},
+			},
+		});
+		await userCreatedViaReferral(referralCode);
+	} else {
+		dataUser = await User.create({
+			fullName: fullName,
+			email: email,
+			age: age,
+			password: password,
+			"avatar.url": profilePic,
+		});
+	}
 	dataUser = await createWalletForUser(dataUser._id);
 
 	sendToken(dataUser, 201, res);
@@ -396,18 +433,6 @@ const startReferral = asyncErrorHandler(async (req, res, next) => {
 		},
 		{ new: true, upsert: true }
 	);
-
-	/* const referal = {
-		active: true,
-		details: req.body.details,
-	};
-	const user = await User.findOneAndUpdate(
-		{ _id: req.user.id },
-		{
-			plusMember,
-		},
-		{ new: true, upsert: true }
-	); */
 
 	res.status(200).json({
 		success: true,
