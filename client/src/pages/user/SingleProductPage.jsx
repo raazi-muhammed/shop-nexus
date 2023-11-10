@@ -133,12 +133,10 @@ const SingleProductPage = () => {
 					<div className="container container-lg">
 						<section className="row p-4 mx-auto w-100 ">
 							<section className="col-12 col-sm-6 justify-content-center">
-								<img
-									src={productData?.images[imgSelect]?.url}
-									alt=""
-									srcset=""
-								/>
-								{/* <ReactImageMagnify
+								<img src={productData?.images[imgSelect]?.url} alt="" />
+								{/* 
+								
+								<ReactImageMagnify
 									className="rounded-4 z-3 "
 									{...{
 										imageClassName: "rounded-4",

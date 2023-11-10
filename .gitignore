@@ -1,5 +1,6 @@
 /client/node_modules
 /client/build
+/client/dist
 /server/node_modules
 /socket/node_modules
 /server/config/.env
