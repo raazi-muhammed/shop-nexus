@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import server from "../server";
 import { socket } from "../socket";
 import convertISOToDate from "../utils/convertISOToDate";
@@ -28,7 +28,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 						setMessagesToShow(res.data.messages);
 					});
 			});
-	}, [chatInfo, toPersonInfo]);
+	}, [senderId, receiverId, toPersonInfo]);
 
 	const handleSendMessage = (e) => {
 		e.preventDefault();
@@ -56,7 +56,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 
 	useEffect(() => {
 		socket.emit("add-user", senderId);
-	}, [chatInfo]);
+	}, [senderId, receiverId]);
 
 	useEffect(() => {
 		socket.on("receive-message", (res) => {
@@ -68,7 +68,8 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 			]);
 		});
 		return () => socket.off("receive-message");
-	}, [socket]);
+	}, []);
+	//}, [socket]);
 
 	useEffect(() => {
 		const divRef = document.querySelector("#messages-chat");
