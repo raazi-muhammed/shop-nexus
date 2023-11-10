@@ -14,7 +14,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import formatPrice from "../../utils/formatPrice";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
-import CouponComp from "../../components/checkout/couponComp";
+import CouponComp from "../../components/checkout/CouponComp";
 import CheckOutNavBar from "./checkout/CheckOutNavBar";
 import PriceDetails from "./checkout/PriceDetails";
 

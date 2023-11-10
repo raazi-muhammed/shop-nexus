@@ -10,8 +10,6 @@ import {
 	useParams,
 } from "react-router-dom";
 import Icons from "../../assets/Icons";
-const { heart, cart } = Icons;
-
 import toast from "react-hot-toast";
 import ReactImageMagnify from "react-image-magnify";
 import ProductSuggestion from "./ProductSuggestion";
@@ -25,6 +23,7 @@ import { getCategoryByKey } from "../../constants/categoriesConstants";
 import ChattingComp from "../../components/ChattingComp";
 import ReviewsSection from "./product/ReviewsSection";
 import QuantityPicker from "../../components/product/QuantityPicker";
+const { heart, cart } = Icons;
 
 const SingleProductPage = () => {
 	const [loading, setLoading] = useState(false);

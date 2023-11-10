@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ReferralFeatures from "../../../components/referral/referralFeatures";
+import ReferralFeatures from "../../../components/referral/ReferralFeatures";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import server from "../../../server";

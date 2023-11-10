@@ -1,26 +1,23 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/user/userManagment/LoginPage";
 import SignUpPage from "./pages/user/userManagment/SignUpPage";
 import ActivationPage from "./pages/user/userManagment/ActivationPage";
 import SellerActivationPage from "./pages/seller/SellerActivationPage";
 import "./styles/App.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import toast, { Toaster } from "react-hot-toast";
-
-import HomePage from "./pages/User/HomePage";
+import { Toaster } from "react-hot-toast";
+import HomePage from "./pages/user/HomePage";
 import SellerLoginPage from "./pages/seller/SellerLoginPage";
 import SellerSignUpPage from "./pages/seller/SellerSignUpPage";
 import SellerDashboardPage from "./pages/seller/SellerDashboardPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
-import { useEffect, useState } from "react";
 import UserChangePassword from "./pages/user/account/UserChangePassword";
 import { UserAuthContextProvider } from "./context/userAuthContext";
 import ForgotPasswordPage from "./pages/user/account/ForgotPasswordPage";
 import ChattingComp from "./components/ChattingComp";
 
 function App() {
-	const navigate = useNavigate();
 	return (
 		<>
 			<UserAuthContextProvider>

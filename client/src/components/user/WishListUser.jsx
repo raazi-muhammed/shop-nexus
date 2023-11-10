@@ -2,15 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import server from "../../server";
 import { useNavigate } from "react-router-dom";
-
 import Icons from "../../assets/Icons";
-const { trash, close, cart } = Icons;
-
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { hideWishList } from "../../app/feature/wishList/wishListSlice";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import formatPrice from "../../utils/formatPrice";
+const { trash, close, cart } = Icons;
 
 const WishListUser = () => {
 	const userData = useSelector((state) => state.userData.userData);

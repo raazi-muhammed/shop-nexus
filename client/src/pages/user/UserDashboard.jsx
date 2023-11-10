@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import UserEditPage from "./dashboard/UserEditPage";
-import UserAddAddress from "./dashboard/userAddAddress";
+import UserAddAddress from "./dashboard/UserAddAddress";
 import UserAllAddress from "./dashboard/UserAllAddress";
 import UserAllOrders from "./dashboard/UserAllOrders";
 import UserSingleOrderDetails from "./dashboard/UserSingleOrderDetails";

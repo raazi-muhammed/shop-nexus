@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import server from "../../../server";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
 	formLabelClass,
 	inputDivClass,
@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 
 const UserAddAddress = () => {
 	const dispatch = useDispatch();
-
+	const location = useLocation();
 	const navigate = useNavigate();
 	const [fullName, setFullName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");

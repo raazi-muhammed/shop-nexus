@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Icons from "../../assets/Icons";
-const { heart, cart, profile } = Icons;
 import categoriesConstants from "../../constants/categoriesConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { displayCart } from "../../app/feature/cart/cartSlice";
@@ -12,6 +11,7 @@ import toast from "react-hot-toast";
 import { useUserAuth } from "../../context/userAuthContext";
 import NavComponent from "./NavComponent";
 import { setCategoryOptions } from "../../app/feature/search/searchOptionsSlice";
+const { heart, cart, profile } = Icons;
 
 const UserNavbar = () => {
 	const navigate = useNavigate();

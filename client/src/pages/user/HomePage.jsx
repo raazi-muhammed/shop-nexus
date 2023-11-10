@@ -7,11 +7,9 @@ import HomeContentPage from "./homepage/HomeContentPage";
 import SingleProductPage from "./SingleProductPage";
 import UserDashboard from "./UserDashboard";
 import UserSingleShopPage from "./UserSingleShopPage";
-
 import { useDispatch, useSelector } from "react-redux";
 import server from "../../server";
 import axios from "axios";
-
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import toast from "react-hot-toast";
 import CheckOutPage from "./CheckOutPage";
@@ -23,7 +21,7 @@ import FooterComp from "../../components/layout/FooterComp";
 import SearchResults from "./homepage/SearchResults";
 import UserShopNexusPlus from "./dashboard/UserShopNexusPlus";
 import SuccessPlus from "./nexusPlus/SuccessPlus";
-import EventsPage from "./homepage/Eventspage";
+import EventsPage from "./homepage/EventsPage";
 import SingleEvent from "./homepage/SingleEvent";
 import ErrorComp from "../../components/error/ErrorComp";
 

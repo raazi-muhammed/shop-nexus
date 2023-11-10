@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import server from "../../../server";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
+import toast from "react-hot-toast";
 
 const AdminSellerPage = () => {
 	const [data, setData] = useState([]);

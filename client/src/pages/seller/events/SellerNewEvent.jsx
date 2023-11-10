@@ -81,10 +81,7 @@ const SellerNewEvent = ({ shopId }) => {
 				setProducts(res.data.data);
 				setPagination(res.data.pagination);
 			})
-			.catch((err) => toast.error(err.response.data.message))
-			.finally(() => {
-				setLoading(false);
-			});
+			.catch((err) => toast.error(err.response.data.message));
 	};
 
 	const handleProductClick = (e) => {

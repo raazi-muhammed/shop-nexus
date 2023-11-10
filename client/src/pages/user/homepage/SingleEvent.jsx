@@ -60,7 +60,7 @@ const SingleEvent = () => {
 			})
 			.catch((err) => toast.error(err.response?.data?.message || "Failed"));
 	};
-	const handleAddToWishList = () => {
+	const handleAddToWishList = (productId, discountPrice) => {
 		const itemData = {
 			product_id: productId,
 			price: discountPrice,

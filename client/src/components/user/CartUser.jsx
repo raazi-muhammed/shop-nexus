@@ -3,13 +3,12 @@ import React, { useEffect, useState } from "react";
 import server from "../../server";
 import Icons from "../../assets/Icons";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
-const { trash, close, cart } = Icons;
-
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { displayCart, hideCart } from "../../app/feature/cart/cartSlice";
+import { hideCart } from "../../app/feature/cart/cartSlice";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import formatPrice from "../../utils/formatPrice";
+const { trash, close, cart } = Icons;
 
 const CartUser = () => {
 	const userData = useSelector((state) => state.userData.userData);

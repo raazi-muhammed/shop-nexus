@@ -6,11 +6,10 @@ import {
 } from "../../../app/feature/order/orderSlice";
 import { useDispatch } from "react-redux";
 import Icons from "../../../assets/Icons";
-const { hollowCircle, checkCircleFill } = Icons;
 import toast from "react-hot-toast";
 import server from "../../../server";
 import axios from "axios";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+const { hollowCircle, checkCircleFill } = Icons;
 
 const CheckOutPaymentPage = ({ totalAmount }) => {
 	const [expanded, setExpanded] = useState("cod");

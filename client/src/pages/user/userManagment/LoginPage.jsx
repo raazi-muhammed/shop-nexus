@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import loginCover from "../../../assets/login-cover.jpg";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { useUserAuth } from "../../../context/userAuthContext";
 
 const LoginPage = () => {
 	const navigate = useNavigate();
-	const { login, user, googleSignIn, gitHubSignIn } = useUserAuth();
+	const { login, googleSignIn, gitHubSignIn } = useUserAuth();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -110,7 +110,7 @@ const LoginPage = () => {
 							if (res.data.success) navigate("/");
 						})
 						.catch((err) => {
-							toast.error(message);
+							toast.error(err.data?.message);
 						});
 				} catch (error) {
 					if (

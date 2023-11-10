@@ -1,11 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-import toast from "react-hot-toast";
 import server from "../../../server";
-import orderStateConstants from "../../../constants/orderStateConstants";
-
 import ClipLoader from "react-spinners/ClipLoader";
 import SingleOrderDetailsComp from "../../../components/order/SingleOrderDetailsComp";
 
@@ -24,7 +20,6 @@ const SellerSingleOrderDetails = () => {
 			})
 			.then((res) => {
 				setOrderDetails(res?.data?.orderData);
-				setOrderState(res?.data?.orderData?.status);
 			})
 			.finally(() => setLoading(false));
 	}, [refresh]);
