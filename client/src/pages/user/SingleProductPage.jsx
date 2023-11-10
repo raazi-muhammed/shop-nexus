@@ -13,7 +13,7 @@ import Icons from "../../assets/Icons";
 const { heart, cart } = Icons;
 
 import toast from "react-hot-toast";
-import ReactImageMagnify from "react-image-magnify";
+//import ReactImageMagnify from "react-image-magnify";
 import ProductSuggestion from "./ProductSuggestion";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -134,6 +134,9 @@ const SingleProductPage = () => {
 					<div className="container container-lg">
 						<section className="row p-4 mx-auto w-100 ">
 							<section className="col-12 col-sm-6 justify-content-center">
+								<img src={productData?.images[imgSelect]?.url} alt="" />
+								{/* 
+								
 								<ReactImageMagnify
 									className="rounded-4 z-3 "
 									{...{
@@ -150,7 +153,7 @@ const SingleProductPage = () => {
 										},
 									}}
 								/>
-
+ */}
 								<section className="col-12 d-flex gap-3 justify-content-center my-4">
 									{productData?.images.map((e, i) => (
 										<img
