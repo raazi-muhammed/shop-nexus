@@ -9,6 +9,7 @@ import Icons from "../../../assets/Icons";
 import toast from "react-hot-toast";
 import server from "../../../server";
 import axios from "axios";
+const { hollowCircle, checkCircleFill } = Icons;
 
 const CheckOutPaymentPage = ({ totalAmount }) => {
 	const [expanded, setExpanded] = useState("cod");

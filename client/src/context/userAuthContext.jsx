@@ -35,7 +35,7 @@ export function UserAuthContextProvider({ children }) {
 	};
 	const forgotPassword = (email) => {
 		return sendPasswordResetEmail(auth, email, {
-			url: "http://localhost:5173/login",
+			url: "http://13.53.190.246/login",
 		});
 	};
 	useEffect(() => {

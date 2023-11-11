@@ -68,8 +68,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 			]);
 		});
 		return () => socket.off("receive-message");
-	}, []);
-	//}, [socket]);
+	}, [socket]);
 
 	useEffect(() => {
 		const divRef = document.querySelector("#messages-chat");

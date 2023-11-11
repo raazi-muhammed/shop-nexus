@@ -16,7 +16,7 @@ const { Server, socket } = require("socket.io");
 const http = createServer(app);
 const io = new Server(http, {
 	cors: {
-		origin: ["http://localhost:5173", "http://localhost:3001"],
+		origin: ["http://localhost:5173", "http://13.53.190.246"],
 	},
 });
 const sockets = require("./socket/sockets");
@@ -40,7 +40,7 @@ const couponRoutes = require("./routes/couponRoutes");
 const cors = require("cors");
 app.use(
 	cors({
-		origin: ["http://localhost:5173", "http://localhost:3001"],
+		origin: ["http://localhost:5173", "http://13.53.190.246"],
 		credentials: true, //access-control-allow-credentials:true
 		optionSuccessStatus: 200,
 	})
@@ -86,8 +86,9 @@ app.get("*", (req, res) => {
 /* Error handler */
 app.use(errorHandling);
 
-io.on("connection", (socket) => {
-	sockets(socket, io);
+const nsp = io.of("/api/v1/socket");
+nsp.on("connection", (socket) => {
+	sockets(socket, nsp);
 });
 
 http.listen(PORT, () => {
