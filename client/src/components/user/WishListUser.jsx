@@ -56,6 +56,7 @@ const WishListUser = () => {
 	};
 
 	useEffect(() => {
+		if (!userData._id) return;
 		axios
 			.get(`${server}/wish-list/get-all-wish-list`, { withCredentials: true })
 			.then((res) => {

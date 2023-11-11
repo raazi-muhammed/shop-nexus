@@ -16,7 +16,7 @@ const { Server, socket } = require("socket.io");
 const http = createServer(app);
 const io = new Server(http, {
 	cors: {
-		origin: ["http://localhost:5173", "http://13.53.190.246"],
+		origin: ["http://localhost:5173", "https://shopnexus.live"],
 	},
 });
 const sockets = require("./socket/sockets");
@@ -40,7 +40,7 @@ const couponRoutes = require("./routes/couponRoutes");
 const cors = require("cors");
 app.use(
 	cors({
-		origin: ["http://localhost:5173", "http://13.53.190.246"],
+		origin: ["http://localhost:5173", "https://shopnexus.live"],
 		credentials: true, //access-control-allow-credentials:true
 		optionSuccessStatus: 200,
 	})

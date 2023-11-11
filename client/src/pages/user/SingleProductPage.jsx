@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import Icons from "../../assets/Icons";
 import toast from "react-hot-toast";
-//import ReactImageMagnify from "react-image-magnify";
+import ReactImageMagnify from "react-image-magnify";
 import ProductSuggestion from "./ProductSuggestion";
 import { setUserDataReducer } from "../../app/feature/userData/userDataSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -133,15 +133,13 @@ const SingleProductPage = () => {
 					<div className="container container-lg">
 						<section className="row p-4 mx-auto w-100 ">
 							<section className="col-12 col-sm-6 justify-content-center">
-								<div className="w-100">
+								{/* 	<div className="w-100">
 									<img
 										className="w-100 rounded-4"
 										src={productData?.images[imgSelect]?.url}
 										alt=""
 									/>
-								</div>
-								{/* 
-								
+								</div> */}
 								<ReactImageMagnify
 									className="rounded-4 z-3 "
 									{...{
@@ -157,7 +155,7 @@ const SingleProductPage = () => {
 											height: 1200,
 										},
 									}}
-								/> */}
+								/>
 
 								<section className="col-12 d-flex gap-3 justify-content-center my-4">
 									{productData?.images.map((e, i) => (

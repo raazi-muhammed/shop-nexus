@@ -139,7 +139,7 @@ const createUser = asyncErrorHandler(async (req, res, next) => {
 	};
 
 	const activationToken = createActivationToken(user);
-	const activationUrl = `http://localhost:5173/api/v1/activation?activation_token=${activationToken}`;
+	const activationUrl = `https://shopnexus.live/api/v1/activation?activation_token=${activationToken}`;
 
 	await sendMail({
 		email: user.email,
@@ -233,7 +233,7 @@ const editUserDetails = asyncErrorHandler(async (req, res, next) => {
 	);
 
 	if (req.file) {
-		const fileUrl = `http://localhost:3000/images/${req.file.filename}`;
+		const fileUrl = `https://shopnexus.live/images/${req.file.filename}`;
 		user = await User.findOneAndUpdate(
 			{ _id: req.user.id },
 			{ $set: { "avatar.url": fileUrl } },

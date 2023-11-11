@@ -46,6 +46,7 @@ const CartUser = () => {
 	};
 
 	useEffect(() => {
+		if (!userData._id) return;
 		axios
 			.get(`${server}/cart/get-all-cart`, { withCredentials: true })
 			.then((res) => {
