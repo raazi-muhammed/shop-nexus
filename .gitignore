@@ -1,5 +1,9 @@
+/client/dist
+
 /client/node_modules
 /server/node_modules
-/socket/node_modules
-/client/config/.env
+
+**/.DS_Store
+
 /server/config/.env
+/client/config/.env
