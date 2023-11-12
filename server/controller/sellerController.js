@@ -71,7 +71,7 @@ const sellerCreateShop = asyncErrorHandler(async (req, res, next) => {
 		});
 	};
 	const activationToken = createActivationToken(shop);
-	const activationUrl = `http://localhost:5173/api/v1/seller/activation?activation_token=${activationToken}`;
+	const activationUrl = `https://shopnexus.live/seller/activation?activation_token=${activationToken}`;
 
 	/* Can be removed, added so that don't have to check mail while testing */
 	console.log(activationUrl);

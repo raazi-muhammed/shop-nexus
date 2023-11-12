@@ -139,7 +139,7 @@ const createUser = asyncErrorHandler(async (req, res, next) => {
 	};
 
 	const activationToken = createActivationToken(user);
-	const activationUrl = `https://shopnexus.live/api/v1/activation?activation_token=${activationToken}`;
+	const activationUrl = `https://shopnexus.live/activation?activation_token=${activationToken}`;
 
 	await sendMail({
 		email: user.email,

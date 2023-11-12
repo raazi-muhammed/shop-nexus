@@ -25,11 +25,8 @@ function App() {
 					<Route path="/login" element={<LoginPage />} />
 					<Route path="/sign-up" element={<SignUpPage />} />
 
-					<Route path="/api/v1/activation" element={<ActivationPage />} />
-					<Route
-						path="/api/v1/seller/activation"
-						element={<SellerActivationPage />}
-					/>
+					<Route path="/activation" element={<ActivationPage />} />
+					<Route path="/seller/activation" element={<SellerActivationPage />} />
 					<Route path="/seller/login" element={<SellerLoginPage />} />
 					<Route path="/seller/sign-up" element={<SellerSignUpPage />} />
 					<Route path="/seller/dashboard/*" element={<SellerDashboardPage />} />
