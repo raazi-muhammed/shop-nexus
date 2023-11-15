@@ -5,6 +5,8 @@
 
 **/.DS_Store
 
+/client/.DS_Store
+
 /server/config/.env
 /server/logs
 /client/config/.env
