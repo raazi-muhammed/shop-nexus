@@ -6,13 +6,15 @@ const sendToken = require("../utils/jwtToken");
 const { upload } = require("../multer");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
-
 const bcrypt = require("bcrypt");
 const { createWalletForUser } = require("./transactionController");
 const Transaction = require("../model/Transaction");
 const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSorting");
 const generateRandomId = require("../utils/generateRandomId");
 const { userCreatedViaReferral } = require("./referralController");
+const {
+	activateAccountMail,
+} = require("../utils/emailTemplates/getHtmlTemplate");
 
 // @METHOD POST
 // @PATH /user/login-user
@@ -110,7 +112,7 @@ const providerSignIn = asyncErrorHandler(async (req, res, next) => {
 });
 
 // @METHOD POST
-// @PATH /user/creates-user
+// @PATH /user/create-user
 const createUser = asyncErrorHandler(async (req, res, next) => {
 	const { fullName, email, password, age, referralCode } = req.body;
 
@@ -142,7 +144,7 @@ const createUser = asyncErrorHandler(async (req, res, next) => {
 	const activationUrl = `https://shopnexus.live/activation?activation_token=${activationToken}`;
 
 	await sendMailHTML({
-		email: shop.email,
+		email: user.email,
 		subject: "Activate you Account account",
 		html: activateAccountMail(user.fullName, activationUrl),
 	});

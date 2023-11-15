@@ -5,6 +5,15 @@ require("dotenv").config({ path: "./config/.env" });
 const sessions = require("express-session");
 const bodyParser = require("body-parser");
 const cookies = require("cookie-parser");
+
+const morgan = require("morgan");
+var rfs = require("rotating-file-stream");
+const path = require("path");
+var accessLogStream = rfs.createStream("access.log", {
+	interval: "7d",
+	path: path.join(__dirname, "logs"),
+});
+
 app.use(cookies());
 const PORT = process.env.PORT;
 
@@ -64,6 +73,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Static file
 app.use("/images", express.static(__dirname + "/uploads"));
+
+// Logs
+app.use(morgan("dev", { stream: accessLogStream }));
 
 // Router
 app.use("/api/v1/products/", productRoutes);
