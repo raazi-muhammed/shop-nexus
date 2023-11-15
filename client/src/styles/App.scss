@@ -3,12 +3,34 @@ $secondary: #7a76e2;
 $light: #d7d6f6;
 
 $border-radius: 1rem;
-$form-select-font-size: 0.75rem;
-$form-select-bg: $secondary;
-
 $btn-border-radius-sm: 1rem;
 $input-bg: $light;
 $input-padding-y: 0.75rem;
+
+/* Form */
+$form-select-border-radius-sm: 1rem;
+$form-feedback-icon-valid: none;
+$form-feedback-icon-invalid: none;
+
+$form-feedback-valid-color: $primary;
+$form-valid-border-color: $light;
+$form-valid-color: $primary;
+
+/* Table */
+$table-cell-padding-y: 1rem;
+$table-cell-padding-x: 1rem;
+$table-bg: white;
+
+$table-border-color: #f1f0ff;
+
+/* Pagination */
+$pagination-border-radius-sm: 1rem;
+$pagination-color: $primary;
+$pagination-bg: $light;
+$pagination-hover-bg: #c3c1f5;
+
+/* Carosole */
+$carousel-control-color: $secondary;
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
@@ -18,7 +40,8 @@ $input-padding-y: 0.75rem;
 }
 
 .btn-sm,
-.form-sm {
+.form-sm,
+.form-control-sm {
 	height: 2rem;
 }
 
@@ -57,4 +80,23 @@ body {
 .single-product-image {
 	max-height: min(70rem, 60vh);
 	aspect-ratio: 1;
+}
+
+.aside-card {
+	position: fixed;
+	right: 0;
+	top: 0;
+	height: 100vh;
+	width: 20rem;
+	z-index: 100;
+}
+
+.overflow-ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.placeholder-color::placeholder {
+	/* Most modern browsers support this now. */
+	color: $light;
 }

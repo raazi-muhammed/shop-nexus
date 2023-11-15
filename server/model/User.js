@@ -2,71 +2,168 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const userSchema = new mongoose.Schema({
-	fullName: {
-		type: String,
-		required: [true, "Please enter your name!"],
-	},
-	email: {
-		type: String,
-		required: [true, "Please enter your email!"],
-	},
-	password: {
-		type: String,
-		required: [true, "Please enter your password"],
-		minLength: [4, "Password should be greater than 4 characters"],
-		select: false,
-	},
-	phoneNumber: {
-		type: Number,
-	},
-	addresses: [
-		{
-			country: {
+const userSchema = new mongoose.Schema(
+	{
+		fullName: {
+			type: String,
+			required: [true, "Please enter your name!"],
+		},
+		email: {
+			type: String,
+			required: [true, "Please enter your email!"],
+		},
+		password: {
+			type: String,
+			required: [true, "Please enter your password"],
+			minLength: [4, "Password should be greater than 4 characters"],
+			select: false,
+		},
+		phoneNumber: {
+			type: Number,
+		},
+		addresses: [
+			{
+				default: {
+					type: Boolean,
+					default: false,
+				},
+				fullName: {
+					type: String,
+					required: true,
+				},
+				phoneNumber: {
+					type: Number,
+					required: true,
+				},
+				city: {
+					type: String,
+					required: true,
+				},
+				state: {
+					type: String,
+					required: true,
+				},
+				address1: {
+					type: String,
+					required: true,
+				},
+				address2: {
+					type: String,
+					required: true,
+				},
+				pinCode: {
+					type: Number,
+					required: true,
+				},
+				addressType: {
+					type: String,
+					default: "Home",
+				},
+			},
+		],
+		avatar: {
+			url: {
 				type: String,
 			},
-			city: {
-				type: String,
+		},
+		cart: [
+			{
+				_id: false,
+				product: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Product",
+					required: true,
+				},
+				quantity: {
+					type: Number,
+					default: 1,
+				},
+				price: {
+					type: Number,
+					required: true,
+				},
+				offer: {
+					applied: {
+						type: Boolean,
+					},
+					offerPrice: {
+						type: Number,
+					},
+					type: {
+						type: String,
+					},
+					details: {
+						type: Object,
+					},
+				},
+				type: {
+					type: Object,
+				},
 			},
-			address1: {
-				type: String,
+		],
+		wishList: [
+			{
+				_id: false,
+				product: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Product",
+					required: true,
+				},
+				type: {
+					type: Object,
+				},
 			},
-			address2: {
-				type: String,
+		],
+		isBlocked: {
+			type: Boolean,
+			default: false,
+		},
+		plusMember: {
+			active: {
+				type: Boolean,
+				default: false,
 			},
-			zipCode: {
+			details: {
+				type: Object,
+			},
+		},
+		wallet: {
+			balance: {
 				type: Number,
+				default: 0,
 			},
-			addressType: {
+		},
+		referral: {
+			myCode: {
 				type: String,
 			},
+			myReferrals: {
+				count: {
+					type: Number,
+					default: 0,
+				},
+				moneyViaReferral: {
+					type: Number,
+					default: 0,
+				},
+			},
+			viaReferral: {
+				type: Boolean,
+				default: false,
+			},
+			viaReferralDetails: {
+				code: {
+					type: String,
+				},
+				boughtFirstItem: {
+					type: Boolean,
+					default: false,
+				},
+			},
 		},
-	],
-	role: {
-		type: String,
-		default: "user",
 	},
-	avatar: {
-		public_id: {
-			type: String,
-			//required: true,
-		},
-		url: {
-			type: String,
-			//required: true,
-		},
-	},
-	createdAt: {
-		type: Date,
-		default: Date.now(),
-	},
-	isBlocked: {
-		type: Boolean,
-		default: false,
-	},
-	resetPasswordToken: String,
-	resetPasswordTime: Date,
-});
+	{ timestamps: true }
+);
 
 //  Hash password
 userSchema.pre("save", async function (next) {

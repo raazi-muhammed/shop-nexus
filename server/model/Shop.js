@@ -2,86 +2,61 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const shopSchema = new mongoose.Schema({
-	shopName: {
-		type: String,
-		required: [true, "Please enter your shop name!"],
-	},
-	email: {
-		type: String,
-		required: [true, "Please enter your shop email address"],
-	},
-	password: {
-		type: String,
-		required: [true, "Please enter your password"],
-		minLength: [6, "Password should be greater than 6 characters"],
-	},
-	description: {
-		type: String,
-	},
-	address1: {
-		type: String,
-		required: true,
-	},
-	address2: {
-		type: String,
-		required: true,
-	},
-	phoneNumber: {
-		type: Number,
-		required: true,
-	},
-	role: {
-		type: String,
-		default: "Seller",
-	},
-	image: {
-		public_id: {
+const shopSchema = new mongoose.Schema(
+	{
+		shopName: {
 			type: String,
-			//required: true,
+			required: [true, "Please enter your shop name!"],
 		},
-		url: {
+		email: {
 			type: String,
-			//required: true,
+			required: [true, "Please enter your shop email address"],
 		},
-	},
-	zipCode: {
-		type: Number,
-		required: true,
-	},
-	withdrawMethod: {
-		type: Object,
-	},
-	availableBalance: {
-		type: Number,
-		default: 0,
-	},
-	transections: [
-		{
-			amount: {
-				type: Number,
-				required: true,
-			},
-			status: {
+		password: {
+			type: String,
+			required: [true, "Please enter your password"],
+			minLength: [6, "Password should be greater than 6 characters"],
+		},
+		description: {
+			type: String,
+		},
+		address1: {
+			type: String,
+			required: true,
+		},
+		address2: {
+			type: String,
+			required: true,
+		},
+		phoneNumber: {
+			type: Number,
+			required: true,
+		},
+		gstinNumber: {
+			type: String,
+		},
+		image: {
+			url: {
 				type: String,
-				default: "Processing",
-			},
-			createdAt: {
-				type: Date,
-				default: Date.now(),
-			},
-			updatedAt: {
-				type: Date,
 			},
 		},
-	],
-	createdAt: {
-		type: Date,
-		default: Date.now(),
+		zipCode: {
+			type: Number,
+			required: true,
+		},
+		isBlocked: {
+			type: Boolean,
+			default: false,
+		},
+		wallet: {
+			balance: {
+				type: Number,
+				default: 0,
+			},
+		},
 	},
-	resetPasswordToken: String,
-	resetPasswordTime: Date,
-});
+	{ timestamps: true }
+);
 
 // Hash password
 shopSchema.pre("save", async function (next) {
@@ -98,7 +73,7 @@ shopSchema.methods.getJwtToken = function () {
 	});
 };
 
-// comapre password
+// compare password
 shopSchema.methods.comparePassword = async function (enteredPassword) {
 	return await bcrypt.compare(enteredPassword, this.password);
 };

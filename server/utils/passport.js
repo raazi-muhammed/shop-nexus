@@ -19,6 +19,7 @@ passport.use(
 
                 User.save
             } */
+			console.log(profile);
 		}
 	)
 );

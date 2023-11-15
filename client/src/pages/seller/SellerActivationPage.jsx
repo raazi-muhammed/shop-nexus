@@ -1,31 +1,37 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import server from "../../server";
+import toast from "react-hot-toast";
+import { debounce } from "lodash";
 
 const SellerActivationPage = () => {
-	//const { activation_token } = useQuery();
+	const navigate = useNavigate();
+
 	const [message, setMessage] = useState("Seller Verification on process");
 	const [searchParams, setSearchParams] = useSearchParams();
-
-	// Get a specific query parameter
 	const activation_token = searchParams.get("activation_token");
 	console.log(activation_token);
 
-	useEffect(() => {
-		if (activation_token) {
-			axios
-				.post(`${server}/seller/activation`, {
-					activation_token,
-				})
-				.then(() => {
-					setMessage("Account Verified Successfully");
-				})
-				.catch((err) => {
-					setMessage(err.response.data.message || "Verification Failed");
-				});
-		}
-	}, []);
+	useEffect(
+		debounce(() => {
+			if (activation_token) {
+				axios
+					.post(`${server}/seller/activation`, {
+						activation_token,
+					})
+					.then(() => {
+						setMessage("Account Verified Successfully");
+						toast.success("Account Verified Successfully");
+						navigate("/seller/login");
+					})
+					.catch((err) => {
+						setMessage(err.response.data.message || "Verification Failed");
+					});
+			}
+		}, 1000),
+		[]
+	);
 	return (
 		<div className="vw-100 vh-100 d-flex justify-content-center align-items-center">
 			{message}
