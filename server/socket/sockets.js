@@ -26,7 +26,7 @@ const sockets = (socket, io) => {
 		try {
 			const receiver = getUser(receiverId);
 
-			io.to(receiver.socketId).emit("receive-message", {
+			io.to(receiver?.socketId).emit("receive-message", {
 				senderId,
 				receiver,
 				message,

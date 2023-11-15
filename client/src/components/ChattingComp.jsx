@@ -19,12 +19,10 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 				receiverId: receiverId,
 			})
 			.then((res) => {
-				console.log(res.data);
 				setConversationID(res.data.conversationId);
 				axios
 					.get(`${server}/message/get-messages/${res.data.conversationId}`)
 					.then((res) => {
-						console.log(res);
 						setMessagesToShow(res.data.messages);
 					});
 			});
@@ -39,7 +37,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 				sender: senderId,
 				text: message,
 			})
-			.then((res) => console.log(res))
+			.then((res) => null)
 			.catch((err) => console.log(err));
 
 		setMessagesToShow([...messagesToShow, { sender: senderId, text: message }]);
@@ -60,7 +58,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 
 	useEffect(() => {
 		socket.on("receive-message", (res) => {
-			console.log(res?.message);
+			console.log("RM", res?.message);
 
 			setMessagesToShow((prevMessagesToShow) => [
 				...prevMessagesToShow,
@@ -143,6 +141,7 @@ const ChattingComp = ({ chatInfo, toPersonInfo }) => {
 										placeholder="message..."
 										aria-label="chat-input"
 										aria-describedby="button-addon2"
+										required
 									/>
 									<button
 										class="btn px-4 btn-secondary text-white rounded-pill ms-2"
