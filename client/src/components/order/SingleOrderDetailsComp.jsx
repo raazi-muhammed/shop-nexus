@@ -37,7 +37,7 @@ const SingleOrderDetailsComp = ({
 					<span className=" fw-bold"> Order Id: </span> {orderId}
 				</p>
 				<p className="text-primary">
-					<span className=" fw-bold"> Date & Time: </span>
+					<span className="fw-bold"> Date & Time: </span>
 					{convertISOToDate(orderDetails[0]?.createdAt, true)}
 				</p>
 				<section>

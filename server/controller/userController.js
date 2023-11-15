@@ -1,7 +1,7 @@
 const express = require("express");
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
-const sendMail = require("../utils/sendMail");
+const { sendMailHTML } = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { upload } = require("../multer");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
@@ -141,10 +141,10 @@ const createUser = asyncErrorHandler(async (req, res, next) => {
 	const activationToken = createActivationToken(user);
 	const activationUrl = `https://shopnexus.live/activation?activation_token=${activationToken}`;
 
-	await sendMail({
-		email: user.email,
-		subject: "Activate you account",
-		message: `Click to activate ${activationUrl}`,
+	await sendMailHTML({
+		email: shop.email,
+		subject: "Activate you Account account",
+		html: activateAccountMail(user.fullName, activationUrl),
 	});
 
 	/* Can be removed, added so that don't have to check mail while testing */

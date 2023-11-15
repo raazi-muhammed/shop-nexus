@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const sendMail = require("../utils/sendMail");
+const { sendMail, sendMailHTML } = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const Products = require("../model/Products");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
@@ -9,6 +9,9 @@ const { createTransaction } = require("./transactionController");
 const Order = require("../model/Order");
 const Shop = require("../model/Shop");
 const ErrorHandler = require("../utils/errorHandler");
+const {
+	activateAccountMail,
+} = require("../utils/emailTemplates/getHtmlTemplate");
 
 // @METHOD POST
 // @PATH /seller/login-shop
@@ -86,11 +89,12 @@ const sellerCreateShop = asyncErrorHandler(async (req, res, next) => {
 	/* Can be removed, added so that don't have to check mail while testing */
 	console.log(activationUrl);
 
-	await sendMail({
+	await sendMailHTML({
 		email: shop.email,
 		subject: "Activate you Seller Account account",
-		message: `Click to activate ${activationUrl}`,
+		html: activateAccountMail(shop.shopName, activationUrl),
 	});
+
 	res.status(201).json({
 		success: true,
 		message: `Please check your email`,
