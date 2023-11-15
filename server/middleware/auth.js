@@ -42,8 +42,9 @@ exports.isSellerAuthenticated = asyncErrorHandler(async (req, res, next) => {
 	const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
 	const shopFound = await Shop.findById(decoded.id);
-	if (!shopFound)
-		res.status(500).json({ success: false, message: "No User found" });
+	if (!shopFound) return next(new ErrorHandler("No User found", 403));
+	if (shopFound.isBlocked)
+		return next(new ErrorHandler("You are Blocked", 403));
 	req.shop = shopFound;
 	next();
 });

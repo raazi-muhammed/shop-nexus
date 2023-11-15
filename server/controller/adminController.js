@@ -6,6 +6,7 @@ const Shop = require("../model/Shop");
 const ErrorHandler = require("../utils/errorHandler");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 const Order = require("../model/Order");
+const Products = require("../model/Products");
 
 // @METHOD POST
 // @PATH /admin/login
@@ -64,6 +65,12 @@ const adminBlockAndUnBlockSeller = asyncErrorHandler(async (req, res) => {
 	const { id, action } = req.body;
 	const userData = await Shop.findOneAndUpdate(
 		{ _id: id },
+		{ isBlocked: action },
+		{ new: true, upsert: true }
+	);
+
+	await Products.updateMany(
+		{ "shop.id": id },
 		{ isBlocked: action },
 		{ new: true, upsert: true }
 	);

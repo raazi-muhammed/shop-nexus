@@ -8,13 +8,14 @@ const findWithPaginationAndSorting = require("../utils/findWithPaginationAndSort
 const { createTransaction } = require("./transactionController");
 const Order = require("../model/Order");
 const Shop = require("../model/Shop");
+const ErrorHandler = require("../utils/errorHandler");
 
 // @METHOD POST
 // @PATH /seller/login-shop
 const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 	let shop = await Shop.findOne(
 		{ email: req.body.email },
-		{ password: 1, email: 1, fullName: 1, role: 1 } // used projection because other password is not returend
+		{ password: 1, email: 1, fullName: 1, isBlocked: 1 } // used projection because other password is not returend
 	);
 
 	if (!shop) {
@@ -22,6 +23,15 @@ const sellerLogin = asyncErrorHandler(async (req, res, next) => {
 			success: false,
 			errorWith: "email",
 			message: "No user found",
+		});
+		return;
+	}
+
+	if (shop.isBlocked) {
+		res.status(404).json({
+			success: false,
+			errorWith: "email",
+			message: "Your account has been blocked",
 		});
 		return;
 	}
@@ -130,6 +140,11 @@ const sellerActivateShop = asyncErrorHandler(async (req, res, next) => {
 const getShopDetails = asyncErrorHandler(async (req, res, next) => {
 	const shopId = req.shop._id;
 	const shopDetails = await Shop.findOne({ _id: shopId });
+
+	if (shopDetails.isBlocked) {
+		return next(new ErrorHandler("You have been blocked", 404));
+	}
+
 	res.status(200).json({
 		success: true,
 		data: shopDetails,

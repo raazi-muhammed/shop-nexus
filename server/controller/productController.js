@@ -9,7 +9,10 @@ const Order = require("../model/Order");
 // @METHOD GET
 // @PATH /product/best-selling
 const getBestSellingProducts = asyncErrorHandler(async (req, res, next) => {
-	let products = await Products.find({ isDeleted: { $ne: true } }).sort({
+	let products = await Products.find({
+		isDeleted: { $ne: true },
+		isBlocked: { $ne: true },
+	}).sort({
 		total_sell: -1,
 	});
 
@@ -22,7 +25,10 @@ const getBestSellingProducts = asyncErrorHandler(async (req, res, next) => {
 // @METHOD GET
 // @PATH /product/all-products
 const getProducts = asyncErrorHandler(async (req, res, next) => {
-	let products = await Products.find({ isDeleted: { $ne: true } });
+	let products = await Products.find({
+		isDeleted: { $ne: true },
+		isBlocked: { $ne: true },
+	});
 	res.status(200).json({
 		success: true,
 		products,
@@ -33,7 +39,11 @@ const getProducts = asyncErrorHandler(async (req, res, next) => {
 // @PATH /product/filter-products/:category
 const getProductByCategory = asyncErrorHandler(async (req, res, next) => {
 	const { category } = req.params;
-	let products = await Products.find({ isDeleted: { $ne: true }, category });
+	let products = await Products.find({
+		isDeleted: { $ne: true },
+		isBlocked: { $ne: true },
+		category,
+	});
 	res.status(200).json({
 		success: true,
 		products,
@@ -46,6 +56,7 @@ const searchProducts = asyncErrorHandler(async (req, res, next) => {
 	const { category, searchTerm, minPrice, maxPrice, rating } = req.query;
 	let filter = {
 		isDeleted: { $ne: true },
+		isBlocked: { $ne: true },
 	};
 	if (searchTerm) {
 		filter.$or = [

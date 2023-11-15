@@ -26,9 +26,11 @@ import ChartProducts from "./dashboard/ChartProducts";
 import ChartOrders from "./dashboard/ChartOrders";
 import MainDashBoard from "./dashboard/MainDashBoard";
 import SalesReport from "./dashboard/SalesReport";
+import toast from "react-hot-toast";
 const { threeLine } = Icons;
 
 const SellerDashboardPage = () => {
+	const navigate = useNavigate();
 	const [data, setData] = useState("");
 	const [shopName, setShopName] = useState("Loading...");
 
@@ -124,10 +126,15 @@ const SellerDashboardPage = () => {
 			})
 			.then((res) => {
 				setData(res.data.data);
-				console.log(res.data.data);
 				setShopName(res.data.data.shopName);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				toast.error(err.response?.data?.message || "An error occurred");
+				if (err.response?.data)
+					axios
+						.get(`${server}/seller/logout`, { withCredentials: true })
+						.then(() => navigate("/seller/login"));
+			});
 	}, []);
 
 	return (
