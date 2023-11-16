@@ -9,29 +9,38 @@ const Order = require("../model/Order");
 // @METHOD GET
 // @PATH /product/best-selling
 const getBestSellingProducts = asyncErrorHandler(async (req, res, next) => {
-	let products = await Products.find({
-		isDeleted: { $ne: true },
-		isBlocked: { $ne: true },
-	}).sort({
-		total_sell: -1,
-	});
+	const [pagination, products] = await findWithPaginationAndSorting(
+		req,
+		Products,
+		{
+			isDeleted: { $ne: true },
+			isBlocked: { $ne: true },
+		}
+	);
 
 	res.status(200).json({
 		success: true,
 		products,
+		pagination,
 	});
 });
 
 // @METHOD GET
 // @PATH /product/all-products
 const getProducts = asyncErrorHandler(async (req, res, next) => {
-	let products = await Products.find({
-		isDeleted: { $ne: true },
-		isBlocked: { $ne: true },
-	});
+	const [pagination, products] = await findWithPaginationAndSorting(
+		req,
+		Products,
+		{
+			isDeleted: { $ne: true },
+			isBlocked: { $ne: true },
+		}
+	);
+
 	res.status(200).json({
 		success: true,
 		products,
+		pagination,
 	});
 });
 
