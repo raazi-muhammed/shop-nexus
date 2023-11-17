@@ -9,7 +9,7 @@ const EventsPage = ({ onHomePage }) => {
 	const [loading, setLoading] = useState(false);
 	const [events, setEvents] = useState([]);
 	const userData = useSelector((state) => state.userData.userData);
-
+	const [arrayDataLow, setArrayDataLow] = useState(false);
 	useEffect(() => {
 		setLoading(true);
 		let plusMember = false;
@@ -21,6 +21,7 @@ const EventsPage = ({ onHomePage }) => {
 		axios
 			.get(`${server}/event/all-events?plusMember=${plusMember}`)
 			.then((res) => {
+				if (res.data?.eventsData?.length > 1) setArrayDataLow(true);
 				setEvents(res.data?.eventsData);
 			})
 			.catch((err) => console.log(err))
@@ -44,7 +45,7 @@ const EventsPage = ({ onHomePage }) => {
 			)}
 
 			<div className="w-100 container container-xxl ">
-				{onHomePage ? (
+				{onHomePage && arrayDataLow ? (
 					<div
 						id="carouselExample"
 						class="carousel slide"
