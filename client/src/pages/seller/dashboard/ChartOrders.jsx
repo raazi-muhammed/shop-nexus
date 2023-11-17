@@ -49,9 +49,6 @@ const ChartOrders = () => {
 						{
 							label: "Total Revenue",
 							data: data.map((row) => row.count),
-							backgroundColor: "#7a76e2",
-							hoverBackgroundColor: "#342475",
-							borderRadius: 10,
 						},
 					],
 				});

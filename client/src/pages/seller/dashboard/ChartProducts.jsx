@@ -48,9 +48,6 @@ const ChartProducts = () => {
 							data: data.map((row) =>
 								dataType === "SALES" ? row.count : row.totalPrice
 							),
-							backgroundColor: "#7a76e2",
-							hoverBackgroundColor: "#342475",
-							borderRadius: 10,
 						},
 					],
 				});
