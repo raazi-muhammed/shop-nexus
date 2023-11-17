@@ -34,7 +34,7 @@ const BestSellingPage = ({ showHeading, overFlow }) => {
 			.finally(() => {
 				setLoading(false);
 			});
-	}, [pagination.page]);
+	}, [pagination?.page]);
 
 	const handleSeeMore = () => {
 		setPagination({

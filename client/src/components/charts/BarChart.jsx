@@ -48,7 +48,9 @@ const BarChart = ({ chartData }) => {
 					Radar
 				</button>
 			</div>
-			<div className="w-100 h-100">
+			<div
+				style={{ maxHeight: "min(70vh, 35rem)" }}
+				className="w-100 h-100 d-flex justify-content-center">
 				{currentChart == "BAR" ? (
 					<Bar
 						data={chartData}

@@ -38,7 +38,7 @@ const ProductsPage = ({ showHeading, overFlow }) => {
 			.finally(() => {
 				setLoading(false);
 			});
-	}, [pagination.page]);
+	}, [pagination?.page]);
 
 	const handleSeeMore = () => {
 		setPagination({
@@ -55,7 +55,7 @@ const ProductsPage = ({ showHeading, overFlow }) => {
 						<h2 className="text-secondary mx-4">Products</h2>
 						<Link
 							className="m-0 p-0 mt-auto text-decoration-none"
-							to={"/products"}>
+							to={"/new-products"}>
 							<p className="text-secondary fw-bold mb-2  mt-auto">See more</p>
 						</Link>
 					</div>
