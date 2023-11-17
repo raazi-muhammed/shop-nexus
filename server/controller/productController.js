@@ -336,6 +336,7 @@ const getProductsFromShop = asyncErrorHandler(async (req, res, next) => {
 		req,
 		Products,
 		{
+			isDeleted: { $ne: true },
 			"shop.name": shopName,
 		}
 	);
