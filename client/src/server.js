@@ -1,4 +1,3 @@
-//const server = "https://shopnexus.live/api/v1";
-const server = "http://localhost:3000/api/v1";
-
-export default server;
+const server = import.meta.env.VITE_API_URL;
+if (!server) console.log("ENV FILES NOT FOUND");
+export default `${server}/api/v1`;

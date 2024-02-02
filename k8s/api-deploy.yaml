@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: api-deploy
+spec:
+    selector:
+        matchLabels:
+            app: api-deploy
+    template:
+        metadata:
+            labels:
+                app: api-deploy
+        spec:
+            containers:
+                - name: api-deploy
+                  image: raazimuhammed/shopnexus-api
+                  resources:
+                      limits:
+                          memory: "128Mi"
+                          cpu: "500m"
+                  ports:
+                      - containerPort: 3000
+                  env:
+                      - name: PORT
+                        valueFrom:
+                            secretKeyRef:
+                                name: api-secret
+                                key: PORT
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: api-service
+spec:
+    selector:
+        app: api-deploy
+    ports:
+        - port: 3000
+          targetPort: 3000

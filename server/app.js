@@ -10,12 +10,16 @@ const morgan = require("morgan");
 var rfs = require("rotating-file-stream");
 const path = require("path");
 var accessLogStream = rfs.createStream("access.log", {
-	interval: "7d",
-	path: path.join(__dirname, "logs"),
+    interval: "7d",
+    path: path.join(__dirname, "logs"),
 });
 
 app.use(cookies());
 const PORT = process.env.PORT;
+if (!process.env.PORT || !process.env.DB_URL)
+    console.log(
+        "ENV file not found ----------------------------------------------------------------"
+    );
 
 connectDatabase();
 
@@ -23,10 +27,17 @@ connectDatabase();
 const { createServer } = require("http");
 const { Server, socket } = require("socket.io");
 const http = createServer(app);
+const corsOptions = {
+    origin: [
+        "http://localhost:8080",
+        "https://shopnexus.live",
+        "http://127.0.0.1:56540",
+    ],
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+};
 const io = new Server(http, {
-	cors: {
-		origin: ["http://localhost:5173", "https://shopnexus.live"],
-	},
+    cors: corsOptions,
 });
 const sockets = require("./socket/sockets");
 
@@ -47,27 +58,21 @@ const couponRoutes = require("./routes/couponRoutes");
 
 /* Cors */
 const cors = require("cors");
-app.use(
-	cors({
-		origin: ["http://localhost:5173", "https://shopnexus.live"],
-		credentials: true, //access-control-allow-credentials:true
-		optionSuccessStatus: 200,
-	})
-);
+app.use(cors(corsOptions));
 
 /* Session */
 app.use(
-	sessions({
-		secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-		saveUninitialized: true,
-		resave: false,
-	})
+    sessions({
+        secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+        saveUninitialized: true,
+        resave: false,
+    })
 );
 
 app.use(
-	express.json({
-		limit: "50mb",
-	})
+    express.json({
+        limit: "50mb",
+    })
 );
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -92,7 +97,7 @@ app.use("/api/v1/event/", eventRoutes);
 app.use("/api/v1/coupon/", couponRoutes);
 
 app.get("*", (req, res) => {
-	console.error(`URL Not found: http://localhost:${req.url}`);
+    console.error(`URL Not found: http://localhost:${req.url}`);
 });
 
 /* Error handler */
@@ -100,9 +105,9 @@ app.use(errorHandling);
 
 const nsp = io.of("/api/v1/socket");
 nsp.on("connection", (socket) => {
-	sockets(socket, nsp);
+    sockets(socket, nsp);
 });
 
 http.listen(PORT, () => {
-	console.info(`Local:   http://localhost:${PORT}`);
+    console.info(`Local:   http://localhost:${PORT}`);
 });

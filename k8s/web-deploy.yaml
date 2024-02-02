@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: web-deploy
+spec:
+    selector:
+        matchLabels:
+            app: web-deploy
+    template:
+        metadata:
+            labels:
+                app: web-deploy
+        spec:
+            containers:
+                - name: web-deploy
+                  image: raazimuhammed/shopnexus-web
+                  resources:
+                      limits:
+                          memory: "1056Mi"
+                          cpu: "500m"
+                  ports:
+                      - containerPort: 8080
+                  env:
+                      - name: VITE_API_URL
+                        valueFrom:
+                            configMapKeyRef:
+                                name: api-config
+                                key: api-url
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: web-service
+spec:
+    type: NodePort
+    selector:
+        app: web-deploy
+    ports:
+        - port: 8080
+          targetPort: 8080
+          nodePort: 30200
